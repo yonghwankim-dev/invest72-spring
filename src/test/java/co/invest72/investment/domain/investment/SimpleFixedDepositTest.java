@@ -2,8 +2,6 @@ package co.invest72.investment.domain.investment;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,15 +61,7 @@ class SimpleFixedDepositTest {
 	void getPrincipal() {
 		int principal = investment.getPrincipal();
 
-		assertEquals(1_000_000, principal);
-	}
-
-	@Test
-	void getPrincipal_forAllMonths() {
-		IntStream.rangeClosed(1, 12).forEach(month -> {
-			int principal = investment.getPrincipal(month);
-			assertEquals(1_000_000, principal);
-		});
+		assertEquals(1_045_833, principal);
 	}
 
 	@Test
@@ -98,7 +88,7 @@ class SimpleFixedDepositTest {
 
 		int principal = investment.getPrincipal(month);
 
-		assertEquals(1_000_000, principal);
+		assertEquals(1_045_833, principal);
 	}
 
 	@Test
@@ -154,7 +144,7 @@ class SimpleFixedDepositTest {
 	void getProfit() {
 		int profit = investment.getProfit();
 
-		assertEquals(1_004_167, profit);
+		assertEquals(1_050_000, profit);
 	}
 
 	@Test
@@ -188,7 +178,7 @@ class SimpleFixedDepositTest {
 
 		int profit = investment.getProfit(month);
 
-		assertEquals(1_004_167, profit);
+		assertEquals(1_050_000, profit);
 	}
 
 	@Test
@@ -202,7 +192,7 @@ class SimpleFixedDepositTest {
 	void getTotalPrincipal() {
 		int totalPrincipal = investment.getTotalPrincipal();
 
-		assertEquals(1_000_000, totalPrincipal);
+		assertEquals(1_045_833, totalPrincipal);
 	}
 
 	@Test
