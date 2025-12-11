@@ -147,6 +147,21 @@ public class MonthlyCompoundInterest implements Investment {
 	}
 
 	@Override
+	public int getTotalPrincipal() {
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public int getTotalTax() {
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public int getTotalProfit() {
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
 	public int getFinalMonth() {
 		return investPeriod.getMonths();
 	}
@@ -155,4 +170,5 @@ public class MonthlyCompoundInterest implements Investment {
 	public String getTaxType() {
 		return taxable.getTaxType();
 	}
+
 }

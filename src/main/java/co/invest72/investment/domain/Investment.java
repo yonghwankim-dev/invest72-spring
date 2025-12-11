@@ -74,33 +74,25 @@ public interface Investment {
 	 * 만기까지의 총 원금 금액을 반환합니다.
 	 * @return 총 원금 금액
 	 */
-	default int getTotalPrincipal() {
-		return getPrincipal();
-	}
+	int getTotalPrincipal();
 
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	default int getTotalInterest() {
-		return getInterest();
-	}
+	int getTotalInterest();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	default int getTotalTax() {
-		throw new UnsupportedOperationException("getTotalTax must be implemented if tax is applicable.");
-	}
+	int getTotalTax();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.
 	 * @return 총 수익 금액
 	 */
-	default int getTotalProfit() {
-		return getProfit();
-	}
+	int getTotalProfit();
 
 	/**
 	 * 투자 기간의 마지막 월을 반환합니다

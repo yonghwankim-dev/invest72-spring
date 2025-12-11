@@ -6,7 +6,9 @@ import java.util.List;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
+import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
+import co.invest72.investment.presentation.response.YearlyInvestmentResult;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -45,16 +47,22 @@ public class CalculateMonthlyInvestment {
 			.build();
 	}
 
-	public CalculateMonthlyInvestmentResponse calYearlyInvestmentAmount(CalculateInvestmentRequest request) {
-		List<MonthlyInvestmentResult> result = new ArrayList<>();
+	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(CalculateInvestmentRequest request) {
+		List<YearlyInvestmentResult> details = new ArrayList<>();
 		Investment investment = investmentFactory.createBy(request);
 
-		for (int month = 1; month <= investment.getFinalMonth(); month++) {
-			result.add(new MonthlyInvestmentResult(
-				month,
-				investment.getPrincipal(month),
-				investment.getInterest(month),
-				investment.getProfit(month)
+		int finalMonth = investment.getFinalMonth();
+		int years = (finalMonth / 12) + 1;
+		for (int year = 1; year <= years; year++) {
+			int principal = investment.getPrincipal(year * 12);
+			// 해당 년도까지의 누적 이자 수익
+			int interest = investment.getInterest(year * 12);
+			int profit = investment.getProfit(year * 12);
+			details.add(new YearlyInvestmentResult(
+				year,
+				principal,
+				interest,
+				profit
 			));
 		}
 		int totalInvestment = investment.getTotalInvestment();
@@ -64,7 +72,7 @@ public class CalculateMonthlyInvestment {
 		int totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(request.getTaxRate());
-		return CalculateMonthlyInvestmentResponse.builder()
+		return CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
 			.totalPrincipal(totalPrincipal)
 			.totalInterest(totalInterest)
@@ -72,7 +80,7 @@ public class CalculateMonthlyInvestment {
 			.totalProfit(totalProfit)
 			.taxType(taxType)
 			.taxPercent(taxPercent)
-			.details(result)
+			.details(details)
 			.build();
 	}
 

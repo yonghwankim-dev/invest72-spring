@@ -17,7 +17,9 @@ import co.invest72.investment.domain.period.PeriodType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
+import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
+import co.invest72.investment.presentation.response.YearlyInvestmentResult;
 
 class CalculateMonthlyInvestmentTest {
 
@@ -144,7 +146,7 @@ class CalculateMonthlyInvestmentTest {
 		Assertions.assertThat(response).isEqualTo(expected);
 	}
 
-	@DisplayName("년도별 투자 금액 계산")
+	@DisplayName("년도별 투자 금액 계산 - 고정 예금, 단리, 과세")
 	@Test
 	void calYearlyInvestmentAmount() {
 		CalculateInvestmentRequest request = CalculateInvestmentRequest.builder()
@@ -152,14 +154,29 @@ class CalculateMonthlyInvestmentTest {
 			.amountType(AmountType.ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType(PeriodType.MONTH.getDisplayName())
-			.periodValue(12)
-			.interestType(COMPOUND.getTypeName())
+			.periodValue(4)
+			.interestType(SIMPLE.getTypeName())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
-			.taxRate(0.0)
+			.taxType(TaxType.STANDARD.getDescription())
+			.taxRate(0.154)
 			.build();
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(request);
 
-		Assertions.assertThat(response).isNotNull();
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
+			request);
+
+		List<YearlyInvestmentResult> details = List.of(
+			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
+		);
+		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
+			.totalInvestment(1_000_000)
+			.totalPrincipal(1_000_000)
+			.totalInterest(16_667)
+			.totalTax(2_567)
+			.totalProfit(1_014_100)
+			.taxType(TaxType.STANDARD.getDescription())
+			.taxPercent("15.4%")
+			.details(details)
+			.build();
+		Assertions.assertThat(response).isEqualTo(expected);
 	}
 }
