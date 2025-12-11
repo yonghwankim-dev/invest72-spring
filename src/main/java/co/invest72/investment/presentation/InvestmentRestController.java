@@ -3,6 +3,7 @@ package co.invest72.investment.presentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.investment.application.CalculateExpirationInvestment;
@@ -13,11 +14,14 @@ import co.invest72.investment.application.dto.CalculateMonthlyCompoundInterestRe
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.request.MonthlyCompoundInterestCalculateRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyCompoundInterestResponse;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class InvestmentRestController {
 
 	private final CalculateExpirationInvestment calculateExpirationInvestment;
@@ -33,9 +37,11 @@ public class InvestmentRestController {
 	}
 
 	@PostMapping("/investments/calculate/monthly")
-	public ResponseEntity<CalculateMonthlyInvestment.CalculateMonthlyInvestmentResponse> calculateMonthly(
+	public ResponseEntity<CalculateMonthlyInvestmentResponse> calculateMonthly(
+		@RequestParam(required = false, defaultValue = "monthly") String view,
 		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateMonthlyInvestment.CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+		log.info("View type: {}, request : {}", view, request);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
 			request);
 		return ResponseEntity.ok(response);
 	}

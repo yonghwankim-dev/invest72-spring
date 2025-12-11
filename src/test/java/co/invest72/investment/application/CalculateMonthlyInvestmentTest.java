@@ -1,6 +1,5 @@
 package co.invest72.investment.application;
 
-import static co.invest72.investment.application.CalculateMonthlyInvestment.*;
 import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 
@@ -17,6 +16,8 @@ import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.domain.period.PeriodType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
+import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 
 class CalculateMonthlyInvestmentTest {
 
@@ -143,4 +144,22 @@ class CalculateMonthlyInvestmentTest {
 		Assertions.assertThat(response).isEqualTo(expected);
 	}
 
+	@DisplayName("년도별 투자 금액 계산")
+	@Test
+	void calYearlyInvestmentAmount() {
+		CalculateInvestmentRequest request = CalculateInvestmentRequest.builder()
+			.type(FIXED_DEPOSIT.getTypeName())
+			.amountType(AmountType.ONE_TIME.getDescription())
+			.amount(1_000_000)
+			.periodType(PeriodType.MONTH.getDisplayName())
+			.periodValue(12)
+			.interestType(COMPOUND.getTypeName())
+			.annualInterestRate(0.05)
+			.taxType(TaxType.NON_TAX.getDescription())
+			.taxRate(0.0)
+			.build();
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(request);
+
+		Assertions.assertThat(response).isNotNull();
+	}
 }

@@ -7,6 +7,7 @@ import co.invest72.investment.application.CalculateMonthlyInvestment;
 import co.invest72.investment.console.input.delegator.CalculateExpirationInvestmentReaderDelegator;
 import co.invest72.investment.console.output.InvestmentResultPrinter;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 
 public class CalculateMonthlyInvestmentConsoleRunner {
 	private final PrintStream err;
@@ -29,7 +30,7 @@ public class CalculateMonthlyInvestmentConsoleRunner {
 			CalculateInvestmentRequest request = delegator.readRequest();
 
 			// 계산 요청
-			CalculateMonthlyInvestment.CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestmentAmount(
+			CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestmentAmount(
 				request);
 
 			// 출력

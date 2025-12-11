@@ -2,7 +2,7 @@ package co.invest72.investment.console.output;
 
 import java.util.List;
 
-import co.invest72.investment.application.CalculateMonthlyInvestment;
+import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 
 public interface InvestmentResultPrinter {
 	void printTotalPrincipal(int amount);
@@ -13,6 +13,5 @@ public interface InvestmentResultPrinter {
 
 	void printTotalProfit(int amount);
 
-	void printMonthlyInvestmentResults(
-		List<CalculateMonthlyInvestment.MonthlyInvestmentResult> monthlyInvestmentResults);
+	void printMonthlyInvestmentResults(List<MonthlyInvestmentResult> monthlyInvestmentResults);
 }
