@@ -45,6 +45,15 @@ public interface Investment {
 	int getInterest(int month);
 
 	/**
+	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
+	 * @param month 회차 (기본 1부터 시작)
+	 * @return 누적 이자 금액
+	 */
+	default int getAccumulatedInterest(int month) {
+		throw new UnsupportedOperationException("getAccumulatedInterest is not supported");
+	}
+
+	/**
 	 * 만기 시점의 수익 금액을 반환합니다.
 	 * <p>
 	 * 해당 금액은 원금 + 이자 - 세금 입니다.

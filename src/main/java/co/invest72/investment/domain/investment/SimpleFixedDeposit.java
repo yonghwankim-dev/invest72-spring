@@ -73,6 +73,15 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
+	public int getAccumulatedInterest(int month) {
+		BigDecimal result = BigDecimal.ZERO;
+		for (int i = 1; i <= month; i++) {
+			result = result.add(details.get(i).getInterest());
+		}
+		return roundToInt.applyAsInt(result);
+	}
+
+	@Override
 	public int getInterest(int month) {
 		if (month > getFinalMonth()) {
 			return getInterest();

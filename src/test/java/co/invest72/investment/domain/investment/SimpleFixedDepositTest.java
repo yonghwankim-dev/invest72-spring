@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -132,6 +133,14 @@ class SimpleFixedDepositTest {
 		int interest = investment.getInterest(month);
 
 		assertEquals(4_167, interest);
+	}
+
+	@ParameterizedTest
+	@MethodSource(value = "source.TestDataProvider#getMonthAndExpectedAccumulatedInterest")
+	void getAccumulatedInterest(int month, int expected) {
+		int accumulatedInterest = investment.getAccumulatedInterest(month);
+
+		assertEquals(expected, accumulatedInterest);
 	}
 
 	@Test

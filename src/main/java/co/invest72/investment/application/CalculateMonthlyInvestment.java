@@ -55,8 +55,15 @@ public class CalculateMonthlyInvestment {
 		int years = (finalMonth / 12) + 1;
 		for (int year = 1; year <= years; year++) {
 			int principal = investment.getPrincipal(year * 12);
+
 			// 해당 년도까지의 누적 이자 수익
-			int interest = investment.getInterest(year * 12);
+			int month = year * 12;
+			int accumulatedInterest = 0;
+			for (int i = 1; i <= month && i <= finalMonth; i++) {
+				accumulatedInterest += investment.getInterest(i);
+			}
+			int interest = accumulatedInterest;
+
 			int profit = investment.getProfit(year * 12);
 			details.add(new YearlyInvestmentResult(
 				year,
