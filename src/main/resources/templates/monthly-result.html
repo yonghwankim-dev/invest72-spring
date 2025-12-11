@@ -198,7 +198,12 @@
 
     function displayMonthlyView() {
         alert("월별 뷰 표시 함수 호출됨.");
-        const url = sessionStorage.getItem('requestURL');
+        let url = sessionStorage.getItem('requestURL');
+        // url에 query parma 제거
+        url = url.split('?')[0];
+        // url에 monthly query param 추가
+        url += '?view=monthly';
+
         const requestJson = sessionStorage.getItem('request');
         $.ajax({
             url: url,
@@ -211,7 +216,6 @@
                 sessionStorage.setItem('calculationResult', JSON.stringify(response));
 
                 const body = JSON.parse(sessionStorage.getItem('calculationResult'));
-                console.log(body);
                 renderResult(body);
             },
             error: function (xhr, status, error) {
@@ -222,6 +226,31 @@
 
     function displayYearlyView() {
         alert("년도별 뷰 표시 함수 호출됨.");
+        let url = sessionStorage.getItem('requestURL');
+        // url에 query parma 제거
+        url = url.split('?')[0];
+        // url에 yearly query param 추가
+        url += '?view=yearly';
+        const requestJson = sessionStorage.getItem('request');
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (response) {
+                sessionStorage.setItem('requestURL', url);
+                sessionStorage.setItem('request', requestJson);
+                sessionStorage.setItem('calculationResult', JSON.stringify(response));
+
+                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+                renderResult(body);
+            },
+            error: function (xhr, status, error) {
+                alert('계산 중 오류가 발생했습니다: ' + error);
+            }
+        });
+
+
     }
 </script>
 </body>
