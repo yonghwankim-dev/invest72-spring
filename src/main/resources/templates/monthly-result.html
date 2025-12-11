@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>투자 계산 결과</title>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -106,11 +108,18 @@
 </div>
 
 <script>
+
     document.addEventListener("DOMContentLoaded", function () {
         // sessionStorage에서 계산 결과 읽기
         const body = JSON.parse(sessionStorage.getItem('calculationResult'));
 
+        renderResult(body);
+    });
+
+    function renderResult(body) {
         const container = document.getElementById('resultContainer');
+        // reset container
+        container.innerHTML = '';
 
         if (!body) {
             container.innerHTML = '<div>계산 결과가 존재하지 않습니다.</div>';
@@ -168,7 +177,52 @@
 
         // 출력
         container.innerHTML = resultHTML;
+    }
+
+    const monthlyViewBtn = document.getElementById('monthlyViewBtn');
+    const yearlyViewBtn = document.getElementById('yearlyViewBtn');
+
+    monthlyViewBtn.addEventListener('change', function () {
+        if (this.checked) {
+            displayMonthlyView();
+            alert("월별 뷰로 전환하고 서버에 요청합니다.");
+        }
     });
+
+    yearlyViewBtn.addEventListener('change', function () {
+        if (this.checked) {
+            displayYearlyView();
+            alert("년도별 뷰로 전환하고 서버에 요청합니다.");
+        }
+    })
+
+    function displayMonthlyView() {
+        alert("월별 뷰 표시 함수 호출됨.");
+        const url = sessionStorage.getItem('requestURL');
+        const requestJson = sessionStorage.getItem('request');
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (response) {
+                sessionStorage.setItem('requestURL', url);
+                sessionStorage.setItem('request', requestJson);
+                sessionStorage.setItem('calculationResult', JSON.stringify(response));
+
+                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+                console.log(body);
+                renderResult(body);
+            },
+            error: function (xhr, status, error) {
+                alert('계산 중 오류가 발생했습니다: ' + error);
+            }
+        });
+    }
+
+    function displayYearlyView() {
+        alert("년도별 뷰 표시 함수 호출됨.");
+    }
 </script>
 </body>
 </html>
