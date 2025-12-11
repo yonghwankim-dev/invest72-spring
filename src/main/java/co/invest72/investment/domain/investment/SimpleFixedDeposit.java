@@ -85,10 +85,12 @@ public class SimpleFixedDeposit implements Investment {
 		if (month < 0) {
 			return getAccumulatedInterest(0);
 		}
-		BigDecimal result = BigDecimal.ZERO;
-		for (int i = 1; i <= month; i++) {
-			result = result.add(details.get(i).getInterest());
-		}
+
+		BigDecimal result = details.stream()
+			.skip(1)
+			.limit(month) // Include months from 0 to the specified month
+			.map(MonthlyInvestmentDetail::getInterest)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
 		return roundToInt.applyAsInt(result);
 	}
 
