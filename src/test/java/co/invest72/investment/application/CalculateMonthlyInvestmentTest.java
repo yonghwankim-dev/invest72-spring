@@ -50,13 +50,13 @@ class CalculateMonthlyInvestmentTest {
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
-			new MonthlyInvestmentResult(2, 1_000_000, 4_167, 1_004_167),
-			new MonthlyInvestmentResult(3, 1_000_000, 4_167, 1_004_167),
-			new MonthlyInvestmentResult(4, 1_000_000, 4_167, 1_004_167)
+			new MonthlyInvestmentResult(2, 1_004_167, 4_167, 1_008_333),
+			new MonthlyInvestmentResult(3, 1_008_333, 4_167, 1_012_500),
+			new MonthlyInvestmentResult(4, 1_012_500, 4_167, 1_016_667)
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_000_000)
+			.totalPrincipal(1_012_500)
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
