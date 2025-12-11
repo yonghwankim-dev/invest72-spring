@@ -39,7 +39,8 @@ public class TestDataProvider {
 			Arguments.of(9, 37_500),
 			Arguments.of(10, 41_667),
 			Arguments.of(11, 45_833),
-			Arguments.of(12, 50_000)
+			Arguments.of(12, 50_000),
+			Arguments.of(13, 50_000)
 		);
 	}
 

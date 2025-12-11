@@ -135,6 +135,13 @@ class SimpleFixedDepositTest {
 		assertEquals(4_167, interest);
 	}
 
+	@Test
+	void getAccumulatedInterest() {
+		int accumulatedInterest = investment.getAccumulatedInterest();
+
+		assertEquals(50_000, accumulatedInterest);
+	}
+
 	@ParameterizedTest
 	@MethodSource(value = "source.TestDataProvider#getMonthAndExpectedAccumulatedInterest")
 	void getAccumulatedInterest(int month, int expected) {

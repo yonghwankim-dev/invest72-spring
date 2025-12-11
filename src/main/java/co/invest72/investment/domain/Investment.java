@@ -45,6 +45,14 @@ public interface Investment {
 	int getInterest(int month);
 
 	/**
+	 * 만기 시점의 누적 이자 금액을 반환합니다.
+	 * @return 누적 이자 금액
+	 */
+	default int getAccumulatedInterest() {
+		return getAccumulatedInterest(getFinalMonth());
+	}
+
+	/**
 	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 누적 이자 금액
