@@ -60,8 +60,7 @@ public class CalculateMonthlyInvestment {
 			int month = year * 12;
 			int accumulatedInterest = investment.getAccInterest(month);
 
-			// todo: implement getAccumulatedProfit
-			int profit = 1_016_667;
+			int profit = investment.getProfit(month);
 			details.add(new YearlyInvestmentResult(
 				year,
 				principal,

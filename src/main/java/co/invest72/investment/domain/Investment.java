@@ -58,7 +58,7 @@ public interface Investment {
 	 * @return 누적 이자 금액
 	 */
 	default int getAccInterest(int month) {
-		throw new UnsupportedOperationException("getAccInterest is not supported");
+		throw new UnsupportedOperationException("implement not yeted");
 	}
 
 	/**
@@ -80,7 +80,7 @@ public interface Investment {
 	 * @return 총 투자 금액
 	 */
 	int getProfit(int month);
-
+	
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액

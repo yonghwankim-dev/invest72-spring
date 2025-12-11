@@ -42,8 +42,8 @@ public class SimpleFixedDeposit implements Investment {
 		BigDecimal profit = investmentAmount.getAmount();
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
 		for (int i = 1; i <= getFinalMonth(); i++) {
-			principal = investmentAmount.getAmount();
-			interest = interestRate.getMonthlyRate().multiply(principal);
+			principal = profit;
+			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmount());
 			tax = taxable.applyTax(interest);
 			profit = principal.add(interest);
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
