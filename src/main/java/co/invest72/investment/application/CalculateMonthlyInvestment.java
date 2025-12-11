@@ -7,10 +7,7 @@ import co.invest72.investment.domain.Investment;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @RequiredArgsConstructor
 public class CalculateMonthlyInvestment {
@@ -79,14 +76,4 @@ public class CalculateMonthlyInvestment {
 			.build();
 	}
 
-	@RequiredArgsConstructor
-	@Getter
-	@ToString
-	@EqualsAndHashCode
-	public static final class YearlyInvestmentResult {
-		private final int year;
-		private final int principal;
-		private final int interest;
-		private final int profit;
-	}
 }
