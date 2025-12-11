@@ -48,8 +48,8 @@ public interface Investment {
 	 * 만기 시점의 누적 이자 금액을 반환합니다.
 	 * @return 누적 이자 금액
 	 */
-	default int getAccumulatedInterest() {
-		return getAccumulatedInterest(getFinalMonth());
+	default int getAccInterest() {
+		return getAccInterest(getFinalMonth());
 	}
 
 	/**
@@ -57,8 +57,8 @@ public interface Investment {
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 누적 이자 금액
 	 */
-	default int getAccumulatedInterest(int month) {
-		throw new UnsupportedOperationException("getAccumulatedInterest is not supported");
+	default int getAccInterest(int month) {
+		throw new UnsupportedOperationException("getAccInterest is not supported");
 	}
 
 	/**

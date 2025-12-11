@@ -58,7 +58,7 @@ public class CalculateMonthlyInvestment {
 
 			// 해당 년도까지의 누적 이자 수익
 			int month = year * 12;
-			int accumulatedInterest = investment.getAccumulatedInterest(month);
+			int accumulatedInterest = investment.getAccInterest(month);
 
 			// todo: implement getAccumulatedProfit
 			int profit = 1_016_667;
