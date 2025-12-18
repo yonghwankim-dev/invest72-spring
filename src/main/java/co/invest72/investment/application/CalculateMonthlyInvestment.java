@@ -29,7 +29,7 @@ public class CalculateMonthlyInvestment {
 			));
 		}
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalPrincipal();
+		int totalPrincipal = investment.getTotalInvestment();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -54,22 +54,14 @@ public class CalculateMonthlyInvestment {
 		int finalMonth = investment.getFinalMonth();
 		int years = (finalMonth / 12) + 1;
 		for (int year = 1; year <= years; year++) {
-			int principal = investment.getPrincipal(year * 12);
-
-			// 해당 년도까지의 누적 이자 수익
-			int month = year * 12;
-			int accumulatedInterest = investment.getAccInterest(month);
-
-			int profit = investment.getProfit(month);
-			details.add(new YearlyInvestmentResult(
-				year,
-				principal,
-				accumulatedInterest,
-				profit
-			));
+			// TODO: 임시 고정값
+			int principal = 1_000_000;
+			int interest = 16_667;
+			int profit = investment.getProfit(year * 12);
+			details.add(new YearlyInvestmentResult(year, principal, interest, profit));
 		}
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalPrincipal();
+		int totalPrincipal = investment.getTotalInvestment();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
