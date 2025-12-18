@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
+import co.invest72.investment.application.dto.YearlyInvestmentDetail;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
@@ -23,8 +24,9 @@ public class SimpleFixedDeposit implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
-	@Builder
+	@Builder(toBuilder = true)
 	public SimpleFixedDeposit(LumpSumInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
@@ -32,6 +34,7 @@ public class SimpleFixedDeposit implements Investment {
 		this.interestRate = interestRate;
 		this.taxable = taxable;
 		this.details = calculateDetails();
+		this.yearlyDetails = calculateYearlyDetails();
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
@@ -47,6 +50,24 @@ public class SimpleFixedDeposit implements Investment {
 			tax = taxable.applyTax(interest);
 			profit = principal.add(interest);
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
+		}
+		return result;
+	}
+
+	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
+		List<YearlyInvestmentDetail> result = new ArrayList<>();
+		BigDecimal principal = investmentAmount.getAmount();
+		BigDecimal interest = BigDecimal.ZERO;
+		BigDecimal tax = BigDecimal.ZERO;
+		BigDecimal profit = investmentAmount.getAmount();
+		result.add(new YearlyInvestmentDetail(0, principal, interest, tax, profit));
+		int finalYear = (getFinalMonth() - 1) / 12 + 1;
+		for (int i = 1; i <= finalYear; i++) {
+			principal = profit;
+			interest = interestRate.getAnnualRate().multiply(investmentAmount.getAmount());
+			tax = taxable.applyTax(interest);
+			profit = principal.add(interest).subtract(tax);
+			result.add(new YearlyInvestmentDetail(i, principal, interest, tax, profit));
 		}
 		return result;
 	}
@@ -174,4 +195,12 @@ public class SimpleFixedDeposit implements Investment {
 		return taxable.getTaxType();
 	}
 
+	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = (getFinalMonth() - 1) / 12 + 1;
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
 }

@@ -54,8 +54,8 @@ public class CalculateMonthlyInvestment {
 		int finalMonth = investment.getFinalMonth();
 		int years = (finalMonth / 12) + 1;
 		for (int year = 1; year <= years; year++) {
+			int principal = investment.getPrincipalForYear(year);
 			// TODO: 임시 고정값
-			int principal = 1_000_000;
 			int interest = 16_667;
 			int profit = investment.getProfit(year * 12);
 			details.add(new YearlyInvestmentResult(year, principal, interest, profit));

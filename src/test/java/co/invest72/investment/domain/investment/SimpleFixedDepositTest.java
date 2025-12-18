@@ -20,6 +20,7 @@ import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.PeriodYearRange;
+import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
@@ -221,5 +222,37 @@ class SimpleFixedDepositTest {
 		String taxType = investment.getTaxType();
 
 		assertEquals(TaxType.STANDARD.getDescription(), taxType);
+	}
+
+	@Test
+	void getPrincipalForYear() {
+		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+	}
+
+	@Test
+	void getPrincipalForYear_whenPeriodIsFiveYears() {
+		investment = ((SimpleFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(5))
+			.taxable(new KoreanTaxableFactory().createNonTax())
+			.build();
+
+		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+		assertEquals(1_050_000, investment.getPrincipalForYear(2));
+		assertEquals(1_100_000, investment.getPrincipalForYear(3));
+		assertEquals(1_150_000, investment.getPrincipalForYear(4));
+		assertEquals(1_200_000, investment.getPrincipalForYear(5));
+	}
+
+	@Test
+	void getPrincipalForYear_whenPeriodIsOneMonth() {
+		investment = ((SimpleFixedDeposit)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(1))
+			.taxable(new KoreanTaxableFactory().createNonTax())
+			.build();
+
+		assertEquals(1_000_000, investment.getPrincipalForYear(0));
+		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+		assertEquals(1_000_000, investment.getPrincipalForYear(2));
+		assertEquals(1_000_000, investment.getPrincipalForYear(3));
 	}
 }

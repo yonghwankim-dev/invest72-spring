@@ -80,7 +80,7 @@ public interface Investment {
 	 * @return 총 투자 금액
 	 */
 	int getProfit(int month);
-	
+
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액
@@ -121,4 +121,8 @@ public interface Investment {
 	int getFinalMonth();
 
 	String getTaxType();
+
+	default int getPrincipalForYear(int year) {
+		throw new UnsupportedOperationException("implement not yeted");
+	}
 }
