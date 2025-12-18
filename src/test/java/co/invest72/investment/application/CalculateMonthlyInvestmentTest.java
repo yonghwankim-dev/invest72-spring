@@ -3,9 +3,7 @@ package co.invest72.investment.application;
 import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,14 +81,25 @@ class CalculateMonthlyInvestmentTest {
 			.build();
 		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
 			request);
-
-		List<MonthlyInvestmentResult> details = new ArrayList<>(IntStream.rangeClosed(1, 12)
-			.mapToObj(month -> new MonthlyInvestmentResult(month, 1_000_000, 4_167, 1_004_167))
-			.toList());
+		
+		List<MonthlyInvestmentResult> details = List.of(
+			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
+			new MonthlyInvestmentResult(2, 1_004_167, 4_167, 1_008_333),
+			new MonthlyInvestmentResult(3, 1_008_333, 4_167, 1_012_500),
+			new MonthlyInvestmentResult(4, 1_012_500, 4_167, 1_016_667),
+			new MonthlyInvestmentResult(5, 1_016_667, 4_167, 1_020_833),
+			new MonthlyInvestmentResult(6, 1_020_833, 4_167, 1_025_000),
+			new MonthlyInvestmentResult(7, 1_025_000, 4_167, 1_029_167),
+			new MonthlyInvestmentResult(8, 1_029_167, 4_167, 1_033_333),
+			new MonthlyInvestmentResult(9, 1_033_333, 4_167, 1_037_500),
+			new MonthlyInvestmentResult(10, 1_037_500, 4_167, 1_041_667),
+			new MonthlyInvestmentResult(11, 1_041_667, 4_167, 1_045_833),
+			new MonthlyInvestmentResult(12, 1_045_833, 4_167, 1_050_000)
+		);
 
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_000_000)
+			.totalPrincipal(1_045_833)
 			.totalInterest(50_000)
 			.totalTax(0)
 			.totalProfit(1_050_000)
