@@ -45,7 +45,8 @@ public class SimpleFixedDeposit implements Investment {
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 		for (int i = 1; i <= getFinalMonth(); i++) {
 			principal = profit;
-			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmount());
+			interest = interestRate.getMonthlyRate()
+				.multiply(investmentAmount.getAmount());
 			profit = principal.add(interest);
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 		}
@@ -59,8 +60,7 @@ public class SimpleFixedDeposit implements Investment {
 		BigDecimal profit = investmentAmount.getAmount();
 
 		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
-		int finalYear = getFinalYear();
-		for (int i = 1; i <= finalYear; i++) {
+		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			int monthsInYear = calculateMonthsInYear(i);
 			interest = interestRate.getMonthlyRate()
