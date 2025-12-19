@@ -51,12 +51,11 @@ public class CalculateMonthlyInvestment {
 		List<YearlyInvestmentResult> details = new ArrayList<>();
 		Investment investment = investmentFactory.createBy(request);
 
-		int finalMonth = investment.getFinalMonth();
-		int years = (finalMonth / 12) + 1;
+		int years = (investment.getFinalMonth() - 1) / 12 + 1;
 		for (int year = 1; year <= years; year++) {
 			int principal = investment.getPrincipalForYear(year);
 			int interest = investment.getInterestForYear(year);
-			int profit = investment.getProfit(year * 12);
+			int profit = investment.getProfitForYear(year);
 			details.add(new YearlyInvestmentResult(year, principal, interest, profit));
 		}
 		int totalInvestment = investment.getTotalInvestment();

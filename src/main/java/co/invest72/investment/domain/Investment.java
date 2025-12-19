@@ -133,4 +133,8 @@ public interface Investment {
 	default int getProfitForYear(int year) {
 		throw new UnsupportedOperationException("implement not yeted");
 	}
+
+	default int getTaxForYear(int year) {
+		throw new UnsupportedOperationException("implement not yeted");
+	}
 }

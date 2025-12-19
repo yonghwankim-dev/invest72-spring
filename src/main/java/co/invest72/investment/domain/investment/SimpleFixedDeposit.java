@@ -227,6 +227,15 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
+	public int getTaxForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getTaxForYear(finalYear);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getTax());
+	}
+
+	@Override
 	public int getProfitForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
