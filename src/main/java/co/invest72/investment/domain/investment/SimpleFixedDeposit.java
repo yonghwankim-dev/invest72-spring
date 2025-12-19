@@ -34,7 +34,8 @@ public class SimpleFixedDeposit implements Investment {
 		this.details = calculateDetails();
 		this.yearlyDetails = calculateYearlyDetails();
 	}
-
+	
+	// calculateDetails, calculateYearlyDetails logic refactoring
 	private List<MonthlyInvestmentDetail> calculateDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
