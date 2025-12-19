@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -43,7 +42,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 
 			// 월 이자 계산
 			interest = interestRate.getMonthlyRate().multiply(principal);
-			
+
 			profit = principal.add(interest);
 
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));

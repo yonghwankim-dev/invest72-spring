@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
+import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
