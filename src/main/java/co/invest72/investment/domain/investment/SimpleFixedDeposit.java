@@ -60,13 +60,12 @@ public class SimpleFixedDeposit implements Investment {
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
+
 		result.add(new YearlyInvestmentDetail(0, principal, interest, tax, profit));
 		int finalYear = getFinalYear();
-		// getFinalMonth()=13, finalYear=2
 		for (int i = 1; i <= finalYear; i++) {
 			principal = profit;
-			// 마지막 해의 경우, 남은 개월 수에 따라 이자를 계산합니다.
-			int monthsInYear = Math.min(12, getFinalMonth() - (i - 1) * 12);
+			int monthsInYear = calculateMonthsInYear(i);
 			interest = interestRate.getMonthlyRate()
 				.multiply(investmentAmount.getAmount())
 				.multiply(BigDecimal.valueOf(monthsInYear));
@@ -75,6 +74,11 @@ public class SimpleFixedDeposit implements Investment {
 			result.add(new YearlyInvestmentDetail(i, principal, interest, tax, profit));
 		}
 		return result;
+	}
+
+	// 해당 연도의 남은 개월 수를 계산합니다.
+	private int calculateMonthsInYear(int currentYear) {
+		return Math.min(12, getFinalMonth() - (currentYear - 1) * 12);
 	}
 
 	@Override
