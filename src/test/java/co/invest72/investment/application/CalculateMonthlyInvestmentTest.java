@@ -174,7 +174,7 @@ class CalculateMonthlyInvestmentTest {
 			request);
 
 		List<YearlyInvestmentResult> details = List.of(
-			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_014_100)
+			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
@@ -182,6 +182,42 @@ class CalculateMonthlyInvestmentTest {
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
+			.taxType(TaxType.STANDARD.getDescription())
+			.taxPercent("15.4%")
+			.details(details)
+			.build();
+		Assertions.assertThat(response).isEqualTo(expected);
+	}
+
+	@DisplayName("년도별 투자 금액 계산 - 고정 예금, 단리, 과세, 36개월")
+	@Test
+	void calYearlyInvestmentAmount_whenPeriodIs36Months() {
+		CalculateInvestmentRequest request = CalculateInvestmentRequest.builder()
+			.type(FIXED_DEPOSIT.getTypeName())
+			.amountType(AmountType.ONE_TIME.getDescription())
+			.amount(1_000_000)
+			.periodType(PeriodType.MONTH.getDisplayName())
+			.periodValue(36)
+			.interestType(SIMPLE.getTypeName())
+			.annualInterestRate(0.05)
+			.taxType(TaxType.STANDARD.getDescription())
+			.taxRate(0.154)
+			.build();
+
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
+			request);
+
+		List<YearlyInvestmentResult> details = List.of(
+			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
+			new YearlyInvestmentResult(2, 1_050_000, 50_000, 1_100_000),
+			new YearlyInvestmentResult(3, 1_100_000, 50_000, 1_150_000)
+		);
+		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
+			.totalInvestment(1_000_000)
+			.totalPrincipal(1_000_000)
+			.totalInterest(150_000)
+			.totalTax(23_100)
+			.totalProfit(1_126_900)
 			.taxType(TaxType.STANDARD.getDescription())
 			.taxPercent("15.4%")
 			.details(details)

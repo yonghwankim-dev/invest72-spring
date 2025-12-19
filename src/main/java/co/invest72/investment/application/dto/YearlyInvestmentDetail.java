@@ -9,15 +9,12 @@ public class YearlyInvestmentDetail {
 	private final int year;
 	private final BigDecimal principal;
 	private final BigDecimal interest;
-	private final BigDecimal tax;
 	private final BigDecimal profit;
 
-	public YearlyInvestmentDetail(int year, BigDecimal principal, BigDecimal interest, BigDecimal tax,
-		BigDecimal profit) {
+	public YearlyInvestmentDetail(int year, BigDecimal principal, BigDecimal interest, BigDecimal profit) {
 		this.year = year;
 		this.principal = principal;
 		this.interest = interest;
-		this.tax = tax;
 		this.profit = profit;
 	}
 }

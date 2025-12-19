@@ -58,10 +58,9 @@ public class SimpleFixedDeposit implements Investment {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
 
-		result.add(new YearlyInvestmentDetail(0, principal, interest, tax, profit));
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 		int finalYear = getFinalYear();
 		for (int i = 1; i <= finalYear; i++) {
 			principal = profit;
@@ -69,9 +68,8 @@ public class SimpleFixedDeposit implements Investment {
 			interest = interestRate.getMonthlyRate()
 				.multiply(investmentAmount.getAmount())
 				.multiply(BigDecimal.valueOf(monthsInYear));
-			tax = taxable.applyTax(interest);
-			profit = principal.add(interest).subtract(tax);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, tax, profit));
+			profit = principal.add(interest);
+			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
 		}
 		return result;
 	}
@@ -224,15 +222,6 @@ public class SimpleFixedDeposit implements Investment {
 			return getInterestForYear(finalYear);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
-	}
-
-	@Override
-	public int getTaxForYear(int year) {
-		int finalYear = getFinalYear();
-		if (year > finalYear) {
-			return getTaxForYear(finalYear);
-		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getTax());
 	}
 
 	@Override
