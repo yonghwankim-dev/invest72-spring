@@ -32,8 +32,8 @@ public class MonthlyCompoundInterest implements Investment {
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		result.add(new MonthlyInvestmentDetail(1, initialAmount.getAmount(), BigDecimal.ZERO, BigDecimal.ZERO,
-			initialAmount.getAmount()));
+		result.add(
+			new MonthlyInvestmentDetail(1, initialAmount.getAmount(), BigDecimal.ZERO, initialAmount.getAmount()));
 
 		BigDecimal principal = initialAmount.getAmount();
 		for (int i = 2; i <= investPeriod.getMonths(); i++) {
@@ -60,7 +60,6 @@ public class MonthlyCompoundInterest implements Investment {
 				new MonthlyInvestmentDetail(i,
 					principal,
 					interest,
-					tax,
 					profit
 				)
 			);

@@ -41,15 +41,13 @@ public class SimpleFixedDeposit implements Investment {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
+		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 		for (int i = 1; i <= getFinalMonth(); i++) {
 			principal = profit;
 			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmount());
-			tax = taxable.applyTax(interest);
 			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
+			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 		}
 		return result;
 	}
@@ -177,11 +175,7 @@ public class SimpleFixedDeposit implements Investment {
 
 	@Override
 	public int getTotalTax() {
-		BigDecimal totalTax = details.stream()
-			.skip(1) // 첫 번째 항목(0월)은 세금이 없으므로 건너뜁니다.
-			.map(MonthlyInvestmentDetail::getTax)
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return roundToInt.applyAsInt(totalTax);
+		return taxable.applyTax(getTotalInterest());
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal profit = BigDecimal.ZERO;
 		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
+		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int i = 1; i <= getFinalMonth(); i++) {
 			// 월 적립금액 누적
@@ -43,13 +43,10 @@ public class CompoundFixedInstallmentSaving implements Investment {
 
 			// 월 이자 계산
 			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			// 이자 과세
-			tax = taxable.applyTax(interest);
-
+			
 			profit = principal.add(interest);
 
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
+			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 
 			principal = profit; // 이자를 포함한 원금이 다음 달의 원금이 됨
 		}

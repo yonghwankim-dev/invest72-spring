@@ -38,7 +38,7 @@ public class CompoundFixedDeposit implements Investment {
 		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount(); // 0 월의 총합은 원금과 동일
 		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
+		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int i = 1; i <= getFinalMonth(); i++) {
 			// 월 이자 계산
@@ -50,7 +50,7 @@ public class CompoundFixedDeposit implements Investment {
 			// 복리 예금: 원금에 이자가 합산되고 세금은 차감
 			profit = principal.add(interest);
 
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
+			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 
 			principal = profit; // 다음 달의 원금은 이번 달의 총합
 		}
@@ -151,4 +151,5 @@ public class CompoundFixedDeposit implements Investment {
 	public String getTaxType() {
 		return taxable.getTaxType();
 	}
+
 }
