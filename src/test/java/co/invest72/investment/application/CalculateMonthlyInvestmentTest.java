@@ -188,4 +188,39 @@ class CalculateMonthlyInvestmentTest {
 			.build();
 		Assertions.assertThat(response).isEqualTo(expected);
 	}
+
+	@DisplayName("년도별 투자 금액 계산 - 고정 예금, 단리, 비과세, 13개월")
+	@Test
+	void calYearlyInvestmentAmount_whenPeriodIsTwoYearAndNonTax() {
+		CalculateInvestmentRequest request = CalculateInvestmentRequest.builder()
+			.type(FIXED_DEPOSIT.getTypeName())
+			.amountType(AmountType.ONE_TIME.getDescription())
+			.amount(1_000_000)
+			.periodType(PeriodType.MONTH.getDisplayName())
+			.periodValue(13)
+			.interestType(SIMPLE.getTypeName())
+			.annualInterestRate(0.05)
+			.taxType(TaxType.NON_TAX.getDescription())
+			.taxRate(0.0)
+			.build();
+
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
+			request);
+
+		List<YearlyInvestmentResult> details = List.of(
+			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
+			new YearlyInvestmentResult(2, 1_050_000, 4_167, 1_054_167)
+		);
+		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
+			.totalInvestment(1_000_000)
+			.totalPrincipal(1_000_000)
+			.totalInterest(54_167)
+			.totalTax(0)
+			.totalProfit(1_054_167)
+			.taxType(TaxType.NON_TAX.getDescription())
+			.taxPercent("0%")
+			.details(details)
+			.build();
+		Assertions.assertThat(response).isEqualTo(expected);
+	}
 }

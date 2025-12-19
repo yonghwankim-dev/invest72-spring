@@ -255,4 +255,41 @@ class SimpleFixedDepositTest {
 		assertEquals(1_000_000, investment.getPrincipalForYear(2));
 		assertEquals(1_000_000, investment.getPrincipalForYear(3));
 	}
+
+	@Test
+	void getInterestForYear() {
+		investment = ((SimpleFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(5))
+			.taxable(new KoreanTaxableFactory().createNonTax())
+			.build();
+
+		assertEquals(50_000, investment.getInterestForYear(1));
+		assertEquals(50_000, investment.getInterestForYear(2));
+		assertEquals(50_000, investment.getInterestForYear(3));
+		assertEquals(50_000, investment.getInterestForYear(4));
+		assertEquals(50_000, investment.getInterestForYear(5));
+	}
+
+	@Test
+	void getInterestForYear_whenPeriodIsMonth13() {
+		investment = ((SimpleFixedDeposit)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(13))
+			.taxable(new KoreanTaxableFactory().createNonTax())
+			.build();
+
+		assertEquals(50_000, investment.getInterestForYear(1));
+		assertEquals(4_167, investment.getInterestForYear(2));
+	}
+
+	@Test
+	void getInterestForYear_whenPeriodIsMonth25() {
+		investment = ((SimpleFixedDeposit)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(25))
+			.taxable(new KoreanTaxableFactory().createNonTax())
+			.build();
+
+		assertEquals(50_000, investment.getInterestForYear(1));
+		assertEquals(50_000, investment.getInterestForYear(2));
+		assertEquals(4_167, investment.getInterestForYear(3));
+	}
 }
