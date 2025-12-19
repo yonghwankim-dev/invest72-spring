@@ -236,6 +236,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
+		assertEquals(1_000_000, investment.getPrincipalForYear(-1));
+		assertEquals(1_000_000, investment.getPrincipalForYear(0));
 		assertEquals(1_000_000, investment.getPrincipalForYear(1));
 		assertEquals(1_050_000, investment.getPrincipalForYear(2));
 		assertEquals(1_100_000, investment.getPrincipalForYear(3));
@@ -263,6 +265,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
+		assertEquals(0, investment.getInterestForYear(-1));
+		assertEquals(0, investment.getInterestForYear(0));
 		assertEquals(50_000, investment.getInterestForYear(1));
 		assertEquals(50_000, investment.getInterestForYear(2));
 		assertEquals(50_000, investment.getInterestForYear(3));
@@ -321,6 +325,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
+		assertEquals(1_000_000, investment.getProfitForYear(-1));
+		assertEquals(1_000_000, investment.getProfitForYear(0));
 		assertEquals(1_050_000, investment.getProfitForYear(1));
 		assertEquals(1_100_000, investment.getProfitForYear(2));
 		assertEquals(1_150_000, investment.getProfitForYear(3));

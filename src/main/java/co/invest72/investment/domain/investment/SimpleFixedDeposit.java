@@ -202,6 +202,9 @@ public class SimpleFixedDeposit implements Investment {
 		if (year > finalYear) {
 			return getPrincipalForYear(finalYear);
 		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
 	}
 
@@ -215,6 +218,9 @@ public class SimpleFixedDeposit implements Investment {
 		if (year > finalYear) {
 			return getInterestForYear(finalYear);
 		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
 	}
 
@@ -223,6 +229,9 @@ public class SimpleFixedDeposit implements Investment {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getProfitForYear(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYear(0);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
 	}
