@@ -1,7 +1,6 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
@@ -31,49 +30,9 @@ public class SimpleFixedDeposit implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		this.details = calculateDetails();
-		this.yearlyDetails = calculateYearlyDetails();
-	}
-	
-	// calculateDetails, calculateYearlyDetails logic refactoring
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = investmentAmount.getAmount();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount();
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			principal = profit;
-			interest = interestRate.getMonthlyRate()
-				.multiply(investmentAmount.getAmount());
-			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
-		}
-		return result;
-	}
-
-	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
-		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = investmentAmount.getAmount();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount();
-
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
-		for (int i = 1; i <= getFinalYear(); i++) {
-			principal = profit;
-			int monthsInYear = calculateMonthsInYear(i);
-			interest = interestRate.getMonthlyRate()
-				.multiply(investmentAmount.getAmount())
-				.multiply(BigDecimal.valueOf(monthsInYear));
-			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
-		}
-		return result;
-	}
-
-	// 해당 연도의 남은 개월 수를 계산합니다.
-	private int calculateMonthsInYear(int currentYear) {
-		return Math.min(12, getFinalMonth() - (currentYear - 1) * 12);
+		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
+		this.details = factory.createMonthlyDetails();
+		this.yearlyDetails = factory.calculateYearlyDetails();
 	}
 
 	@Override

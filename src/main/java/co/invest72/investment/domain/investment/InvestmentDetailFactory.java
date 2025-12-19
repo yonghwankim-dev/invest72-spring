@@ -36,4 +36,32 @@ public class InvestmentDetailFactory {
 		}
 		return result;
 	}
+
+	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
+		List<YearlyInvestmentDetail> result = new ArrayList<>();
+		BigDecimal principal = investmentAmount.getAmount();
+		BigDecimal interest = BigDecimal.ZERO;
+		BigDecimal profit = investmentAmount.getAmount();
+
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		for (int i = 1; i <= getFinalYear(); i++) {
+			principal = profit;
+			int monthsInYear = calculateMonthsInYear(i);
+			interest = interestRate.getMonthlyRate()
+				.multiply(investmentAmount.getAmount())
+				.multiply(BigDecimal.valueOf(monthsInYear));
+			profit = principal.add(interest);
+			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+		}
+		return result;
+	}
+
+	private int getFinalYear() {
+		return (investPeriod.getMonths() - 1) / 12 + 1;
+	}
+
+	// 해당 연도의 남은 개월 수를 계산합니다.
+	private int calculateMonthsInYear(int currentYear) {
+		return Math.min(12, investPeriod.getMonths() - (currentYear - 1) * 12);
+	}
 }
