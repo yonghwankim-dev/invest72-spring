@@ -1,5 +1,6 @@
 package co.invest72.investment.domain.investment;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -12,6 +13,7 @@ import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
+import testutil.BigDecimalAssertion;
 
 class InvestmentDetailFactoryTest {
 
@@ -41,6 +43,16 @@ class InvestmentDetailFactoryTest {
 	void createYearlyDetails() {
 		List<YearlyInvestmentDetail> details = factory.calculateYearlyDetails();
 
-		Assertions.assertThat(details).hasSize(2);
+		List<YearlyInvestmentDetail> expected = List.of(
+			new YearlyInvestmentDetail(0, BigDecimal.valueOf(1_000_000), BigDecimal.ZERO,
+				BigDecimal.valueOf(1_000_000)),
+			new YearlyInvestmentDetail(1, BigDecimal.valueOf(1_000_000), BigDecimal.valueOf(50_000),
+				BigDecimal.valueOf(1_050_000))
+		);
+		Assertions.assertThat(details)
+			.hasSize(2)
+			.usingRecursiveComparison()
+			.withComparatorForType(BigDecimalAssertion.bigDecimalComparator(), BigDecimal.class)
+			.isEqualTo(expected);
 	}
 }
