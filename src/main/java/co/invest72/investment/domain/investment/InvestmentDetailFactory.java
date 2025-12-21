@@ -33,6 +33,27 @@ public class InvestmentDetailFactory {
 		return createDetails(investPeriod.getMonths(), monthCalculator, supplier);
 	}
 
+	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
+		int finalYear = getFinalYear();
+		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
+		DetailCreator<YearlyInvestmentDetail> creator = (index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
+			.year(index)
+			.principal(principal)
+			.interest(interest)
+			.profit(profit)
+			.build();
+		return createDetails(finalYear, monthCalculator, creator);
+	}
+
+	// 해당 연도의 남은 개월 수를 계산합니다.
+	private int calculateMonthsInYear(int currentYear) {
+		return Math.min(12, investPeriod.getMonths() - (currentYear - 1) * 12);
+	}
+
+	private int getFinalYear() {
+		return (investPeriod.getMonths() - 1) / 12 + 1;
+	}
+
 	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator) {
 		List<T> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
@@ -48,29 +69,6 @@ public class InvestmentDetailFactory {
 			result.add(creator.create(i, principal, interest, profit));
 		}
 		return result;
-	}
-
-	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
-		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
-		return createDetails(
-			getFinalYear(),
-			monthCalculator,
-			(index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
-				.year(index)
-				.principal(principal)
-				.interest(interest)
-				.profit(profit)
-				.build()
-		);
-	}
-
-	private int getFinalYear() {
-		return (investPeriod.getMonths() - 1) / 12 + 1;
-	}
-
-	// 해당 연도의 남은 개월 수를 계산합니다.
-	private int calculateMonthsInYear(int currentYear) {
-		return Math.min(12, investPeriod.getMonths() - (currentYear - 1) * 12);
 	}
 
 	// 람다 가독성을 위한 커스텀 함수형 인터페이스
