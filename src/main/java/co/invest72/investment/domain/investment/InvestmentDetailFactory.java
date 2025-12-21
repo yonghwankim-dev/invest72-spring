@@ -3,6 +3,7 @@ package co.invest72.investment.domain.investment;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -22,16 +23,17 @@ public class InvestmentDetailFactory {
 	}
 
 	public List<MonthlyInvestmentDetail> createMonthlyDetails() {
+		IntFunction<Integer> monthCalculator = year -> 1;
 		DetailCreator<MonthlyInvestmentDetail> supplier = (index, principal, interest, profit) -> MonthlyInvestmentDetail.builder()
 			.month(index)
 			.principal(principal)
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(supplier, investPeriod.getMonths());
+		return createDetails(investPeriod.getMonths(), monthCalculator, supplier);
 	}
 
-	private <T> List<T> createDetails(DetailCreator<T> creator, int finalPeriod) {
+	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator) {
 		List<T> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
@@ -39,7 +41,9 @@ public class InvestmentDetailFactory {
 		result.add(creator.create(0, principal, interest, profit));
 		for (int i = 1; i <= finalPeriod; i++) {
 			principal = profit;
-			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
+			int month = monthCalculator.apply(i);
+			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount())
+				.multiply(BigDecimal.valueOf(month));
 			profit = principal.add(interest);
 			result.add(creator.create(i, principal, interest, profit));
 		}
