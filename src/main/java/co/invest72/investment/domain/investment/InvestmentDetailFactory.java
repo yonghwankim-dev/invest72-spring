@@ -29,8 +29,7 @@ public class InvestmentDetailFactory {
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
-			interest = interestRate.getMonthlyRate()
-				.multiply(investmentAmount.getAmount());
+			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
 			profit = principal.add(interest);
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 		}

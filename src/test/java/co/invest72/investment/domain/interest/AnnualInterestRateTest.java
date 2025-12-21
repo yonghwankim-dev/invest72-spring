@@ -84,6 +84,16 @@ class AnnualInterestRateTest {
 	}
 
 	@Test
+	void calMonthlyInterest_givenBigDecimalAmount() {
+		BigDecimal amount = BigDecimal.valueOf(1_000_000);
+
+		BigDecimal actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
+
+		BigDecimal expectedMonthlyInterest = BigDecimal.valueOf(4166.66666667);
+		assertBigDecimalEquals(expectedMonthlyInterest, actualMonthlyInterest);
+	}
+
+	@Test
 	void shouldReturnAnnualInterest() {
 		int amount = 1_000_000;
 

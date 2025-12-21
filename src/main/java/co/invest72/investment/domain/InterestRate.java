@@ -47,4 +47,6 @@ public interface InterestRate {
 	BigDecimal calGrowthFactor();
 
 	BigDecimal calMonthlyInterest(int amount);
+
+	BigDecimal calMonthlyInterest(BigDecimal amount);
 }
