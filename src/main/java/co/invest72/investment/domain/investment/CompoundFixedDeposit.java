@@ -39,6 +39,8 @@ public class CompoundFixedDeposit implements Investment {
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int i = 1; i <= getFinalMonth(); i++) {
+			principal = profit; // 다음 달의 원금은 이번 달의 총합
+
 			// 월 이자 계산
 			interest = interestRate.getMonthlyRate().multiply(principal);
 
@@ -46,8 +48,6 @@ public class CompoundFixedDeposit implements Investment {
 			profit = principal.add(interest);
 
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
-
-			principal = profit; // 다음 달의 원금은 이번 달의 총합
 		}
 		return result;
 	}
