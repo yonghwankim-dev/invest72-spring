@@ -22,22 +22,26 @@ public class InvestmentDetailFactory {
 	}
 
 	public List<MonthlyInvestmentDetail> createMonthlyDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
+		DetailCreator<MonthlyInvestmentDetail> supplier = (index, principal, interest, profit) -> MonthlyInvestmentDetail.builder()
+			.month(index)
+			.principal(principal)
+			.interest(interest)
+			.profit(profit)
+			.build();
+		return createDetails(supplier);
+	}
+
+	private <T> List<T> createDetails(DetailCreator<T> creator) {
+		List<T> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
+		result.add(creator.create(0, principal, interest, profit));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
 			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
 			profit = principal.add(interest);
-			result.add(MonthlyInvestmentDetail.builder()
-				.month(i)
-				.principal(principal)
-				.interest(interest)
-				.profit(profit)
-				.build()
-			);
+			result.add(creator.create(i, principal, interest, profit));
 		}
 		return result;
 	}
@@ -73,5 +77,11 @@ public class InvestmentDetailFactory {
 	// 해당 연도의 남은 개월 수를 계산합니다.
 	private int calculateMonthsInYear(int currentYear) {
 		return Math.min(12, investPeriod.getMonths() - (currentYear - 1) * 12);
+	}
+
+	// 람다 가독성을 위한 커스텀 함수형 인터페이스
+	@FunctionalInterface
+	private interface DetailCreator<T> {
+		T create(int index, BigDecimal principal, BigDecimal interest, BigDecimal profit);
 	}
 }
