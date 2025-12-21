@@ -2,9 +2,13 @@ package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
+@EqualsAndHashCode
 public class YearlyInvestmentDetail {
 	private final int year;
 	private final BigDecimal principal;
