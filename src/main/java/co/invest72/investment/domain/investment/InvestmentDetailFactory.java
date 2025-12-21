@@ -28,16 +28,16 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(supplier);
+		return createDetails(supplier, investPeriod.getMonths());
 	}
 
-	private <T> List<T> createDetails(DetailCreator<T> creator) {
+	private <T> List<T> createDetails(DetailCreator<T> creator, int finalPeriod) {
 		List<T> result = new ArrayList<>();
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
 		result.add(creator.create(0, principal, interest, profit));
-		for (int i = 1; i <= investPeriod.getMonths(); i++) {
+		for (int i = 1; i <= finalPeriod; i++) {
 			principal = profit;
 			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
 			profit = principal.add(interest);
