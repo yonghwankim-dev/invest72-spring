@@ -46,8 +46,7 @@ public class InvestmentDetailFactory {
 		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			int monthsInYear = calculateMonthsInYear(i);
-			interest = interestRate.getMonthlyRate()
-				.multiply(investmentAmount.getAmount())
+			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount())
 				.multiply(BigDecimal.valueOf(monthsInYear));
 			profit = principal.add(interest);
 			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
