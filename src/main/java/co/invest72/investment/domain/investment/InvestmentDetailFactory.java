@@ -51,27 +51,17 @@ public class InvestmentDetailFactory {
 	}
 
 	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
-		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = investmentAmount.getAmount();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount();
-
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
-		for (int i = 1; i <= getFinalYear(); i++) {
-			principal = profit;
-			int monthsInYear = calculateMonthsInYear(i);
-			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount())
-				.multiply(BigDecimal.valueOf(monthsInYear));
-			profit = principal.add(interest);
-			result.add(YearlyInvestmentDetail.builder()
-				.year(i)
+		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
+		return createDetails(
+			getFinalYear(),
+			monthCalculator,
+			(index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
+				.year(index)
 				.principal(principal)
 				.interest(interest)
 				.profit(profit)
 				.build()
-			);
-		}
-		return result;
+		);
 	}
 
 	private int getFinalYear() {
