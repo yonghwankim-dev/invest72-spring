@@ -35,8 +35,9 @@ class InvestmentDetailFactoryTest {
 	@Test
 	void createMonthlyDetails() {
 		List<MonthlyInvestmentDetail> details = factory.createMonthlyDetails();
-
-		Assertions.assertThat(details).hasSize(13);
+		
+		Assertions.assertThat(details)
+			.hasSize(13);
 	}
 
 	@Test

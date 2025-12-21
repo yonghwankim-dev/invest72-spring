@@ -3,9 +3,13 @@ package co.invest72.investment.domain.investment;
 import java.math.BigDecimal;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
+@EqualsAndHashCode
 public class MonthlyInvestmentDetail {
 	private final int month;
 	private final BigDecimal principal;

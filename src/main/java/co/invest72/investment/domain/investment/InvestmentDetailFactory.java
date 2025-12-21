@@ -31,7 +31,13 @@ public class InvestmentDetailFactory {
 			principal = profit;
 			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
 			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
+			result.add(MonthlyInvestmentDetail.builder()
+				.month(i)
+				.principal(principal)
+				.interest(interest)
+				.profit(profit)
+				.build()
+			);
 		}
 		return result;
 	}
@@ -49,7 +55,13 @@ public class InvestmentDetailFactory {
 			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount())
 				.multiply(BigDecimal.valueOf(monthsInYear));
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(YearlyInvestmentDetail.builder()
+				.year(i)
+				.principal(principal)
+				.interest(interest)
+				.profit(profit)
+				.build()
+			);
 		}
 		return result;
 	}

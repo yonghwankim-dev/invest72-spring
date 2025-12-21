@@ -2,6 +2,7 @@ package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ public class YearlyInvestmentDetail {
 	private final BigDecimal interest;
 	private final BigDecimal profit;
 
+	@Builder
 	public YearlyInvestmentDetail(int year, BigDecimal principal, BigDecimal interest, BigDecimal profit) {
 		this.year = year;
 		this.principal = principal;
