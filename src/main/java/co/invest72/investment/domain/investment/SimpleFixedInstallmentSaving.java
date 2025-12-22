@@ -70,7 +70,6 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		for (int i = 1; i <= finalMonth; i++) {
 			principal = principal.add(investmentAmount.getAmount());
 			interest = interestRate.getMonthlyRate().multiply(principal);
-			profit = principal.add(interest);
 
 			accInterest = accInterest.add(interest);
 			if (i % 12 == 0) {

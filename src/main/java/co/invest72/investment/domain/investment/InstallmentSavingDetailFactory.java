@@ -85,16 +85,18 @@ public class InstallmentSavingDetailFactory {
 		InterestType interestType, InterestCalculator interestCalculator) {
 		List<T> result = new ArrayList<>();
 
+		BigDecimal investment = BigDecimal.ZERO;
 		BigDecimal principal = BigDecimal.ZERO;
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = BigDecimal.ZERO;
 		result.add(creator.create(0, principal, interest, profit));
 
 		for (int i = 1; i <= finalPeriod; i++) {
+			investment = investment.add(investmentAmount.getAmount());
 			principal = profit.add(investmentAmount.getAmount());
 			int month = monthCalculator.apply(i);
 			if (interestType == InterestType.SIMPLE) {
-				interest = interestCalculator.calculate(interestRate, principal,
+				interest = interestCalculator.calculate(interestRate, investment,
 					BigDecimal.valueOf(month));
 			}
 			profit = principal.add(interest);
