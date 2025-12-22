@@ -29,7 +29,7 @@ public class CompoundFixedDeposit implements Investment {
 		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
 		this.taxable = taxable;
-		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
+		FixedDepositDetailFactory factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod);
 		this.details = factory.createMonthlyDetails(InterestType.COMPOUND);
 		this.yearlyDetails = factory.calculateYearlyDetails(InterestType.COMPOUND);
 	}

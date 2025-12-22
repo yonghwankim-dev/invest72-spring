@@ -31,7 +31,7 @@ public class SimpleFixedDeposit implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
+		FixedDepositDetailFactory factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod);
 		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
 		this.yearlyDetails = factory.calculateYearlyDetails(InterestType.SIMPLE);
 	}

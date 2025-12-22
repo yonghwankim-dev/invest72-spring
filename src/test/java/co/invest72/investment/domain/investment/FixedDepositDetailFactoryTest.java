@@ -16,16 +16,16 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import testutil.BigDecimalAssertion;
 
-class InvestmentDetailFactoryTest {
+class FixedDepositDetailFactoryTest {
 
-	private InvestmentDetailFactory factory;
+	private FixedDepositDetailFactory factory;
 
 	@BeforeEach
 	void setUp() {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(1_000_000);
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(12);
-		factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
+		factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod);
 	}
 
 	@Test
