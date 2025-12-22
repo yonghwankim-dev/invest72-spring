@@ -74,7 +74,8 @@ public class SimpleFixedInstallmentSaving implements Investment {
 
 			accInterest = accInterest.add(interest);
 			if (i % 12 == 0) {
-				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, profit));
+				BigDecimal yearlyProfit = principal.add(accInterest);
+				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, yearlyProfit));
 			}
 		}
 		return result;
@@ -181,6 +182,10 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
 	}
 
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
+
 	@Override
 	public int getInterestForYear(int year) {
 		int finalYear = getFinalYear();
@@ -193,7 +198,15 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
 	}
 
-	private int getFinalYear() {
-		return (getFinalMonth() - 1) / 12 + 1;
+	@Override
+	public int getProfitForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getProfitForYear(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
 	}
 }
