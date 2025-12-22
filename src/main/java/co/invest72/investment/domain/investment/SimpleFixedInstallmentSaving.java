@@ -41,7 +41,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 
 		for (int i = 1; i <= getFinalMonth(); i++) {
 			// 월 적립금액 누적
-			principal = principal.add(investmentAmount.getAmount());
+			principal = profit.add(investmentAmount.getAmount());
 
 			// 월 이자 계산
 			interest = interestRate.getMonthlyRate().multiply(principal);
