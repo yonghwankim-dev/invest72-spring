@@ -53,9 +53,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getPrincipal_whenMonthsIsFinalMonth() {
-		int principalAmount = investment.getPrincipal();
-
-		assertEquals(12_278_855, principalAmount);
+		assertEquals(12_278_855, investment.getPrincipal());
 	}
 
 	@Test
@@ -79,9 +77,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getInterest_whenMonthIsFinalMonth() {
-		int interest = investment.getInterest();
-
-		assertEquals(51_162, interest);
+		assertEquals(51_162, investment.getInterest());
 	}
 
 	@Test
@@ -105,9 +101,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getProfit_whenMonthIsFinalMonth() {
-		int amount = investment.getProfit();
-
-		assertEquals(12_330_017, amount);
+		assertEquals(12_330_017, investment.getProfit());
 	}
 
 	@Test
