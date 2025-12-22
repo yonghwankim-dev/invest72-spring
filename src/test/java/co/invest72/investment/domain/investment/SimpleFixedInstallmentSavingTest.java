@@ -55,7 +55,6 @@ class SimpleFixedInstallmentSavingTest {
 	void getPrincipal_whenMonthsIsFinalMonth() {
 		int principalAmount = investment.getPrincipal();
 
-		int expectedPrincipalAmount = 12_000_000;
 		assertEquals(12_278_855, principalAmount);
 	}
 
@@ -64,17 +63,20 @@ class SimpleFixedInstallmentSavingTest {
 		assertEquals(0, investment.getPrincipal(-1));
 		assertEquals(0, investment.getPrincipal(0));
 		assertEquals(1_000_000, investment.getPrincipal(1));
+		assertEquals(2_004_167, investment.getPrincipal(2));
+		assertEquals(3_012_517, investment.getPrincipal(3));
+		assertEquals(4_025_070, investment.getPrincipal(4));
+		assertEquals(5_041_841, investment.getPrincipal(5));
+		assertEquals(6_062_848, investment.getPrincipal(6));
+		assertEquals(7_088_110, investment.getPrincipal(7));
+		assertEquals(8_117_644, investment.getPrincipal(8));
+		assertEquals(9_151_467, investment.getPrincipal(9));
+		assertEquals(10_189_599, investment.getPrincipal(10));
+		assertEquals(11_232_055, investment.getPrincipal(11));
+		assertEquals(12_278_855, investment.getPrincipal(12));
+		assertEquals(12_278_855, investment.getPrincipal(13));
 	}
-
-	@Test
-	void getPrincipal_whenMonthIsGreaterThanFinalMonth_thenReturnPrincipal() {
-		int months = 13;
-
-		int principal = investment.getPrincipal(months);
-
-		assertEquals(12_278_855, principal);
-	}
-
+	
 	@Test
 	void getInterest_whenMonthIsFinalMonth() {
 		int interest = investment.getInterest();
