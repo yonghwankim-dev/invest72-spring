@@ -27,7 +27,10 @@ public class CompoundFixedDeposit implements Investment {
 		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
 		this.taxable = taxable;
-		this.details = calculateDetails();
+		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
+		// this.details = calculateDetails();
+		// todo: 월별 상세내역 생성 로직을 Factory로 이전
+		this.details = factory.createMonthlyDetails();
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {

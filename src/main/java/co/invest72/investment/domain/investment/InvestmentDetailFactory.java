@@ -24,21 +24,17 @@ public class InvestmentDetailFactory {
 
 	public List<MonthlyInvestmentDetail> createMonthlyDetails() {
 		IntFunction<Integer> monthCalculator = year -> 1;
-		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
-			.multiply(months);
 		DetailCreator<MonthlyInvestmentDetail> supplier = (index, principal, interest, profit) -> MonthlyInvestmentDetail.builder()
 			.month(index)
 			.principal(principal)
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(investPeriod.getMonths(), monthCalculator, interestCalculator, supplier);
+		return createDetails(investPeriod.getMonths(), monthCalculator, supplier);
 	}
 
 	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
 		int finalYear = getFinalYear();
-		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
-			.multiply(months);
 		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
 		DetailCreator<YearlyInvestmentDetail> creator = (index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
 			.year(index)
@@ -46,7 +42,7 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(finalYear, monthCalculator, interestCalculator, creator);
+		return createDetails(finalYear, monthCalculator, creator);
 	}
 
 	// 해당 연도의 남은 개월 수를 계산합니다.
@@ -58,9 +54,10 @@ public class InvestmentDetailFactory {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 
-	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator,
-		InterestCalculator interestCalculator, DetailCreator<T> creator) {
+	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator) {
 		List<T> result = new ArrayList<>();
+		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
+			.multiply(months);
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
