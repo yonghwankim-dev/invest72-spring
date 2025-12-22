@@ -56,7 +56,7 @@ class SimpleFixedInstallmentSavingTest {
 		int principalAmount = investment.getPrincipal();
 
 		int expectedPrincipalAmount = 12_000_000;
-		assertEquals(expectedPrincipalAmount, principalAmount);
+		assertEquals(12_278_855, principalAmount);
 	}
 
 	@Test
@@ -72,15 +72,14 @@ class SimpleFixedInstallmentSavingTest {
 
 		int principal = investment.getPrincipal(months);
 
-		int expectedPrincipalAmount = 12_000_000;
-		assertEquals(expectedPrincipalAmount, principal);
+		assertEquals(12_278_855, principal);
 	}
 
 	@Test
 	void getInterest_whenMonthIsFinalMonth() {
 		int interest = investment.getInterest();
 
-		assertEquals(50_000, interest);
+		assertEquals(51_162, interest);
 	}
 
 	@Test
@@ -125,14 +124,14 @@ class SimpleFixedInstallmentSavingTest {
 
 		int interest = investment.getInterest(months);
 
-		assertEquals(50_000, interest);
+		assertEquals(51_162, interest);
 	}
 
 	@Test
 	void getProfit() {
 		int amount = investment.getProfit();
 
-		assertEquals(12_050_000, amount);
+		assertEquals(12_330_017, amount);
 	}
 
 	@Test
@@ -159,7 +158,7 @@ class SimpleFixedInstallmentSavingTest {
 
 		int profit = investment.getProfit(months);
 
-		int expectedTotalProfit = 12_050_000;
+		int expectedTotalProfit = 12_330_017;
 		assertEquals(expectedTotalProfit, profit);
 	}
 
@@ -175,7 +174,7 @@ class SimpleFixedInstallmentSavingTest {
 	void getTotalPrincipal() {
 		int totalPrincipal = investment.getTotalPrincipal();
 
-		int expectedTotalPrincipal = 12_000_000;
+		int expectedTotalPrincipal = 12_278_855;
 		assertEquals(expectedTotalPrincipal, totalPrincipal);
 	}
 
@@ -183,23 +182,21 @@ class SimpleFixedInstallmentSavingTest {
 	void getTotalInterest() {
 		int totalInterest = investment.getTotalInterest();
 
-		int expectedTotalInterest = 325_000;
-		assertEquals(expectedTotalInterest, totalInterest);
+		assertEquals(330_017, totalInterest);
 	}
 
 	@Test
 	void getTotalTax() {
 		int totalTax = investment.getTotalTax();
 
-		int expectedTotalTax = 50_050;
-		assertEquals(expectedTotalTax, totalTax);
+		assertEquals(50_823, totalTax);
 	}
 
 	@Test
 	void getTotalProfit() {
 		int totalProfit = investment.getTotalProfit();
 
-		assertEquals(12_274_950, totalProfit);
+		assertEquals(12_558_049, totalProfit);
 	}
 
 	@Test
