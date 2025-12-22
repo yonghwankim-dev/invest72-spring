@@ -9,6 +9,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.interest.InterestType;
 
 /**
  * 정기적금
@@ -28,7 +29,9 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		this.details = calculateDetails();
+		InstallmentSavingDetailFactory factory = new InstallmentSavingDetailFactory(investmentAmount, interestRate,
+			investPeriod);
+		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
