@@ -56,12 +56,14 @@ public class InvestmentDetailFactory {
 
 	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator) {
 		List<T> result = new ArrayList<>();
-		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
-			.multiply(months);
+		
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
 		result.add(creator.create(0, principal, interest, profit));
+
+		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
+			.multiply(months);
 		for (int i = 1; i <= finalPeriod; i++) {
 			principal = profit;
 			int month = monthCalculator.apply(i);
