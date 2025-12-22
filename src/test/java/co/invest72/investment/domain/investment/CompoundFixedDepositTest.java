@@ -148,4 +148,22 @@ class CompoundFixedDepositTest {
 
 		assertEquals(TaxType.STANDARD.getDescription(), taxType);
 	}
+
+	@Test
+	void getPrincipalForYear() {
+		int principalForYear = investment.getPrincipalForYear(1);
+
+		assertEquals(1_000_000, principalForYear);
+	}
+
+	@Test
+	void getPrincipalForYear_whenPeriodIs2Year() {
+		investment = ((CompoundFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+		assertEquals(1_050_000, investment.getPrincipalForYear(2));
+		assertEquals(1_102_500, investment.getPrincipalForYear(3));
+	}
 }

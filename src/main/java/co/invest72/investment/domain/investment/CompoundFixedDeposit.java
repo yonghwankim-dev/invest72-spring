@@ -19,8 +19,9 @@ public class CompoundFixedDeposit implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
-	@Builder
+	@Builder(toBuilder = true)
 	public CompoundFixedDeposit(LumpSumInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate,
 		Taxable taxable) {
@@ -29,9 +30,8 @@ public class CompoundFixedDeposit implements Investment {
 		this.investPeriod = investPeriod;
 		this.taxable = taxable;
 		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
-		// this.details = calculateDetails();
-		// todo: 월별 상세내역 생성 로직을 Factory로 이전
 		this.details = factory.createMonthlyDetails(InterestType.COMPOUND);
+		this.yearlyDetails = factory.calculateYearlyDetails(InterestType.COMPOUND);
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
@@ -151,4 +151,19 @@ public class CompoundFixedDeposit implements Investment {
 		return taxable.getTaxType();
 	}
 
+	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
+
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
 }
