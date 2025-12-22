@@ -31,7 +31,10 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(investPeriod.getMonths(), monthCalculator, supplier, interestType);
+		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
+			.multiply(months);
+		return createDetails(investPeriod.getMonths(), monthCalculator, supplier, interestType,
+			interestCalculator);
 	}
 
 	public List<YearlyInvestmentDetail> calculateYearlyDetails(InterestType interestType) {
@@ -43,7 +46,30 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(finalYear, monthCalculator, creator, interestType);
+		InterestCalculator interestCalculator = createYearlyInterestCalculator(interestType);
+
+		return createDetails(finalYear, monthCalculator, creator, interestType,
+			interestCalculator);
+	}
+
+	private InterestCalculator createYearlyInterestCalculator(InterestType interestType) {
+		InterestCalculator interestCalculator;
+		if (interestType == InterestType.SIMPLE) {
+			interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
+				.multiply(months);
+			return interestCalculator;
+		} else if (interestType == InterestType.COMPOUND) {
+			interestCalculator = (rate, amount, months) -> {
+				BigDecimal total = amount;
+				BigDecimal growthFactor = rate.calGrowthFactor();
+				for (int i = 0; i < months.intValue(); i++) {
+					total = total.multiply(growthFactor);
+				}
+				return total.subtract(amount);
+			};
+			return interestCalculator;
+		}
+		throw new UnsupportedOperationException("지원하지 않는 이자 유형입니다: " + interestType);
 	}
 
 	// 해당 연도의 남은 개월 수를 계산합니다.
@@ -56,7 +82,7 @@ public class InvestmentDetailFactory {
 	}
 
 	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator,
-		InterestType interestType) {
+		InterestType interestType, InterestCalculator interestCalculator) {
 		List<T> result = new ArrayList<>();
 
 		BigDecimal principal = investmentAmount.getAmount();
@@ -64,8 +90,6 @@ public class InvestmentDetailFactory {
 		BigDecimal profit = investmentAmount.getAmount();
 		result.add(creator.create(0, principal, interest, profit));
 
-		InterestCalculator interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
-			.multiply(months);
 		for (int i = 1; i <= finalPeriod; i++) {
 			principal = profit;
 			int month = monthCalculator.apply(i);
