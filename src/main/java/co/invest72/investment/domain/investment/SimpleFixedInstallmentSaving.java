@@ -170,6 +170,18 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
+
+	@Override
 	public int getInterestForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
