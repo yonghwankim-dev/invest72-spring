@@ -9,6 +9,7 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.interest.InterestType;
 import lombok.Builder;
 
 public class CompoundFixedDeposit implements Investment {
@@ -30,7 +31,7 @@ public class CompoundFixedDeposit implements Investment {
 		InvestmentDetailFactory factory = new InvestmentDetailFactory(investmentAmount, interestRate, investPeriod);
 		// this.details = calculateDetails();
 		// todo: 월별 상세내역 생성 로직을 Factory로 이전
-		this.details = factory.createMonthlyDetails();
+		this.details = factory.createMonthlyDetails(InterestType.COMPOUND);
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {

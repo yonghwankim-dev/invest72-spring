@@ -12,6 +12,7 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import testutil.BigDecimalAssertion;
 
@@ -34,15 +35,15 @@ class InvestmentDetailFactoryTest {
 
 	@Test
 	void createMonthlyDetails() {
-		List<MonthlyInvestmentDetail> details = factory.createMonthlyDetails();
-		
+		List<MonthlyInvestmentDetail> details = factory.createMonthlyDetails(InterestType.SIMPLE);
+
 		Assertions.assertThat(details)
 			.hasSize(13);
 	}
 
 	@Test
 	void createYearlyDetails() {
-		List<YearlyInvestmentDetail> details = factory.calculateYearlyDetails();
+		List<YearlyInvestmentDetail> details = factory.calculateYearlyDetails(InterestType.SIMPLE);
 
 		List<YearlyInvestmentDetail> expected = List.of(
 			new YearlyInvestmentDetail(0, BigDecimal.valueOf(1_000_000), BigDecimal.ZERO,

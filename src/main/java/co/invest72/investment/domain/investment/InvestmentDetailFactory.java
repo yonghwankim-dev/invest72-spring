@@ -8,6 +8,7 @@ import java.util.function.IntFunction;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
+import co.invest72.investment.domain.interest.InterestType;
 
 public class InvestmentDetailFactory {
 
@@ -22,7 +23,7 @@ public class InvestmentDetailFactory {
 		this.investPeriod = investPeriod;
 	}
 
-	public List<MonthlyInvestmentDetail> createMonthlyDetails() {
+	public List<MonthlyInvestmentDetail> createMonthlyDetails(InterestType interestType) {
 		IntFunction<Integer> monthCalculator = year -> 1;
 		DetailCreator<MonthlyInvestmentDetail> supplier = (index, principal, interest, profit) -> MonthlyInvestmentDetail.builder()
 			.month(index)
@@ -30,10 +31,10 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(investPeriod.getMonths(), monthCalculator, supplier);
+		return createDetails(investPeriod.getMonths(), monthCalculator, supplier, interestType);
 	}
 
-	public List<YearlyInvestmentDetail> calculateYearlyDetails() {
+	public List<YearlyInvestmentDetail> calculateYearlyDetails(InterestType interestType) {
 		int finalYear = getFinalYear();
 		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
 		DetailCreator<YearlyInvestmentDetail> creator = (index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
@@ -42,7 +43,7 @@ public class InvestmentDetailFactory {
 			.interest(interest)
 			.profit(profit)
 			.build();
-		return createDetails(finalYear, monthCalculator, creator);
+		return createDetails(finalYear, monthCalculator, creator, interestType);
 	}
 
 	// 해당 연도의 남은 개월 수를 계산합니다.
@@ -54,9 +55,10 @@ public class InvestmentDetailFactory {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 
-	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator) {
+	private <T> List<T> createDetails(int finalPeriod, IntFunction<Integer> monthCalculator, DetailCreator<T> creator,
+		InterestType interestType) {
 		List<T> result = new ArrayList<>();
-		
+
 		BigDecimal principal = investmentAmount.getAmount();
 		BigDecimal interest = BigDecimal.ZERO;
 		BigDecimal profit = investmentAmount.getAmount();
@@ -67,8 +69,13 @@ public class InvestmentDetailFactory {
 		for (int i = 1; i <= finalPeriod; i++) {
 			principal = profit;
 			int month = monthCalculator.apply(i);
-			interest = interestCalculator.calculate(interestRate, investmentAmount.getAmount(),
-				BigDecimal.valueOf(month));
+			if (interestType == InterestType.SIMPLE) {
+				interest = interestCalculator.calculate(interestRate, investmentAmount.getAmount(),
+					BigDecimal.valueOf(month));
+			} else if (interestType == InterestType.COMPOUND) {
+				interest = interestCalculator.calculate(interestRate, principal,
+					BigDecimal.valueOf(month));
+			}
 			profit = principal.add(interest);
 			result.add(creator.create(i, principal, interest, profit));
 		}
