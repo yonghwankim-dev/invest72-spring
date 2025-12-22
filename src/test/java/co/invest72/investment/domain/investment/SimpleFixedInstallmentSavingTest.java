@@ -157,4 +157,10 @@ class SimpleFixedInstallmentSavingTest {
 	void getTaxType() {
 		assertEquals(TaxType.STANDARD.getDescription(), investment.getTaxType());
 	}
+
+	@Test
+	void getInterestForYear() {
+		assertEquals(0, investment.getInterestForYear(0));
+		assertEquals(325_000, investment.getInterestForYear(1));
+	}
 }

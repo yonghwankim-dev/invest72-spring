@@ -96,9 +96,6 @@ public class InstallmentSavingDetailFactory {
 			if (interestType == InterestType.SIMPLE) {
 				interest = interestCalculator.calculate(interestRate, principal,
 					BigDecimal.valueOf(month));
-			} else if (interestType == InterestType.COMPOUND) {
-				interest = interestCalculator.calculate(interestRate, principal,
-					BigDecimal.valueOf(month));
 			}
 			profit = principal.add(interest);
 			result.add(creator.create(i, principal, interest, profit));

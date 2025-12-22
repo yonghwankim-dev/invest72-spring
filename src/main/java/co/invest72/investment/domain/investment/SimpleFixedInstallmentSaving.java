@@ -22,6 +22,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
 	public SimpleFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
@@ -32,6 +33,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		InstallmentSavingDetailFactory factory = new InstallmentSavingDetailFactory(investmentAmount, interestRate,
 			investPeriod);
 		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
+		this.yearlyDetails = calculateYearlyDetails();
 	}
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
@@ -52,6 +54,28 @@ public class SimpleFixedInstallmentSaving implements Investment {
 			profit = principal.add(interest);
 
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
+		}
+		return result;
+	}
+
+	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
+		List<YearlyInvestmentDetail> result = new ArrayList<>();
+		BigDecimal principal = BigDecimal.ZERO;
+		BigDecimal interest = BigDecimal.ZERO;
+		BigDecimal profit = BigDecimal.ZERO;
+		// 0 월
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		int finalMonth = getFinalMonth();
+		BigDecimal accInterest = BigDecimal.ZERO;
+		for (int i = 1; i <= finalMonth; i++) {
+			principal = principal.add(investmentAmount.getAmount());
+			interest = interestRate.getMonthlyRate().multiply(principal);
+			profit = principal.add(interest);
+
+			accInterest = accInterest.add(interest);
+			if (i % 12 == 0) {
+				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, profit));
+			}
 		}
 		return result;
 	}
@@ -143,5 +167,21 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	@Override
 	public String getTaxType() {
 		return taxable.getTaxType();
+	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getInterestForYear(finalYear);
+		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+	}
+
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
 	}
 }
