@@ -157,13 +157,16 @@ class CompoundFixedDepositTest {
 	}
 
 	@Test
-	void getPrincipalForYear_whenPeriodIs2Year() {
+	void getPrincipalForYear_whenPeriodIs3Year() {
 		investment = ((CompoundFixedDeposit)investment).toBuilder()
 			.investPeriod(new YearlyInvestPeriod(3))
 			.build();
 
+		assertEquals(1_000_000, investment.getPrincipalForYear(-1));
+		assertEquals(1_000_000, investment.getPrincipalForYear(0));
 		assertEquals(1_000_000, investment.getPrincipalForYear(1));
 		assertEquals(1_050_000, investment.getPrincipalForYear(2));
 		assertEquals(1_102_500, investment.getPrincipalForYear(3));
+		assertEquals(1_102_500, investment.getPrincipalForYear(4));
 	}
 }
