@@ -102,77 +102,56 @@ class SimpleFixedInstallmentSavingTest {
 		assertEquals(51_162, investment.getInterest(12));
 		assertEquals(51_162, investment.getInterest(13));
 	}
-	
+
 	@Test
-	void getProfit() {
+	void getProfit_whenMonthIsFinalMonth() {
 		int amount = investment.getProfit();
 
 		assertEquals(12_330_017, amount);
 	}
 
 	@Test
-	void getProfit_whenMonthsIsNegative__thenReturnZeroTotalProfit() {
-		int months = -1;
-
-		int profit = investment.getProfit(months);
-
-		assertEquals(0, profit);
-	}
-
-	@Test
-	void getProfit_whenMonthsIsZero_thenReturnZeroTotalProfit() {
-		int months = 0;
-
-		int totalProfit = investment.getProfit(months);
-
-		assertEquals(0, totalProfit);
-	}
-
-	@Test
-	void getProfit_whenMonthsIsGreaterThanFinalMonth_thenReturnTotalProfit() {
-		int months = 13;
-
-		int profit = investment.getProfit(months);
-
-		int expectedTotalProfit = 12_330_017;
-		assertEquals(expectedTotalProfit, profit);
+	void getProfit() {
+		assertEquals(0, investment.getProfit(-1));
+		assertEquals(0, investment.getProfit(0));
+		assertEquals(1_004_167, investment.getProfit(1));
+		assertEquals(2_012_517, investment.getProfit(2));
+		assertEquals(3_025_070, investment.getProfit(3));
+		assertEquals(4_041_841, investment.getProfit(4));
+		assertEquals(5_062_848, investment.getProfit(5));
+		assertEquals(6_088_110, investment.getProfit(6));
+		assertEquals(7_117_644, investment.getProfit(7));
+		assertEquals(8_151_467, investment.getProfit(8));
+		assertEquals(9_189_599, investment.getProfit(9));
+		assertEquals(10_232_055, investment.getProfit(10));
+		assertEquals(11_278_855, investment.getProfit(11));
+		assertEquals(12_330_017, investment.getProfit(12));
+		assertEquals(12_330_017, investment.getProfit(13));
 	}
 
 	@Test
 	void getTotalInvestment() {
-		int totalInvestment = investment.getTotalInvestment();
-
-		int expectedTotalInvestment = 12_000_000;
-		assertEquals(expectedTotalInvestment, totalInvestment);
+		assertEquals(12_000_000, investment.getTotalInvestment());
 	}
 
 	@Test
 	void getTotalPrincipal() {
-		int totalPrincipal = investment.getTotalPrincipal();
-
-		int expectedTotalPrincipal = 12_278_855;
-		assertEquals(expectedTotalPrincipal, totalPrincipal);
+		assertEquals(12_278_855, investment.getTotalPrincipal());
 	}
 
 	@Test
 	void getTotalInterest() {
-		int totalInterest = investment.getTotalInterest();
-
-		assertEquals(330_017, totalInterest);
+		assertEquals(330_017, investment.getTotalInterest());
 	}
 
 	@Test
 	void getTotalTax() {
-		int totalTax = investment.getTotalTax();
-
-		assertEquals(50_823, totalTax);
+		assertEquals(50_823, investment.getTotalTax());
 	}
 
 	@Test
 	void getTotalProfit() {
-		int totalProfit = investment.getTotalProfit();
-
-		assertEquals(12_558_049, totalProfit);
+		assertEquals(12_558_049, investment.getTotalProfit());
 	}
 
 	@Test
@@ -182,8 +161,6 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getTaxType() {
-		String taxType = investment.getTaxType();
-
-		assertEquals(TaxType.STANDARD.getDescription(), taxType);
+		assertEquals(TaxType.STANDARD.getDescription(), investment.getTaxType());
 	}
 }
