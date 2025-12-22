@@ -169,4 +169,18 @@ class CompoundFixedDepositTest {
 		assertEquals(1_102_500, investment.getPrincipalForYear(3));
 		assertEquals(1_102_500, investment.getPrincipalForYear(4));
 	}
+
+	@Test
+	void getInterestForYear_whenPeriodIs3Year() {
+		investment = ((CompoundFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getInterestForYear(-1));
+		assertEquals(0, investment.getInterestForYear(0));
+		assertEquals(50_000, investment.getInterestForYear(1));
+		assertEquals(52_500, investment.getInterestForYear(2));
+		assertEquals(55_125, investment.getInterestForYear(3));
+		assertEquals(55_125, investment.getInterestForYear(4));
+	}
 }

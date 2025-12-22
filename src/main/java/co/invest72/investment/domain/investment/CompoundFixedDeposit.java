@@ -166,4 +166,16 @@ public class CompoundFixedDeposit implements Investment {
 	private int getFinalYear() {
 		return (getFinalMonth() - 1) / 12 + 1;
 	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getInterestForYear(finalYear);
+		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+	}
 }
