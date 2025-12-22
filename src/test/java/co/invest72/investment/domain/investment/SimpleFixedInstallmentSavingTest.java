@@ -159,12 +159,6 @@ class SimpleFixedInstallmentSavingTest {
 	}
 
 	@Test
-	void getInterestForYear() {
-		assertEquals(0, investment.getInterestForYear(0));
-		assertEquals(325_000, investment.getInterestForYear(1));
-	}
-
-	@Test
 	void getPrincipalForYear() {
 		assertEquals(0, investment.getPrincipalForYear(0));
 		assertEquals(12_000_000, investment.getPrincipalForYear(1));
@@ -174,5 +168,11 @@ class SimpleFixedInstallmentSavingTest {
 	void getProfitForYear() {
 		assertEquals(0, investment.getProfitForYear(0));
 		assertEquals(12_325_000, investment.getProfitForYear(1));
+	}
+
+	@Test
+	void getInterestForYear() {
+		assertEquals(0, investment.getInterestForYear(0));
+		assertEquals(325_000, investment.getInterestForYear(1));
 	}
 }
