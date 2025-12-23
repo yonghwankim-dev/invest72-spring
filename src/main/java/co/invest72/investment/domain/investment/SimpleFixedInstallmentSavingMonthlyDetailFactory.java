@@ -22,7 +22,7 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 		this.investPeriod = investPeriod;
 	}
 
-	public List<MonthlyInvestmentDetail> createMonthlyDetails() {
+	public List<MonthlyInvestmentDetail> createDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 		BigDecimal accInvestmentAmount = BigDecimal.ZERO;
 		BigDecimal principal = BigDecimal.ZERO;

@@ -158,22 +158,19 @@ class SimpleFixedInstallmentSavingTest {
 	void getTaxType() {
 		assertEquals(TaxType.STANDARD.getDescription(), investment.getTaxType());
 	}
-
-	@Test
-	void getPrincipalForYear() {
-		assertEquals(0, investment.getPrincipalForYear(0));
-		assertEquals(12_000_000, investment.getPrincipalForYear(1));
-	}
-
+	
 	@Test
 	void getPrincipalForYear_whenPeriodIs3Year() {
 		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
 			.investPeriod(new YearlyInvestPeriod(3))
 			.build();
 
+		assertEquals(0, investment.getPrincipalForYear(-1));
 		assertEquals(0, investment.getPrincipalForYear(0));
 		assertEquals(12_000_000, investment.getPrincipalForYear(1));
 		assertEquals(24_325_000, investment.getPrincipalForYear(2));
+		assertEquals(37_575_000, investment.getPrincipalForYear(3));
+		assertEquals(37_575_000, investment.getPrincipalForYear(4));
 	}
 
 	@Test

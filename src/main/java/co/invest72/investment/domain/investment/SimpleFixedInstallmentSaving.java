@@ -1,7 +1,6 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
@@ -33,8 +32,10 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		this.taxable = taxable;
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
 			investmentAmount, interestRate, investPeriod);
-		this.details = factory.createMonthlyDetails();
-		this.yearlyDetails = new ArrayList<>();
+		this.details = factory.createDetails();
+		SimpleFixedInstallmentSavingYearlyDetailFactory yearlyFactory = new SimpleFixedInstallmentSavingYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
 	@Override
