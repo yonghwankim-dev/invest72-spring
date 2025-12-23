@@ -158,7 +158,7 @@ class SimpleFixedInstallmentSavingTest {
 	void getTaxType() {
 		assertEquals(TaxType.STANDARD.getDescription(), investment.getTaxType());
 	}
-	
+
 	@Test
 	void getPrincipalForYear_whenPeriodIs3Year() {
 		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
@@ -174,14 +174,30 @@ class SimpleFixedInstallmentSavingTest {
 	}
 
 	@Test
-	void getProfitForYear() {
+	void getProfitForYear_whenPeriodIs3Year() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getProfitForYear(-1));
 		assertEquals(0, investment.getProfitForYear(0));
 		assertEquals(12_325_000, investment.getProfitForYear(1));
+		assertEquals(25_575_000, investment.getProfitForYear(2));
+		assertEquals(40_350_000, investment.getProfitForYear(3));
+		assertEquals(40_350_000, investment.getProfitForYear(4));
 	}
 
 	@Test
-	void getInterestForYear() {
+	void getInterestForYear_whenPeriodIs3Year() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getInterestForYear(-1));
 		assertEquals(0, investment.getInterestForYear(0));
 		assertEquals(325_000, investment.getInterestForYear(1));
+		assertEquals(1_250_000, investment.getInterestForYear(2));
+		assertEquals(2_775_000, investment.getInterestForYear(3));
+		assertEquals(2_775_000, investment.getInterestForYear(4));
 	}
 }
