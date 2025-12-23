@@ -8,8 +8,8 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.interest.InterestType;
-import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
+import co.invest72.investment.domain.investment.factory.SimpleFixedDepositMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.SimpleFixedDepositYearlyDetailFactory;
 import lombok.Builder;
 
 /**
@@ -32,9 +32,12 @@ public class SimpleFixedDeposit implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		FixedDepositDetailFactory factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod);
-		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
-		this.yearlyDetails = factory.createYearlyDetails(InterestType.SIMPLE);
+		SimpleFixedDepositMonthlyDetailFactory factory = new SimpleFixedDepositMonthlyDetailFactory(investmentAmount,
+			interestRate, investPeriod);
+		this.details = factory.createDetails();
+		SimpleFixedDepositYearlyDetailFactory yearlyFactory = new SimpleFixedDepositYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
 	@Override
