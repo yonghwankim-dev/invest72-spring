@@ -135,8 +135,26 @@ class SimpleFixedInstallmentSavingTest {
 	}
 
 	@Test
+	void getTotalPrincipal_whenPeriodIs25Months() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(25))
+			.build();
+
+		assertEquals(26_250_000, investment.getTotalPrincipal());
+	}
+
+	@Test
 	void getTotalInterest() {
 		assertEquals(325_000, investment.getTotalInterest());
+	}
+
+	@Test
+	void getTotalInterest_whenPeriodIs25Months() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(25))
+			.build();
+
+		assertEquals(1_354_167, investment.getTotalInterest());
 	}
 
 	@Test
@@ -146,7 +164,16 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalProfit() {
-		assertEquals(12_549_950, investment.getTotalProfit());
+		assertEquals(12_274_950, investment.getTotalProfit());
+	}
+
+	@Test
+	void getTotalProfit_whenPeriodIs25Months() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(25))
+			.build();
+
+		assertEquals(26_145_625, investment.getTotalProfit());
 	}
 
 	@Test
