@@ -1,7 +1,6 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
@@ -24,32 +23,9 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		this.details = calculateDetails();
-	}
-
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal tax = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
-		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
-
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			// 월 적립금액 누적
-			principal = principal.add(investmentAmount.getAmount());
-
-			// 월 이자 계산
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			profit = principal.add(interest);
-
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
-
-			principal = profit; // 이자를 포함한 원금이 다음 달의 원금이 됨
-		}
-		return result;
+		CompoundFixedInstallmentSavingMonthlyDetailFactory factory = new CompoundFixedInstallmentSavingMonthlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createDetails();
 	}
 
 	@Override
