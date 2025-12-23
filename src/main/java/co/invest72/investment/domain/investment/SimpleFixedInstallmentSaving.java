@@ -9,7 +9,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.interest.InterestType;
+import lombok.Builder;
 
 /**
  * 정기적금
@@ -24,42 +24,17 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	private final List<MonthlyInvestmentDetail> details;
 	private final List<YearlyInvestmentDetail> yearlyDetails;
 
+	@Builder(toBuilder = true)
 	public SimpleFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		FixedInstallmentSavingDetailFactory factory = new FixedInstallmentSavingDetailFactory(investmentAmount,
-			interestRate,
-			investPeriod);
-		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
-		// this.yearlyDetails = calculateYearlyDetails();
-		this.yearlyDetails = factory.createYearlyDetails(InterestType.SIMPLE);
-	}
-
-	// TODO: FixedInstallmentSavingFactory에 적용하기  
-	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
-		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
-		// 0 월
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
-		int finalMonth = getFinalMonth();
-		BigDecimal accInterest = BigDecimal.ZERO;
-		for (int i = 1; i <= finalMonth; i++) {
-			principal = principal.add(investmentAmount.getAmount());
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			accInterest = accInterest.add(interest);
-			if (i % 12 == 0) {
-				BigDecimal yearlyProfit = principal.add(accInterest);
-				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, yearlyProfit));
-			}
-			System.out.printf("%d월, principal=%s%n", i, Investment.roundToInt.applyAsInt(principal));
-		}
-		return result;
+		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createMonthlyDetails();
+		this.yearlyDetails = new ArrayList<>();
 	}
 
 	@Override

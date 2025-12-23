@@ -16,6 +16,7 @@ import co.invest72.investment.domain.TaxableFactory;
 import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
+import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
@@ -162,6 +163,17 @@ class SimpleFixedInstallmentSavingTest {
 	void getPrincipalForYear() {
 		assertEquals(0, investment.getPrincipalForYear(0));
 		assertEquals(12_000_000, investment.getPrincipalForYear(1));
+	}
+
+	@Test
+	void getPrincipalForYear_whenPeriodIs3Year() {
+		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getPrincipalForYear(0));
+		assertEquals(12_000_000, investment.getPrincipalForYear(1));
+		assertEquals(24_325_000, investment.getPrincipalForYear(2));
 	}
 
 	@Test
