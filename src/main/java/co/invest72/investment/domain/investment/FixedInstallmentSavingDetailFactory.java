@@ -37,7 +37,7 @@ public class FixedInstallmentSavingDetailFactory {
 			interestCalculator);
 	}
 
-	public List<YearlyInvestmentDetail> calculateYearlyDetails(InterestType interestType) {
+	public List<YearlyInvestmentDetail> createYearlyDetails(InterestType interestType) {
 		int finalYear = getFinalYear();
 		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
 		DetailCreator<YearlyInvestmentDetail> creator = (index, principal, interest, profit) -> YearlyInvestmentDetail.builder()
@@ -55,8 +55,16 @@ public class FixedInstallmentSavingDetailFactory {
 	private InterestCalculator createYearlyInterestCalculator(InterestType interestType) {
 		InterestCalculator interestCalculator;
 		if (interestType == InterestType.SIMPLE) {
-			interestCalculator = (rate, amount, months) -> rate.calMonthlyInterest(amount)
-				.multiply(months);
+			interestCalculator = (rate, amount, months) -> {
+				BigDecimal investmentAmount = amount;
+				BigDecimal accInterest = BigDecimal.ZERO;
+				for (int i = 1; i <= months.intValue(); i++) {
+					BigDecimal interest = interestRate.getMonthlyRate().multiply(investmentAmount);
+					accInterest = accInterest.add(interest);
+					investmentAmount = investmentAmount.add(amount);
+				}
+				return accInterest;
+			};
 			return interestCalculator;
 		} else if (interestType == InterestType.COMPOUND) {
 			interestCalculator = (rate, amount, months) -> {
@@ -92,15 +100,40 @@ public class FixedInstallmentSavingDetailFactory {
 		result.add(creator.create(0, principal, interest, profit));
 
 		for (int i = 1; i <= finalPeriod; i++) {
-			investment = investment.add(investmentAmount.getAmount());
-			principal = profit.add(investmentAmount.getAmount());
 			int month = monthCalculator.apply(i);
+			investment = investment.add(investmentAmount.getAmount());
+			principal = profit.add(investmentAmount.getAmount())
+				.multiply(BigDecimal.valueOf(month));
+
 			if (interestType == InterestType.SIMPLE) {
 				interest = interestCalculator.calculate(interestRate, investment,
 					BigDecimal.valueOf(month));
 			}
+
 			profit = principal.add(interest);
 			result.add(creator.create(i, principal, interest, profit));
+		}
+		return result;
+	}
+
+	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
+		List<YearlyInvestmentDetail> result = new ArrayList<>();
+		BigDecimal principal = BigDecimal.ZERO;
+		BigDecimal interest = BigDecimal.ZERO;
+		BigDecimal profit = BigDecimal.ZERO;
+		// 0 월
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		int finalMonth = investPeriod.getMonths();
+		BigDecimal accInterest = BigDecimal.ZERO;
+		for (int i = 1; i <= finalMonth; i++) {
+			principal = principal.add(investmentAmount.getAmount());
+			interest = interestRate.getMonthlyRate().multiply(principal);
+
+			accInterest = accInterest.add(interest);
+			if (i % 12 == 0) {
+				BigDecimal yearlyProfit = principal.add(accInterest);
+				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, yearlyProfit));
+			}
 		}
 		return result;
 	}

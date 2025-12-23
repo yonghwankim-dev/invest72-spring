@@ -37,7 +37,7 @@ public class FixedDepositDetailFactory {
 			interestCalculator);
 	}
 
-	public List<YearlyInvestmentDetail> calculateYearlyDetails(InterestType interestType) {
+	public List<YearlyInvestmentDetail> createYearlyDetails(InterestType interestType) {
 		int finalYear = getFinalYear();
 		IntFunction<Integer> monthCalculator = this::calculateMonthsInYear;
 		DetailCreator<YearlyInvestmentDetail> creator = (index, principal, interest, profit) -> YearlyInvestmentDetail.builder()

@@ -43,7 +43,7 @@ class FixedDepositDetailFactoryTest {
 
 	@Test
 	void createYearlyDetails() {
-		List<YearlyInvestmentDetail> details = factory.calculateYearlyDetails(InterestType.SIMPLE);
+		List<YearlyInvestmentDetail> details = factory.createYearlyDetails(InterestType.SIMPLE);
 
 		List<YearlyInvestmentDetail> expected = List.of(
 			new YearlyInvestmentDetail(0, BigDecimal.valueOf(1_000_000), BigDecimal.ZERO,

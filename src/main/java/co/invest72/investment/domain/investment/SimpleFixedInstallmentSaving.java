@@ -34,7 +34,8 @@ public class SimpleFixedInstallmentSaving implements Investment {
 			interestRate,
 			investPeriod);
 		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
-		this.yearlyDetails = calculateYearlyDetails();
+		// this.yearlyDetails = calculateYearlyDetails();
+		this.yearlyDetails = factory.createYearlyDetails(InterestType.SIMPLE);
 	}
 
 	// TODO: FixedInstallmentSavingFactory에 적용하기  
@@ -56,6 +57,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 				BigDecimal yearlyProfit = principal.add(accInterest);
 				result.add(new YearlyInvestmentDetail(i / 12, principal, accInterest, yearlyProfit));
 			}
+			System.out.printf("%d월, principal=%s%n", i, Investment.roundToInt.applyAsInt(principal));
 		}
 		return result;
 	}
