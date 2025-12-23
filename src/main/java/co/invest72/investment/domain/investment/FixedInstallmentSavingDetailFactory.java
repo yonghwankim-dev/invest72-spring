@@ -10,13 +10,13 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.interest.InterestType;
 
-public class InstallmentSavingDetailFactory {
+public class FixedInstallmentSavingDetailFactory {
 
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
 	private final InvestPeriod investPeriod;
 
-	public InstallmentSavingDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
+	public FixedInstallmentSavingDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
 		InvestPeriod investPeriod) {
 		this.investmentAmount = investmentAmount;
 		this.interestRate = interestRate;

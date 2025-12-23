@@ -30,34 +30,14 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		InstallmentSavingDetailFactory factory = new InstallmentSavingDetailFactory(investmentAmount, interestRate,
+		FixedInstallmentSavingDetailFactory factory = new FixedInstallmentSavingDetailFactory(investmentAmount,
+			interestRate,
 			investPeriod);
 		this.details = factory.createMonthlyDetails(InterestType.SIMPLE);
 		this.yearlyDetails = calculateYearlyDetails();
 	}
 
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
-		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
-
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			// 월 적립금액 누적
-			principal = profit.add(investmentAmount.getAmount());
-
-			// 월 이자 계산
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			profit = principal.add(interest);
-
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
-		}
-		return result;
-	}
-
+	// TODO: FixedInstallmentSavingFactory에 적용하기  
 	private List<YearlyInvestmentDetail> calculateYearlyDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 		BigDecimal principal = BigDecimal.ZERO;
