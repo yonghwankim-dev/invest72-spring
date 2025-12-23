@@ -1,7 +1,6 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
@@ -9,8 +8,8 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.interest.InterestType;
-import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
+import co.invest72.investment.domain.investment.factory.CompoundFixedDepositMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.CompoundFixedDepositYearlyDetailFactory;
 import lombok.Builder;
 
 public class CompoundFixedDeposit implements Investment {
@@ -30,31 +29,12 @@ public class CompoundFixedDeposit implements Investment {
 		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
 		this.taxable = taxable;
-		FixedDepositDetailFactory factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod);
-		this.details = factory.createMonthlyDetails(InterestType.COMPOUND);
-		this.yearlyDetails = factory.createYearlyDetails(InterestType.COMPOUND);
-	}
-
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = investmentAmount.getAmount(); // 초기 원금
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount(); // 0 월의 총합은 원금과 동일
-		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
-
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			principal = profit; // 다음 달의 원금은 이번 달의 총합
-
-			// 월 이자 계산
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			// 복리 예금: 원금에 이자가 합산되고 세금은 차감
-			profit = principal.add(interest);
-
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
-		}
-		return result;
+		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createDetails();
+		CompoundFixedDepositYearlyDetailFactory yearlyFactory = new CompoundFixedDepositYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
 	@Override
