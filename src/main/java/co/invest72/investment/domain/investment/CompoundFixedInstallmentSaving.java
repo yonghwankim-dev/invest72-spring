@@ -152,4 +152,16 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
 	}
+
+	@Override
+	public int getProfitForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getProfitForYear(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+	}
 }

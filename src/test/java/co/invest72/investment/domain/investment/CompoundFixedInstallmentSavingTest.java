@@ -155,4 +155,18 @@ class CompoundFixedInstallmentSavingTest {
 		assertEquals(1_623_946, investment.getInterestForYear(3));
 		assertEquals(1_623_946, investment.getInterestForYear(4));
 	}
+
+	@Test
+	void getProfitForYear() {
+		investment = ((CompoundFixedInstallmentSaving)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getProfitForYear(-1));
+		assertEquals(0, investment.getProfitForYear(0));
+		assertEquals(12_330_017, investment.getProfitForYear(1));
+		assertEquals(25_290_862, investment.getProfitForYear(2));
+		assertEquals(38_914_808, investment.getProfitForYear(3));
+		assertEquals(38_914_808, investment.getProfitForYear(4));
+	}
 }
