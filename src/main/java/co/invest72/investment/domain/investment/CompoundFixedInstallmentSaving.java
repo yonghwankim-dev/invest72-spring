@@ -137,6 +137,10 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
 	}
 
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
+
 	@Override
 	public int getInterestForYear(int year) {
 		int finalYear = getFinalYear();
@@ -147,9 +151,5 @@ public class CompoundFixedInstallmentSaving implements Investment {
 			return getInterestForYear(0);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
-	}
-
-	private int getFinalYear() {
-		return (getFinalMonth() - 1) / 12 + 1;
 	}
 }
