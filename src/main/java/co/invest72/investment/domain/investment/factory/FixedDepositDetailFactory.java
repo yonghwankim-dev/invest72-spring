@@ -1,4 +1,4 @@
-package co.invest72.investment.domain.investment;
+package co.invest72.investment.domain.investment.factory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
+import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
 
 public class FixedDepositDetailFactory {
 

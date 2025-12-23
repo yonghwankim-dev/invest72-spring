@@ -10,6 +10,7 @@ import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
 import lombok.Builder;
 
 public class CompoundFixedDeposit implements Investment {

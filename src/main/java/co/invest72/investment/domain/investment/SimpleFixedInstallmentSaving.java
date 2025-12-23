@@ -8,6 +8,8 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.investment.factory.SimpleFixedInstallmentSavingMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.SimpleFixedInstallmentSavingYearlyDetailFactory;
 import lombok.Builder;
 
 /**

@@ -8,6 +8,8 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingYearlyDetailFactory;
 import lombok.Builder;
 
 public class CompoundFixedInstallmentSaving implements Investment {

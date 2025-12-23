@@ -13,6 +13,7 @@ import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import testutil.BigDecimalAssertion;
 
