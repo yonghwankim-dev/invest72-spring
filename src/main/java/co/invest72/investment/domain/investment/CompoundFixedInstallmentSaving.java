@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
+import lombok.Builder;
 
 public class CompoundFixedInstallmentSaving implements Investment {
 
@@ -16,7 +17,9 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
+	@Builder(toBuilder = true)
 	public CompoundFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
@@ -26,6 +29,9 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		CompoundFixedInstallmentSavingMonthlyDetailFactory factory = new CompoundFixedInstallmentSavingMonthlyDetailFactory(
 			investmentAmount, interestRate, investPeriod);
 		this.details = factory.createDetails();
+		CompoundFixedInstallmentSavingYearlyDetailFactory yearlyFactory = new CompoundFixedInstallmentSavingYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
 	@Override
@@ -117,5 +123,33 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	@Override
 	public String getTaxType() {
 		return taxable.getTaxType();
+	}
+
+	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getInterestForYear(finalYear);
+		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+	}
+
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
 	}
 }
