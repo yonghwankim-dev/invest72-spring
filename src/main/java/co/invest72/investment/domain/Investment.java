@@ -58,7 +58,7 @@ public interface Investment {
 	 * @return 누적 이자 금액
 	 */
 	default int getAccInterest(int month) {
-		throw new UnsupportedOperationException("implement not yeted");
+		throw new UnsupportedOperationException("not implemented yet");
 	}
 
 	/**
