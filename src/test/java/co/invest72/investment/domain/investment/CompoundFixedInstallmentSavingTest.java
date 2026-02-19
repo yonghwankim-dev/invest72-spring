@@ -207,8 +207,10 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getProfitForYear_whenPeriodIs25Months() {
+		Taxable nonTax = taxableFactory.createNonTax();
 		investment = ((CompoundFixedInstallmentSaving)investment).toBuilder()
-			.investPeriod(new YearlyInvestPeriod(3))
+			.investPeriod(new MonthlyInvestPeriod(25))
+			.taxable(nonTax)
 			.build();
 
 		assertEquals(0, investment.getProfitForYear(-1));
