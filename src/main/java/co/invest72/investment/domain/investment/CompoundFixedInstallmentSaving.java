@@ -1,15 +1,16 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingYearlyDetailFactory;
+import lombok.Builder;
 
 public class CompoundFixedInstallmentSaving implements Investment {
 
@@ -18,44 +19,23 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
+	@Builder(toBuilder = true)
 	public CompoundFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		this.details = calculateDetails();
+		CompoundFixedInstallmentSavingMonthlyDetailFactory factory = new CompoundFixedInstallmentSavingMonthlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createDetails();
+		CompoundFixedInstallmentSavingYearlyDetailFactory yearlyFactory = new CompoundFixedInstallmentSavingYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal tax = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
-		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
-
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			// 월 적립금액 누적
-			principal = principal.add(investmentAmount.getAmount());
-
-			// 월 이자 계산
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			// 이자 과세
-			tax = taxable.applyTax(interest);
-
-			profit = principal.add(interest);
-
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
-
-			principal = profit; // 이자를 포함한 원금이 다음 달의 원금이 됨
-		}
-		return result;
-	}
-	
 	@Override
 	public int getPrincipal() {
 		return getPrincipal(getFinalMonth());
@@ -132,13 +112,59 @@ public class CompoundFixedInstallmentSaving implements Investment {
 
 	@Override
 	public int getTotalProfit() {
+		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
+		BigDecimal interest = details.get(getFinalMonth()).getInterest();
 		BigDecimal totalTax = BigDecimal.valueOf(getTotalTax());
-		BigDecimal totalProfit = details.get(getFinalMonth()).getProfit().subtract(totalTax);
-		return roundToInt.applyAsInt(totalProfit);
+		return roundToInt.applyAsInt(principal.add(interest).subtract(totalTax));
 	}
 
 	@Override
 	public int getFinalMonth() {
 		return investPeriod.getMonths();
+	}
+
+	@Override
+	public String getTaxType() {
+		return taxable.getTaxType();
+	}
+
+	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
+
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getInterestForYear(finalYear);
+		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+	}
+
+	@Override
+	public int getProfitForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getProfitForYear(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
 	}
 }

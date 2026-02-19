@@ -13,11 +13,15 @@ import co.invest72.investment.application.dto.CalculateMonthlyCompoundInterestRe
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.request.MonthlyCompoundInterestCalculateRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyCompoundInterestResponse;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
+import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class InvestmentRestController {
 
 	private final CalculateExpirationInvestment calculateExpirationInvestment;
@@ -33,10 +37,17 @@ public class InvestmentRestController {
 	}
 
 	@PostMapping("/investments/calculate/monthly")
-	public ResponseEntity<CalculateMonthlyInvestment.CalculateMonthlyInvestmentResponse> calculateMonthly(
+	public ResponseEntity<CalculateMonthlyInvestmentResponse> calculateMonthly(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateMonthlyInvestment.CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
 			request);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/investments/calculate/yearly")
+	public ResponseEntity<CalculateYearlyInvestmentResponse> calculateYearly(
+		@Valid @RequestBody CalculateInvestmentRequest request) {
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(request);
 		return ResponseEntity.ok(response);
 	}
 

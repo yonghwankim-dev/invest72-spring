@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>투자 계산 결과</title>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        h1 {
+            color: #2E8B57;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 80%; /* 테이블 및 버튼에 맞게 너비 조정 */
+        }
+
+        .result-row {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        /* --- 새로 추가된 스타일 --- */
+
+        /* --- 라디오 버튼 스타일링 추가 --- */
+
+        /* 라디오 버튼 자체는 숨김 */
+        #viewOptions input[type="radio"] {
+            display: none;
+        }
+
+        /* label 요소를 버튼처럼 스타일링 (비활성화 상태: 흰색 배경) */
+        #viewOptions label {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 5px;
+            border: 1px solid #2E8B57; /* 경계선 초록색 */
+            cursor: pointer;
+            background-color: white; /* 비활성화된 버튼 배경색: 흰색 */
+            color: #2E8B57; /* 비활성화된 버튼 글자색: 초록색 */
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+            font-weight: normal;
+            user-select: none;
+        }
+
+        /* 마우스 오버 시 스타일 (비활성화 상태에서만 적용) */
+        #viewOptions label:hover {
+            background-color: #f0f0f0; /* 약간 밝은 회색으로 변경 */
+        }
+
+        /* 선택된 (checked) 라디오 버튼의 label 스타일 (활성화: 초록색 배경) */
+        #viewOptions input[type="radio"]:checked + label {
+            background-color: #2E8B57; /* 활성화된 버튼 배경색: 초록색 */
+            color: white; /* 활성화된 버튼 글자색: 흰색 */
+            border-color: #2E8B57;
+            font-weight: bold;
+        }
+
+        /* 테이블 스타일 조정 (가독성 향상) */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center; /* 숫자 정렬 */
+        }
+
+        th {
+            background-color: #2E8B57;
+            color: white;
+            text-align: center; /* 헤더 정렬 */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+    </style>
+</head>
+<body>
+<h1>투자 계산 결과</h1>
+<div id="viewOptions">
+    <input type="radio" name="viewOption" id="monthlyViewBtn" value="monthly" checked>
+    <label for="monthlyViewBtn">월별</label>
+
+    <input type="radio" name="viewOption" id="yearlyViewBtn" value="yearly">
+    <label for="yearlyViewBtn">년도별</label>
+</div>
+
+<div class="result-container" id="resultContainer">
+    <!-- 계산 결과가 여기에 들어갑니다 -->
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // sessionStorage에서 계산 결과 읽기
+        const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+
+        renderMonthlyResult(body);
+    });
+
+    function renderMonthlyResult(body) {
+        const container = document.getElementById('resultContainer');
+        // reset container
+        container.innerHTML = '';
+
+        if (!body) {
+            container.innerHTML = '<div>계산 결과가 존재하지 않습니다.</div>';
+            return;
+        }
+
+        const details = body.details;
+
+        // 월별 데이터 존재 확인
+        if (!details || details.length === 0) {
+            container.innerHTML = '<div>월별 계산 결과가 존재하지 않습니다.</div>';
+            return;
+        }
+
+        // 숫자 포맷 함수 (3자리 콤마)
+        const formatNumber = (num) => num.toLocaleString('ko-KR');
+
+        let resultHTML = `
+                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
+        `
+
+        // 테이블 HTML 생성
+        resultHTML += `
+            <table style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>월</th>
+                        <th>원금</th>
+                        <th>이자</th>
+                        <th>총 수익</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        for (const item of details) {
+            const isYearEnd = (item.month % 12 === 0); // Check if the month is the end of a year
+            resultHTML += `
+                <tr style="background-color: ${isYearEnd ? '#f9f9f9' : 'transparent'};">
+                    <td>${item.month}</td>
+                    <td>${formatNumber(item.principal)} 원</td>
+                    <td>${formatNumber(item.interest)} 원</td>
+                    <td>${formatNumber(item.profit)} 원</td>
+                </tr>
+            `;
+        }
+        resultHTML += `
+                </tbody>
+            </table>
+        `;
+
+
+        // 출력
+        container.innerHTML = resultHTML;
+    }
+
+    function renderYearlyResult(body) {
+        const container = document.getElementById('resultContainer');
+        // reset container
+        container.innerHTML = '';
+
+        if (!body) {
+            container.innerHTML = '<div>계산 결과가 존재하지 않습니다.</div>';
+            return;
+        }
+
+        const details = body.details;
+
+        // 월별 데이터 존재 확인
+        if (!details || details.length === 0) {
+            container.innerHTML = '<div>월별 계산 결과가 존재하지 않습니다.</div>';
+            return;
+        }
+
+        // 숫자 포맷 함수 (3자리 콤마)
+        const formatNumber = (num) => num.toLocaleString('ko-KR');
+
+        let resultHTML = `
+                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
+        `
+
+        // 테이블 HTML 생성
+        resultHTML += `
+            <table style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>년</th>
+                        <th>원금</th>
+                        <th>이자</th>
+                        <th>총 수익</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        for (const item of details) {
+            resultHTML += `
+                <tr style="background-color: #f9f9f9">
+                    <td>${item.year}</td>
+                    <td>${formatNumber(item.principal)} 원</td>
+                    <td>${formatNumber(item.interest)} 원</td>
+                    <td>${formatNumber(item.profit)} 원</td>
+                </tr>
+            `;
+        }
+
+        resultHTML += `
+                </tbody>
+            </table>
+        `;
+
+        // 출력
+        container.innerHTML = resultHTML;
+    }
+
+    const monthlyViewBtn = document.getElementById('monthlyViewBtn');
+    const yearlyViewBtn = document.getElementById('yearlyViewBtn');
+
+    monthlyViewBtn.addEventListener('change', function () {
+        if (this.checked) {
+            displayMonthlyView();
+        }
+    });
+
+    yearlyViewBtn.addEventListener('change', function () {
+        if (this.checked) {
+            displayYearlyView();
+        }
+    })
+
+    function displayMonthlyView() {
+        let url = '/investments/calculate/monthly';
+        const requestJson = sessionStorage.getItem('request');
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (response) {
+                sessionStorage.setItem('requestURL', url);
+                sessionStorage.setItem('request', requestJson);
+                sessionStorage.setItem('calculationResult', JSON.stringify(response));
+
+                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+                renderMonthlyResult(body);
+            },
+            error: function (xhr, status, error) {
+                alert('계산 중 오류가 발생했습니다: ' + error);
+            }
+        });
+    }
+
+    function displayYearlyView() {
+        let url = '/investments/calculate/yearly';
+        const requestJson = sessionStorage.getItem('request');
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (response) {
+                sessionStorage.setItem('requestURL', url);
+                sessionStorage.setItem('request', requestJson);
+                sessionStorage.setItem('calculationResult', JSON.stringify(response));
+
+                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+                renderYearlyResult(body);
+            },
+            error: function (xhr, status, error) {
+                alert('계산 중 오류가 발생했습니다: ' + error);
+            }
+        });
+
+
+    }
+</script>
+</body>
+</html>

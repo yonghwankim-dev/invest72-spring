@@ -1,15 +1,15 @@
 package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.investment.domain.investment.factory.CompoundFixedDepositMonthlyDetailFactory;
+import co.invest72.investment.domain.investment.factory.CompoundFixedDepositYearlyDetailFactory;
 import lombok.Builder;
 
 public class CompoundFixedDeposit implements Investment {
@@ -19,8 +19,9 @@ public class CompoundFixedDeposit implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<MonthlyInvestmentDetail> details;
+	private final List<YearlyInvestmentDetail> yearlyDetails;
 
-	@Builder
+	@Builder(toBuilder = true)
 	public CompoundFixedDeposit(LumpSumInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate,
 		Taxable taxable) {
@@ -28,33 +29,12 @@ public class CompoundFixedDeposit implements Investment {
 		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
 		this.taxable = taxable;
-		this.details = calculateDetails();
-	}
-
-	private List<MonthlyInvestmentDetail> calculateDetails() {
-		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = investmentAmount.getAmount(); // 초기 원금
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal tax = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount(); // 0 월의 총합은 원금과 동일
-		// 0 월
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, tax, profit));
-
-		for (int i = 1; i <= getFinalMonth(); i++) {
-			// 월 이자 계산
-			interest = interestRate.getMonthlyRate().multiply(principal);
-
-			// 이자 과세
-			tax = taxable.applyTax(interest);
-
-			// 복리 예금: 원금에 이자가 합산되고 세금은 차감
-			profit = principal.add(interest);
-
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, tax, profit));
-
-			principal = profit; // 다음 달의 원금은 이번 달의 총합
-		}
-		return result;
+		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createDetails();
+		CompoundFixedDepositYearlyDetailFactory yearlyFactory = new CompoundFixedDepositYearlyDetailFactory(
+			investmentAmount, interestRate, investPeriod);
+		this.yearlyDetails = yearlyFactory.createDetails();
 	}
 
 	@Override
@@ -145,5 +125,50 @@ public class CompoundFixedDeposit implements Investment {
 	@Override
 	public int getFinalMonth() {
 		return investPeriod.getMonths();
+	}
+
+	@Override
+	public String getTaxType() {
+		return taxable.getTaxType();
+	}
+
+	@Override
+	public int getPrincipalForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getPrincipalForYear(finalYear);
+		}
+		if (year < 0) {
+			return getPrincipalForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+	}
+
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getInterestForYear(finalYear);
+		}
+		if (year < 0) {
+			return getInterestForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+	}
+
+	@Override
+	public int getProfitForYear(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getProfitForYear(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYear(0);
+		}
+		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
 	}
 }

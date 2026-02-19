@@ -28,7 +28,7 @@ class CalculateInvestmentTest {
 	@BeforeEach
 	void setUp() {
 		InvestmentFactory investmentFactory = new InvestmentFactory();
-		investmentUseCase = new CalculateExpirationInvestment(investmentFactory);
+		investmentUseCase = new CalculateExpirationInvestment(investmentFactory, new TaxPercentFormatter());
 		investmentType = FIXED_DEPOSIT.getTypeName();
 		String amountType = AmountType.ONE_TIME.getDescription();
 		amount = 1_000_000;

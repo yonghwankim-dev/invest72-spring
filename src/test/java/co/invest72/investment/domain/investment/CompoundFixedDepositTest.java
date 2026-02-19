@@ -18,6 +18,7 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
+import co.invest72.investment.domain.tax.TaxType;
 
 class CompoundFixedDepositTest {
 
@@ -139,5 +140,54 @@ class CompoundFixedDepositTest {
 		int totalTax = investment.getTotalTax();
 
 		assertEquals(7_879, totalTax);
+	}
+
+	@Test
+	void getTaxType() {
+		String taxType = investment.getTaxType();
+
+		assertEquals(TaxType.STANDARD.getDescription(), taxType);
+	}
+
+	@Test
+	void getPrincipalForYear_whenPeriodIs3Year() {
+		investment = ((CompoundFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(1_000_000, investment.getPrincipalForYear(-1));
+		assertEquals(1_000_000, investment.getPrincipalForYear(0));
+		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+		assertEquals(1_051_162, investment.getPrincipalForYear(2));
+		assertEquals(1_104_941, investment.getPrincipalForYear(3));
+		assertEquals(1_104_941, investment.getPrincipalForYear(4));
+	}
+
+	@Test
+	void getInterestForYear_whenPeriodIs3Year() {
+		investment = ((CompoundFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(0, investment.getInterestForYear(-1));
+		assertEquals(0, investment.getInterestForYear(0));
+		assertEquals(51_162, investment.getInterestForYear(1));
+		assertEquals(53_779, investment.getInterestForYear(2));
+		assertEquals(56_531, investment.getInterestForYear(3));
+		assertEquals(56_531, investment.getInterestForYear(4));
+	}
+
+	@Test
+	void getProfitForYear_whenPeriodIs3Year() {
+		investment = ((CompoundFixedDeposit)investment).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(3))
+			.build();
+
+		assertEquals(1_000_000, investment.getProfitForYear(-1));
+		assertEquals(1_000_000, investment.getProfitForYear(0));
+		assertEquals(1_051_162, investment.getProfitForYear(1));
+		assertEquals(1_104_941, investment.getProfitForYear(2));
+		assertEquals(1_161_472, investment.getProfitForYear(3));
+		assertEquals(1_161_472, investment.getProfitForYear(4));
 	}
 }

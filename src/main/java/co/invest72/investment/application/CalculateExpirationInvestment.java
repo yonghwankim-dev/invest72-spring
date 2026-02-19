@@ -2,14 +2,13 @@ package co.invest72.investment.application;
 
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CalculateExpirationInvestment {
 
 	private final InvestmentFactory investmentFactory;
-
-	public CalculateExpirationInvestment(InvestmentFactory investmentFactory) {
-		this.investmentFactory = investmentFactory;
-	}
+	private final TaxFormatter taxFormatter;
 
 	public CalculateExpirationInvestmentResponse calInvestment(CalculateInvestmentRequest request) {
 		Investment investment = investmentFactory.createBy(request);
@@ -18,11 +17,14 @@ public class CalculateExpirationInvestment {
 		int totalPrincipal = investment.getTotalPrincipal();
 		int interest = investment.getTotalInterest();
 		int tax = investment.getTotalTax();
-		return new CalculateExpirationInvestmentResponse(totalInvestment, totalPrincipal, interest, tax, totalProfit);
+		String taxType = investment.getTaxType();
+		String taxPercent = taxFormatter.format(request.getTaxRate());
+		return new CalculateExpirationInvestmentResponse(totalInvestment, totalPrincipal, interest, tax, totalProfit,
+			taxType, taxPercent);
 	}
 
 	public record CalculateExpirationInvestmentResponse(
-		int totalInvestment, int totalPrincipal, int totalInterest, int totalTax, int totalProfit
-	) {
+		int totalInvestment, int totalPrincipal, int totalInterest, int totalTax, int totalProfit, String taxType,
+		String taxPercent) {
 	}
 }

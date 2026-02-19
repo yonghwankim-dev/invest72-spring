@@ -2,7 +2,7 @@ package co.invest72.investment.presentation.response;
 
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
+import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
 import lombok.Builder;
 import lombok.Getter;
 

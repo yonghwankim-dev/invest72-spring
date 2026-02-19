@@ -45,6 +45,23 @@ public interface Investment {
 	int getInterest(int month);
 
 	/**
+	 * 만기 시점의 누적 이자 금액을 반환합니다.
+	 * @return 누적 이자 금액
+	 */
+	default int getAccInterest() {
+		return getAccInterest(getFinalMonth());
+	}
+
+	/**
+	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
+	 * @param month 회차 (기본 1부터 시작)
+	 * @return 누적 이자 금액
+	 */
+	default int getAccInterest(int month) {
+		throw new UnsupportedOperationException("not implemented yet");
+	}
+
+	/**
 	 * 만기 시점의 수익 금액을 반환합니다.
 	 * <p>
 	 * 해당 금액은 원금 + 이자 - 세금 입니다.
@@ -74,33 +91,25 @@ public interface Investment {
 	 * 만기까지의 총 원금 금액을 반환합니다.
 	 * @return 총 원금 금액
 	 */
-	default int getTotalPrincipal() {
-		return getPrincipal();
-	}
+	int getTotalPrincipal();
 
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	default int getTotalInterest() {
-		return getInterest();
-	}
+	int getTotalInterest();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	default int getTotalTax() {
-		throw new UnsupportedOperationException("getTotalTax must be implemented if tax is applicable.");
-	}
+	int getTotalTax();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.
 	 * @return 총 수익 금액
 	 */
-	default int getTotalProfit() {
-		return getProfit();
-	}
+	int getTotalProfit();
 
 	/**
 	 * 투자 기간의 마지막 월을 반환합니다
@@ -110,4 +119,18 @@ public interface Investment {
 	 * @return 마지막 월 (기본 1부터 시작)
 	 */
 	int getFinalMonth();
+
+	String getTaxType();
+
+	default int getPrincipalForYear(int year) {
+		throw new UnsupportedOperationException("implement not yeted");
+	}
+
+	default int getInterestForYear(int year) {
+		throw new UnsupportedOperationException("implement not yeted");
+	}
+
+	default int getProfitForYear(int year) {
+		throw new UnsupportedOperationException("implement not yeted");
+	}
 }

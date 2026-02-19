@@ -135,6 +135,9 @@
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
+                sessionStorage.setItem('requestURL', url);
+                // 요청 정보를 sessionStorage에 저장
+                sessionStorage.setItem('request', JSON.stringify(formData));
                 // 결과를 sessionStorage에 저장
                 sessionStorage.setItem('calculationResult', JSON.stringify(response));
                 // 결과 페이지로 이동

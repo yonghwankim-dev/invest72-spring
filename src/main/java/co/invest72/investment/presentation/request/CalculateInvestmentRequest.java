@@ -50,7 +50,7 @@ public class CalculateInvestmentRequest {
 	@NotNull(message = "taxRate must not be null")
 	private Double taxRate;
 
-	@Builder
+	@Builder(toBuilder = true)
 	private CalculateInvestmentRequest(String type, String amountType, Integer amount, String periodType,
 		Integer periodValue, String interestType, Double annualInterestRate, String taxType, Double taxRate) {
 		this.type = Objects.requireNonNull(type, "type must not be null");

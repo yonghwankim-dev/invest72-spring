@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.invest72.investment.application.dto.MonthlyInvestmentDetail;
+import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,8 +32,8 @@ public class MonthlyCompoundInterest implements Investment {
 
 	private List<MonthlyInvestmentDetail> calculateDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		result.add(new MonthlyInvestmentDetail(1, initialAmount.getAmount(), BigDecimal.ZERO, BigDecimal.ZERO,
-			initialAmount.getAmount()));
+		result.add(
+			new MonthlyInvestmentDetail(1, initialAmount.getAmount(), BigDecimal.ZERO, initialAmount.getAmount()));
 
 		BigDecimal principal = initialAmount.getAmount();
 		for (int i = 2; i <= investPeriod.getMonths(); i++) {
@@ -60,7 +60,6 @@ public class MonthlyCompoundInterest implements Investment {
 				new MonthlyInvestmentDetail(i,
 					principal,
 					interest,
-					tax,
 					profit
 				)
 			);
@@ -142,12 +141,33 @@ public class MonthlyCompoundInterest implements Investment {
 	@Override
 	public int getTotalInvestment() {
 		BigDecimal totalInvestment = initialAmount.getAmount()
-			.add(monthlyAmount.getAmount().multiply(BigDecimal.valueOf(investPeriod.getMonths() - 1)));
+			.add(monthlyAmount.getAmount().multiply(BigDecimal.valueOf(investPeriod.getMonths() - 1L)));
 		return roundToInt.applyAsInt(totalInvestment);
+	}
+
+	@Override
+	public int getTotalPrincipal() {
+		return getPrincipal();
+	}
+
+	@Override
+	public int getTotalTax() {
+		return taxable.applyTax(getTotalInterest());
+	}
+
+	@Override
+	public int getTotalProfit() {
+		return getTotalPrincipal() - getTotalTax() + getTotalInterest();
 	}
 
 	@Override
 	public int getFinalMonth() {
 		return investPeriod.getMonths();
 	}
+
+	@Override
+	public String getTaxType() {
+		return taxable.getTaxType();
+	}
+
 }

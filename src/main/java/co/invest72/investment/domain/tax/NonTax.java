@@ -14,4 +14,14 @@ public class NonTax implements Taxable {
 	public BigDecimal applyTax(BigDecimal interest) {
 		return BigDecimal.ZERO;
 	}
+
+	@Override
+	public String getTaxType() {
+		return TaxType.NON_TAX.getDescription();
+	}
+
+	@Override
+	public double getTaxRate() {
+		return 0.0;
+	}
 }

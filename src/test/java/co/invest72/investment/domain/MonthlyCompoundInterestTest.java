@@ -11,6 +11,7 @@ import co.invest72.investment.domain.amount.MonthlyAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
+import co.invest72.investment.domain.tax.TaxType;
 
 class MonthlyCompoundInterestTest {
 
@@ -33,7 +34,7 @@ class MonthlyCompoundInterestTest {
 	void canCreated() {
 		Assertions.assertThat(investment).isNotNull();
 	}
-	
+
 	@Test
 	void getPrincipal() {
 		int principal = investment.getPrincipal();
@@ -98,5 +99,12 @@ class MonthlyCompoundInterestTest {
 		int finalMonth = investment.getFinalMonth();
 
 		Assertions.assertThat(finalMonth).isEqualTo(12);
+	}
+
+	@Test
+	void getTaxType() {
+		String taxType = investment.getTaxType();
+
+		Assertions.assertThat(taxType).isEqualTo(TaxType.NON_TAX.getDescription());
 	}
 }

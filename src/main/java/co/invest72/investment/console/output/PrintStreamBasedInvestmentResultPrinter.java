@@ -3,7 +3,7 @@ package co.invest72.investment.console.output;
 import java.io.PrintStream;
 import java.util.List;
 
-import co.invest72.investment.application.CalculateMonthlyInvestment;
+import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 
 public class PrintStreamBasedInvestmentResultPrinter implements InvestmentResultPrinter {
 
@@ -43,14 +43,14 @@ public class PrintStreamBasedInvestmentResultPrinter implements InvestmentResult
 
 	@Override
 	public void printMonthlyInvestmentResults(
-		List<CalculateMonthlyInvestment.MonthlyInvestmentResult> monthlyInvestmentResults) {
+		List<MonthlyInvestmentResult> monthlyInvestmentResults) {
 		if (monthlyInvestmentResults.isEmpty()) {
 			out.println("월별 투자 결과가 없습니다.");
 			return;
 		}
 
 		out.println("월별 투자 결과:");
-		for (CalculateMonthlyInvestment.MonthlyInvestmentResult result : monthlyInvestmentResults) {
+		for (MonthlyInvestmentResult result : monthlyInvestmentResults) {
 			String formatted = String.format(
 				"월: %d, 원금(누적): %s원, 이자(누적): %s원, 총 수익 금액: %s원",
 				result.getMonth(),

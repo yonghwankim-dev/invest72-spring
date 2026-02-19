@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.investment.application.CalculateExpirationInvestment;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.application.TaxPercentFormatter;
 import co.invest72.investment.console.input.delegator.CalculateExpirationInvestmentReaderDelegator;
 import co.invest72.investment.console.input.reader.CalculateInvestmentRequestReader;
 import co.invest72.investment.console.input.registry.InvestmentAmountReaderStrategyRegistry;
@@ -104,7 +105,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
 		InvestmentFactory factory = new InvestmentFactory();
-		investment = new CalculateExpirationInvestment(factory);
+		investment = new CalculateExpirationInvestment(factory, new TaxPercentFormatter());
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,

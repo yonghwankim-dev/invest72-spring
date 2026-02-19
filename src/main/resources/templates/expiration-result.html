@@ -40,21 +40,21 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // sessionStorage에서 계산 결과 읽기
-        const calculationResult = JSON.parse(sessionStorage.getItem('calculationResult'));
+        const body = JSON.parse(sessionStorage.getItem('calculationResult'));
 
         const container = document.getElementById('resultContainer');
 
-        if (!calculationResult) {
+        if (!body) {
             container.innerHTML = '<div>계산 결과가 존재하지 않습니다.</div>';
             return;
         }
 
         container.innerHTML = `
 
-                <div class="result-row"><span class="label">총 투자금:</span> ${calculationResult.totalInvestment.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 이자:</span> ${calculationResult.totalInterest.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 세금:</span> ${calculationResult.totalTax.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 수익:</span> ${calculationResult.totalProfit.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
             `;
     });
 </script>
