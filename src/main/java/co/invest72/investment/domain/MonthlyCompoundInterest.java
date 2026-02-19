@@ -147,17 +147,17 @@ public class MonthlyCompoundInterest implements Investment {
 
 	@Override
 	public int getTotalPrincipal() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		return getPrincipal();
 	}
 
 	@Override
 	public int getTotalTax() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		return taxable.applyTax(getTotalInterest());
 	}
 
 	@Override
 	public int getTotalProfit() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		return getTotalPrincipal() - getTotalTax() + getTotalInterest();
 	}
 
 	@Override
