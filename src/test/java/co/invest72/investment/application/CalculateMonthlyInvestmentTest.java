@@ -60,7 +60,7 @@ class CalculateMonthlyInvestmentTest {
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_000_000)
+			.totalPrincipal(1_012_500)
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
@@ -100,7 +100,7 @@ class CalculateMonthlyInvestmentTest {
 
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_000_000)
+			.totalPrincipal(1_045_833)
 			.totalInterest(50_000)
 			.totalTax(0)
 			.totalProfit(1_050_000)
@@ -139,7 +139,7 @@ class CalculateMonthlyInvestmentTest {
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_000_000)
+			.totalPrincipal(1_046_800)
 			.totalInterest(51_162)
 			.totalTax(0)
 			.totalProfit(1_051_162)

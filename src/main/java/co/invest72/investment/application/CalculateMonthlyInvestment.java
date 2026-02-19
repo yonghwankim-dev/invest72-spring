@@ -29,7 +29,7 @@ public class CalculateMonthlyInvestment {
 			));
 		}
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalInvestment();
+		int totalPrincipal = investment.getTotalPrincipal();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
