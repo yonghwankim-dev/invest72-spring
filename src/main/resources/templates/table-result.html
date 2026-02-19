@@ -78,7 +78,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
-            text-align: right; /* 숫자 정렬 */
+            text-align: center; /* 숫자 정렬 */
         }
 
         th {
@@ -137,8 +137,15 @@
         // 숫자 포맷 함수 (3자리 콤마)
         const formatNumber = (num) => num.toLocaleString('ko-KR');
 
-        // 테이블 HTML 생성
         let resultHTML = `
+                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
+        `
+
+        // 테이블 HTML 생성
+        resultHTML += `
             <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr style="background-color: #f2f2f2;">
@@ -162,18 +169,11 @@
                 </tr>
             `;
         });
-
-        resultHTML += `
-                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
-        `
-
         resultHTML += `
                 </tbody>
             </table>
         `;
+
 
         // 출력
         container.innerHTML = resultHTML;
@@ -200,8 +200,15 @@
         // 숫자 포맷 함수 (3자리 콤마)
         const formatNumber = (num) => num.toLocaleString('ko-KR');
 
-        // 테이블 HTML 생성
         let resultHTML = `
+                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
+                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
+        `
+
+        // 테이블 HTML 생성
+        resultHTML += `
             <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr style="background-color: #f2f2f2;">
@@ -225,13 +232,6 @@
                 </tr>
             `;
         });
-
-        resultHTML += `
-                <div class="result-row"><span class="label">총 투자금:</span> ${body.totalInvestment.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 이자:</span> ${body.totalInterest.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 세금(${body.taxType}, ${body.taxPercent}):</span> ${body.totalTax.toLocaleString()} 원</div>
-                <div class="result-row"><span class="label">총 수익:</span> ${body.totalProfit.toLocaleString()} 원</div>
-        `
 
         resultHTML += `
                 </tbody>

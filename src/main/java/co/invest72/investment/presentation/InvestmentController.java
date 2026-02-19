@@ -23,6 +23,6 @@ public class InvestmentController {
 
 	@GetMapping("/investments/calculate/monthly/result")
 	public String showMonthlyResultPage() {
-		return "monthly-result";
+		return "table-result";
 	}
 }
