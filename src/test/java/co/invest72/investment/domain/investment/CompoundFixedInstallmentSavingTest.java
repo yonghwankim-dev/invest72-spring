@@ -24,16 +24,21 @@ import co.invest72.investment.domain.tax.TaxType;
 class CompoundFixedInstallmentSavingTest {
 
 	private Investment investment;
+	private TaxableFactory taxableFactory;
 
 	@BeforeEach
 	void setUp() {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(1_000_000);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(12);
 		InterestRate annualInterestRateRate = new AnnualInterestRate(0.05);
-		TaxableFactory taxableFactory = new KoreanTaxableFactory();
+		taxableFactory = new KoreanTaxableFactory();
 		Taxable taxable = taxableFactory.createStandardTax(new FixedTaxRate(0.154));
-		investment = new CompoundFixedInstallmentSaving(investmentAmount, investPeriod, annualInterestRateRate,
-			taxable);
+		investment = CompoundFixedInstallmentSaving.builder()
+			.investmentAmount(investmentAmount)
+			.investPeriod(investPeriod)
+			.interestRate(annualInterestRateRate)
+			.taxable(taxable)
+			.build();
 
 	}
 
@@ -172,8 +177,10 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getInterestForYear_whenPeriodIs25Months() {
+		Taxable nonTax = taxableFactory.createNonTax();
 		investment = ((CompoundFixedInstallmentSaving)investment).toBuilder()
 			.investPeriod(new MonthlyInvestPeriod(25))
+			.taxable(nonTax)
 			.build();
 
 		assertEquals(0, investment.getInterestForYear(-1));

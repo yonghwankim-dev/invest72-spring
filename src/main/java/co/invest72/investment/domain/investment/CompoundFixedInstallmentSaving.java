@@ -35,7 +35,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 			investmentAmount, interestRate, investPeriod);
 		this.yearlyDetails = yearlyFactory.createDetails();
 	}
-
+	
 	@Override
 	public int getPrincipal() {
 		return getPrincipal(getFinalMonth());
