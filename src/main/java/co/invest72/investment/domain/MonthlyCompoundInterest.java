@@ -141,7 +141,7 @@ public class MonthlyCompoundInterest implements Investment {
 	@Override
 	public int getTotalInvestment() {
 		BigDecimal totalInvestment = initialAmount.getAmount()
-			.add(monthlyAmount.getAmount().multiply(BigDecimal.valueOf(investPeriod.getMonths() - 1)));
+			.add(monthlyAmount.getAmount().multiply(BigDecimal.valueOf(investPeriod.getMonths() - 1L)));
 		return roundToInt.applyAsInt(totalInvestment);
 	}
 
