@@ -10,7 +10,6 @@ import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingMonthlyDetailFactory;
 import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingYearlyDetailFactory;
-import lombok.Builder;
 
 public class CompoundFixedInstallmentSaving implements Investment {
 
@@ -21,7 +20,6 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	private final List<MonthlyInvestmentDetail> details;
 	private final List<YearlyInvestmentDetail> yearlyDetails;
 
-	@Builder(toBuilder = true)
 	public CompoundFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
 		InterestRate interestRate, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
@@ -35,7 +33,50 @@ public class CompoundFixedInstallmentSaving implements Investment {
 			investmentAmount, interestRate, investPeriod);
 		this.yearlyDetails = yearlyFactory.createDetails();
 	}
-	
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public Builder toBuilder() {
+		Builder builder = new Builder();
+		return builder.investmentAmount(this.investmentAmount)
+			.investPeriod(this.investPeriod)
+			.interestRate(this.interestRate)
+			.taxable(this.taxable);
+	}
+
+	public static class Builder {
+		private InstallmentInvestmentAmount investmentAmount;
+		private InvestPeriod investPeriod;
+		private InterestRate interestRate;
+		private Taxable taxable;
+
+		public Builder investmentAmount(InstallmentInvestmentAmount investmentAmount) {
+			this.investmentAmount = investmentAmount;
+			return this;
+		}
+
+		public Builder investPeriod(InvestPeriod investPeriod) {
+			this.investPeriod = investPeriod;
+			return this;
+		}
+
+		public Builder interestRate(InterestRate interestRate) {
+			this.interestRate = interestRate;
+			return this;
+		}
+
+		public Builder taxable(Taxable taxable) {
+			this.taxable = taxable;
+			return this;
+		}
+
+		public CompoundFixedInstallmentSaving build() {
+			return new CompoundFixedInstallmentSaving(investmentAmount, investPeriod, interestRate, taxable);
+		}
+	}
+
 	@Override
 	public int getPrincipal() {
 		return getPrincipal(getFinalMonth());
