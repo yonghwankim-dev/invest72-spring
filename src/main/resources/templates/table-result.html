@@ -248,19 +248,16 @@
     monthlyViewBtn.addEventListener('change', function () {
         if (this.checked) {
             displayMonthlyView();
-            alert("월별 뷰로 전환하고 서버에 요청합니다.");
         }
     });
 
     yearlyViewBtn.addEventListener('change', function () {
         if (this.checked) {
             displayYearlyView();
-            alert("년도별 뷰로 전환하고 서버에 요청합니다.");
         }
     })
 
     function displayMonthlyView() {
-        alert("월별 뷰 표시 함수 호출됨.");
         let url = '/investments/calculate/monthly';
         const requestJson = sessionStorage.getItem('request');
         $.ajax({
@@ -283,7 +280,6 @@
     }
 
     function displayYearlyView() {
-        alert("년도별 뷰 표시 함수 호출됨.");
         let url = '/investments/calculate/yearly';
         const requestJson = sessionStorage.getItem('request');
         $.ajax({
