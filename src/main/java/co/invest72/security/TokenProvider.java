@@ -46,7 +46,7 @@ public class TokenProvider {
 		Date validity = new Date(now + tokenValidityInMilliseconds);
 
 		return Jwts.builder()
-			.setSubject(authentication.getName()) // 유저의 고유 식별자 (예: 이메일)
+			.setSubject(authentication.getName()) // 유저의 고유 식별자
 			.claim("auth", authorities) // 권한 정보
 			.signWith(key, SignatureAlgorithm.HS256)
 			.setExpiration(validity) // 토큰 만료 시간 설정
@@ -67,6 +67,8 @@ public class TokenProvider {
 			return false;
 		}
 	}
+
+	// todo: uuid를 가져올수 있도록 개선
 
 	/**
 	 * JWT 토큰에서 사용자 이름을 추출하는 메서드입니다. 토큰이 유효한 경우, 토큰의 "sub" 클레임에서 사용자 이름을 반환합니다.
