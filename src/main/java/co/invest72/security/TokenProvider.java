@@ -82,7 +82,12 @@ public class TokenProvider {
 			.getBody();
 
 		// 1. 권한 정보 추출
-		Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
+		Object auth = claims.get("auth");
+		if (auth == null) {
+			auth = "";
+		}
+
+		Collection<? extends GrantedAuthority> authorities = Arrays.stream(auth.toString().split(","))
 			.map(SimpleGrantedAuthority::new)
 			.toList();
 
