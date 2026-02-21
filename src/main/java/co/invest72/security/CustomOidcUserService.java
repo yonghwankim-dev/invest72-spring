@@ -5,7 +5,6 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.user.domain.User;
 import co.invest72.user.domain.UserRepository;
@@ -22,7 +21,6 @@ public class CustomOidcUserService extends OidcUserService {
 	private final UuidGenerator uuidGenerator;
 
 	@Override
-	@Transactional
 	public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 		// 1. 부모 클래스의 loadUser를 호출하여 유저 정보를 가져옵니다.
 		OidcUser oidcUser = super.loadUser(userRequest);

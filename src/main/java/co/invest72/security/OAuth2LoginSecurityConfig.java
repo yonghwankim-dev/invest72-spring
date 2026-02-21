@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -23,7 +24,6 @@ public class OAuth2LoginSecurityConfig {
 
 	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
-	private final TokenProvider tokenProvider;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,7 +41,15 @@ public class OAuth2LoginSecurityConfig {
 			.oauth2Login(oauth2 -> oauth2
 				.userInfoEndpoint(userInfo -> userInfo
 					.oidcUserService(customOidcUserService))
-				.successHandler(successHandler));
+				.successHandler(successHandler))
+			.logout(logout -> logout
+				.logoutUrl("/api/v1/auth/logout")
+				.logoutSuccessHandler((request, response, authentication) ->
+					response.setStatus(HttpServletResponse.SC_OK)
+				)
+				.invalidateHttpSession(true) // 세션 무효화
+				.deleteCookies("JSESSIONID") // 세션 쿠키 삭제
+			);
 		return http.build();
 	}
 
