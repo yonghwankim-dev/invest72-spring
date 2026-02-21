@@ -28,7 +28,7 @@ public class TokenProvider {
 	/**
 	 * 생성자에서 JWT 서명에 사용할 비밀 키와 토큰 유효 기간을 설정합니다.
 	 * @param secretKey JWT 서명에 사용할 비밀 키 (Base64로 인코딩된 문자열)
-	 * @param tokenValidityInMilliseconds 토큰의 유효 기간 (밀리초 단위, 기본값: 36000000초 = 10시간)
+	 * @param tokenValidityInMilliseconds 토큰의 유효 기간 (밀리초 단위, 기본값: 36000000밀리초 = 10시간)
 	 */
 	public TokenProvider(@Value("${jwt.secret}") String secretKey,
 		@Value("${jwt.token-validity-in-milli-seconds:36000000}") long tokenValidityInMilliseconds) {
