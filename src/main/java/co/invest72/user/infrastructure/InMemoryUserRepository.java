@@ -21,6 +21,9 @@ public class InMemoryUserRepository implements UserRepository {
 
 	@Override
 	public Optional<User> findByProviderId(String providerId) {
+		if (providerId == null) {
+			return Optional.empty();
+		}
 		return userStore.values().stream()
 			.filter(user -> user.getProviderId().equals(providerId))
 			.findFirst();
