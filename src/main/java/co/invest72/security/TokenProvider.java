@@ -72,16 +72,7 @@ public class TokenProvider {
 			return false;
 		}
 	}
-
-	public String getUsernameFromToken(String token) {
-		return Jwts.parserBuilder()
-			.setSigningKey(key)
-			.build()
-			.parseClaimsJws(token)
-			.getBody()
-			.getSubject();
-	}
-
+	
 	public Authentication getAuthentication(String token) {
 		Claims claims = Jwts.parserBuilder()
 			.setSigningKey(key)
