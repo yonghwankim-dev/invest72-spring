@@ -18,8 +18,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class TokenProvider {
 	private final Key key;
 	private final long tokenValidityInMilliseconds;
@@ -59,20 +61,20 @@ public class TokenProvider {
 	}
 
 	/**
-	 * JWT 토큰을 검증하는 메서드입니다. 토큰이 유효한지, 서명이 올바른지, 만료되지 않았는지 등을 확인합니다.
+	 * JWT 토큰의 유효성을 검증합니다. 토큰이 올바르게 서명되었는지, 만료되지 않았는지 등을 확인합니다.
 	 * @param token 검증할 JWT 토큰 문자열
-	 * @return 토큰이 유효하면 true, 그렇지 않으면 false를 반환합니다. 예외가 발생할 경우 false를 반환합니다.
+	 * @return 토큰이 유효하면 true, 그렇지 않으면 false를 반환합니다.
 	 */
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
-			// ExpiredJwtException, UnsupportedJwtException 등 예외 처리 가능
-			return false;
+			log.warn("Invalid JWT token: {}", e.getMessage());
 		}
+		return false;
 	}
-	
+
 	public Authentication getAuthentication(String token) {
 		Claims claims = Jwts.parserBuilder()
 			.setSigningKey(key)
