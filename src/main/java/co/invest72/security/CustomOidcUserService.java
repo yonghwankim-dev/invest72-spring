@@ -1,9 +1,7 @@
 package co.invest72.security;
 
-import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,9 +11,11 @@ import org.springframework.stereotype.Service;
 import co.invest72.user.domain.User;
 import co.invest72.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomOidcUserService extends OidcUserService {
 
 	private final UserRepository userRepository;
@@ -24,27 +24,20 @@ public class CustomOidcUserService extends OidcUserService {
 	public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 		// 1. 부모 클래스의 loadUser를 호출하여 유저 정보를 가져옵니다.
 		OidcUser oidcUser = super.loadUser(userRequest);
+		String providerId = oidcUser.getSubject(); // 구글의 sub값
 
-		try {
-			return processOidcUser(oidcUser);
-		} catch (Exception ex) {
-			throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
-		}
+		User user = userRepository.findByProviderId(providerId).orElseGet(() -> createNewUser(oidcUser, providerId));
+
+		return new PrincipalUser(user, oidcUser.getAttributes(), oidcUser.getIdToken(), oidcUser.getUserInfo());
 	}
 
-	private OidcUser processOidcUser(OidcUser oidcUser) {
-		Map<String, Object> attributes = oidcUser.getAttributes();
-
-		String email = (String)attributes.get("email");
-		String name = (String)attributes.get("name");
-
-		// 여기서 DB 저장 로직을 수행하세요 (예: 유저가 없으면 저장, 있으면 업데이트)
-		String id = UUID.randomUUID().toString();
-		User user = new User(id, email, name);
-		userRepository.save(user);
-
-		System.out.println("✅ OIDC 로그인 시도: " + email);
-
-		return oidcUser;
+	private User createNewUser(OidcUser oidcUser, String providerId) {
+		// 2. 유저가 존재하지 않으면 새로 생성하여 저장합니다.
+		String uuid = UUID.randomUUID().toString();// UUID로 고유한 ID 생성
+		String email = oidcUser.getEmail(); // 구글에서 제공하는 이메일 정보
+		String nickname = oidcUser.getName();
+		User newUser = new User(uuid, email, nickname, providerId);
+		userRepository.save(newUser);
+		return newUser;
 	}
 }

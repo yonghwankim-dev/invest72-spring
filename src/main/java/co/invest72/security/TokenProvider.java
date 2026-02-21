@@ -67,14 +67,7 @@ public class TokenProvider {
 			return false;
 		}
 	}
-
-	// todo: uuid를 가져올수 있도록 개선
-
-	/**
-	 * JWT 토큰에서 사용자 이름을 추출하는 메서드입니다. 토큰이 유효한 경우, 토큰의 "sub" 클레임에서 사용자 이름을 반환합니다.
-	 * @param token 사용자 이름을 추출할 JWT 토큰 문자열
-	 * @return 토큰에서 추출된 사용자 이름 (예: 이메일). 토큰이 유효하지 않거나 추출에 실패한 경우 null을 반환할 수 있습니다.
-	 */
+	
 	public String getUsernameFromToken(String token) {
 		return Jwts.parserBuilder()
 			.setSigningKey(key)
