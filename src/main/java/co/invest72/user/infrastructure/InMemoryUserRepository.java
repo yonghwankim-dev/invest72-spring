@@ -1,10 +1,13 @@
-package co.invest72.user.domain;
+package co.invest72.user.infrastructure;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Repository;
+
+import co.invest72.user.domain.User;
+import co.invest72.user.domain.UserRepository;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
