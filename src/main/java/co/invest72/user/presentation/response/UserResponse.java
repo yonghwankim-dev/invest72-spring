@@ -1,4 +1,4 @@
-package co.invest72.user.presentation.dto;
+package co.invest72.user.presentation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

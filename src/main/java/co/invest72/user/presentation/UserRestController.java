@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.application.UserService;
 import co.invest72.user.domain.User;
-import co.invest72.user.presentation.dto.UserResponse;
+import co.invest72.user.presentation.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
