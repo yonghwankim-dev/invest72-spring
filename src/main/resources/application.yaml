@@ -1,3 +1,7 @@
 spring:
   profiles:
     include: secret
+
+app:
+  oauth2:
+    authorized-redirect-uri: http://localhost:3000/oauth2/redirect
