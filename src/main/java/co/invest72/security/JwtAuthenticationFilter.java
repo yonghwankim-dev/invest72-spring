@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String jwt = resolveToken(request);
 		// 2. 토큰 유효성 검사
 		if (Strings.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-			// 3. 토큰에서 유저 식별자(UUID) 및 권한 정보 추출
+			// 3. 토큰에서 유저 식별자 및 권한 정보 추출
 			Authentication authentication = tokenProvider.getAuthentication(jwt);
 			log.debug("Authenticated user: {}", authentication.getName());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
