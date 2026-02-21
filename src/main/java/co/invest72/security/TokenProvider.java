@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +54,7 @@ public class TokenProvider {
 		return Jwts.builder()
 			.setSubject(authentication.getName()) // 유저의 고유 식별자
 			.claim("auth", authorities) // 권한 정보
-			.signWith(key, SignatureAlgorithm.HS256)
+			.signWith(key)
 			.setExpiration(validity) // 토큰 만료 시간 설정
 			.compact();
 	}
