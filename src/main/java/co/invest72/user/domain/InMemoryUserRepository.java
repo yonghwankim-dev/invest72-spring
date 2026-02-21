@@ -22,4 +22,9 @@ public class InMemoryUserRepository implements UserRepository {
 			.filter(user -> user.getProviderId().equals(providerId))
 			.findFirst();
 	}
+
+	@Override
+	public Optional<User> findById(String id) {
+		return Optional.ofNullable(userStore.get(id));
+	}
 }

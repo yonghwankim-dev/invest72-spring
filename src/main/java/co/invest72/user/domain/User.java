@@ -19,4 +19,8 @@ public class User {
 		this.providerId = providerId;
 		this.createdAt = LocalDateTime.now();
 	}
+
+	public static User create(String id) {
+		return new User(id, null, null, null);
+	}
 }

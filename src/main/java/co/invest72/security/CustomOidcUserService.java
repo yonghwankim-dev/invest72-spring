@@ -35,7 +35,7 @@ public class CustomOidcUserService extends OidcUserService {
 		// 2. 유저가 존재하지 않으면 새로 생성하여 저장합니다.
 		String uuid = UUID.randomUUID().toString();// UUID로 고유한 ID 생성
 		String email = oidcUser.getEmail(); // 구글에서 제공하는 이메일 정보
-		String nickname = oidcUser.getName();
+		String nickname = oidcUser.getGivenName();
 		User newUser = new User(uuid, email, nickname, providerId);
 		userRepository.save(newUser);
 		return newUser;

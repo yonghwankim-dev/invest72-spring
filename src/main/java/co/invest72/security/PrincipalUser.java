@@ -28,6 +28,12 @@ public class PrincipalUser implements OidcUser {
 		this.userInfo = userInfo;
 	}
 
+	// uuid를 가진 임시 user 객체를 생성하는 정적 팩토리 메서드입니다. 이 메서드는 OidcUser의 속성에서 필요한 정보를 추출하여 User 객체를 생성합니다.
+	public static PrincipalUser create(String id) {
+		User user = User.create(id);
+		return new PrincipalUser(user, null, null, null);
+	}
+
 	@Override
 	public Map<String, Object> getAttributes() {
 		return attributes;

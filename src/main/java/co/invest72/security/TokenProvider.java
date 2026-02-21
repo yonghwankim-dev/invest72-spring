@@ -1,14 +1,19 @@
 package co.invest72.security;
 
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -67,7 +72,7 @@ public class TokenProvider {
 			return false;
 		}
 	}
-	
+
 	public String getUsernameFromToken(String token) {
 		return Jwts.parserBuilder()
 			.setSigningKey(key)
@@ -75,5 +80,23 @@ public class TokenProvider {
 			.parseClaimsJws(token)
 			.getBody()
 			.getSubject();
+	}
+
+	public Authentication getAuthentication(String token) {
+		Claims claims = Jwts.parserBuilder()
+			.setSigningKey(key)
+			.build()
+			.parseClaimsJws(token)
+			.getBody();
+
+		// 1. 권한 정보 추출
+		Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
+			.map(SimpleGrantedAuthority::new)
+			.toList();
+
+		// 2. PrincipalUser 객체 생성 (여기서는 사용자 이름을 UUID로 사용)
+		PrincipalUser principal = PrincipalUser.create(claims.getSubject());
+
+		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 }
