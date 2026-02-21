@@ -45,10 +45,10 @@ public class PrincipalUser implements OidcUser {
 	}
 
 	/**
-	 * 사용자의 고유 식별자를 반환하는 메서드입니다. 이 예제에서는 User 객체의 ID를 반환하도록 구현되어 있습니다.
-	 * 객체의 ID는 UUID로 생성되어 고유하므로, 이를 사용하여 사용자를 식별할 수 있습니다.
-	 * 이 메서드는 Spring Security에서 인증된 사용자의 이름을 가져올 때 사용됩니다.
-	 * @return 사용자의 고유 식별자 (User 객체의 ID)
+	 * 사용자의 고유 식별자(Unique Identifier)를 반환합니다.
+	 * 이 메서드는 Spring Security의 Principal 인터페이스 구현체로서,
+	 * 인증된 사용자를 시스템 내에서 고유하게 식별할 수 있는 ID를 제공합니다.
+	 * * @return 사용자의 고유 식별자 문자열
 	 */
 	@Override
 	public String getName() {
