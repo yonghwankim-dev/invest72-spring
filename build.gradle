@@ -26,6 +26,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.1'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.5.11'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.5.11'
+    // h2 database for testing
+    implementation 'com.h2database:h2:2.4.240'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok'

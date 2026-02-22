@@ -1,7 +1,16 @@
 spring:
   profiles:
     include: secret
+  datasource:
+    url: jdbc:h2:mem:fineAnts;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      path: /h2-console
 
 app:
   oauth2:
     authorized-redirect-uri: http://localhost:3000/
+# h2 database 설정
