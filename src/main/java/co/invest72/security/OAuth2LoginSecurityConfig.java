@@ -2,8 +2,7 @@ package co.invest72.security;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
-import java.util.List;
-
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,10 +19,12 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableConfigurationProperties(CorsConfigurationProperties.class)
 public class OAuth2LoginSecurityConfig {
 
 	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
+	private final CorsConfigurationProperties corsConfigurationProperties;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,14 +58,13 @@ public class OAuth2LoginSecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
-		configuration.setAllowCredentials(true);
+		configuration.setAllowedOrigins(corsConfigurationProperties.getAllowedOrigin());
+		configuration.setAllowedMethods(corsConfigurationProperties.getAllowedMethods());
+		configuration.setAllowedHeaders(corsConfigurationProperties.getAllowedHeaders());
+		configuration.setAllowCredentials(corsConfigurationProperties.getAllowCredentials());
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-
 }
