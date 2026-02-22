@@ -19,9 +19,9 @@ public class CorsConfigurationProperties {
 	public CorsConfigurationProperties(List<String> allowedOrigins, List<String> allowedMethods,
 		List<String> allowedHeaders,
 		Boolean allowCredentials) {
-		this.allowedOrigins = allowedOrigins;
-		this.allowedMethods = allowedMethods;
-		this.allowedHeaders = allowedHeaders;
-		this.allowCredentials = allowCredentials;
+		this.allowedOrigins = allowedOrigins != null ? allowedOrigins : List.of();
+		this.allowedMethods = allowedMethods != null ? allowedMethods : List.of();
+		this.allowedHeaders = allowedHeaders != null ? allowedHeaders : List.of();
+		this.allowCredentials = allowCredentials != null ? allowCredentials : Boolean.FALSE;
 	}
 }
