@@ -16,27 +16,19 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-	private final TokenProvider tokenProvider;
 	private final String redirectUri;
 
 	public OAuth2AuthenticationSuccessHandler(
-		TokenProvider tokenProvider,
 		@Value("${app.oauth2.authorized-redirect-uri}") String redirectUri) {
 		super("/");
-		this.tokenProvider = tokenProvider;
 		this.redirectUri = redirectUri;
 	}
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
-		// 실제 서명된 JWT 생성
-		String token = tokenProvider.createToken(authentication);
-
-		// React 앱으로 리다이렉 (쿼리 스트링에 토큰 포함)
-		String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
-			.queryParam("token", token)
-			.build().toUriString();
+		// redirectUri는 프론트에서 로그인 성공 후 리다이렉트할 URL입니다. 예를 들어, "http://localhost:3000/login-success"와 같은 URL이 될 수 있습니다.
+		String targetUrl = UriComponentsBuilder.fromUriString(redirectUri).build().toUriString();
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 	}
 }
