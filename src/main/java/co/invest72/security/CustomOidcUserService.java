@@ -21,8 +21,8 @@ public class CustomOidcUserService extends OidcUserService {
 	private final UserRepository userRepository;
 	private final UuidGenerator uuidGenerator;
 
-	@Override
 	@Transactional
+	@Override
 	public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 		// 1. 부모 클래스의 loadUser를 호출하여 유저 정보를 가져옵니다.
 		OidcUser oidcUser = super.loadUser(userRequest);
