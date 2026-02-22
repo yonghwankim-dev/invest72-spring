@@ -10,16 +10,16 @@ import lombok.Getter;
 @ConfigurationProperties(prefix = "app.cors")
 @Getter
 public class CorsConfigurationProperties {
-	private final List<String> allowedOrigin;
+	private final List<String> allowedOrigins;
 	private final List<String> allowedMethods;
 	private final List<String> allowedHeaders;
 	private final Boolean allowCredentials;
 
 	@ConstructorBinding
-	public CorsConfigurationProperties(List<String> allowedOrigin, List<String> allowedMethods,
+	public CorsConfigurationProperties(List<String> allowedOrigins, List<String> allowedMethods,
 		List<String> allowedHeaders,
 		Boolean allowCredentials) {
-		this.allowedOrigin = allowedOrigin;
+		this.allowedOrigins = allowedOrigins;
 		this.allowedMethods = allowedMethods;
 		this.allowedHeaders = allowedHeaders;
 		this.allowCredentials = allowCredentials;

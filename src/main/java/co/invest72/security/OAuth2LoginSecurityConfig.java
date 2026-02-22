@@ -58,7 +58,7 @@ public class OAuth2LoginSecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(corsConfigurationProperties.getAllowedOrigin());
+		configuration.setAllowedOrigins(corsConfigurationProperties.getAllowedOrigins());
 		configuration.setAllowedMethods(corsConfigurationProperties.getAllowedMethods());
 		configuration.setAllowedHeaders(corsConfigurationProperties.getAllowedHeaders());
 		configuration.setAllowCredentials(corsConfigurationProperties.getAllowCredentials());
