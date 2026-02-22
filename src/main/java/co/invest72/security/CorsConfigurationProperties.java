@@ -3,13 +3,11 @@ package co.invest72.security;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import lombok.Getter;
 
 @ConfigurationProperties(prefix = "app.cors")
-@EnableConfigurationProperties(CorsConfigurationProperties.class)
 @Getter
 public class CorsConfigurationProperties {
 	private final List<String> allowedOrigin;
