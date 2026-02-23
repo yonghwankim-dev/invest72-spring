@@ -3,11 +3,14 @@ package co.invest72.financial_product.presentation.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.common.validation.EnumValid;
 import co.invest72.common.validation.FinancialAmount;
 import co.invest72.common.validation.FinancialMonths;
 import co.invest72.common.validation.FinancialProductName;
 import co.invest72.common.validation.FinancialRate;
-import jakarta.validation.constraints.NotBlank;
+import co.invest72.financial_product.domain.ProductType;
+import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.tax.TaxType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +23,7 @@ public class CreateFinancialProductDto {
 	@FinancialProductName
 	private String name;
 
-	@NotBlank(message = "상품 유형은 필수입니다.")
+	@EnumValid(enumClass = ProductType.class, message = "유효하지 않은 상품 유형입니다.")
 	private String productType;
 
 	@FinancialAmount
@@ -32,10 +35,10 @@ public class CreateFinancialProductDto {
 	@FinancialRate
 	private BigDecimal interestRate;
 
-	@NotBlank(message = "이자 유형은 필수입니다.")
+	@EnumValid(enumClass = InterestType.class, message = "유효하지 않은 이자 유형입니다.")
 	private String interestType;
 
-	@NotBlank(message = "세율 유형은 필수입니다.")
+	@EnumValid(enumClass = TaxType.class, message = "유효하지 않은 세금 유형입니다.")
 	private String taxType;
 
 	@FinancialRate

@@ -131,6 +131,32 @@ class FinancialProductRestControllerTest {
 			.andDo(MockMvcResultHandlers.print());
 	}
 
+	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
+	@Test
+	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
+		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+			.name("현금 상품")
+			.productType("INVALID_TYPE") // 유효하지 않은 상품 유형
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(0)
+			.interestRate(BigDecimal.valueOf(0.0))
+			.interestType("INVALID_INTEREST_TYPE") // 유효하지 않은 이자 유형
+			.taxType("INVALID_TAX_TYPE") // 유효하지 않은 세금 유형
+			.taxRate(BigDecimal.valueOf(0.0))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors").isArray())
+			.andExpect(jsonPath("$.errors", hasSize(3)))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
 	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
