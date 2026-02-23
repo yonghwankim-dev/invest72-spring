@@ -89,7 +89,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
 
-	@DisplayName("상품 생성 - 유효하지 않은 현금 상품 생성 요청은 400 Bad Request를 반환한다")
+	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
 		CreateFinancialProductDto dto = CreateFinancialProductDto.builder().build();
@@ -100,6 +100,8 @@ class FinancialProductRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors").isArray())
+			.andExpect(jsonPath("$.errors", hasSize(9)))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
