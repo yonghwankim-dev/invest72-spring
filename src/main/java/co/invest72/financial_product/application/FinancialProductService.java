@@ -1,6 +1,5 @@
 package co.invest72.financial_product.application;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +29,12 @@ public class FinancialProductService {
 			.user(user)
 			.name(dto.getName())
 			.productType(ProductType.valueOf(dto.getProductType()))
-			.amount(BigDecimal.valueOf(dto.getAmount()))
+			.amount(dto.getAmount())
 			.months(dto.getMonths())
-			.interestRate(BigDecimal.valueOf(dto.getInterestRate()))
+			.interestRate(dto.getInterestRate())
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(BigDecimal.valueOf(dto.getTaxRate()))
+			.taxRate(dto.getTaxRate())
 			.startDate(dto.getStartDate())
 			.createdAt(LocalDateTime.now())
 			.build();

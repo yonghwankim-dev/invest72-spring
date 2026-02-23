@@ -72,12 +72,12 @@ class FinancialProductRestControllerTest {
 		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
 			.name("현금 상품")
 			.productType(ProductType.CASH.name())
-			.amount(1_000_000L)
+			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
-			.interestRate(0.0)
+			.interestRate(BigDecimal.valueOf(0.0))
 			.interestType(InterestType.NONE.name())
 			.taxType(TaxType.NONE.name())
-			.taxRate(0.0)
+			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.build();
 		// when & then
