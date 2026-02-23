@@ -35,6 +35,7 @@ class FinancialProductRestControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
 	private PrincipalUser principalUser;
 
 	@BeforeEach
@@ -61,14 +62,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
-		// when
+		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
-		// then
 
 	}
 }

@@ -1,5 +1,6 @@
 package co.invest72.financial_product.domain;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,5 +28,12 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 	@Override
 	public FinancialProduct findById(String id) {
 		return storage.get(id);
+	}
+
+	@Override
+	public List<FinancialProduct> findAllById(String id) {
+		return storage.values().stream()
+			.filter(product -> product.getUser().getId().equals(id))
+			.toList();
 	}
 }

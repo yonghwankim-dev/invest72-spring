@@ -1,6 +1,7 @@
 package co.invest72.financial_product.application;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
+import co.invest72.financial_product.presentation.dto.response.ProductResponseDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
@@ -34,5 +36,12 @@ public class FinancialProductService {
 			.taxRate(BigDecimal.valueOf(dto.getTaxRate()))
 			.build();
 		return repository.save(product);
+	}
+
+	public List<ProductResponseDto> getProductsByUser(User user) {
+		List<FinancialProduct> products = repository.findAllById(user.getId());
+		return products.stream()
+			.map(ProductResponseDto::from)
+			.toList();
 	}
 }
