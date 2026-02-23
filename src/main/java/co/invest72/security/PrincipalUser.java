@@ -69,4 +69,8 @@ public class PrincipalUser implements OidcUser {
 	public OidcIdToken getIdToken() {
 		return idToken;
 	}
+
+	public User getUser() {
+		return user;
+	}
 }
