@@ -1,0 +1,31 @@
+package co.invest72.financial_product.domain;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class InMemoryFinancialProductRepository implements FinancialProductRepository {
+	private final Map<String, FinancialProduct> storage = new ConcurrentHashMap<>();
+	private final IdGenerator idGenerator;
+
+	public InMemoryFinancialProductRepository(IdGenerator idGenerator) {
+		this.idGenerator = idGenerator;
+	}
+
+	@Override
+	public String save(FinancialProduct product) {
+		String id = idGenerator.generateId();
+		FinancialProduct newProduct = product.toBuilder()
+			.id(id)
+			.build();
+		storage.put(id, newProduct);
+		return id;
+	}
+
+	@Override
+	public FinancialProduct findById(String id) {
+		return storage.get(id);
+	}
+}

@@ -19,12 +19,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
+@Getter
 public class FinancialProduct {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
