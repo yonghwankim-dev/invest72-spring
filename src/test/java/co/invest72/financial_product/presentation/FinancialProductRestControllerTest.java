@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
+import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
 import co.invest72.investment.domain.interest.InterestType;
@@ -165,7 +166,7 @@ class FinancialProductRestControllerTest {
 			.user(principalUser.getUser())
 			.name("현금 상품")
 			.productType(ProductType.CASH)
-			.amount(BigDecimal.valueOf(1_000_000L))
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
 			.interestType(InterestType.NONE)

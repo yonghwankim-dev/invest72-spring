@@ -8,6 +8,7 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -42,8 +43,8 @@ public class FinancialProduct {
 	@Enumerated(EnumType.STRING)
 	private ProductType productType;
 
-	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
-	private BigDecimal amount; // 원금 또는 월 적립액
+	@Embedded
+	private ProductAmount amount; // 원금 또는 월 적립액
 
 	@Column(name = "months", nullable = false)
 	private Integer months; // 기간 (개월)

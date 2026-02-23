@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.ProductResponseDto;
@@ -29,7 +30,7 @@ public class FinancialProductService {
 			.user(user)
 			.name(dto.getName())
 			.productType(ProductType.valueOf(dto.getProductType()))
-			.amount(dto.getAmount())
+			.amount(new ProductAmount(dto.getAmount()))
 			.months(dto.getMonths())
 			.interestRate(dto.getInterestRate())
 			.interestType(InterestType.valueOf(dto.getInterestType()))
@@ -51,7 +52,7 @@ public class FinancialProductService {
 				.userId(product.getUser().getId())
 				.name(product.getName())
 				.productType(product.getProductType().name())
-				.amount(product.getAmount().doubleValue())
+				.amount(product.getAmount().getValue().doubleValue())
 				.months(product.getMonths())
 				.interestRate(product.getInterestRate().doubleValue())
 				.interestType(product.getInterestType().name())
