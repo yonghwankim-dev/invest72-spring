@@ -1,12 +1,12 @@
 package co.invest72.financial_product.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -49,8 +49,9 @@ public class FinancialProduct {
 	@Column(name = "months", nullable = false)
 	private Integer months; // 기간 (개월)
 
-	@Column(name = "interest_rate", nullable = false, precision = 5, scale = 4)
-	private BigDecimal interestRate; // 연이율
+	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
+	private ProductRate interestRate; // 연이율
 
 	@Enumerated(EnumType.STRING)
 	private InterestType interestType; // 이자 유형 (단리, 복리)
@@ -58,8 +59,9 @@ public class FinancialProduct {
 	@Enumerated(EnumType.STRING)
 	private TaxType taxType; // 세금 유형 (과세, 비과세)
 
-	@Column(name = "tax_rate", nullable = false, precision = 5, scale = 4)
-	private BigDecimal taxRate; // 세율 (예: 0.15 for 15%)
+	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "tax_rate", nullable = false, precision = 5, scale = 4))
+	private ProductRate taxRate; // 세율 (예: 0.15 for 15%)
 
 	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate; // 투자 시작일

@@ -25,6 +25,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
 import co.invest72.investment.domain.interest.InterestType;
@@ -168,10 +169,10 @@ class FinancialProductRestControllerTest {
 			.productType(ProductType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(0)
-			.interestRate(BigDecimal.valueOf(0.0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
 			.interestType(InterestType.NONE)
 			.taxType(TaxType.NONE)
-			.taxRate(BigDecimal.valueOf(0.0))
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.ProductResponseDto;
@@ -32,10 +33,10 @@ public class FinancialProductService {
 			.productType(ProductType.valueOf(dto.getProductType()))
 			.amount(new ProductAmount(dto.getAmount()))
 			.months(dto.getMonths())
-			.interestRate(dto.getInterestRate())
+			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(dto.getTaxRate())
+			.taxRate(new ProductRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(LocalDateTime.now())
 			.build();
@@ -54,10 +55,10 @@ public class FinancialProductService {
 				.productType(product.getProductType().name())
 				.amount(product.getAmount().getValue().doubleValue())
 				.months(product.getMonths())
-				.interestRate(product.getInterestRate().doubleValue())
+				.interestRate(product.getInterestRate().getValue().doubleValue())
 				.interestType(product.getInterestType().name())
 				.taxType(product.getTaxType().name())
-				.taxRate(product.getTaxRate().doubleValue())
+				.taxRate(product.getTaxRate().getValue().doubleValue())
 				.startDate(product.getStartDate())
 				.createdAt(product.getCreatedAt())
 				.build();
