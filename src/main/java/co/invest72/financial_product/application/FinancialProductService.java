@@ -1,6 +1,7 @@
 package co.invest72.financial_product.application;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -39,9 +40,27 @@ public class FinancialProductService {
 	}
 
 	public List<ProductResponseDto> getProductsByUser(User user) {
+		List<ProductResponseDto> result = new ArrayList<>();
 		List<FinancialProduct> products = repository.findAllById(user.getId());
-		return products.stream()
-			.map(ProductResponseDto::from)
-			.toList();
+
+		for (FinancialProduct product : products) {
+			ProductResponseDto dto = ProductResponseDto.builder()
+				.id(product.getId())
+				.userId(product.getUser().getId())
+				.name(product.getName())
+				.productType(product.getProductType().name())
+				.amount(product.getAmount().doubleValue())
+				.months(product.getMonths())
+				.interestRate(product.getInterestRate().doubleValue())
+				.interestType(product.getInterestType().name())
+				.taxType(product.getTaxType().name())
+				.taxRate(product.getTaxRate().doubleValue())
+				.startDate(product.getStartDate())
+				.createdAt(product.getCreatedAt())
+				.build();
+			result.add(dto);
+		}
+		
+		return result;
 	}
 }
