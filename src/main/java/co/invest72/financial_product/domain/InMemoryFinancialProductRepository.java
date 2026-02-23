@@ -36,4 +36,9 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 			.filter(product -> product.getUser().getId().equals(id))
 			.toList();
 	}
+
+	@Override
+	public void clear() {
+		storage.clear();
+	}
 }

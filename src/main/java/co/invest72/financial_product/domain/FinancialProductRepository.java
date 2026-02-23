@@ -20,4 +20,6 @@ public interface FinancialProductRepository {
 	FinancialProduct findById(String id);
 
 	List<FinancialProduct> findAllById(String id);
+
+	void clear();
 }

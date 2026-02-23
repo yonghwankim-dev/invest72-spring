@@ -1,5 +1,8 @@
 package co.invest72.financial_product.presentation.dto.response;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import co.invest72.financial_product.domain.FinancialProduct;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +23,8 @@ public class ProductResponseDto {
 	private String interestType;
 	private String taxType;
 	private double taxRate;
+	private LocalDate startDate;
+	private LocalDateTime createdAt;
 
 	public static ProductResponseDto from(FinancialProduct product) {
 		return ProductResponseDto.builder()
@@ -33,6 +38,8 @@ public class ProductResponseDto {
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
 			.taxRate(product.getTaxRate().doubleValue())
+			.startDate(product.getStartDate())
+			.createdAt(product.getCreatedAt())
 			.build();
 	}
 }

@@ -3,6 +3,10 @@ package co.invest72.financial_product.presentation;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +20,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
@@ -36,6 +42,9 @@ class FinancialProductRestControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	private FinancialProductRepository financialProductRepository;
+
 	private PrincipalUser principalUser;
 
 	@BeforeEach
@@ -46,6 +55,11 @@ class FinancialProductRestControllerTest {
 		String providerId = idGenerator.generateId();
 		User testUser = new User(id, email, nickname, providerId);
 		principalUser = new PrincipalUser(testUser, null, null, null);
+	}
+
+	@AfterEach
+	void tearDown() {
+		financialProductRepository.clear();
 	}
 
 	@Test
@@ -61,6 +75,7 @@ class FinancialProductRestControllerTest {
 			.interestType(InterestType.NONE.name())
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.startDate(LocalDate.of(2026, 1, 1))
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -69,6 +84,43 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
 
+	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
+	@Test
+	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.user(principalUser.getUser())
+			.name("현금 상품")
+			.productType(ProductType.CASH)
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(0)
+			.interestRate(BigDecimal.valueOf(0.0))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(BigDecimal.valueOf(0.0))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").isArray())
+			.andExpect(jsonPath("$[0].id").value(notNullValue()))
+			.andExpect(jsonPath("$[0].userId").value(principalUser.getUser().getId()))
+			.andExpect(jsonPath("$[0].name").value("현금 상품"))
+			.andExpect(jsonPath("$[0].productType").value(ProductType.CASH.name()))
+			.andExpect(jsonPath("$[0].amount").value(1_000_000.0))
+			.andExpect(jsonPath("$[0].months").value(0))
+			.andExpect(jsonPath("$[0].interestRate").value(0.0))
+			.andExpect(jsonPath("$[0].interestType").value(InterestType.NONE.name()))
+			.andExpect(jsonPath("$[0].taxType").value(TaxType.NON_TAX.name()))
+			.andExpect(jsonPath("$[0].taxRate").value(0.0))
+			.andExpect(jsonPath("$[0].startDate").value("2026-01-01"))
+			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
 	}
 }
