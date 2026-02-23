@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import co.invest72.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 
 public class PrincipalUser extends org.springframework.security.core.userdetails.User implements OidcUser {
@@ -23,18 +24,13 @@ public class PrincipalUser extends org.springframework.security.core.userdetails
 
 	private final OidcUserInfo userInfo;
 
+	@Builder(builderMethodName = "of")
 	public PrincipalUser(User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
 		super(user.getId(), "", Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 		this.user = user;
 		this.attributes = attributes;
 		this.idToken = idToken;
 		this.userInfo = userInfo;
-	}
-
-	// uuid를 가진 임시 user 객체를 생성하는 정적 팩토리 메서드입니다. 이 메서드는 OidcUser의 속성에서 필요한 정보를 추출하여 User 객체를 생성합니다.
-	public static PrincipalUser create(String id) {
-		User user = User.create(id);
-		return new PrincipalUser(user, null, null, null);
 	}
 
 	@Override

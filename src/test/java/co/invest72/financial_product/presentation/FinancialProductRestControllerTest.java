@@ -54,7 +54,9 @@ class FinancialProductRestControllerTest {
 		String nickname = "user1";
 		String providerId = idGenerator.generateId();
 		User testUser = new User(id, email, nickname, providerId);
-		principalUser = new PrincipalUser(testUser, null, null, null);
+		principalUser = PrincipalUser.of()
+			.user(testUser)
+			.build();
 	}
 
 	@AfterEach

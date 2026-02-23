@@ -1,6 +1,7 @@
 package co.invest72.financial_product.application;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class FinancialProductService {
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(BigDecimal.valueOf(dto.getTaxRate()))
+			.startDate(dto.getStartDate())
+			.createdAt(LocalDateTime.now())
 			.build();
 		return repository.save(product);
 	}
@@ -60,7 +63,7 @@ public class FinancialProductService {
 				.build();
 			result.add(dto);
 		}
-		
+
 		return result;
 	}
 }
