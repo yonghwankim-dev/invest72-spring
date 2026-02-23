@@ -1,10 +1,14 @@
-package co.invest72.financial_product.domain;
+package co.invest72.financial_product.infrastructure.repository;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Repository;
+
+import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.IdGenerator;
 
 @Repository
 public class InMemoryFinancialProductRepository implements FinancialProductRepository {
