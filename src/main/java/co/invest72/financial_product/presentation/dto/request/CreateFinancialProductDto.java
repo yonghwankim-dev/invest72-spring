@@ -2,6 +2,7 @@ package co.invest72.financial_product.presentation.dto.request;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +12,9 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CreateFinancialProductDto {
-	@NotNull(message = "상품 이름은 필수입니다.")
+	@NotBlank(message = "상품 이름은 필수입니다.")
 	private String name;
-	@NotNull(message = "상품 유형은 필수입니다.")
+	@NotBlank(message = "상품 유형은 필수입니다.")
 	private String productType;
 	@NotNull(message = "투자 금액은 필수입니다.")
 	private Long amount;
@@ -21,9 +22,9 @@ public class CreateFinancialProductDto {
 	private Integer months;
 	@NotNull(message = "이자율은 필수입니다.")
 	private Double interestRate;
-	@NotNull(message = "이자 유형은 필수입니다.")
+	@NotBlank(message = "이자 유형은 필수입니다.")
 	private String interestType;
-	@NotNull(message = "세금 유형은 필수입니다.")
+	@NotBlank(message = "세율 유형은 필수입니다.")
 	private String taxType;
 	@NotNull(message = "세율은 필수입니다.")
 	private Double taxRate;
