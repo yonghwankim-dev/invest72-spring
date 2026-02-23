@@ -105,6 +105,32 @@ class FinancialProductRestControllerTest {
 			.andDo(MockMvcResultHandlers.print());
 	}
 
+	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
+	@Test
+	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
+		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+			.name("현금 상품")
+			.productType(ProductType.CASH.name())
+			.amount(BigDecimal.valueOf(-1)) // 음수 금액
+			.months(-1) // 음수 기간
+			.interestRate(BigDecimal.valueOf(-0.01)) // 음수 이자율
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.valueOf(-0.01)) // 음수 세율
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors").isArray())
+			.andExpect(jsonPath("$.errors", hasSize(4)))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
 	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
