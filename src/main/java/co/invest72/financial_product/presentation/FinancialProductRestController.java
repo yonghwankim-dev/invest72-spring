@@ -16,6 +16,7 @@ import co.invest72.financial_product.presentation.dto.request.CreateFinancialPro
 import co.invest72.financial_product.presentation.dto.response.CreateFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.ProductResponseDto;
 import co.invest72.security.PrincipalUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,7 +29,7 @@ public class FinancialProductRestController {
 	// 상품 생성
 	@PostMapping
 	public ResponseEntity<CreateFinancialProductResponse> createProduct(@AuthenticationPrincipal PrincipalUser user,
-		@RequestBody CreateFinancialProductDto dto) {
+		@Valid @RequestBody CreateFinancialProductDto dto) {
 		String id = service.createProduct(user.getUser(), dto);
 		CreateFinancialProductResponse response = new CreateFinancialProductResponse(id);
 		return ResponseEntity.status(HttpStatus.CREATED)

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -75,7 +76,7 @@ class FinancialProductRestControllerTest {
 			.months(0)
 			.interestRate(0.0)
 			.interestType(InterestType.NONE.name())
-			.taxType(TaxType.NON_TAX.name())
+			.taxType(TaxType.NONE.name())
 			.taxRate(0.0)
 			.startDate(LocalDate.of(2026, 1, 1))
 			.build();
@@ -86,6 +87,20 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
+
+	@DisplayName("상품 생성 - 유효하지 않은 현금 상품 생성 요청은 400 Bad Request를 반환한다")
+	@Test
+	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
+		CreateFinancialProductDto dto = CreateFinancialProductDto.builder().build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andDo(MockMvcResultHandlers.print());
 	}
 
 	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
@@ -100,7 +115,7 @@ class FinancialProductRestControllerTest {
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
 			.interestType(InterestType.NONE)
-			.taxType(TaxType.NON_TAX)
+			.taxType(TaxType.NONE)
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
@@ -120,7 +135,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$[0].months").value(0))
 			.andExpect(jsonPath("$[0].interestRate").value(0.0))
 			.andExpect(jsonPath("$[0].interestType").value(InterestType.NONE.name()))
-			.andExpect(jsonPath("$[0].taxType").value(TaxType.NON_TAX.name()))
+			.andExpect(jsonPath("$[0].taxType").value(TaxType.NONE.name()))
 			.andExpect(jsonPath("$[0].taxRate").value(0.0))
 			.andExpect(jsonPath("$[0].startDate").value("2026-01-01"))
 			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
