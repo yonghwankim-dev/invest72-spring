@@ -35,6 +35,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test:6.5.8'
     testImplementation 'org.apache.commons:commons-csv:1.14.1'
 }
 

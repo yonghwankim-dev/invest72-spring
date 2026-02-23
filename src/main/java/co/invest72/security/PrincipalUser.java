@@ -11,9 +11,11 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import co.invest72.user.domain.User;
+import lombok.Getter;
 
-public class PrincipalUser implements OidcUser {
+public class PrincipalUser extends org.springframework.security.core.userdetails.User implements OidcUser {
 
+	@Getter
 	private final User user;
 	private final Map<String, Object> attributes;
 
@@ -22,6 +24,7 @@ public class PrincipalUser implements OidcUser {
 	private final OidcUserInfo userInfo;
 
 	public PrincipalUser(User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+		super(user.getId(), "", Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 		this.user = user;
 		this.attributes = attributes;
 		this.idToken = idToken;
@@ -40,8 +43,8 @@ public class PrincipalUser implements OidcUser {
 	}
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+	public Collection<GrantedAuthority> getAuthorities() {
+		return super.getAuthorities();
 	}
 
 	/**
@@ -70,7 +73,4 @@ public class PrincipalUser implements OidcUser {
 		return idToken;
 	}
 
-	public User getUser() {
-		return user;
-	}
 }

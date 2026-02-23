@@ -3,9 +3,11 @@ package co.invest72.financial_product.presentation.dto.request;
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @AllArgsConstructor
+@Builder
 @Getter
 public class CreateFinancialProductDto {
 	private String name;
