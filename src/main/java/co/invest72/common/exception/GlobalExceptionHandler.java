@@ -14,11 +14,14 @@ public class GlobalExceptionHandler {
 	protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
 		MethodArgumentNotValidException e) {
 		List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
-			.map(error -> new ErrorResponse.FieldError(
-				error.getField(),
-				String.valueOf(error.getRejectedValue()),
-				error.getDefaultMessage()
-			))
+			.map(error -> {
+				String rejectedValueString = error.getRejectedValue().toString();
+				return new ErrorResponse.FieldError(
+					error.getField(),
+					rejectedValueString,
+					error.getDefaultMessage()
+				);
+			})
 			.toList();
 		ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid Input", fieldErrors);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
