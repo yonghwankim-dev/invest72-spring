@@ -164,7 +164,7 @@ class FinancialProductRestControllerTest {
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
 		// given
 		FinancialProduct product = FinancialProduct.builder()
-			.user(principalUser.getUser())
+			.userId(principalUser.getUser().getId())
 			.name("현금 상품")
 			.productType(ProductType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))

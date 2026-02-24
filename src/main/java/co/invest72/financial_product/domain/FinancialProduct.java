@@ -5,19 +5,15 @@ import java.time.LocalDateTime;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.user.domain.User;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,9 +29,8 @@ public class FinancialProduct {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(name = "user_id", nullable = false, updatable = false)
+	private String userId;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;

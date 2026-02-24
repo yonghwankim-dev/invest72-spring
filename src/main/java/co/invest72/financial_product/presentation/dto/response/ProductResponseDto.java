@@ -1,5 +1,6 @@
 package co.invest72.financial_product.presentation.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,12 +17,12 @@ public class ProductResponseDto {
 	private String userId;
 	private String name;
 	private String productType;
-	private double amount;
-	private int months;
-	private double interestRate;
+	private BigDecimal amount;
+	private Integer months;
+	private BigDecimal interestRate;
 	private String interestType;
 	private String taxType;
-	private double taxRate;
+	private BigDecimal taxRate;
 	private LocalDate startDate;
 	private LocalDateTime createdAt;
 }

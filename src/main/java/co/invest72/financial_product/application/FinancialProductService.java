@@ -28,7 +28,7 @@ public class FinancialProductService {
 	@Transactional
 	public String createProduct(User user, CreateFinancialProductDto dto) {
 		FinancialProduct product = FinancialProduct.builder()
-			.user(user)
+			.userId(user.getId())
 			.name(dto.getName())
 			.productType(ProductType.valueOf(dto.getProductType()))
 			.amount(new ProductAmount(dto.getAmount()))
@@ -50,15 +50,15 @@ public class FinancialProductService {
 		for (FinancialProduct product : products) {
 			ProductResponseDto dto = ProductResponseDto.builder()
 				.id(product.getId())
-				.userId(product.getUser().getId())
+				.userId(product.getUserId())
 				.name(product.getName())
 				.productType(product.getProductType().name())
-				.amount(product.getAmount().getValue().doubleValue())
+				.amount(product.getAmount().getValue())
 				.months(product.getMonths())
-				.interestRate(product.getInterestRate().getValue().doubleValue())
+				.interestRate(product.getInterestRate().getValue())
 				.interestType(product.getInterestType().name())
 				.taxType(product.getTaxType().name())
-				.taxRate(product.getTaxRate().getValue().doubleValue())
+				.taxRate(product.getTaxRate().getValue())
 				.startDate(product.getStartDate())
 				.createdAt(product.getCreatedAt())
 				.build();

@@ -37,7 +37,7 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 	@Override
 	public List<FinancialProduct> findAllById(String id) {
 		return storage.values().stream()
-			.filter(product -> product.getUser().getId().equals(id))
+			.filter(product -> product.getUserId().equals(id))
 			.toList();
 	}
 
