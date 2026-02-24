@@ -1,4 +1,4 @@
-package co.invest72.financial_product.infrastructure;
+package co.invest72.user.infrastructure;
 
 import java.util.UUID;
 

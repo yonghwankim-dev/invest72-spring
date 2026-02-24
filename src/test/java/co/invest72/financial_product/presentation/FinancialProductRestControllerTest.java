@@ -31,12 +31,12 @@ import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.financial_product.infrastructure.UserIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
+import co.invest72.user.infrastructure.UserIdGenerator;
 
 @SpringBootTest
 @AutoConfigureMockMvc
