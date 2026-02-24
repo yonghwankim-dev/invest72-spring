@@ -1,7 +1,6 @@
 package co.invest72.financial_product.application;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -44,11 +43,8 @@ public class FinancialProductService {
 	}
 
 	public List<ProductResponseDto> getProductsByUser(User user) {
-		List<ProductResponseDto> result = new ArrayList<>();
-		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
-
-		for (FinancialProduct product : products) {
-			ProductResponseDto dto = ProductResponseDto.builder()
+		return repository.findAllByUserId(user.getId()).stream()
+			.map(product -> ProductResponseDto.builder()
 				.id(product.getId())
 				.userId(product.getUserId())
 				.name(product.getName())
@@ -61,10 +57,7 @@ public class FinancialProductService {
 				.taxRate(product.getTaxRate().getValue())
 				.startDate(product.getStartDate())
 				.createdAt(product.getCreatedAt())
-				.build();
-			result.add(dto);
-		}
-
-		return result;
+				.build())
+			.toList();
 	}
 }
