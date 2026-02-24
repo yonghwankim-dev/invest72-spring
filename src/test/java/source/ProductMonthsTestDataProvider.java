@@ -1,21 +1,25 @@
 package source;
 
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.provider.Arguments;
+
 public class ProductMonthsTestDataProvider {
-	public static java.util.stream.Stream<org.junit.jupiter.params.provider.Arguments> validValues() {
+	public static Stream<Arguments> validValues() {
 		return java.util.stream.Stream.of(
-			org.junit.jupiter.params.provider.Arguments.of(0),
-			org.junit.jupiter.params.provider.Arguments.of(1),
-			org.junit.jupiter.params.provider.Arguments.of(12),
-			org.junit.jupiter.params.provider.Arguments.of(9999)
+			Arguments.of(0),
+			Arguments.of(1),
+			Arguments.of(12),
+			Arguments.of(9999)
 		);
 	}
 
-	public static java.util.stream.Stream<org.junit.jupiter.params.provider.Arguments> invalidValues() {
+	public static Stream<Arguments> invalidValues() {
 		return java.util.stream.Stream.of(
-			org.junit.jupiter.params.provider.Arguments.of((Integer)null),
-			org.junit.jupiter.params.provider.Arguments.of(-1),
-			org.junit.jupiter.params.provider.Arguments.of(-100),
-			org.junit.jupiter.params.provider.Arguments.of(10000)
+			Arguments.of((Integer)null),
+			Arguments.of(-1),
+			Arguments.of(-100),
+			Arguments.of(10000)
 		);
 	}
 }
