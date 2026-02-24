@@ -17,7 +17,7 @@ public interface FinancialProductRepository {
 	 * @param id 조회할 금융 상품의 ID
 	 * @return 조회된 금융 상품, 존재하지 않으면 null
 	 */
-	FinancialProduct findById(String id);
+	FinancialProduct findByProductId(String id);
 
 	/**
 	 * 사용자 ID로 모든 금융 상품을 조회합니다.
@@ -25,6 +25,8 @@ public interface FinancialProductRepository {
 	 * @return 조회된 금융 상품 목록, 존재하지 않으면 빈 리스트
 	 */
 	List<FinancialProduct> findAllByUserId(String userId);
+
+	void deleteByProductId(String productId);
 
 	/**
 	 * 저장된 모든 금융 상품을 삭제합니다. 테스트 용도로만 사용해야 합니다.
