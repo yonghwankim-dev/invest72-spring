@@ -26,6 +26,8 @@ public interface FinancialProductRepository {
 	 */
 	List<FinancialProduct> findAllByUserId(String userId);
 
+	void deleteByProductId(String userId, String productId);
+
 	/**
 	 * 저장된 모든 금융 상품을 삭제합니다. 테스트 용도로만 사용해야 합니다.
 	 */

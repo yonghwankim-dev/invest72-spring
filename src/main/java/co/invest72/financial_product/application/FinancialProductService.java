@@ -75,4 +75,9 @@ public class FinancialProductService {
 		}
 		return buildProductResponseDto(product);
 	}
+
+	@Transactional
+	public void deleteProduct(User user, String productId) {
+		repository.deleteByProductId(user.getId(), productId);
+	}
 }
