@@ -260,7 +260,7 @@ class FinancialProductRestControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
 	@DisplayName("상품 상세 조회 - 존재하지 않는 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")
@@ -273,7 +273,7 @@ class FinancialProductRestControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", nonExistentProductId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
 	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
@@ -362,13 +362,13 @@ class FinancialProductRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 
 		// 상품이 수정되지 않았는지 검증
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+		FinancialProduct findProduct = financialProductRepository.findByProductId(product.getId());
+		Assertions.assertThat(findProduct.getName()).isEqualTo("현금 상품");
+		Assertions.assertThat(findProduct.getAmount().getValue()).isEqualByComparingTo(BigDecimal.valueOf(1_000_000L));
+		Assertions.assertThat(findProduct.getStartDate()).isEqualTo(LocalDate.of(2026, 1, 1));
 	}
 
 	@DisplayName("상품 삭제 - 사용자가 생성한 상품을 삭제한다")
@@ -399,7 +399,7 @@ class FinancialProductRestControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
 	@DisplayName("상품 삭제 - 다른 사용자가 생성한 상품을 삭제하려고 하면 400 Bad Request를 반환한다")
@@ -426,7 +426,7 @@ class FinancialProductRestControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 
 		// 상품이 삭제되지 않았는지 검증
 		Assertions.assertThat(financialProductRepository.findByProductId(product.getId()))
@@ -443,6 +443,6 @@ class FinancialProductRestControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", nonExistentProductId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 }

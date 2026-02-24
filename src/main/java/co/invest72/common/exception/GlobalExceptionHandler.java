@@ -18,10 +18,9 @@ public class GlobalExceptionHandler {
 		MethodArgumentNotValidException e) {
 		List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
 			.map(error -> {
-				String rejectedValue = error.getRejectedValue().toString();
 				return new ErrorResponse.FieldError(
 					error.getField(),
-					rejectedValue,
+					String.valueOf(error.getRejectedValue()),
 					error.getDefaultMessage()
 				);
 			})
