@@ -1,6 +1,7 @@
 package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductRate {
 
+	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
+
 	@Column(nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
 
@@ -22,8 +25,9 @@ public class ProductRate {
 	}
 
 	private void validate(BigDecimal value) {
-		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(new BigDecimal("9.9999")) > 0) {
-			throw new IllegalArgumentException("이율/세율은 0.0에서 9.9999 사이여야 합니다.");
+		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(MAX_RATE) > 0) {
+			BigDecimal maxRatePercent = MAX_RATE.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+			throw new IllegalArgumentException("금리는 0% 이상 " + maxRatePercent + "% 이하이어야 합니다.");
 		}
 	}
 
