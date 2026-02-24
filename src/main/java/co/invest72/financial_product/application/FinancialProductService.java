@@ -13,7 +13,7 @@ import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
-import co.invest72.financial_product.presentation.dto.response.ProductResponseDto;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductResponseDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
@@ -44,14 +44,14 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ProductResponseDto> getProductsByUser(User user) {
+	public List<FinancialProductResponseDto> getProductsByUser(User user) {
 		return repository.findAllByUserId(user.getId()).stream()
 			.map(this::buildProductResponseDto)
 			.toList();
 	}
 
-	private ProductResponseDto buildProductResponseDto(FinancialProduct product) {
-		return ProductResponseDto.builder()
+	private FinancialProductResponseDto buildProductResponseDto(FinancialProduct product) {
+		return FinancialProductResponseDto.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
@@ -68,7 +68,7 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public ProductResponseDto getProductDetail(User user, String productId) {
+	public FinancialProductResponseDto getProductDetail(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		if (product == null || !product.getUserId().equals(user.getId())) {
 			throw new IllegalArgumentException("상품을 찾을 수 없거나 접근 권한이 없습니다.");
