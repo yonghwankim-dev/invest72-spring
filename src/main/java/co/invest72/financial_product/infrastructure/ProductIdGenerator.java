@@ -1,6 +1,8 @@
-package co.invest72.financial_product.domain;
+package co.invest72.financial_product.infrastructure;
 
 import java.util.UUID;
+
+import co.invest72.financial_product.domain.IdGenerator;
 
 public class ProductIdGenerator implements IdGenerator {
 

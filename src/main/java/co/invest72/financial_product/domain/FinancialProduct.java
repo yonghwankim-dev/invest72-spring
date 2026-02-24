@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
