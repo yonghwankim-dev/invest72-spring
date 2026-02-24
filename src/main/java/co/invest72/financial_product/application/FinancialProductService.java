@@ -43,6 +43,7 @@ public class FinancialProductService {
 		return repository.save(product);
 	}
 
+	@Transactional(readOnly = true)
 	public List<ProductResponseDto> getProductsByUser(User user) {
 		return repository.findAllByUserId(user.getId()).stream()
 			.map(product -> ProductResponseDto.builder()
