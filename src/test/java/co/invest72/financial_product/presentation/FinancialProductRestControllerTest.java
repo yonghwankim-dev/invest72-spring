@@ -57,11 +57,10 @@ class FinancialProductRestControllerTest {
 	@BeforeEach
 	void setUp() {
 		userIdGenerator = new UserIdGenerator("user");
-		String id = userIdGenerator.generateId();
 		String email = "user1@gmail.com";
 		String nickname = "user1";
 		String providerId = UUID.randomUUID().toString();
-		User testUser = new User(id, email, nickname, providerId);
+		User testUser = new User(email, nickname, providerId);
 		principalUser = PrincipalUser.of()
 			.user(testUser)
 			.build();
