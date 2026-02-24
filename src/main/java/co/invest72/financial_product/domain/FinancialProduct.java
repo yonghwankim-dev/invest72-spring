@@ -2,6 +2,7 @@ package co.invest72.financial_product.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -11,22 +12,16 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@Builder(toBuilder = true)
 @Getter
 public class FinancialProduct {
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
 	@Column(name = "user_id", nullable = false, updatable = false)
@@ -67,4 +62,23 @@ public class FinancialProduct {
 
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성 일시
+
+	@Builder(toBuilder = true)
+	private FinancialProduct(String userId, String name, ProductType productType, ProductAmount amount,
+		ProductMonths months, ProductRate interestRate, InterestType interestType, TaxType taxType, ProductRate taxRate,
+		LocalDate startDate, LocalDateTime createdAt) {
+		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
+		this.id = UUID.randomUUID().toString();
+		this.userId = userId;
+		this.name = name;
+		this.productType = productType;
+		this.amount = amount;
+		this.months = months;
+		this.interestRate = interestRate;
+		this.interestType = interestType;
+		this.taxType = taxType;
+		this.taxRate = taxRate;
+		this.startDate = startDate;
+		this.createdAt = createdAt;
+	}
 }

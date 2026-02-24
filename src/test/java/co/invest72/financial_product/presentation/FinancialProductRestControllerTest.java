@@ -25,6 +25,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
@@ -168,7 +169,7 @@ class FinancialProductRestControllerTest {
 			.name("현금 상품")
 			.productType(ProductType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(0)
+			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
 			.interestType(InterestType.NONE)
 			.taxType(TaxType.NONE)
