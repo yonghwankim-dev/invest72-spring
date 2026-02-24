@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -26,9 +27,11 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductIdGenerator;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
+import co.invest72.financial_product.infrastructure.UserIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -42,26 +45,28 @@ class FinancialProductRestControllerTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdGenerator idGenerator;
-
-	@Autowired
 	private ObjectMapper objectMapper;
 
 	@Autowired
 	private FinancialProductRepository financialProductRepository;
 
 	private PrincipalUser principalUser;
+	private IdGenerator userIdGenerator;
+	private IdGenerator productIdGenerator;
 
 	@BeforeEach
 	void setUp() {
-		String id = idGenerator.generateId();
+		userIdGenerator = new UserIdGenerator("user");
+		String id = userIdGenerator.generateId();
 		String email = "user1@gmail.com";
 		String nickname = "user1";
-		String providerId = idGenerator.generateId();
+		String providerId = UUID.randomUUID().toString();
 		User testUser = new User(id, email, nickname, providerId);
 		principalUser = PrincipalUser.of()
 			.user(testUser)
 			.build();
+
+		productIdGenerator = new ProductIdGenerator("product");
 	}
 
 	@AfterEach
@@ -240,7 +245,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProductDetail_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
-		String otherUserId = idGenerator.generateId();
+		String otherUserId = userIdGenerator.generateId();
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
@@ -267,7 +272,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProductDetail_whenProductDoesNotExist_thenReturnBadRequest() throws Exception {
 		// given
-		String nonExistentProductId = idGenerator.generateId();
+		String nonExistentProductId = productIdGenerator.generateId();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", nonExistentProductId)
@@ -328,7 +333,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void updateProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
-		String otherUserId = idGenerator.generateId();
+		String otherUserId = userIdGenerator.generateId();
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
@@ -406,7 +411,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void deleteProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
-		String otherUserId = idGenerator.generateId();
+		String otherUserId = userIdGenerator.generateId();
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
@@ -437,7 +442,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void deleteProduct_whenProductDoesNotExist_thenReturnBadRequest() throws Exception {
 		// given
-		String nonExistentProductId = idGenerator.generateId();
+		String nonExistentProductId = productIdGenerator.generateId();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", nonExistentProductId)
