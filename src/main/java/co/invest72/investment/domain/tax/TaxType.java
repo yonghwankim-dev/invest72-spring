@@ -3,7 +3,8 @@ package co.invest72.investment.domain.tax;
 public enum TaxType {
 	STANDARD("일반과세"),
 	NON_TAX("비과세"),
-	TAX_BENEFIT("세금우대");
+	TAX_BENEFIT("세금우대"),
+	NONE("없음");
 
 	private final String description;
 
