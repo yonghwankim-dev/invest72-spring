@@ -20,8 +20,8 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 	}
 
 	@Override
-	public FinancialProduct findById(String id) {
-		return storage.get(id);
+	public FinancialProduct findByProductId(String productId) {
+		return storage.get(productId);
 	}
 
 	@Override
@@ -29,6 +29,11 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 		return storage.values().stream()
 			.filter(product -> product.getUserId().equals(userId))
 			.toList();
+	}
+
+	@Override
+	public void deleteByProductId(String productId) {
+		storage.remove(productId);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class ProductResponseDto {
+public class FinancialProductResponseDto {
 
 	private String id;
 	private String userId;

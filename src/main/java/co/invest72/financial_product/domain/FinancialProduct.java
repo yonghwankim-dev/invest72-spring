@@ -81,4 +81,16 @@ public class FinancialProduct {
 		this.startDate = startDate;
 		this.createdAt = createdAt;
 	}
+
+	public void update(FinancialProduct updatedProduct) {
+		this.name = updatedProduct.getName();
+		this.productType = updatedProduct.getProductType();
+		this.amount = updatedProduct.getAmount();
+		this.months = updatedProduct.getMonths();
+		this.interestRate = updatedProduct.getInterestRate();
+		this.interestType = updatedProduct.getInterestType();
+		this.taxType = updatedProduct.getTaxType();
+		this.taxRate = updatedProduct.getTaxRate();
+		this.startDate = updatedProduct.getStartDate();
+	}
 }

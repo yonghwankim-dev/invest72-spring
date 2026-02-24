@@ -23,6 +23,5 @@ public class ErrorResponse {
 			this.rejectedValue = rejectedValue;
 			this.message = message;
 		}
-
 	}
 }
