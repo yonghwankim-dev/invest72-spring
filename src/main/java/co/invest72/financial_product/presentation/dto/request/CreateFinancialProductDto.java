@@ -24,6 +24,7 @@ public class CreateFinancialProductDto {
 	private String name;
 
 	@EnumValid(enumClass = ProductType.class, message = "유효하지 않은 상품 유형입니다.")
+	@NotNull(message = "상품 유형은 필수입니다.")
 	private String productType;
 
 	@FinancialAmount
@@ -36,9 +37,11 @@ public class CreateFinancialProductDto {
 	private BigDecimal interestRate;
 
 	@EnumValid(enumClass = InterestType.class, message = "유효하지 않은 이자 유형입니다.")
+	@NotNull(message = "이자 유형은 필수입니다.")
 	private String interestType;
 
 	@EnumValid(enumClass = TaxType.class, message = "유효하지 않은 세금 유형입니다.")
+	@NotNull(message = "세금 유형은 필수입니다.")
 	private String taxType;
 
 	@FinancialRate
