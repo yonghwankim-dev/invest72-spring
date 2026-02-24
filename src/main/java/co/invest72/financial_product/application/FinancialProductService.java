@@ -46,20 +46,33 @@ public class FinancialProductService {
 	@Transactional(readOnly = true)
 	public List<ProductResponseDto> getProductsByUser(User user) {
 		return repository.findAllByUserId(user.getId()).stream()
-			.map(product -> ProductResponseDto.builder()
-				.id(product.getId())
-				.userId(product.getUserId())
-				.name(product.getName())
-				.productType(product.getProductType().name())
-				.amount(product.getAmount().getValue())
-				.months(product.getMonths().getValue())
-				.interestRate(product.getInterestRate().getValue())
-				.interestType(product.getInterestType().name())
-				.taxType(product.getTaxType().name())
-				.taxRate(product.getTaxRate().getValue())
-				.startDate(product.getStartDate())
-				.createdAt(product.getCreatedAt())
-				.build())
+			.map(this::buildProductResponseDto)
 			.toList();
+	}
+
+	private ProductResponseDto buildProductResponseDto(FinancialProduct product) {
+		return ProductResponseDto.builder()
+			.id(product.getId())
+			.userId(product.getUserId())
+			.name(product.getName())
+			.productType(product.getProductType().name())
+			.amount(product.getAmount().getValue())
+			.months(product.getMonths().getValue())
+			.interestRate(product.getInterestRate().getValue())
+			.interestType(product.getInterestType().name())
+			.taxType(product.getTaxType().name())
+			.taxRate(product.getTaxRate().getValue())
+			.startDate(product.getStartDate())
+			.createdAt(product.getCreatedAt())
+			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public ProductResponseDto getProductDetail(User user, String userId) {
+		FinancialProduct product = repository.findById(userId);
+		if (product == null || !product.getUserId().equals(user.getId())) {
+			throw new IllegalArgumentException("상품을 찾을 수 없거나 접근 권한이 없습니다.");
+		}
+		return buildProductResponseDto(product);
 	}
 }

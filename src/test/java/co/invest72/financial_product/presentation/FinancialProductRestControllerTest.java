@@ -197,4 +197,41 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$[0].startDate").value("2026-01-01"))
 			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
 	}
+
+	@DisplayName("상품 상제 조회 - 사용자가 생성한 상품의 상세 정보를 조회한다")
+	@Test
+	void getProductDetail_whenProductExists_thenReturnProductDetail() throws Exception {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("현금 상품")
+			.productType(ProductType.CASH)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId()))
+			.andExpect(jsonPath("$.userId").value(principalUser.getUser().getId()))
+			.andExpect(jsonPath("$.name").value("현금 상품"))
+			.andExpect(jsonPath("$.productType").value(ProductType.CASH.name()))
+			.andExpect(jsonPath("$.amount").value(1_000_000.0))
+			.andExpect(jsonPath("$.months").value(0))
+			.andExpect(jsonPath("$.interestRate").value(0.0))
+			.andExpect(jsonPath("$.interestType").value(InterestType.NONE.name()))
+			.andExpect(jsonPath("$.taxType").value(TaxType.NONE.name()))
+			.andExpect(jsonPath("$.taxRate").value(0.0))
+			.andExpect(jsonPath("$.startDate").value("2026-01-01"))
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()));
+	}
 }
