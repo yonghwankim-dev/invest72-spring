@@ -15,10 +15,10 @@ public class GlobalExceptionHandler {
 		MethodArgumentNotValidException e) {
 		List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
 			.map(error -> {
-				String rejectedValueString = error.getRejectedValue().toString();
+				String rejectedValue = error.getRejectedValue().toString();
 				return new ErrorResponse.FieldError(
 					error.getField(),
-					rejectedValueString,
+					rejectedValue,
 					error.getDefaultMessage()
 				);
 			})
