@@ -10,6 +10,9 @@ public class ProductIdGenerator implements IdGenerator {
 
 	public ProductIdGenerator(String prefix) {
 		this.prefix = prefix;
+		if (prefix == null || prefix.isEmpty()) {
+			throw new IllegalArgumentException("Prefix cannot be null or empty");
+		}
 	}
 
 	/**
