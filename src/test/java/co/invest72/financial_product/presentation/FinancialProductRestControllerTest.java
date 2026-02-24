@@ -275,6 +275,101 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
 	}
 
+	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
+	@Test
+	void updateProduct_whenProductExists_thenUpdateProduct() throws Exception {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("현금 상품")
+			.productType(ProductType.CASH)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		financialProductRepository.save(product);
+
+		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+			.name("수정된 현금 상품")
+			.productType(ProductType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(0)
+			.interestRate(BigDecimal.valueOf(0.00))
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.valueOf(0.0))
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isNoContent());
+
+		// 상품이 수정되었는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId())) // ID는 변경되지 않아야 함
+			.andExpect(jsonPath("$.name").value("수정된 현금 상품"))
+			.andExpect(jsonPath("$.amount").value(2_000_000.0))
+			.andExpect(jsonPath("$.startDate").value("2026-02-01"));
+	}
+
+	@DisplayName("상품 수정 - 다른 사용자가 생성한 상품을 수정하려고 하면 400 Bad Request를 반환한다")
+	@Test
+	void updateProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
+		// given
+		String otherUserId = idGenerator.generateId();
+		FinancialProduct product = FinancialProduct.builder()
+			.userId(otherUserId)
+			.name("현금 상품")
+			.productType(ProductType.CASH)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		financialProductRepository.save(product);
+
+		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+			.name("수정된 현금 상품")
+			.productType(ProductType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(0)
+			.interestRate(BigDecimal.valueOf(0.00))
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.valueOf(0.0))
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+
+		// 상품이 수정되지 않았는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+	}
+
 	@DisplayName("상품 삭제 - 사용자가 생성한 상품을 삭제한다")
 	@Test
 	void deleteProduct_whenProductExists_thenDeleteProduct() throws Exception {

@@ -77,6 +77,28 @@ public class FinancialProductService {
 	}
 
 	@Transactional
+	public void updateProduct(User user, String productId, CreateFinancialProductDto dto) {
+		// 기존 상품 조회 및 검증
+		FinancialProduct existingProduct = repository.findByProductId(productId);
+		if (existingProduct == null || !existingProduct.getUserId().equals(user.getId())) {
+			throw new IllegalArgumentException("상품을 찾을 수 없거나 접근 권한이 없습니다.");
+		}
+		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
+		FinancialProduct updatedProduct = existingProduct.toBuilder()
+			.name(dto.getName())
+			.productType(ProductType.valueOf(dto.getProductType()))
+			.amount(new ProductAmount(dto.getAmount()))
+			.months(new ProductMonths(dto.getMonths()))
+			.interestRate(new ProductRate(dto.getInterestRate()))
+			.interestType(InterestType.valueOf(dto.getInterestType()))
+			.taxType(TaxType.valueOf(dto.getTaxType()))
+			.taxRate(new ProductRate(dto.getTaxRate()))
+			.startDate(dto.getStartDate())
+			.build();
+		existingProduct.update(updatedProduct);
+	}
+
+	@Transactional
 	public void deleteProduct(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		if (product == null || !product.getUserId().equals(user.getId())) {
