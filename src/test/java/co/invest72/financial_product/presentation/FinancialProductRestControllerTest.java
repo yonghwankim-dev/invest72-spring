@@ -28,7 +28,7 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
-import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
@@ -72,7 +72,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 현금 상품을 성공적으로 생성한다")
 	void createProduct_whenProductTypeIsCash_thenSaveProduct() throws Exception {
 		// given
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
 			.productType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -95,7 +95,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder().build();
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder().build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -111,7 +111,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
 			.productType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
@@ -137,7 +137,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
 			.productType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -294,7 +294,7 @@ class FinancialProductRestControllerTest {
 			.build();
 		financialProductRepository.save(product);
 
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
 			.productType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -343,7 +343,7 @@ class FinancialProductRestControllerTest {
 			.build();
 		financialProductRepository.save(product);
 
-		CreateFinancialProductDto dto = CreateFinancialProductDto.builder()
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
 			.productType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))

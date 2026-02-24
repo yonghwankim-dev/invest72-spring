@@ -12,7 +12,7 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
-import co.invest72.financial_product.presentation.dto.request.CreateFinancialProductDto;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductResponseDto;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -26,7 +26,7 @@ public class FinancialProductService {
 	private final FinancialProductRepository repository;
 
 	@Transactional
-	public String createProduct(User user, CreateFinancialProductDto dto) {
+	public String createProduct(User user, FinancialProductRequestDto dto) {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(user.getId())
 			.name(dto.getName())
@@ -77,7 +77,7 @@ public class FinancialProductService {
 	}
 
 	@Transactional
-	public void updateProduct(User user, String productId, CreateFinancialProductDto dto) {
+	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		// 기존 상품 조회 및 검증
 		FinancialProduct existingProduct = repository.findByProductId(productId);
 		if (existingProduct == null || !existingProduct.getUserId().equals(user.getId())) {
