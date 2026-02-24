@@ -198,7 +198,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
 	}
 
-	@DisplayName("상품 상제 조회 - 사용자가 생성한 상품의 상세 정보를 조회한다")
+	@DisplayName("상품 상세 조회 - 사용자가 생성한 상품의 상세 정보를 조회한다")
 	@Test
 	void getProductDetail_whenProductExists_thenReturnProductDetail() throws Exception {
 		// given
