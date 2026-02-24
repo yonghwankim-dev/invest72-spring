@@ -50,6 +50,7 @@ public class FinancialProductRestController {
 		@PathVariable String id) {
 		return ResponseEntity.ok(service.getProductDetail(user.getUser(), id));
 	}
+
 	// 상품 수정
 
 	// 상품 삭제

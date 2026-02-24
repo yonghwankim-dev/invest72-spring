@@ -305,4 +305,50 @@ class FinancialProductRestControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
 	}
+
+	@DisplayName("상품 삭제 - 다른 사용자가 생성한 상품을 삭제하려고 하면 400 Bad Request를 반환한다")
+	@Test
+	void deleteProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
+		// given
+		String otherUserId = idGenerator.generateId();
+		FinancialProduct product = FinancialProduct.builder()
+			.userId(otherUserId)
+			.name("현금 상품")
+			.productType(ProductType.CASH)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+
+		// 상품이 삭제되지 않았는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+	}
+
+	@DisplayName("상품 삭제 - 존재하지 않는 상품을 삭제하려고 하면 400 Bad Request를 반환한다")
+	@Test
+	void deleteProduct_whenProductDoesNotExist_thenReturnBadRequest() throws Exception {
+		// given
+		String nonExistentProductId = idGenerator.generateId();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", nonExistentProductId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+	}
 }

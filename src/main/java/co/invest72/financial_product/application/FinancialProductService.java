@@ -78,6 +78,10 @@ public class FinancialProductService {
 
 	@Transactional
 	public void deleteProduct(User user, String productId) {
+		FinancialProduct product = repository.findByProductId(productId);
+		if (product == null || !product.getUserId().equals(user.getId())) {
+			throw new IllegalArgumentException("상품을 찾을 수 없거나 접근 권한이 없습니다.");
+		}
 		repository.deleteByProductId(user.getId(), productId);
 	}
 }
