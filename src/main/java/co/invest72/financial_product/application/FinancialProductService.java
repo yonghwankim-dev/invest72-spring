@@ -104,6 +104,6 @@ public class FinancialProductService {
 	public void deleteProduct(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		validateFinancialProduct(user, product);
-		repository.deleteByProductId(user.getId(), productId);
+		repository.deleteByProductId(productId);
 	}
 }

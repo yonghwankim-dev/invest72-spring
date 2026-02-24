@@ -32,11 +32,8 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 	}
 
 	@Override
-	public void deleteByProductId(String userId, String productId) {
-		FinancialProduct product = storage.get(productId);
-		if (product != null && product.getUserId().equals(userId)) {
-			storage.remove(productId);
-		}
+	public void deleteByProductId(String productId) {
+		storage.remove(productId);
 	}
 
 	@Override
