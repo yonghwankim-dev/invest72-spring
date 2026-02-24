@@ -12,13 +12,11 @@ import co.invest72.financial_product.domain.FinancialProductRepository;
 @Repository
 public class InMemoryFinancialProductRepository implements FinancialProductRepository {
 	private final Map<String, FinancialProduct> storage = new ConcurrentHashMap<>();
-	
+
 	@Override
 	public String save(FinancialProduct product) {
-		FinancialProduct newProduct = product.toBuilder()
-			.build();
-		storage.put(newProduct.getId(), newProduct);
-		return newProduct.getId();
+		storage.put(product.getId(), product);
+		return product.getId();
 	}
 
 	@Override
