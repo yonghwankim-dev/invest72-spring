@@ -36,6 +36,7 @@ public class FinancialProduct {
 	private String name;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "product_type", nullable = false, length = 100)
 	private ProductType productType;
 
 	@Embedded
@@ -49,9 +50,11 @@ public class FinancialProduct {
 	private ProductRate interestRate; // 연이율
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "interest_type", nullable = false, length = 100)
 	private InterestType interestType; // 이자 유형 (단리, 복리)
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "tax_type", nullable = false, length = 100)
 	private TaxType taxType; // 세금 유형 (과세, 비과세)
 
 	@Embedded
