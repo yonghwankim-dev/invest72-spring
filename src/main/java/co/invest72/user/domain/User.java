@@ -2,10 +2,17 @@ package co.invest72.user.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User {
+	@Id
 	private String id;
 	private String email;
 	private String nickname;
