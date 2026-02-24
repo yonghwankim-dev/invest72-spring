@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -428,10 +429,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
 
 		// 상품이 삭제되지 않았는지 검증
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message").value("상품을 찾을 수 없거나 접근 권한이 없습니다."));
+		Assertions.assertThat(financialProductRepository.findByProductId(product.getId()))
+			.isNotNull();
 	}
 
 	@DisplayName("상품 삭제 - 존재하지 않는 상품을 삭제하려고 하면 400 Bad Request를 반환한다")
