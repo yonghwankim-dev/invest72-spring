@@ -19,7 +19,7 @@ public interface FinancialProductRepository {
 	 */
 	FinancialProduct findById(String id);
 
-	List<FinancialProduct> findAllById(String id);
+	List<FinancialProduct> findAllByUserId(String userId);
 
 	void clear();
 }

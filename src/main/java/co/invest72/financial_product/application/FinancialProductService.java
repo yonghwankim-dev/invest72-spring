@@ -45,7 +45,7 @@ public class FinancialProductService {
 
 	public List<ProductResponseDto> getProductsByUser(User user) {
 		List<ProductResponseDto> result = new ArrayList<>();
-		List<FinancialProduct> products = repository.findAllById(user.getId());
+		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		for (FinancialProduct product : products) {
 			ProductResponseDto dto = ProductResponseDto.builder()
