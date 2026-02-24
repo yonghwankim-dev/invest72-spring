@@ -20,7 +20,7 @@ public class InMemoryFinancialProductRepository implements FinancialProductRepos
 	}
 
 	@Override
-	public FinancialProduct findById(String id) {
+	public FinancialProduct findByProductId(String id) {
 		return storage.get(id);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,11 @@ public class FinancialProductRestController {
 		return ResponseEntity.ok(service.getProductDetail(user.getUser(), id));
 	}
 	// 상품 수정
+
 	// 상품 삭제
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteProduct(@AuthenticationPrincipal PrincipalUser user, @PathVariable String id) {
+		service.deleteProduct(user.getUser(), id);
+		return ResponseEntity.noContent().build();
+	}
 }

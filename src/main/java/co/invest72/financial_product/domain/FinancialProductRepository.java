@@ -17,7 +17,7 @@ public interface FinancialProductRepository {
 	 * @param id 조회할 금융 상품의 ID
 	 * @return 조회된 금융 상품, 존재하지 않으면 null
 	 */
-	FinancialProduct findById(String id);
+	FinancialProduct findByProductId(String id);
 
 	/**
 	 * 사용자 ID로 모든 금융 상품을 조회합니다.
