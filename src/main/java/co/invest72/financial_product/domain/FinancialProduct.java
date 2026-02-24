@@ -2,8 +2,8 @@ package co.invest72.financial_product.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
@@ -63,12 +63,14 @@ public class FinancialProduct {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성 일시
 
+	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
+
 	@Builder(toBuilder = true)
 	private FinancialProduct(String userId, String name, ProductType productType, ProductAmount amount,
 		ProductMonths months, ProductRate interestRate, InterestType interestType, TaxType taxType, ProductRate taxRate,
 		LocalDate startDate, LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
-		this.id = UUID.randomUUID().toString();
+		this.id = idGenerator.generateId();
 		this.userId = userId;
 		this.name = name;
 		this.productType = productType;
