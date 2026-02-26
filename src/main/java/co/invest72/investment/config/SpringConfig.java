@@ -12,8 +12,8 @@ import co.invest72.investment.application.TaxPercentFormatter;
 public class SpringConfig {
 
 	@Bean
-	public CalculateInvestment calculateMonthlyInvestment(InvestmentFactory factory, TaxFormatter taxFormatter) {
-		return new CalculateInvestment(factory, taxFormatter);
+	public CalculateInvestment calculateMonthlyInvestment(TaxFormatter taxFormatter) {
+		return new CalculateInvestment(taxFormatter);
 	}
 
 	@Bean

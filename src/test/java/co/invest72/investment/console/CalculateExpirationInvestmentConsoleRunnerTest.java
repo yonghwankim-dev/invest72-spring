@@ -104,8 +104,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
+		investment = new CalculateInvestment(new TaxPercentFormatter());
 		InvestmentFactory factory = new InvestmentFactory();
-		investment = new CalculateInvestment(factory, new TaxPercentFormatter());
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,

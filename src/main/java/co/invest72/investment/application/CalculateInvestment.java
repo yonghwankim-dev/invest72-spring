@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CalculateInvestment {
-	private final InvestmentFactory investmentFactory;
 	private final TaxFormatter taxFormatter;
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(Investment investment) {

@@ -29,7 +29,7 @@ class CalculateInvestmentTest {
 	@BeforeEach
 	void setUp() {
 		investmentFactory = new InvestmentFactory();
-		calculateMonthlyInvestment = new CalculateInvestment(investmentFactory, new TaxPercentFormatter());
+		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.getTypeName())
