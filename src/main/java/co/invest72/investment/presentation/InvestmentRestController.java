@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.invest72.investment.application.CalculateExpirationInvestment;
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InvestmentRestController {
 
-	private final CalculateExpirationInvestment calculateExpirationInvestment;
 	private final CalculateInvestment calculateInvestment;
 
 	@PostMapping("/investments/calculate/monthly")
