@@ -55,7 +55,6 @@ public class InvestmentFactory {
 		productRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
 	}
 
-	// TODO: FinancialProduct에서 Investment 생성 지원
 	public Investment createBy(FinancialProduct product) {
 		InvestmentKey key = createInvestmentKey(product.getInvestmentType(), product.getInterestType());
 		Function<FinancialProduct, Investment> creator = productRegistry.get(key);
@@ -77,7 +76,7 @@ public class InvestmentFactory {
 	private InvestmentKey createInvestmentKey(String investmentTypeValue, String interestTypeValue) {
 		InvestmentType type = InvestmentType.from(investmentTypeValue);
 		InterestType interestType = InterestType.from(interestTypeValue);
-		return new InvestmentKey(type, interestType);
+		return createInvestmentKey(type, interestType);
 	}
 
 	private InvestmentKey createInvestmentKey(InvestmentType investmentType, InterestType interestType) {
