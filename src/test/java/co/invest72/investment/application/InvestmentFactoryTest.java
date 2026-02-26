@@ -98,6 +98,28 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-적금-년적립")
+	@Test
+	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
+		request = CalculateInvestmentRequest.builder()
+			.type(SAVINGS.getTypeName())
+			.amountType(YEARLY.getDescription())
+			.amount(12_000_000)
+			.periodType("년")
+			.periodValue(1)
+			.interestType(SIMPLE.getTypeName())
+			.annualInterestRate(0.05)
+			.taxType(TaxType.NON_TAX.getDescription())
+			.taxRate(0.0)
+			.build();
+
+		investment = investmentFactory.createBy(request);
+
+		assertNotNull(investment);
+		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
+		assertEquals(12_000_000, investment.getTotalInvestment());
+	}
+
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {

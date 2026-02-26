@@ -3,19 +3,20 @@ package co.invest72.investment.application;
 import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
 import co.invest72.investment.console.input.parser.InstallmentInvestmentAmountParser;
 import co.invest72.investment.console.input.parser.InvestmentAmountParser;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
-import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
-import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.PeriodRange;
 import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.Taxable;
@@ -42,21 +43,9 @@ import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 
 public class InvestmentFactory {
 
-	private final Map<InvestmentKey, Function<CalculateInvestmentRequest, Investment>> registry = new HashMap<>();
-	private final Map<InvestmentKey, Function<FinancialProduct, Investment>> productRegistry = new HashMap<>();
 	private final Map<InvestmentKey, Function<CalculateInvestmentDto, Investment>> dtoRegistry = new HashMap<>();
 
 	public InvestmentFactory() {
-		registry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
-		registry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
-		registry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
-		registry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
-
-		productRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
-		productRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
-		productRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
-		productRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
-
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
@@ -86,18 +75,32 @@ public class InvestmentFactory {
 	}
 
 	public Investment createBy(CalculateInvestmentRequest request) {
-		InvestmentKey key = createInvestmentKey(request.getType(), request.getInterestType());
-		Function<CalculateInvestmentRequest, Investment> creator = registry.get(key);
-		if (creator == null) {
-			throw new IllegalArgumentException("Unsupported investment type or interest type: " + key);
-		}
-		return creator.apply(request);
-	}
 
-	private InvestmentKey createInvestmentKey(String investmentTypeValue, String interestTypeValue) {
-		InvestmentType type = InvestmentType.from(investmentTypeValue);
-		InterestType interestType = InterestType.from(interestTypeValue);
-		return createInvestmentKey(type, interestType);
+		InvestmentType investmentType = InvestmentType.from(request.getType());
+		PeriodType periodType = PeriodType.from(request.getPeriodType());
+		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
+		InvestPeriod investPeriod = periodType.create(periodRange);
+
+		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
+		ProductAmount productAmount = new ProductAmount(BigDecimal.valueOf(request.getAmount()));
+		// InvestmentType 적금인 경우에 월 투자금액으로 저장되도록 처리
+		if (investmentType == SAVINGS) {
+			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
+			InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
+				request.getAmountType() + " " + request.getAmount());
+			productAmount = new ProductAmount(BigDecimal.valueOf(investmentAmount.getMonthlyAmount()));
+		}
+
+		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
+			.type(investmentType)
+			.amount(productAmount)
+			.months(new ProductMonths(investPeriod.getMonths()))
+			.interestRate(new AnnualInterestRate(request.getAnnualInterestRate()))
+			.interestType(InterestType.from(request.getInterestType()))
+			.taxType(TaxType.from(request.getTaxType()))
+			.taxRate(new FixedTaxRate(request.getTaxRate()))
+			.build();
+		return createBy(dto);
 	}
 
 	private InvestmentKey createInvestmentKey(InvestmentType investmentType, InterestType interestType) {
@@ -144,110 +147,6 @@ public class InvestmentFactory {
 		);
 	}
 
-	private Investment simpleFixedDeposit(FinancialProduct product) {
-		return new SimpleFixedDeposit(
-			new FixedDepositAmount(product.getAmount().getValue().intValue()),
-			new MonthlyInvestPeriod(product.getMonths().getValue()),
-			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
-		);
-	}
-
-	private CompoundFixedDeposit compoundFixedDeposit(FinancialProduct product) {
-		return new CompoundFixedDeposit(
-			new FixedDepositAmount(product.getAmount().getValue().intValue()),
-			new MonthlyInvestPeriod(product.getMonths().getValue()),
-			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
-		);
-	}
-
-	private SimpleFixedInstallmentSaving simpleFixedInstallmentSaving(FinancialProduct product) {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			product.getAmount().getValue().intValue());
-		return new SimpleFixedInstallmentSaving(
-			investmentAmount,
-			new MonthlyInvestPeriod(product.getMonths().getValue()),
-			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
-		);
-	}
-
-	private CompoundFixedInstallmentSaving compoundFixedInstallmentSaving(FinancialProduct product) {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			product.getAmount().getValue().intValue());
-		return new CompoundFixedInstallmentSaving(
-			investmentAmount,
-			new MonthlyInvestPeriod(product.getMonths().getValue()),
-			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
-		);
-	}
-
-	private Investment simpleFixedDeposit(CalculateInvestmentRequest request) {
-		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(request.getAmount());
-		PeriodType periodType = PeriodType.from(request.getPeriodType());
-		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
-		InvestPeriod investPeriod = periodType.create(periodRange);
-		InterestRate interestRate = new AnnualInterestRate(request.getAnnualInterestRate());
-		Taxable taxable = resolveTaxable(request);
-		return new SimpleFixedDeposit(
-			investmentAmount,
-			investPeriod,
-			interestRate,
-			taxable
-		);
-	}
-
-	private CompoundFixedDeposit compoundFixedDeposit(CalculateInvestmentRequest request) {
-		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(request.getAmount());
-		PeriodType periodType = PeriodType.from(request.getPeriodType());
-		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
-		InvestPeriod investPeriod = periodType.create(periodRange);
-		InterestRate interestRate = new AnnualInterestRate(request.getAnnualInterestRate());
-		Taxable taxable = resolveTaxable(request);
-		return new CompoundFixedDeposit(
-			investmentAmount,
-			investPeriod,
-			interestRate,
-			taxable
-		);
-	}
-
-	private SimpleFixedInstallmentSaving simpleFixedInstallmentSaving(CalculateInvestmentRequest request) {
-		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
-		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
-			request.getAmountType() + " " + request.getAmount());
-		PeriodType periodType = PeriodType.from(request.getPeriodType());
-		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
-		InvestPeriod investPeriod = periodType.create(periodRange);
-		InterestRate interestRate = new AnnualInterestRate(request.getAnnualInterestRate());
-		Taxable taxable = resolveTaxable(request);
-		return new SimpleFixedInstallmentSaving(
-			investmentAmount,
-			investPeriod,
-			interestRate,
-			taxable
-		);
-	}
-
-	private CompoundFixedInstallmentSaving compoundFixedInstallmentSaving(CalculateInvestmentRequest request) {
-		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
-		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
-			request.getAmountType() + " " + request.getAmount());
-		PeriodType periodType = PeriodType.from(request.getPeriodType());
-		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
-		InvestPeriod investPeriod = periodType.create(periodRange);
-		InterestRate interestRate = new AnnualInterestRate(request.getAnnualInterestRate());
-		Taxable taxable = resolveTaxable(request);
-		return new CompoundFixedInstallmentSaving(
-			investmentAmount,
-			investPeriod,
-			interestRate,
-			taxable
-		);
-	}
-
 	private PeriodRange createPeriodRange(PeriodType periodType, int periodValue) {
 		PeriodRange periodRange;
 		if (periodType == PeriodType.MONTH) {
@@ -256,12 +155,6 @@ public class InvestmentFactory {
 			periodRange = new PeriodYearRange(periodValue);
 		}
 		return periodRange;
-	}
-
-	private Taxable resolveTaxable(CalculateInvestmentRequest request) {
-		TaxType taxType = TaxType.from(request.getTaxType());
-		Double taxRate = request.getTaxRate();
-		return resolveTaxable(taxType, new FixedTaxRate(taxRate));
 	}
 
 	private Taxable resolveTaxable(TaxType taxType, TaxRate taxRate) {
