@@ -24,7 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import co.invest72.investment.application.CalculateExpirationInvestment;
+import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxPercentFormatter;
 import co.invest72.investment.console.input.delegator.CalculateExpirationInvestmentReaderDelegator;
@@ -52,7 +52,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 	private InvestmentAmountReaderStrategyRegistry amountReaderStrategyRegistry;
 	private InvestmentResultPrinter investmentResultPrinter;
 	private CalculateInvestmentRequestReader calculateInvestmentRequestReader;
-	private CalculateExpirationInvestment investment;
+	private CalculateInvestment investment;
 
 	public static Stream<Arguments> inputFileSource() {
 		return Stream.of(
@@ -105,7 +105,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
 		InvestmentFactory factory = new InvestmentFactory();
-		investment = new CalculateExpirationInvestment(factory, new TaxPercentFormatter());
+		investment = new CalculateInvestment(factory, new TaxPercentFormatter());
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,

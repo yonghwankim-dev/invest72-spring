@@ -20,20 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 public class InvestmentRestController {
 
 	private final CalculateExpirationInvestment calculateExpirationInvestment;
-	private final CalculateInvestment calculateMonthlyInvestment;
-
-	@PostMapping("/investments/calculate/expiration")
-	public ResponseEntity<CalculateExpirationInvestment.CalculateExpirationInvestmentResponse> calculateExpiration(
-		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateExpirationInvestment.CalculateExpirationInvestmentResponse response = calculateExpirationInvestment.calInvestment(
-			request);
-		return ResponseEntity.ok(response);
-	}
+	private final CalculateInvestment calculateInvestment;
 
 	@PostMapping("/investments/calculate/monthly")
 	public ResponseEntity<CalculateMonthlyInvestmentResponse> calculateMonthly(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+		CalculateMonthlyInvestmentResponse response = calculateInvestment.calMonthlyInvestmentAmount(
 			request);
 		return ResponseEntity.ok(response);
 	}
@@ -41,7 +33,7 @@ public class InvestmentRestController {
 	@PostMapping("/investments/calculate/yearly")
 	public ResponseEntity<CalculateYearlyInvestmentResponse> calculateYearly(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(request);
+		CalculateYearlyInvestmentResponse response = calculateInvestment.calYearlyInvestmentAmount(request);
 		return ResponseEntity.ok(response);
 	}
 }

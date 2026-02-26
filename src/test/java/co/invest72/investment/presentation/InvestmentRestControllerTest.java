@@ -72,31 +72,7 @@ class InvestmentRestControllerTest {
 	void setUp() {
 		this.mockMvc = createMockMvc();
 	}
-
-	@ParameterizedTest
-	@MethodSource(value = "validCalculateInvestmentRequests")
-	void calculateExpiration(Map<String, Object> request, Map<String, Object> expected) throws Exception {
-		mockMvc.perform(post("/investments/calculate/expiration")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.totalInvestment").value(expected.get("expectedTotalInvestment")))
-			.andExpect(jsonPath("$.totalInterest").value(expected.get("expectedTotalInterest")))
-			.andExpect(jsonPath("$.totalTax").value(expected.get("expectedTotalTax")))
-			.andExpect(jsonPath("$.totalProfit").value(expected.get("expectedTotalProfit")))
-			.andExpect(jsonPath("$.taxType").value(expected.get("expectedTaxType")))
-			.andExpect(jsonPath("$.taxPercent").value(expected.get("expectedTaxPercent")));
-	}
-
-	@ParameterizedTest
-	@MethodSource(value = "invalidCalculateInvestmentRequests")
-	void calculateExpiration_whenInvalidRequest_thenReturnErrorResponse(Map<String, Object> request) throws Exception {
-		mockMvc.perform(post("/investments/calculate/expiration")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isBadRequest());
-	}
-
+	
 	@ParameterizedTest
 	@MethodSource(value = "validCalculateInvestmentRequests")
 	void calculateMonthly(Map<String, Object> request, Map<String, Object> expected) throws Exception {

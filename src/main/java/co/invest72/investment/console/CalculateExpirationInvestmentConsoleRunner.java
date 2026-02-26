@@ -1,26 +1,25 @@
 package co.invest72.investment.console;
 
-import static co.invest72.investment.application.CalculateExpirationInvestment.*;
-
 import java.io.IOException;
 import java.io.PrintStream;
 
-import co.invest72.investment.application.CalculateExpirationInvestment;
+import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.console.input.delegator.CalculateExpirationInvestmentReaderDelegator;
 import co.invest72.investment.console.output.InvestmentResultPrinter;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 
 public class CalculateExpirationInvestmentConsoleRunner {
 	private final PrintStream err;
 	private final CalculateExpirationInvestmentReaderDelegator delegator;
 	private final InvestmentResultPrinter printer;
-	private final CalculateExpirationInvestment useCase;
+	private final CalculateInvestment useCase;
 
 	public CalculateExpirationInvestmentConsoleRunner(
 		PrintStream err,
 		CalculateExpirationInvestmentReaderDelegator delegator,
 		InvestmentResultPrinter printer,
-		CalculateExpirationInvestment useCase) {
+		CalculateInvestment useCase) {
 		this.err = err;
 		this.delegator = delegator;
 		this.printer = printer;
@@ -33,13 +32,13 @@ public class CalculateExpirationInvestmentConsoleRunner {
 			CalculateInvestmentRequest request = delegator.readRequest();
 
 			// 계산 요청
-			CalculateExpirationInvestmentResponse response = useCase.calInvestment(request);
+			CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestmentAmount(request);
 
 			// 출력
-			printer.printTotalPrincipal(response.totalPrincipal());
-			printer.printInterest(response.totalInterest());
-			printer.printTax(response.totalTax());
-			printer.printTotalProfit(response.totalProfit());
+			printer.printTotalPrincipal(response.getTotalPrincipal());
+			printer.printInterest(response.getTotalInterest());
+			printer.printTax(response.getTotalTax());
+			printer.printTotalProfit(response.getTotalProfit());
 
 		} catch (IOException | IllegalArgumentException e) {
 			err.println("[ERROR] Input Error: " + e.getMessage());
