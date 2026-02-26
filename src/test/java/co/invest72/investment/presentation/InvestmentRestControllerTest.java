@@ -1,6 +1,5 @@
 package co.invest72.investment.presentation;
 
-import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import co.invest72.investment.presentation.request.MonthlyCompoundInterestCalculateRequest;
 import util.TestFileUtils;
 
 @SpringBootTest
@@ -130,25 +127,5 @@ class InvestmentRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	void calculateMonthlyCompoundInterest() throws Exception {
-		MonthlyCompoundInterestCalculateRequest request = MonthlyCompoundInterestCalculateRequest.builder()
-			.initialAmount(0)
-			.monthlyDeposit(1_000_000)
-			.investmentYears(1)
-			.annualInterestRate(0.05)
-			.compoundingMethod("monthly")
-			.build();
-
-		mockMvc.perform(post("/investments/calculate/monthly-compound-interest")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.totalInvestment").value(equalTo(11_000_000)))
-			.andExpect(jsonPath("$.totalInterest").value(equalTo(278_855)))
-			.andExpect(jsonPath("$.totalProfit").value(equalTo(11_278_855)))
-			.andExpect(jsonPath("$.details").isArray());
 	}
 }
