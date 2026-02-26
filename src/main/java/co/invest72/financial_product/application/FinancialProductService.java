@@ -107,7 +107,7 @@ public class FinancialProductService {
 		repository.deleteByProductId(productId);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		validateFinancialProduct(user, product);
