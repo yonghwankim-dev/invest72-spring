@@ -72,11 +72,11 @@ class InvestmentRestControllerTest {
 	void setUp() {
 		this.mockMvc = createMockMvc();
 	}
-	
+
 	@ParameterizedTest
 	@MethodSource(value = "validCalculateInvestmentRequests")
-	void calculateMonthly(Map<String, Object> request, Map<String, Object> expected) throws Exception {
-		mockMvc.perform(post("/investments/calculate/monthly")
+	void calculate(Map<String, Object> request, Map<String, Object> expected) throws Exception {
+		mockMvc.perform(post("/investments/calculate")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isOk())
@@ -98,8 +98,8 @@ class InvestmentRestControllerTest {
 
 	@ParameterizedTest
 	@MethodSource(value = "invalidCalculateInvestmentRequests")
-	void calculateMonthly_whenInvalidRequest_thenReturnErrorResponse(Map<String, Object> request) throws Exception {
-		mockMvc.perform(post("/investments/calculate/monthly")
+	void calculate_whenInvalidRequest_thenReturnErrorResponse(Map<String, Object> request) throws Exception {
+		mockMvc.perform(post("/investments/calculate")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isBadRequest());

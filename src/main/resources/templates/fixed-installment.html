@@ -112,7 +112,7 @@
         // 폼 제출
         $('#investmentForm').on('submit', function (e) {
             e.preventDefault();
-            requestCalculation('/investments/calculate/monthly', '/investments/calculate/monthly/result');
+            requestCalculation('/investments/calculate', '/investments/calculate/result');
         });
     });
 

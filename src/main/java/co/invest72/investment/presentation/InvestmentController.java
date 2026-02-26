@@ -15,8 +15,8 @@ public class InvestmentController {
 	public String showMonthlyCalculationPage() {
 		return "fixed-installment";
 	}
-	
-	@GetMapping("/investments/calculate/monthly/result")
+
+	@GetMapping("/investments/calculate/result")
 	public String showMonthlyResultPage() {
 		return "table-result";
 	}

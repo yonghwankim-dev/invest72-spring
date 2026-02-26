@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.investment.presentation.response.CalculateInvestmentResponse;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import jakarta.validation.Valid;
@@ -21,17 +22,22 @@ public class InvestmentRestController {
 	private final CalculateInvestment calculateInvestment;
 
 	@PostMapping("/investments/calculate")
-	public ResponseEntity<CalculateMonthlyInvestmentResponse> calculateMonthly(
+	public ResponseEntity<CalculateInvestmentResponse> calculate(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateMonthlyInvestmentResponse response = calculateInvestment.calMonthlyInvestmentAmount(
-			request);
-		return ResponseEntity.ok(response);
-	}
+		CalculateMonthlyInvestmentResponse monthlyResponse = calculateInvestment.calMonthlyInvestmentAmount(request);
+		CalculateYearlyInvestmentResponse yearlyResponse = calculateInvestment.calYearlyInvestmentAmount(request);
 
-	@PostMapping("/investments/calculate/yearly")
-	public ResponseEntity<CalculateYearlyInvestmentResponse> calculateYearly(
-		@Valid @RequestBody CalculateInvestmentRequest request) {
-		CalculateYearlyInvestmentResponse response = calculateInvestment.calYearlyInvestmentAmount(request);
+		CalculateInvestmentResponse response = CalculateInvestmentResponse.builder()
+			.totalInvestment(monthlyResponse.getTotalInvestment())
+			.totalPrincipal(monthlyResponse.getTotalPrincipal())
+			.totalInterest(monthlyResponse.getTotalInterest())
+			.totalTax(monthlyResponse.getTotalTax())
+			.totalProfit(monthlyResponse.getTotalProfit())
+			.taxType(monthlyResponse.getTaxType())
+			.taxPercent(monthlyResponse.getTaxPercent())
+			.monthlyDetails(monthlyResponse.getDetails())
+			.yearlyDetails(yearlyResponse.getDetails())
+			.build();
 		return ResponseEntity.ok(response);
 	}
 }

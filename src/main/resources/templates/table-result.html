@@ -126,7 +126,7 @@
             return;
         }
 
-        const details = body.details;
+        const details = body.monthlyDetails;
 
         // 월별 데이터 존재 확인
         if (!details || details.length === 0) {
@@ -189,7 +189,7 @@
             return;
         }
 
-        const details = body.details;
+        const details = body.yearlyDetails;
 
         // 월별 데이터 존재 확인
         if (!details || details.length === 0) {
@@ -246,61 +246,19 @@
 
     monthlyViewBtn.addEventListener('change', function () {
         if (this.checked) {
-            displayMonthlyView();
+            // sessionStorage에서 계산 결과 읽기
+            const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+            renderMonthlyResult(body)
         }
     });
 
     yearlyViewBtn.addEventListener('change', function () {
         if (this.checked) {
-            displayYearlyView();
+            // sessionStorage에서 계산 결과 읽기
+            const body = JSON.parse(sessionStorage.getItem('calculationResult'));
+            renderYearlyResult(body);
         }
     })
-
-    function displayMonthlyView() {
-        let url = '/investments/calculate/monthly';
-        const requestJson = sessionStorage.getItem('request');
-        $.ajax({
-            url: url,
-            type: 'POST',
-            contentType: 'application/json',
-            data: requestJson,
-            success: function (response) {
-                sessionStorage.setItem('requestURL', url);
-                sessionStorage.setItem('request', requestJson);
-                sessionStorage.setItem('calculationResult', JSON.stringify(response));
-
-                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
-                renderMonthlyResult(body);
-            },
-            error: function (xhr, status, error) {
-                alert('계산 중 오류가 발생했습니다: ' + error);
-            }
-        });
-    }
-
-    function displayYearlyView() {
-        let url = '/investments/calculate/yearly';
-        const requestJson = sessionStorage.getItem('request');
-        $.ajax({
-            url: url,
-            type: 'POST',
-            contentType: 'application/json',
-            data: requestJson,
-            success: function (response) {
-                sessionStorage.setItem('requestURL', url);
-                sessionStorage.setItem('request', requestJson);
-                sessionStorage.setItem('calculationResult', JSON.stringify(response));
-
-                const body = JSON.parse(sessionStorage.getItem('calculationResult'));
-                renderYearlyResult(body);
-            },
-            error: function (xhr, status, error) {
-                alert('계산 중 오류가 발생했습니다: ' + error);
-            }
-        });
-
-
-    }
 </script>
 </body>
 </html>
