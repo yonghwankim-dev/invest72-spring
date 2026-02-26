@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 public class FinancialProductCalculationResponseDto {
 	private final int totalInvestment;
-	private final int totalPrincipal;
 	private final int totalInterest;
 	private final int totalTax;
 	private final int totalProfit;
@@ -20,11 +19,10 @@ public class FinancialProductCalculationResponseDto {
 	private final List<YearlyInvestmentResult> yearlyDetails;
 
 	@Builder
-	public FinancialProductCalculationResponseDto(int totalInvestment, int totalPrincipal, int totalInterest,
+	public FinancialProductCalculationResponseDto(int totalInvestment, int totalInterest,
 		int totalTax, int totalProfit, String taxType, String taxPercent, List<MonthlyInvestmentResult> monthlyDetails,
 		List<YearlyInvestmentResult> yearlyDetails) {
 		this.totalInvestment = totalInvestment;
-		this.totalPrincipal = totalPrincipal;
 		this.totalInterest = totalInterest;
 		this.totalTax = totalTax;
 		this.totalProfit = totalProfit;

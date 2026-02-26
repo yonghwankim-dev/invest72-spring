@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import co.invest72.financial_product.application.FinancialProductCalculationService;
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.domain.FinancialProduct;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductCalculationResponseDto;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
+import co.invest72.investment.presentation.response.CalculateInvestmentResponse;
 import co.invest72.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +31,14 @@ public class FinancialProductCalculationRestController {
 	 * @return 상품 계산 결과를 담은 FinancialProductCalculationResponseDto
 	 */
 	@GetMapping("/{id}/calculate")
-	public ResponseEntity<FinancialProductCalculationResponseDto> calculateFinancialProduct(
+	public ResponseEntity<CalculateInvestmentResponse> calculateFinancialProduct(
 		@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable String id) {
 		// 1. 상품 조회
 		FinancialProduct product = financialProductService.getProductByUserAndProductId(user.getUser(), id);
-		// 2. 계산 로직 수행
+		// 2. 상품에 맞는 Investment 생성
 		Investment investment = investmentFactory.createBy(product);
-		FinancialProductCalculationResponseDto response = service.calculate(investment);
-		return ResponseEntity.ok().body(response);
+		// 3. Investment 계산
+		return ResponseEntity.ok().body(service.calculate(investment));
 	}
 }

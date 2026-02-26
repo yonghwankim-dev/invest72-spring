@@ -40,7 +40,6 @@ public class CalculateInvestment {
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalPrincipal();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -48,7 +47,6 @@ public class CalculateInvestment {
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
-			.totalPrincipal(totalPrincipal)
 			.totalInterest(totalInterest)
 			.totalTax(totalTax)
 			.totalProfit(totalProfit)

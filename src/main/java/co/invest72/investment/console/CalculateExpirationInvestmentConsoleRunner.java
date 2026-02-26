@@ -43,7 +43,6 @@ public class CalculateExpirationInvestmentConsoleRunner {
 			CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestment(investment);
 
 			// 출력
-			printer.printTotalPrincipal(response.getTotalPrincipal());
 			printer.printInterest(response.getTotalInterest());
 			printer.printTax(response.getTotalTax());
 			printer.printTotalProfit(response.getTotalProfit());
