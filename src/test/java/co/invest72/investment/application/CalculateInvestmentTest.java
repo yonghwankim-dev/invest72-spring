@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.domain.period.PeriodType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -23,10 +24,11 @@ class CalculateInvestmentTest {
 
 	private CalculateInvestment calculateMonthlyInvestment;
 	private CalculateInvestmentRequest request;
+	private InvestmentFactory investmentFactory;
 
 	@BeforeEach
 	void setUp() {
-		InvestmentFactory investmentFactory = new InvestmentFactory();
+		investmentFactory = new InvestmentFactory();
 		calculateMonthlyInvestment = new CalculateInvestment(investmentFactory, new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()
@@ -48,9 +50,9 @@ class CalculateInvestmentTest {
 		request = request.toBuilder()
 			.periodValue(4)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
-			request);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -79,9 +81,9 @@ class CalculateInvestmentTest {
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
-			request);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -120,8 +122,9 @@ class CalculateInvestmentTest {
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
 			.build();
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
-			request);
+		Investment investment = investmentFactory.createBy(request);
+
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -157,9 +160,9 @@ class CalculateInvestmentTest {
 		request = request.toBuilder()
 			.periodValue(4)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
-			request);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
@@ -183,9 +186,9 @@ class CalculateInvestmentTest {
 		request = request.toBuilder()
 			.periodValue(36)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
-			request);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
@@ -213,9 +216,9 @@ class CalculateInvestmentTest {
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
-			request);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
@@ -242,9 +245,9 @@ class CalculateInvestmentTest {
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
 			.build();
+		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(
-			request);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),

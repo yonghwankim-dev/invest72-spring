@@ -110,7 +110,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 			err,
 			investmentReaderDelegator,
 			investmentResultPrinter,
-			investment
+			investment,
+			factory
 		);
 	}
 
@@ -131,11 +132,13 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		calculateInvestmentRequestReader = new CalculateInvestmentRequestReader(reader, guidePrinter);
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
+		InvestmentFactory factory = new InvestmentFactory();
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,
 			investmentResultPrinter,
-			investment
+			investment,
+			factory
 		);
 
 		runner.run();

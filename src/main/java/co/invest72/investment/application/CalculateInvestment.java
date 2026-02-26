@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.invest72.investment.domain.Investment;
-import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
@@ -15,11 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class CalculateInvestment {
 	private final InvestmentFactory investmentFactory;
 	private final TaxFormatter taxFormatter;
-
-	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(CalculateInvestmentRequest request) {
-		Investment investment = investmentFactory.createBy(request);
-		return calMonthlyInvestmentAmount(investment);
-	}
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(Investment investment) {
 		List<MonthlyInvestmentResult> result = new ArrayList<>();
@@ -49,11 +43,6 @@ public class CalculateInvestment {
 			.taxPercent(taxPercent)
 			.details(result)
 			.build();
-	}
-
-	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(CalculateInvestmentRequest request) {
-		Investment investment = investmentFactory.createBy(request);
-		return calYearlyInvestmentAmount(investment);
 	}
 
 	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(Investment investment) {
