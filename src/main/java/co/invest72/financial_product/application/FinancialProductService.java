@@ -69,9 +69,14 @@ public class FinancialProductService {
 
 	@Transactional(readOnly = true)
 	public FinancialProductResponseDto getProductDetail(User user, String productId) {
+		FinancialProduct product = findFinancialProduct(user, productId);
+		return buildProductResponseDto(product);
+	}
+
+	private FinancialProduct findFinancialProduct(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		validateFinancialProduct(user, product);
-		return buildProductResponseDto(product);
+		return product;
 	}
 
 	private void validateFinancialProduct(User user, FinancialProduct product) {
@@ -83,8 +88,7 @@ public class FinancialProductService {
 	@Transactional
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		// 기존 상품 조회 및 검증
-		FinancialProduct existingProduct = repository.findByProductId(productId);
-		validateFinancialProduct(user, existingProduct);
+		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
 		FinancialProduct updatedProduct = existingProduct.toBuilder()
 			.name(dto.getName())
@@ -102,15 +106,12 @@ public class FinancialProductService {
 
 	@Transactional
 	public void deleteProduct(User user, String productId) {
-		FinancialProduct product = repository.findByProductId(productId);
-		validateFinancialProduct(user, product);
+		findFinancialProduct(user, productId);
 		repository.deleteByProductId(productId);
 	}
 
 	@Transactional(readOnly = true)
 	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
-		FinancialProduct product = repository.findByProductId(productId);
-		validateFinancialProduct(user, product);
-		return product;
+		return findFinancialProduct(user, productId);
 	}
 }
