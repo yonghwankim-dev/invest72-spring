@@ -15,12 +15,7 @@ public class InvestmentController {
 	public String showMonthlyCalculationPage() {
 		return "fixed-installment";
 	}
-
-	@GetMapping("/investments/calculate/expiration/result")
-	public String showExpirationResultPage() {
-		return "expiration-result";
-	}
-
+	
 	@GetMapping("/investments/calculate/monthly/result")
 	public String showMonthlyResultPage() {
 		return "table-result";

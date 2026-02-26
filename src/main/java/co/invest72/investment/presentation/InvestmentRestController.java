@@ -20,7 +20,7 @@ public class InvestmentRestController {
 
 	private final CalculateInvestment calculateInvestment;
 
-	@PostMapping("/investments/calculate/monthly")
+	@PostMapping("/investments/calculate")
 	public ResponseEntity<CalculateMonthlyInvestmentResponse> calculateMonthly(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
 		CalculateMonthlyInvestmentResponse response = calculateInvestment.calMonthlyInvestmentAmount(
