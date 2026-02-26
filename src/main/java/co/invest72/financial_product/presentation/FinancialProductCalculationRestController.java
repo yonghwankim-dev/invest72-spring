@@ -27,7 +27,8 @@ public class FinancialProductCalculationRestController {
 	private final CalculateMonthlyInvestment calculateMonthlyInvestment;
 
 	@GetMapping("/{id}/calculate")
-	public ResponseEntity<Object> calculateFinancialProduct(@AuthenticationPrincipal PrincipalUser user,
+	public ResponseEntity<FinancialProductCalculationResponseDto> calculateFinancialProduct(
+		@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable String id) {
 		// 1. 상품 조회
 		FinancialProduct product = financialProductService.getProductByUserAndProductId(user.getUser(), id);
