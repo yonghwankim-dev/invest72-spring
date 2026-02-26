@@ -24,7 +24,6 @@ public class FinancialProductCalculationRestController {
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductCalculationService service;
 
-	// TODO: 복리도 계산할 수 있도록 수정 필요
 	@GetMapping("/{id}/calculate")
 	public ResponseEntity<FinancialProductCalculationResponseDto> calculateFinancialProduct(
 		@AuthenticationPrincipal PrincipalUser user,
