@@ -5,23 +5,16 @@ import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.financial_product.domain.FinancialProduct;
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
-import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.tax.TaxType;
@@ -126,95 +119,14 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
 	}
 
-	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
-	@Test
-	void createBy_whenSimpleDepositFinancialProduct_thenReturnInvestment() {
-		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId("user-" + UUID.randomUUID())
-			.name("단리-예금")
-			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(SIMPLE)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
+	@DisplayName("투자 객체 생성 - FinancialProduct 객체를 이용하여 Investment 객체 생성")
+	@ParameterizedTest(name = "{2} 객체 생성 테스트")
+	@MethodSource(value = "source.FinancialProductTestDataProvider#provideFinancialProducts")
+	void createBy_givenFinancialProduct_whenCreateInvestment_thenReturnInvestment(FinancialProduct product,
+		Class<?> expectedType, String ignored) {
 		// when
 		investment = investmentFactory.createBy(product);
 		// then
-		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
-	}
-
-	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
-	@Test
-	void createBy_whenCompoundDepositFinancialProduct_thenReturnInvestment() {
-		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId("user-" + UUID.randomUUID())
-			.name("복리-예금")
-			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
-		// when
-		investment = investmentFactory.createBy(product);
-		// then
-		assertInstanceOfInvestment(CompoundFixedDeposit.class, investment);
-	}
-
-	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
-	@Test
-	void createBy_whenSimpleInstallmentSavingFinancialProduct_thenReturnInvestment() {
-		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId("user-" + UUID.randomUUID())
-			.name("단리-적금")
-			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(SIMPLE)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
-		// when
-		investment = investmentFactory.createBy(product);
-		// then
-		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-	}
-
-	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
-	@Test
-	void createBy_whenCompoundInstallmentSavingFinancialProduct_thenReturnInvestment() {
-		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId("user-" + UUID.randomUUID())
-			.name("복리-적금")
-			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
-		// when
-		investment = investmentFactory.createBy(product);
-		// then
-		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
+		assertInstanceOfInvestment(expectedType, investment);
 	}
 }
