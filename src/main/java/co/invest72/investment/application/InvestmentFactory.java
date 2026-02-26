@@ -20,6 +20,7 @@ import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.TaxableFactory;
 import co.invest72.investment.domain.TaxableResolver;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
+import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
@@ -101,9 +102,8 @@ public class InvestmentFactory {
 	}
 
 	private SimpleFixedInstallmentSaving simpleFixedInstallmentSaving(FinancialProduct product) {
-		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
-		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
-			"월 " + product.getAmount().getValue());
+		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
+			product.getAmount().getValue().intValue());
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
@@ -113,9 +113,8 @@ public class InvestmentFactory {
 	}
 
 	private CompoundFixedInstallmentSaving compoundFixedInstallmentSaving(FinancialProduct product) {
-		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
-		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
-			"월 " + product.getAmount().getValue());
+		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
+			product.getAmount().getValue().intValue());
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
