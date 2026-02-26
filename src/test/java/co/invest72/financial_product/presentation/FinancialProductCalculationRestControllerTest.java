@@ -99,7 +99,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.totalInterest").value(50_000))
 			.andExpect(jsonPath("$.totalTax").value(0))
 			.andExpect(jsonPath("$.totalProfit").value(1_050_000))
-			.andExpect(jsonPath("$.taxType").value("비과세")) // todo: convert NON_TAX
+			.andExpect(jsonPath("$.taxType").value("비과세"))
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
