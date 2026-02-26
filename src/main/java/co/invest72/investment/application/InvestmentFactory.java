@@ -88,7 +88,7 @@ public class InvestmentFactory {
 			new FixedDepositAmount(product.getAmount().getValue().intValue()),
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
 			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
 		);
 	}
 
@@ -97,7 +97,7 @@ public class InvestmentFactory {
 			new FixedDepositAmount(product.getAmount().getValue().intValue()),
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
 			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
 		);
 	}
 
@@ -108,7 +108,7 @@ public class InvestmentFactory {
 			investmentAmount,
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
 			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
 		);
 	}
 
@@ -119,15 +119,15 @@ public class InvestmentFactory {
 			investmentAmount,
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
 			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
-			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+			resolveTaxable(product.getTaxType(), new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
 		);
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentRequest request) {
+		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(request.getAmount());
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
-		InvestPeriod investPeriod = new MonthlyInvestPeriod(periodRange.toMonths());
-		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(request.getAmount());
+		InvestPeriod investPeriod = periodType.create(periodRange);
 		InterestRate interestRate = new AnnualInterestRate(request.getAnnualInterestRate());
 		Taxable taxable = resolveTaxable(request);
 		return new SimpleFixedDeposit(
@@ -200,13 +200,13 @@ public class InvestmentFactory {
 	private Taxable resolveTaxable(CalculateInvestmentRequest request) {
 		TaxType taxType = TaxType.from(request.getTaxType());
 		Double taxRate = request.getTaxRate();
-		return resolveTaxable(taxType, taxRate);
+		return resolveTaxable(taxType, new FixedTaxRate(taxRate));
 	}
 
-	private Taxable resolveTaxable(TaxType taxType, double taxRate) {
+	private Taxable resolveTaxable(TaxType taxType, FixedTaxRate taxRate) {
 		TaxableFactory taxableFactory = new KoreanTaxableFactory();
 		TaxableResolver taxableResolver = new KoreanStringBasedTaxableResolver(taxableFactory);
-		return taxableResolver.resolve(taxType, new FixedTaxRate(taxRate));
+		return taxableResolver.resolve(taxType, taxRate);
 	}
 
 	public record InvestmentKey(InvestmentType investmentType, InterestType interestType) {
