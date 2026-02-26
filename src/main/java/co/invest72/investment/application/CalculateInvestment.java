@@ -19,7 +19,6 @@ public class CalculateInvestment {
 		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
 		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalPrincipal();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -28,7 +27,6 @@ public class CalculateInvestment {
 
 		return CalculateInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
-			.totalPrincipal(totalPrincipal)
 			.totalInterest(totalInterest)
 			.totalTax(totalTax)
 			.totalProfit(totalProfit)
