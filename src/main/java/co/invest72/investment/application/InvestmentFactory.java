@@ -59,7 +59,7 @@ public class InvestmentFactory {
 		InvestmentKey key = createInvestmentKey(product.getInvestmentType(), product.getInterestType());
 		Function<FinancialProduct, Investment> creator = productRegistry.get(key);
 		if (creator == null) {
-			throw new IllegalArgumentException("Unsupported investment type or totalInterest type: " + key);
+			throw new IllegalArgumentException("Unsupported investment type or interest type: " + key);
 		}
 		return creator.apply(product);
 	}
@@ -68,7 +68,7 @@ public class InvestmentFactory {
 		InvestmentKey key = createInvestmentKey(request.getType(), request.getInterestType());
 		Function<CalculateInvestmentRequest, Investment> creator = registry.get(key);
 		if (creator == null) {
-			throw new IllegalArgumentException("Unsupported investment type or totalInterest type: " + key);
+			throw new IllegalArgumentException("Unsupported investment type or interest type: " + key);
 		}
 		return creator.apply(request);
 	}
