@@ -51,6 +51,8 @@ public class InvestmentFactory {
 
 		productRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
 		productRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
+		productRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
+		productRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
 	}
 
 	// TODO: FinancialProduct에서 Investment 생성 지원
@@ -94,6 +96,30 @@ public class InvestmentFactory {
 	private CompoundFixedDeposit compoundFixedDeposit(FinancialProduct product) {
 		return new CompoundFixedDeposit(
 			new FixedDepositAmount(product.getAmount().getValue().intValue()),
+			new MonthlyInvestPeriod(product.getMonths().getValue()),
+			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
+			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+		);
+	}
+
+	private SimpleFixedInstallmentSaving simpleFixedInstallmentSaving(FinancialProduct product) {
+		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
+		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
+			"월 " + product.getAmount().getValue());
+		return new SimpleFixedInstallmentSaving(
+			investmentAmount,
+			new MonthlyInvestPeriod(product.getMonths().getValue()),
+			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
+			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+		);
+	}
+
+	private CompoundFixedInstallmentSaving compoundFixedInstallmentSaving(FinancialProduct product) {
+		InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
+		InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
+			"월 " + product.getAmount().getValue());
+		return new CompoundFixedInstallmentSaving(
+			investmentAmount,
 			new MonthlyInvestPeriod(product.getMonths().getValue()),
 			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
 			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())

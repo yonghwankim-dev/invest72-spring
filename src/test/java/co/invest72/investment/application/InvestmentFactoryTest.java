@@ -6,6 +6,8 @@ import static co.invest72.investment.domain.investment.InvestmentType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,7 @@ class InvestmentFactoryTest {
 		investmentFactory = new InvestmentFactory();
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
@@ -60,6 +63,7 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
@@ -80,6 +84,7 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(CompoundFixedDeposit.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
@@ -100,6 +105,7 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
@@ -134,11 +140,11 @@ class InvestmentFactoryTest {
 			.interestType(SIMPLE)
 			.taxType(TaxType.NON_TAX)
 			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(java.time.LocalDate.now())
-			.createdAt(java.time.LocalDateTime.now())
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
 			.build();
 		// when
-		Investment investment = investmentFactory.createBy(product);
+		investment = investmentFactory.createBy(product);
 		// then
 		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
 	}
@@ -157,12 +163,58 @@ class InvestmentFactoryTest {
 			.interestType(COMPOUND)
 			.taxType(TaxType.NON_TAX)
 			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(java.time.LocalDate.now())
-			.createdAt(java.time.LocalDateTime.now())
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
 			.build();
 		// when
-		Investment investment = investmentFactory.createBy(product);
+		investment = investmentFactory.createBy(product);
 		// then
 		assertInstanceOfInvestment(CompoundFixedDeposit.class, investment);
+	}
+
+	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
+	@Test
+	void createBy_whenSimpleInstallmentSavingFinancialProduct_thenReturnInvestment() {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId("user-" + UUID.randomUUID())
+			.name("단리-적금")
+			.investmentType(InvestmentType.SAVINGS)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(SIMPLE)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
+			.build();
+		// when
+		investment = investmentFactory.createBy(product);
+		// then
+		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
+	}
+
+	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
+	@Test
+	void createBy_whenCompoundInstallmentSavingFinancialProduct_thenReturnInvestment() {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId("user-" + UUID.randomUUID())
+			.name("복리-적금")
+			.investmentType(InvestmentType.SAVINGS)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(COMPOUND)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
+			.build();
+		// when
+		investment = investmentFactory.createBy(product);
+		// then
+		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
 	}
 }
