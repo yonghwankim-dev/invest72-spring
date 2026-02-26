@@ -17,8 +17,12 @@ public class CalculateMonthlyInvestment {
 	private final TaxFormatter taxFormatter;
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(CalculateInvestmentRequest request) {
-		List<MonthlyInvestmentResult> result = new ArrayList<>();
 		Investment investment = investmentFactory.createBy(request);
+		return calMonthlyInvestmentAmount(investment);
+	}
+
+	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(Investment investment) {
+		List<MonthlyInvestmentResult> result = new ArrayList<>();
 
 		for (int month = 1; month <= investment.getFinalMonth(); month++) {
 			result.add(new MonthlyInvestmentResult(
@@ -34,7 +38,7 @@ public class CalculateMonthlyInvestment {
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
-		String taxPercent = taxFormatter.format(request.getTaxRate());
+		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateMonthlyInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
 			.totalPrincipal(totalPrincipal)

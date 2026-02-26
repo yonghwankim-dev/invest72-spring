@@ -170,4 +170,8 @@ public class MonthlyCompoundInterest implements Investment {
 		return taxable.getTaxType();
 	}
 
+	@Override
+	public double getTaxRate() {
+		return taxable.getTaxRate();
+	}
 }

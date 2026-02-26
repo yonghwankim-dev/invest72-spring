@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.investment.application.CalculateMonthlyInvestment;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.Investment;
+import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import co.invest72.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +22,18 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductCalculationRestController {
 	private final FinancialProductService financialProductService;
 	private final InvestmentFactory investmentFactory;
+	private final CalculateMonthlyInvestment calculateMonthlyInvestment;
 
 	@GetMapping("/{id}/calculate")
 	public ResponseEntity<Object> calculateFinancialProduct(@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable String id) {
-		// TODO: 상품 계산 로직 구현
 		// 1. 상품 조회
 		FinancialProduct product = financialProductService.getProductByUserAndProductId(user.getUser(), id);
 		// 2. 계산 로직 수행
+		Investment investment = investmentFactory.createBy(product);
+
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+			investment);
 
 		return ResponseEntity.ok().body("계산 결과");
 	}

@@ -167,4 +167,9 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
 	}
+
+	@Override
+	public double getTaxRate() {
+		return taxable.getTaxRate();
+	}
 }

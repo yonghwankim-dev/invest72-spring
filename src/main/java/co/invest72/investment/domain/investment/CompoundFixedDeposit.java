@@ -26,8 +26,8 @@ public class CompoundFixedDeposit implements Investment {
 		InterestRate interestRate,
 		Taxable taxable) {
 		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
+		this.interestRate = interestRate;
 		this.taxable = taxable;
 		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
 			investmentAmount, interestRate, investPeriod);
@@ -170,5 +170,10 @@ public class CompoundFixedDeposit implements Investment {
 			return getProfitForYear(0);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+	}
+
+	@Override
+	public double getTaxRate() {
+		return taxable.getTaxRate();
 	}
 }
