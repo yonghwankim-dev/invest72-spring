@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.investment.console.input.parser.InstallmentInvestmentAmountParser;
 import co.invest72.investment.console.input.parser.InvestmentAmountParser;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
@@ -46,6 +47,11 @@ public class InvestmentFactory {
 		registry.put(new InvestmentKey(FIXED_DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 		registry.put(new InvestmentKey(INSTALLMENT_SAVING, SIMPLE), this::simpleFixedInstallmentSaving);
 		registry.put(new InvestmentKey(INSTALLMENT_SAVING, COMPOUND), this::compoundFixedInstallmentSaving);
+	}
+
+	// TODO: FinancialProduct에서 Investment 생성 지원
+	public Investment createBy(FinancialProduct product) {
+		throw new UnsupportedOperationException("Creating Investment from FinancialProduct is not supported yet.");
 	}
 
 	public Investment createBy(CalculateInvestmentRequest request) {

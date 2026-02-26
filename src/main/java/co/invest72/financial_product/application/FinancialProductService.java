@@ -106,4 +106,11 @@ public class FinancialProductService {
 		validateFinancialProduct(user, product);
 		repository.deleteByProductId(productId);
 	}
+
+	@Transactional
+	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
+		FinancialProduct product = repository.findByProductId(productId);
+		validateFinancialProduct(user, product);
+		return product;
+	}
 }

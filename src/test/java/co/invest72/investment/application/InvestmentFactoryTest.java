@@ -5,9 +5,18 @@ import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductRate;
+import co.invest72.financial_product.domain.ProductType;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
@@ -109,5 +118,28 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
+	}
+
+	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
+	@Test
+	void createBy_whenSimpleDepositFinancialProduct_thenReturnInvestment() {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId("user-" + UUID.randomUUID())
+			.name("단리-예금")
+			.productType(ProductType.DEPOSIT)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(SIMPLE)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.startDate(java.time.LocalDate.now())
+			.createdAt(java.time.LocalDateTime.now())
+			.build();
+		// when
+		Investment investment = investmentFactory.createBy(product);
+		// then
+		assertNotNull(investment);
 	}
 }
