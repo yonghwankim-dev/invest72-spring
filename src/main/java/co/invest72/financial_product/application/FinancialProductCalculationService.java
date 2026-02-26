@@ -16,9 +16,9 @@ public class FinancialProductCalculationService {
 	private final CalculateInvestment calculateMonthlyInvestment;
 
 	public FinancialProductCalculationResponseDto calculate(Investment investment) {
-		CalculateMonthlyInvestmentResponse monthlyResponse = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+		CalculateMonthlyInvestmentResponse monthlyResponse = calculateMonthlyInvestment.calMonthlyInvestment(
 			investment);
-		CalculateYearlyInvestmentResponse yearlyResponse = calculateMonthlyInvestment.calYearlyInvestmentAmount(
+		CalculateYearlyInvestmentResponse yearlyResponse = calculateMonthlyInvestment.calYearlyInvestment(
 			investment);
 
 		return FinancialProductCalculationResponseDto.builder()

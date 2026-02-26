@@ -52,7 +52,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestment(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -83,7 +83,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestment(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -124,7 +124,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(investment);
+		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestment(investment);
 
 		List<MonthlyInvestmentResult> details = List.of(
 			new MonthlyInvestmentResult(1, 1_000_000, 4_167, 1_004_167),
@@ -162,7 +162,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestment(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
@@ -188,7 +188,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestment(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
@@ -218,7 +218,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestment(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),
@@ -247,7 +247,7 @@ class CalculateInvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(request);
 
-		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestmentAmount(investment);
+		CalculateYearlyInvestmentResponse response = calculateMonthlyInvestment.calYearlyInvestment(investment);
 
 		List<YearlyInvestmentResult> details = List.of(
 			new YearlyInvestmentResult(1, 1_000_000, 50_000, 1_050_000),

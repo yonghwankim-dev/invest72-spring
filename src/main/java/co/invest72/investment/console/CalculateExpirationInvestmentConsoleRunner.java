@@ -40,7 +40,7 @@ public class CalculateExpirationInvestmentConsoleRunner {
 			Investment investment = investmentFactory.createBy(request);
 
 			// 계산 요청
-			CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestmentAmount(investment);
+			CalculateMonthlyInvestmentResponse response = useCase.calMonthlyInvestment(investment);
 
 			// 출력
 			printer.printTotalPrincipal(response.getTotalPrincipal());

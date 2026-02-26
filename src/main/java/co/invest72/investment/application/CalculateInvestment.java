@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class CalculateInvestment {
 	private final TaxFormatter taxFormatter;
 
-	public CalculateMonthlyInvestmentResponse calMonthlyInvestmentAmount(Investment investment) {
+	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = new ArrayList<>();
 
 		for (int month = 1; month <= investment.getFinalMonth(); month++) {
@@ -44,7 +44,7 @@ public class CalculateInvestment {
 			.build();
 	}
 
-	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(Investment investment) {
+	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = new ArrayList<>();
 
 		int years = (investment.getFinalMonth() - 1) / 12 + 1;

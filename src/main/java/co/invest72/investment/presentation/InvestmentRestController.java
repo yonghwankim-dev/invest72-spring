@@ -28,8 +28,8 @@ public class InvestmentRestController {
 	public ResponseEntity<CalculateInvestmentResponse> calculate(
 		@Valid @RequestBody CalculateInvestmentRequest request) {
 		Investment investment = investmentFactory.createBy(request);
-		CalculateMonthlyInvestmentResponse monthlyResponse = calculateInvestment.calMonthlyInvestmentAmount(investment);
-		CalculateYearlyInvestmentResponse yearlyResponse = calculateInvestment.calYearlyInvestmentAmount(investment);
+		CalculateMonthlyInvestmentResponse monthlyResponse = calculateInvestment.calMonthlyInvestment(investment);
+		CalculateYearlyInvestmentResponse yearlyResponse = calculateInvestment.calYearlyInvestment(investment);
 
 		CalculateInvestmentResponse response = CalculateInvestmentResponse.builder()
 			.totalInvestment(monthlyResponse.getTotalInvestment())
