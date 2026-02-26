@@ -94,6 +94,15 @@ class FinancialProductCalculationRestControllerTest {
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.totalInvestment").value(1_000_000))
+			.andExpect(jsonPath("$.totalPrincipal").value(1_045_833))
+			.andExpect(jsonPath("$.totalInterest").value(50_000))
+			.andExpect(jsonPath("$.totalTax").value(0))
+			.andExpect(jsonPath("$.totalProfit").value(1_050_000))
+			.andExpect(jsonPath("$.taxType").value("비과세")) // todo: convert NON_TAX
+			.andExpect(jsonPath("$.taxPercent").value("0%"))
+			.andExpect(jsonPath("$.monthlyDetails").isArray())
+			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andDo(MockMvcResultHandlers.print());
 	}
 }

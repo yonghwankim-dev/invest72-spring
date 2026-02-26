@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductCalculationResponseDto;
 import co.invest72.investment.application.CalculateMonthlyInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
+import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 
@@ -32,9 +34,22 @@ public class FinancialProductCalculationRestController {
 		// 2. 계산 로직 수행
 		Investment investment = investmentFactory.createBy(product);
 
-		CalculateMonthlyInvestmentResponse response = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+		CalculateMonthlyInvestmentResponse monthlyResponse = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
+			investment);
+		CalculateYearlyInvestmentResponse yearlyResponse = calculateMonthlyInvestment.calYearlyInvestmentAmount(
 			investment);
 
-		return ResponseEntity.ok().body("계산 결과");
+		FinancialProductCalculationResponseDto response = FinancialProductCalculationResponseDto.builder()
+			.totalInvestment(monthlyResponse.getTotalInvestment())
+			.totalPrincipal(monthlyResponse.getTotalPrincipal())
+			.totalInterest(monthlyResponse.getTotalInterest())
+			.totalTax(monthlyResponse.getTotalTax())
+			.totalProfit(monthlyResponse.getTotalProfit())
+			.taxType(monthlyResponse.getTaxType())
+			.taxPercent(monthlyResponse.getTaxPercent())
+			.monthlyDetails(monthlyResponse.getDetails())
+			.yearlyDetails(yearlyResponse.getDetails())
+			.build();
+		return ResponseEntity.ok().body(response);
 	}
 }

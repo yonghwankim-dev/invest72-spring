@@ -52,8 +52,12 @@ public class CalculateMonthlyInvestment {
 	}
 
 	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(CalculateInvestmentRequest request) {
-		List<YearlyInvestmentResult> details = new ArrayList<>();
 		Investment investment = investmentFactory.createBy(request);
+		return calYearlyInvestmentAmount(investment);
+	}
+
+	public CalculateYearlyInvestmentResponse calYearlyInvestmentAmount(Investment investment) {
+		List<YearlyInvestmentResult> details = new ArrayList<>();
 
 		int years = (investment.getFinalMonth() - 1) / 12 + 1;
 		for (int year = 1; year <= years; year++) {
@@ -68,7 +72,7 @@ public class CalculateMonthlyInvestment {
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
-		String taxPercent = taxFormatter.format(request.getTaxRate());
+		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
 			.totalPrincipal(totalPrincipal)
