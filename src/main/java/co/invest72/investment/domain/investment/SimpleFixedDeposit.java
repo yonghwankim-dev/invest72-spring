@@ -115,18 +115,6 @@ public class SimpleFixedDeposit implements Investment {
 		return roundToInt.applyAsInt(investmentAmount.getAmount());
 	}
 
-	/**
-	 * 만기 시점의 총 원금 금액을 반환합니다.
-	 * <p>
-	 * 단리 방식의 예금은 원금이 변하지 않으므로, 단순히 초기 투자 금액을 반환합니다.
-	 * </p>
-	 * @return 초기 원금 금액
-	 */
-	@Override
-	public int getTotalPrincipal() {
-		return getPrincipal();
-	}
-
 	@Override
 	public int getTotalInterest() {
 		BigDecimal totalInterest = details.stream()

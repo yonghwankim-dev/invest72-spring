@@ -122,13 +122,6 @@ class CompoundFixedDepositTest {
 	}
 
 	@Test
-	void getTotalPrincipal() {
-		int totalPrincipal = investment.getTotalPrincipal();
-
-		assertEquals(1_046_800, totalPrincipal);
-	}
-
-	@Test
 	void getTotalInterest() {
 		int totalInterest = investment.getTotalInterest();
 

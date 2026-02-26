@@ -166,7 +166,6 @@ class CalculateInvestmentTest {
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_012_500)
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
@@ -194,7 +193,6 @@ class CalculateInvestmentTest {
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_145_833)
 			.totalInterest(150_000)
 			.totalTax(23_100)
 			.totalProfit(1_126_900)
@@ -223,7 +221,6 @@ class CalculateInvestmentTest {
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_095_833)
 			.totalInterest(100_000)
 			.totalTax(0)
 			.totalProfit(1_100_000)
@@ -252,7 +249,6 @@ class CalculateInvestmentTest {
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(1_000_000)
-			.totalPrincipal(1_050_000)
 			.totalInterest(54_167)
 			.totalTax(0)
 			.totalProfit(1_054_167)

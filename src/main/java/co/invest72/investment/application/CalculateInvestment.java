@@ -73,7 +73,6 @@ public class CalculateInvestment {
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
 		int totalInvestment = investment.getTotalInvestment();
-		int totalPrincipal = investment.getTotalPrincipal();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -81,7 +80,6 @@ public class CalculateInvestment {
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateYearlyInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
-			.totalPrincipal(totalPrincipal)
 			.totalInterest(totalInterest)
 			.totalTax(totalTax)
 			.totalProfit(totalProfit)

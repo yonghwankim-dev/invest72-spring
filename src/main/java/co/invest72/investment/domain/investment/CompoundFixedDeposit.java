@@ -95,12 +95,7 @@ public class CompoundFixedDeposit implements Investment {
 	public int getTotalInvestment() {
 		return roundToInt.applyAsInt(investmentAmount.getAmount());
 	}
-
-	@Override
-	public int getTotalPrincipal() {
-		return getPrincipal();
-	}
-
+	
 	@Override
 	public int getTotalInterest() {
 		BigDecimal totalInterest = details.stream()

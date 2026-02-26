@@ -130,20 +130,6 @@ class SimpleFixedInstallmentSavingTest {
 	}
 
 	@Test
-	void getTotalPrincipal() {
-		assertEquals(1_227_5000, investment.getTotalPrincipal());
-	}
-
-	@Test
-	void getTotalPrincipal_whenPeriodIs25Months() {
-		investment = ((SimpleFixedInstallmentSaving)investment).toBuilder()
-			.investPeriod(new MonthlyInvestPeriod(25))
-			.build();
-
-		assertEquals(26_250_000, investment.getTotalPrincipal());
-	}
-
-	@Test
 	void getTotalInterest() {
 		assertEquals(325_000, investment.getTotalInterest());
 	}
