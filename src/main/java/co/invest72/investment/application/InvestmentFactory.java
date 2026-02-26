@@ -41,17 +41,26 @@ import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 public class InvestmentFactory {
 
 	private final Map<InvestmentKey, Function<CalculateInvestmentRequest, Investment>> registry = new HashMap<>();
+	private final Map<InvestmentKey, Function<FinancialProduct, Investment>> productRegistry = new HashMap<>();
 
 	public InvestmentFactory() {
 		registry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
 		registry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 		registry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
 		registry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
+
+		productRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
+		productRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 	}
 
 	// TODO: FinancialProduct에서 Investment 생성 지원
 	public Investment createBy(FinancialProduct product) {
-		throw new UnsupportedOperationException("Creating Investment from FinancialProduct is not supported yet.");
+		InvestmentKey key = createInvestmentKey(product.getInvestmentType(), product.getInterestType());
+		Function<FinancialProduct, Investment> creator = productRegistry.get(key);
+		if (creator == null) {
+			throw new IllegalArgumentException("Unsupported investment type or totalInterest type: " + key);
+		}
+		return creator.apply(product);
 	}
 
 	public Investment createBy(CalculateInvestmentRequest request) {
@@ -67,6 +76,28 @@ public class InvestmentFactory {
 		InvestmentType type = InvestmentType.from(investmentTypeValue);
 		InterestType interestType = InterestType.from(interestTypeValue);
 		return new InvestmentKey(type, interestType);
+	}
+
+	private InvestmentKey createInvestmentKey(InvestmentType investmentType, InterestType interestType) {
+		return new InvestmentKey(investmentType, interestType);
+	}
+
+	private Investment simpleFixedDeposit(FinancialProduct product) {
+		return new SimpleFixedDeposit(
+			new FixedDepositAmount(product.getAmount().getValue().intValue()),
+			new MonthlyInvestPeriod(product.getMonths().getValue()),
+			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
+			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+		);
+	}
+
+	private CompoundFixedDeposit compoundFixedDeposit(FinancialProduct product) {
+		return new CompoundFixedDeposit(
+			new FixedDepositAmount(product.getAmount().getValue().intValue()),
+			new MonthlyInvestPeriod(product.getMonths().getValue()),
+			new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()),
+			resolveTaxable(product.getTaxType(), product.getTaxRate().getValue().doubleValue())
+		);
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentRequest request) {
@@ -149,6 +180,12 @@ public class InvestmentFactory {
 		TaxType taxType = TaxType.from(request.getTaxType());
 		TaxRate taxRate = new FixedTaxRate(request.getTaxRate());
 		return taxableResolver.resolve(taxType, taxRate);
+	}
+
+	private Taxable resolveTaxable(TaxType taxType, double taxRate) {
+		TaxableFactory taxableFactory = new KoreanTaxableFactory();
+		TaxableResolver taxableResolver = new KoreanStringBasedTaxableResolver(taxableFactory);
+		return taxableResolver.resolve(taxType, new FixedTaxRate(taxRate));
 	}
 
 	public record InvestmentKey(InvestmentType investmentType, InterestType interestType) {

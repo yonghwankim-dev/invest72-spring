@@ -140,6 +140,29 @@ class InvestmentFactoryTest {
 		// when
 		Investment investment = investmentFactory.createBy(product);
 		// then
-		assertNotNull(investment);
+		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
+	}
+
+	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
+	@Test
+	void createBy_whenCompoundDepositFinancialProduct_thenReturnInvestment() {
+		// given
+		FinancialProduct product = FinancialProduct.builder()
+			.userId("user-" + UUID.randomUUID())
+			.name("복리-예금")
+			.investmentType(InvestmentType.DEPOSIT)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(COMPOUND)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.startDate(java.time.LocalDate.now())
+			.createdAt(java.time.LocalDateTime.now())
+			.build();
+		// when
+		Investment investment = investmentFactory.createBy(product);
+		// then
+		assertInstanceOfInvestment(CompoundFixedDeposit.class, investment);
 	}
 }
