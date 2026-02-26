@@ -7,14 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.invest72.financial_product.application.FinancialProductCalculationService;
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductCalculationResponseDto;
-import co.invest72.investment.application.CalculateMonthlyInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
-import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
-import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +22,9 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductCalculationRestController {
 	private final FinancialProductService financialProductService;
 	private final InvestmentFactory investmentFactory;
-	private final CalculateMonthlyInvestment calculateMonthlyInvestment;
+	private final FinancialProductCalculationService service;
 
+	// TODO: 복리도 계산할 수 있도록 수정 필요
 	@GetMapping("/{id}/calculate")
 	public ResponseEntity<FinancialProductCalculationResponseDto> calculateFinancialProduct(
 		@AuthenticationPrincipal PrincipalUser user,
@@ -34,24 +33,7 @@ public class FinancialProductCalculationRestController {
 		FinancialProduct product = financialProductService.getProductByUserAndProductId(user.getUser(), id);
 		// 2. 계산 로직 수행
 		Investment investment = investmentFactory.createBy(product);
-
-		// TODO: 복리도 계산할 수 있도록 수정 필요
-		CalculateMonthlyInvestmentResponse monthlyResponse = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
-			investment);
-		CalculateYearlyInvestmentResponse yearlyResponse = calculateMonthlyInvestment.calYearlyInvestmentAmount(
-			investment);
-
-		FinancialProductCalculationResponseDto response = FinancialProductCalculationResponseDto.builder()
-			.totalInvestment(monthlyResponse.getTotalInvestment())
-			.totalPrincipal(monthlyResponse.getTotalPrincipal())
-			.totalInterest(monthlyResponse.getTotalInterest())
-			.totalTax(monthlyResponse.getTotalTax())
-			.totalProfit(monthlyResponse.getTotalProfit())
-			.taxType(monthlyResponse.getTaxType())
-			.taxPercent(monthlyResponse.getTaxPercent())
-			.monthlyDetails(monthlyResponse.getDetails())
-			.yearlyDetails(yearlyResponse.getDetails())
-			.build();
+		FinancialProductCalculationResponseDto response = service.calculate(investment);
 		return ResponseEntity.ok().body(response);
 	}
 }
