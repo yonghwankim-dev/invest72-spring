@@ -3,7 +3,7 @@ package co.invest72.investment.console;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import co.invest72.investment.application.CalculateMonthlyInvestment;
+import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.console.input.delegator.CalculateExpirationInvestmentReaderDelegator;
 import co.invest72.investment.console.output.InvestmentResultPrinter;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
@@ -13,11 +13,11 @@ public class CalculateMonthlyInvestmentConsoleRunner {
 	private final PrintStream err;
 	private final CalculateExpirationInvestmentReaderDelegator delegator;
 	private final InvestmentResultPrinter printer;
-	private final CalculateMonthlyInvestment useCase;
+	private final CalculateInvestment useCase;
 
 	public CalculateMonthlyInvestmentConsoleRunner(PrintStream err,
 		CalculateExpirationInvestmentReaderDelegator delegator, InvestmentResultPrinter printer,
-		CalculateMonthlyInvestment useCase) {
+		CalculateInvestment useCase) {
 		this.err = err;
 		this.delegator = delegator;
 		this.printer = printer;

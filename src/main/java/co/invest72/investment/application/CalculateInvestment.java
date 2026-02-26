@@ -12,7 +12,7 @@ import co.invest72.investment.presentation.response.YearlyInvestmentResult;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CalculateMonthlyInvestment {
+public class CalculateInvestment {
 	private final InvestmentFactory investmentFactory;
 	private final TaxFormatter taxFormatter;
 

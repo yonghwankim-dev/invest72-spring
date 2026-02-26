@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import co.invest72.investment.application.CalculateExpirationInvestment;
-import co.invest72.investment.application.CalculateMonthlyInvestment;
+import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxFormatter;
 import co.invest72.investment.application.TaxPercentFormatter;
@@ -18,8 +18,8 @@ public class SpringConfig {
 	}
 
 	@Bean
-	public CalculateMonthlyInvestment calculateMonthlyInvestment(InvestmentFactory factory, TaxFormatter taxFormatter) {
-		return new CalculateMonthlyInvestment(factory, taxFormatter);
+	public CalculateInvestment calculateMonthlyInvestment(InvestmentFactory factory, TaxFormatter taxFormatter) {
+		return new CalculateInvestment(factory, taxFormatter);
 	}
 
 	@Bean
