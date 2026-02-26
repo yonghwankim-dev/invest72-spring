@@ -16,7 +16,6 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.PeriodRange;
-import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.TaxableFactory;
 import co.invest72.investment.domain.TaxableResolver;
@@ -200,11 +199,9 @@ public class InvestmentFactory {
 	}
 
 	private Taxable resolveTaxable(CalculateInvestmentRequest request) {
-		TaxableFactory taxableFactory = new KoreanTaxableFactory();
-		TaxableResolver taxableResolver = new KoreanStringBasedTaxableResolver(taxableFactory);
 		TaxType taxType = TaxType.from(request.getTaxType());
-		TaxRate taxRate = new FixedTaxRate(request.getTaxRate());
-		return taxableResolver.resolve(taxType, taxRate);
+		Double taxRate = request.getTaxRate();
+		return resolveTaxable(taxType, taxRate);
 	}
 
 	private Taxable resolveTaxable(TaxType taxType, double taxRate) {
