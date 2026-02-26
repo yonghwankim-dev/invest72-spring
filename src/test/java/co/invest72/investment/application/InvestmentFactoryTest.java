@@ -16,10 +16,10 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
-import co.invest72.financial_product.domain.ProductType;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.tax.TaxType;
@@ -43,7 +43,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(FIXED_DEPOSIT.getTypeName())
+			.type(DEPOSIT.getTypeName())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -63,7 +63,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(FIXED_DEPOSIT.getTypeName())
+			.type(DEPOSIT.getTypeName())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -83,7 +83,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(INSTALLMENT_SAVING.getTypeName())
+			.type(SAVINGS.getTypeName())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -103,7 +103,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(INSTALLMENT_SAVING.getTypeName())
+			.type(SAVINGS.getTypeName())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -127,7 +127,7 @@ class InvestmentFactoryTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId("user-" + UUID.randomUUID())
 			.name("단리-예금")
-			.productType(ProductType.DEPOSIT)
+			.investmentType(InvestmentType.DEPOSIT)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))

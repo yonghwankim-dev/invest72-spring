@@ -1,8 +1,9 @@
 package co.invest72.investment.domain.investment;
 
 public enum InvestmentType {
-	FIXED_DEPOSIT("예금"),
-	INSTALLMENT_SAVING("적금");
+	CASH("현금"),
+	DEPOSIT("예금"),
+	SAVINGS("적금");
 
 	private final String typeName;
 

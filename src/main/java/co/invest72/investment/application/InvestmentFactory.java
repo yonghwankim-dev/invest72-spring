@@ -43,10 +43,10 @@ public class InvestmentFactory {
 	private final Map<InvestmentKey, Function<CalculateInvestmentRequest, Investment>> registry = new HashMap<>();
 
 	public InvestmentFactory() {
-		registry.put(new InvestmentKey(FIXED_DEPOSIT, SIMPLE), this::simpleFixedDeposit);
-		registry.put(new InvestmentKey(FIXED_DEPOSIT, COMPOUND), this::compoundFixedDeposit);
-		registry.put(new InvestmentKey(INSTALLMENT_SAVING, SIMPLE), this::simpleFixedInstallmentSaving);
-		registry.put(new InvestmentKey(INSTALLMENT_SAVING, COMPOUND), this::compoundFixedInstallmentSaving);
+		registry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
+		registry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
+		registry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
+		registry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
 	}
 
 	// TODO: FinancialProduct에서 Investment 생성 지원

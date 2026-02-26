@@ -29,7 +29,7 @@ class CalculateInvestmentTest {
 	void setUp() {
 		InvestmentFactory investmentFactory = new InvestmentFactory();
 		investmentUseCase = new CalculateExpirationInvestment(investmentFactory, new TaxPercentFormatter());
-		investmentType = FIXED_DEPOSIT.getTypeName();
+		investmentType = DEPOSIT.getTypeName();
 		String amountType = AmountType.ONE_TIME.getDescription();
 		amount = 1_000_000;
 		periodType = "년";
@@ -55,7 +55,7 @@ class CalculateInvestmentTest {
 	@DisplayName("복리 적금 계산 테스트")
 	@Test
 	void calAmount_shouldReturnCalAmountResponse() {
-		investmentType = INSTALLMENT_SAVING.getTypeName();
+		investmentType = SAVINGS.getTypeName();
 		amount = 1_000_000;
 		interestType = COMPOUND.getTypeName();
 
