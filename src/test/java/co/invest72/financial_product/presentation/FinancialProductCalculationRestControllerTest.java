@@ -20,20 +20,15 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
-import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
-import co.invest72.user.infrastructure.UserIdGenerator;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,18 +37,12 @@ class FinancialProductCalculationRestControllerTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
 	private FinancialProductRepository financialProductRepository;
 
 	private PrincipalUser principalUser;
-	private IdGenerator userIdGenerator;
-	private IdGenerator productIdGenerator;
 
 	@BeforeEach
 	void setUp() {
-		userIdGenerator = new UserIdGenerator("user");
 		String email = "user1@gmail.com";
 		String nickname = "user1";
 		String providerId = UUID.randomUUID().toString();
@@ -61,8 +50,6 @@ class FinancialProductCalculationRestControllerTest {
 		principalUser = PrincipalUser.of()
 			.user(testUser)
 			.build();
-
-		productIdGenerator = new ProductIdGenerator("product");
 	}
 
 	@AfterEach
