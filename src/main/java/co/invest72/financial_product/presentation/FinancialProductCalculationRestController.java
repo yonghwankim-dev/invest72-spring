@@ -24,6 +24,12 @@ public class FinancialProductCalculationRestController {
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductCalculationService service;
 
+	/**
+	 * 상품 계산 API
+	 * @param user 인증된 사용자 정보
+	 * @param id 계산할 상품의 ID
+	 * @return 상품 계산 결과를 담은 FinancialProductCalculationResponseDto
+	 */
 	@GetMapping("/{id}/calculate")
 	public ResponseEntity<FinancialProductCalculationResponseDto> calculateFinancialProduct(
 		@AuthenticationPrincipal PrincipalUser user,
