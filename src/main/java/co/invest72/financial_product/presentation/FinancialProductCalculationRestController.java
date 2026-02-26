@@ -35,6 +35,7 @@ public class FinancialProductCalculationRestController {
 		// 2. 계산 로직 수행
 		Investment investment = investmentFactory.createBy(product);
 
+		// TODO: 복리도 계산할 수 있도록 수정 필요
 		CalculateMonthlyInvestmentResponse monthlyResponse = calculateMonthlyInvestment.calMonthlyInvestmentAmount(
 			investment);
 		CalculateYearlyInvestmentResponse yearlyResponse = calculateMonthlyInvestment.calYearlyInvestmentAmount(
