@@ -94,12 +94,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
 		return roundToInt.applyAsInt(totalInvestment);
 	}
-
-	@Override
-	public int getTotalPrincipal() {
-		return roundToInt.applyAsInt(details.get(getFinalMonth()).getPrincipal());
-	}
-
+	
 	@Override
 	public int getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
@@ -170,5 +165,10 @@ public class SimpleFixedInstallmentSaving implements Investment {
 			return getProfitForYear(0);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+	}
+
+	@Override
+	public double getTaxRate() {
+		return taxable.getTaxRate();
 	}
 }

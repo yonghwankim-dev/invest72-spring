@@ -102,11 +102,6 @@ class CompoundFixedInstallmentSavingTest {
 	}
 
 	@Test
-	void getTotalPrincipal() {
-		assertEquals(12_278_855, investment.getTotalPrincipal());
-	}
-
-	@Test
 	void getTotalInterest() {
 		assertEquals(330_017, investment.getTotalInterest());
 	}

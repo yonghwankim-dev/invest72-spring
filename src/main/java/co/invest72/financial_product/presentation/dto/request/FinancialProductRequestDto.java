@@ -8,8 +8,8 @@ import co.invest72.common.validation.FinancialAmount;
 import co.invest72.common.validation.FinancialMonths;
 import co.invest72.common.validation.FinancialProductName;
 import co.invest72.common.validation.FinancialRate;
-import co.invest72.financial_product.domain.ProductType;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,9 +23,9 @@ public class FinancialProductRequestDto {
 	@FinancialProductName
 	private String name;
 
-	@EnumValid(enumClass = ProductType.class, message = "유효하지 않은 상품 유형입니다.")
+	@EnumValid(enumClass = InvestmentType.class, message = "유효하지 않은 상품 유형입니다.")
 	@NotNull(message = "상품 유형은 필수입니다.")
-	private String productType;
+	private String investmentType;
 
 	@FinancialAmount
 	private BigDecimal amount;

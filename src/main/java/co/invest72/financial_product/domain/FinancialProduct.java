@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -32,7 +33,7 @@ public class FinancialProduct {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "product_type", nullable = false, length = 100)
-	private ProductType productType;
+	private InvestmentType investmentType;
 
 	@Embedded
 	private ProductAmount amount; // 원금 또는 월 적립액
@@ -66,14 +67,14 @@ public class FinancialProduct {
 	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
 
 	@Builder(toBuilder = true)
-	private FinancialProduct(String userId, String name, ProductType productType, ProductAmount amount,
+	private FinancialProduct(String userId, String name, InvestmentType investmentType, ProductAmount amount,
 		ProductMonths months, ProductRate interestRate, InterestType interestType, TaxType taxType, ProductRate taxRate,
 		LocalDate startDate, LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
 		this.id = idGenerator.generateId();
 		this.userId = userId;
 		this.name = name;
-		this.productType = productType;
+		this.investmentType = investmentType;
 		this.amount = amount;
 		this.months = months;
 		this.interestRate = interestRate;
@@ -86,7 +87,7 @@ public class FinancialProduct {
 
 	public void update(FinancialProduct updatedProduct) {
 		this.name = updatedProduct.getName();
-		this.productType = updatedProduct.getProductType();
+		this.investmentType = updatedProduct.getInvestmentType();
 		this.amount = updatedProduct.getAmount();
 		this.months = updatedProduct.getMonths();
 		this.interestRate = updatedProduct.getInterestRate();

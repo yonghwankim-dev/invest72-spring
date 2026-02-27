@@ -1,8 +1,12 @@
 package co.invest72.investment.domain.investment;
 
+import lombok.Getter;
+
+@Getter
 public enum InvestmentType {
-	FIXED_DEPOSIT("예금"),
-	INSTALLMENT_SAVING("적금");
+	CASH("현금"),
+	DEPOSIT("예금"),
+	SAVINGS("적금");
 
 	private final String typeName;
 
@@ -19,7 +23,4 @@ public enum InvestmentType {
 		throw new IllegalArgumentException("Unknown investment type: " + type);
 	}
 
-	public String getTypeName() {
-		return typeName;
-	}
 }

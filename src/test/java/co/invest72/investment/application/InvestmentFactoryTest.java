@@ -6,8 +6,12 @@ import static co.invest72.investment.domain.investment.InvestmentType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
@@ -31,10 +35,11 @@ class InvestmentFactoryTest {
 		investmentFactory = new InvestmentFactory();
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(FIXED_DEPOSIT.getTypeName())
+			.type(DEPOSIT.getTypeName())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -51,10 +56,11 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(FIXED_DEPOSIT.getTypeName())
+			.type(DEPOSIT.getTypeName())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -71,10 +77,11 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(CompoundFixedDeposit.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(INSTALLMENT_SAVING.getTypeName())
+			.type(SAVINGS.getTypeName())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -91,10 +98,33 @@ class InvestmentFactoryTest {
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
 	}
 
+	@DisplayName("투자 객체 생성 - 단리-적금-년적립")
+	@Test
+	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
+		request = CalculateInvestmentRequest.builder()
+			.type(SAVINGS.getTypeName())
+			.amountType(YEARLY.getDescription())
+			.amount(12_000_000)
+			.periodType("년")
+			.periodValue(1)
+			.interestType(SIMPLE.getTypeName())
+			.annualInterestRate(0.05)
+			.taxType(TaxType.NON_TAX.getDescription())
+			.taxRate(0.0)
+			.build();
+
+		investment = investmentFactory.createBy(request);
+
+		assertNotNull(investment);
+		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
+		assertEquals(12_000_000, investment.getTotalInvestment());
+	}
+
+	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(INSTALLMENT_SAVING.getTypeName())
+			.type(SAVINGS.getTypeName())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -109,5 +139,16 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
+	}
+
+	@DisplayName("투자 객체 생성 - FinancialProduct 객체를 이용하여 Investment 객체 생성")
+	@ParameterizedTest(name = "{2} 객체 생성 테스트")
+	@MethodSource(value = "source.FinancialProductTestDataProvider#provideFinancialProducts")
+	void createBy_givenFinancialProduct_whenCreateInvestment_thenReturnInvestment(FinancialProduct product,
+		Class<?> expectedType, String ignored) {
+		// when
+		investment = investmentFactory.createBy(product);
+		// then
+		assertInstanceOfInvestment(expectedType, investment);
 	}
 }

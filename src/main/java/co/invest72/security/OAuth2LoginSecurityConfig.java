@@ -37,6 +37,7 @@ public class OAuth2LoginSecurityConfig {
 			.authorizeHttpRequests(authorize ->
 				// 1. 루트와 정적 리소스 파일들을 모두 허용합니다.
 				authorize.requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/error").permitAll()
+					.requestMatchers("/investments/**").permitAll() // 투자 계산 페이지는 인증 없이 접근 허용
 					.requestMatchers("/login/**", "/oauth2/**", "/error").permitAll()
 					.anyRequest().authenticated())
 			.oauth2Login(oauth2 -> oauth2

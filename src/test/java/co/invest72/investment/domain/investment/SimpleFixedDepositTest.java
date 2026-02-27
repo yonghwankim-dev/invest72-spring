@@ -190,13 +190,6 @@ class SimpleFixedDepositTest {
 	}
 
 	@Test
-	void getTotalPrincipal() {
-		int totalPrincipal = investment.getTotalPrincipal();
-
-		assertEquals(1_045_833, totalPrincipal);
-	}
-
-	@Test
 	void getTotalInterest() {
 		int totalInterest = investment.getTotalInterest();
 
