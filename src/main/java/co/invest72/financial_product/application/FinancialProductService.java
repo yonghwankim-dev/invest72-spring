@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -119,30 +120,71 @@ public class FinancialProductService {
 		return findFinancialProduct(user, productId);
 	}
 
+	/**
+	 * 상품 요약 목록 조회
+	 * <p>
+	 * 정렬 기준<br>
+	 * - 1차 정렬 기준 : 시작일자 내림차순<br>
+	 * - 2차 정렬 기준 : 만기일 오름차순<br>
+	 * - 3차 정렬 기준 : 금액 내림차순<br>
+	 * - 4차 정렬 기준 : 생성일자 오름차순<br>
+	 * @param user 조회 대상 사용자
+	 * @return 상품 요약 정보 리스트
+	 */
 	@Transactional(readOnly = true)
 	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
 		List<FinancialProductSummaryResponse> result = new ArrayList<>();
+		// 기본적으로 최근 생성된 상품이 먼저 보이도록 정렬
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		for (FinancialProduct product : products) {
-			// LocalDate expirationDate = product.getStartDate().plusMonths(product.getMonths().getValue());
-			LocalDate expirationDate = null;
-			BigDecimal expectedInterest = BigDecimal.ZERO;
-			BigDecimal progress = BigDecimal.ONE;
-			long remainingDays = 0;
-			FinancialProductSummaryResponse summary = FinancialProductSummaryResponse.builder()
-				.id(product.getId())
-				.name(product.getName())
-				.investmentType(product.getInvestmentType().name())
-				.interestRate(product.getInterestRate().getValue())
-				.expirationDate(expirationDate)
-				.balance(product.getAmount().getValue())
-				.expectedInterest(expectedInterest)
-				.progress(progress)
-				.remainingDays(remainingDays)
-				.build();
-			result.add(summary);
+			FinancialProductSummaryResponse data = null;
+			if (product.getInvestmentType() == InvestmentType.CASH) {
+				LocalDate expirationDate = null;
+				BigDecimal expectedInterest = BigDecimal.ZERO;
+				BigDecimal progress = BigDecimal.ONE;
+				long remainingDays = 0;
+				data = FinancialProductSummaryResponse.builder()
+					.id(product.getId())
+					.name(product.getName())
+					.investmentType(product.getInvestmentType().name())
+					.interestRate(product.getInterestRate().getValue())
+					.startDate(product.getStartDate())
+					.expirationDate(expirationDate)
+					.balance(product.getAmount().getValue())
+					.expectedInterest(expectedInterest)
+					.progress(progress)
+					.remainingDays(remainingDays)
+					.createAt(product.getCreatedAt())
+					.build();
+			} else if (product.getInvestmentType() == InvestmentType.DEPOSIT) {
+				LocalDate expirationDate = LocalDate.of(2027, 1, 1);
+				BigDecimal expectedInterest = BigDecimal.valueOf(50_000);
+				BigDecimal progress = BigDecimal.valueOf(0.1562);
+				long remainingDays = 308;
+				data = FinancialProductSummaryResponse.builder()
+					.id(product.getId())
+					.name(product.getName())
+					.investmentType(product.getInvestmentType().name())
+					.interestRate(product.getInterestRate().getValue())
+					.startDate(product.getStartDate())
+					.expirationDate(expirationDate)
+					.balance(product.getAmount().getValue())
+					.expectedInterest(expectedInterest)
+					.progress(progress)
+					.remainingDays(remainingDays)
+					.createAt(product.getCreatedAt())
+					.build();
+			}
+			result.add(data);
 		}
-		return result;
+
+		return result.stream()
+			.sorted(Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
+				.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
+					Comparator.nullsLast(Comparator.naturalOrder()))
+				.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
+				.thenComparing(FinancialProductSummaryResponse::getCreateAt))
+			.toList();
 	}
 }

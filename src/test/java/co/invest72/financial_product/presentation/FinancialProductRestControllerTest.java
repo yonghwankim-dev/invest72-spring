@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Arrays;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -71,6 +71,23 @@ class FinancialProductRestControllerTest {
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
+	}
+
+	private FinancialProduct createDepositProduct() {
+		FinancialProduct depositProduct = FinancialProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(InterestType.SIMPLE)
+			.taxType(TaxType.STANDARD)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		return depositProduct;
 	}
 
 	@BeforeEach
@@ -268,27 +285,45 @@ class FinancialProductRestControllerTest {
 	void getSummaryProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
 		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		FinancialProduct depositProduct = createDepositProduct();
 		financialProductRepository.save(product);
+		financialProductRepository.save(depositProduct);
 
-		// when & then
-		FinancialProductSummaryResponse expectedResponse = FinancialProductSummaryResponse.builder()
+		FinancialProductSummaryResponse expectedResponse1 = FinancialProductSummaryResponse.builder()
+			.id(depositProduct.getId())
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.interestRate(BigDecimal.valueOf(0.05))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.expirationDate(LocalDate.of(2027, 1, 1))
+			.balance(BigDecimal.valueOf(1_000_000L))
+			.expectedInterest(BigDecimal.valueOf(50_000L))
+			.progress(BigDecimal.valueOf(0.1562))
+			.remainingDays(308)
+			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
 			.id(product.getId())
 			.name("현금 상품")
 			.investmentType(ProductType.CASH.name())
 			.interestRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
 			.expirationDate(null)
 			.balance(BigDecimal.valueOf(1_000_000L))
 			.expectedInterest(BigDecimal.ZERO)
 			.progress(BigDecimal.ONE)
 			.remainingDays(0L)
+			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
-		String expectedJson = objectMapper.writeValueAsString(List.of(expectedResponse));
 
+		String expectedJson = objectMapper.writeValueAsString(Arrays.asList(expectedResponse1, expectedResponse2));
+		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())
-			.andExpect(content().json(expectedJson));
+			.andExpect(content().json(expectedJson))
+			.andDo(MockMvcResultHandlers.print());
 	}
 
 	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
