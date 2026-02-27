@@ -55,7 +55,7 @@ public class FinancialProductService {
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
-			.productType(product.getInvestmentType().name())
+			.investmentType(product.getInvestmentType().name())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
 			.interestRate(product.getInterestRate().getValue())
