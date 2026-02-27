@@ -151,11 +151,15 @@ public class FinancialProductService {
 		}
 
 		return result.stream()
-			.sorted(Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
-				.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
-					Comparator.nullsLast(Comparator.naturalOrder()))
-				.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
-				.thenComparing(FinancialProductSummaryResponse::getCreateAt))
+			.sorted(getFinancialProductSummaryResponseComparator())
 			.toList();
+	}
+
+	private Comparator<FinancialProductSummaryResponse> getFinancialProductSummaryResponseComparator() {
+		return Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
+				Comparator.nullsLast(Comparator.naturalOrder()))
+			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummaryResponse::getCreateAt);
 	}
 }
