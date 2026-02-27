@@ -158,10 +158,11 @@ public class FinancialProductService {
 					.createAt(product.getCreatedAt())
 					.build();
 			} else if (product.getInvestmentType() == InvestmentType.DEPOSIT) {
-				LocalDate expirationDate = LocalDate.of(2027, 1, 1);
+				LocalDate today = LocalDate.of(2026, 2, 27);
+				LocalDate expirationDate = product.getExpirationDate();
 				BigDecimal expectedInterest = BigDecimal.valueOf(50_000);
-				BigDecimal progress = BigDecimal.valueOf(0.1562);
-				long remainingDays = 308;
+				BigDecimal progress = product.getProgressByLocalDate(today);
+				long remainingDays = product.getRemainingDaysByLocalDate(today);
 				data = FinancialProductSummaryResponse.builder()
 					.id(product.getId())
 					.name(product.getName())

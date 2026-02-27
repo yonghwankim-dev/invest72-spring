@@ -1,7 +1,10 @@
 package co.invest72.financial_product.domain;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
@@ -95,5 +98,29 @@ public class FinancialProduct {
 		this.taxType = updatedProduct.getTaxType();
 		this.taxRate = updatedProduct.getTaxRate();
 		this.startDate = updatedProduct.getStartDate();
+	}
+
+	public LocalDate getExpirationDate() {
+		return startDate.plusMonths(months.getValue());
+	}
+
+	public BigDecimal getProgressByLocalDate(LocalDate today) {
+		if (today.isBefore(startDate)) {
+			return BigDecimal.ZERO;
+		}
+		if (today.isAfter(getExpirationDate())) {
+			return BigDecimal.ONE;
+		}
+		long totalDays = startDate.until(getExpirationDate(), ChronoUnit.DAYS);
+		long elapsedDays = startDate.until(today, ChronoUnit.DAYS);
+		return BigDecimal.valueOf(elapsedDays)
+			.divide(BigDecimal.valueOf(totalDays), 4, RoundingMode.HALF_EVEN);
+	}
+
+	public long getRemainingDaysByLocalDate(LocalDate today) {
+		if (today.isAfter(getExpirationDate())) {
+			return 0;
+		}
+		return today.until(getExpirationDate(), ChronoUnit.DAYS);
 	}
 }
