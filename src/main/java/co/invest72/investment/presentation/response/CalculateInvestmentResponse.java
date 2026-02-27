@@ -1,7 +1,6 @@
 package co.invest72.investment.presentation.response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,41 +8,41 @@ import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
-public class CalculateYearlyInvestmentResponse {
+public class CalculateInvestmentResponse {
 	private final int totalInvestment;
 	private final int totalInterest;
 	private final int totalTax;
 	private final int totalProfit;
 	private final String taxType;
 	private final String taxPercent;
-	private final List<YearlyInvestmentResult> details;
+	private final List<MonthlyInvestmentResult> monthlyDetails;
+	private final List<YearlyInvestmentResult> yearlyDetails;
 
 	@Builder
-	public CalculateYearlyInvestmentResponse(int totalInvestment, int totalInterest,
-		int totalTax, int totalProfit, String taxType, String taxPercent,
-		List<YearlyInvestmentResult> details) {
+	public CalculateInvestmentResponse(int totalInvestment, int totalInterest, int totalTax,
+		int totalProfit, String taxType, String taxPercent, List<MonthlyInvestmentResult> monthlyDetails,
+		List<YearlyInvestmentResult> yearlyDetails) {
 		this.totalInvestment = totalInvestment;
 		this.totalInterest = totalInterest;
 		this.totalTax = totalTax;
 		this.totalProfit = totalProfit;
 		this.taxType = taxType;
 		this.taxPercent = taxPercent;
-		this.details = details;
+		this.monthlyDetails = monthlyDetails;
+		this.yearlyDetails = yearlyDetails;
 	}
 
 	@Override
 	public String toString() {
-		return "CalculateYearlyInvestmentResponse{" +
+		return "CalculateInvestmentResponse{" +
 			"totalInvestment=" + totalInvestment +
 			", totalInterest=" + totalInterest +
 			", totalTax=" + totalTax +
 			", totalProfit=" + totalProfit +
 			", taxType='" + taxType + '\'' +
 			", taxPercent='" + taxPercent + '\'' +
-			", details=" + details.stream()
-			.map(YearlyInvestmentResult::toString)
-			.collect(Collectors.joining(", ")) +
+			", monthlyDetails=" + monthlyDetails +
+			", yearlyDetails=" + yearlyDetails +
 			'}';
 	}
-
 }

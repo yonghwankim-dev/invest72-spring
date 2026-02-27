@@ -26,8 +26,8 @@ public class CompoundFixedDeposit implements Investment {
 		InterestRate interestRate,
 		Taxable taxable) {
 		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
+		this.interestRate = interestRate;
 		this.taxable = taxable;
 		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
 			investmentAmount, interestRate, investPeriod);
@@ -95,12 +95,7 @@ public class CompoundFixedDeposit implements Investment {
 	public int getTotalInvestment() {
 		return roundToInt.applyAsInt(investmentAmount.getAmount());
 	}
-
-	@Override
-	public int getTotalPrincipal() {
-		return getPrincipal();
-	}
-
+	
 	@Override
 	public int getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
@@ -170,5 +165,10 @@ public class CompoundFixedDeposit implements Investment {
 			return getProfitForYear(0);
 		}
 		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+	}
+
+	@Override
+	public double getTaxRate() {
+		return taxable.getTaxRate();
 	}
 }

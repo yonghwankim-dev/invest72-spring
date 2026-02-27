@@ -33,6 +33,7 @@ import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
@@ -79,7 +80,7 @@ class FinancialProductRestControllerTest {
 		// given
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
@@ -118,7 +119,7 @@ class FinancialProductRestControllerTest {
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
 			.months(-1) // 음수 기간
 			.interestRate(BigDecimal.valueOf(-0.01)) // 음수 이자율
@@ -144,7 +145,7 @@ class FinancialProductRestControllerTest {
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType("INVALID_TYPE") // 유효하지 않은 상품 유형
+			.investmentType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
@@ -172,7 +173,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -210,7 +211,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -248,7 +249,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -287,7 +288,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -301,7 +302,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))
@@ -336,7 +337,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -350,7 +351,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))
@@ -382,7 +383,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
@@ -414,7 +415,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(otherUserId)
 			.name("현금 상품")
-			.productType(ProductType.CASH)
+			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))

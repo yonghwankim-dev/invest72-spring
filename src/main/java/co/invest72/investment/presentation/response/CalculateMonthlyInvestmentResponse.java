@@ -11,7 +11,6 @@ import lombok.Getter;
 @Getter
 public class CalculateMonthlyInvestmentResponse {
 	private final int totalInvestment;
-	private final int totalPrincipal;
 	private final int totalInterest;
 	private final int totalTax;
 	private final int totalProfit;
@@ -20,11 +19,10 @@ public class CalculateMonthlyInvestmentResponse {
 	private final List<MonthlyInvestmentResult> details;
 
 	@Builder
-	public CalculateMonthlyInvestmentResponse(int totalInvestment, int totalPrincipal, int totalInterest,
+	public CalculateMonthlyInvestmentResponse(int totalInvestment, int totalInterest,
 		int totalTax, int totalProfit, String taxType, String taxPercent,
 		List<MonthlyInvestmentResult> details) {
 		this.totalInvestment = totalInvestment;
-		this.totalPrincipal = totalPrincipal;
 		this.totalInterest = totalInterest;
 		this.totalTax = totalTax;
 		this.totalProfit = totalProfit;
@@ -35,16 +33,17 @@ public class CalculateMonthlyInvestmentResponse {
 
 	@Override
 	public String toString() {
-		String header = String.format("%-10s %-15s %-15s %-15s%n",
-			"회차", "원금", "이자", "수익");
-
-		String body = details.stream()
-			.map(result -> String.format("%-10d %-15d %-15d %-15d%n",
-				result.getMonth(), result.getPrincipal(), result.getInterest(), result.getProfit()))
-			.collect(Collectors.joining());
-		String footer = String.format("총 원금: %,d원, 총 이자: %,d원, 총 세금: %,d원, 총 수익 금액: %,d원%n",
-			totalPrincipal, totalInterest, totalTax, totalProfit);
-		return header + body + footer;
+		return "CalculateMonthlyInvestmentResponse{" +
+			"totalInvestment=" + totalInvestment +
+			", totalInterest=" + totalInterest +
+			", totalTax=" + totalTax +
+			", totalProfit=" + totalProfit +
+			", taxType='" + taxType + '\'' +
+			", taxPercent='" + taxPercent + '\'' +
+			", details=" + details.stream()
+			.map(MonthlyInvestmentResult::toString)
+			.collect(Collectors.joining(", ")) +
+			'}';
 	}
 
 }

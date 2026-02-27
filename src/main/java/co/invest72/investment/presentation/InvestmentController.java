@@ -6,23 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class InvestmentController {
 
-	@GetMapping("/fixed-deposit")
+	@GetMapping("/investments/deposit")
 	public String showExpirationCalculationPage() {
-		return "fixed-deposit";
+		return "deposit";
 	}
 
-	@GetMapping("/fixed-installment")
+	@GetMapping("/investments/savings")
 	public String showMonthlyCalculationPage() {
-		return "fixed-installment";
+		return "savings";
 	}
 
-	@GetMapping("/investments/calculate/expiration/result")
-	public String showExpirationResultPage() {
-		return "expiration-result";
-	}
-
-	@GetMapping("/investments/calculate/monthly/result")
+	@GetMapping("/investments/calculate/result")
 	public String showMonthlyResultPage() {
-		return "table-result";
+		return "calculate-result";
 	}
 }

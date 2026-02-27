@@ -11,10 +11,10 @@ import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
-import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductResponseDto;
 import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class FinancialProductService {
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(user.getId())
 			.name(dto.getName())
-			.productType(ProductType.valueOf(dto.getProductType()))
+			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
 			.amount(new ProductAmount(dto.getAmount()))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new ProductRate(dto.getInterestRate()))
@@ -55,7 +55,7 @@ public class FinancialProductService {
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
-			.productType(product.getProductType().name())
+			.productType(product.getInvestmentType().name())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
 			.interestRate(product.getInterestRate().getValue())
@@ -69,9 +69,14 @@ public class FinancialProductService {
 
 	@Transactional(readOnly = true)
 	public FinancialProductResponseDto getProductDetail(User user, String productId) {
+		FinancialProduct product = findFinancialProduct(user, productId);
+		return buildProductResponseDto(product);
+	}
+
+	private FinancialProduct findFinancialProduct(User user, String productId) {
 		FinancialProduct product = repository.findByProductId(productId);
 		validateFinancialProduct(user, product);
-		return buildProductResponseDto(product);
+		return product;
 	}
 
 	private void validateFinancialProduct(User user, FinancialProduct product) {
@@ -83,12 +88,11 @@ public class FinancialProductService {
 	@Transactional
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		// 기존 상품 조회 및 검증
-		FinancialProduct existingProduct = repository.findByProductId(productId);
-		validateFinancialProduct(user, existingProduct);
+		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
 		FinancialProduct updatedProduct = existingProduct.toBuilder()
 			.name(dto.getName())
-			.productType(ProductType.valueOf(dto.getProductType()))
+			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
 			.amount(new ProductAmount(dto.getAmount()))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new ProductRate(dto.getInterestRate()))
@@ -102,8 +106,12 @@ public class FinancialProductService {
 
 	@Transactional
 	public void deleteProduct(User user, String productId) {
-		FinancialProduct product = repository.findByProductId(productId);
-		validateFinancialProduct(user, product);
+		findFinancialProduct(user, productId);
 		repository.deleteByProductId(productId);
+	}
+
+	@Transactional(readOnly = true)
+	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
+		return findFinancialProduct(user, productId);
 	}
 }
