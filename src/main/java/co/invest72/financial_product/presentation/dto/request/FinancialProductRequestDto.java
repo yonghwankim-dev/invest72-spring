@@ -25,7 +25,7 @@ public class FinancialProductRequestDto {
 
 	@EnumValid(enumClass = InvestmentType.class, message = "유효하지 않은 상품 유형입니다.")
 	@NotNull(message = "상품 유형은 필수입니다.")
-	private String productType;
+	private String investmentType;
 
 	@FinancialAmount
 	private BigDecimal amount;

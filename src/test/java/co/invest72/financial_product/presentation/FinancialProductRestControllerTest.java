@@ -80,7 +80,7 @@ class FinancialProductRestControllerTest {
 		// given
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
@@ -119,7 +119,7 @@ class FinancialProductRestControllerTest {
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
 			.months(-1) // 음수 기간
 			.interestRate(BigDecimal.valueOf(-0.01)) // 음수 이자율
@@ -145,7 +145,7 @@ class FinancialProductRestControllerTest {
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.productType("INVALID_TYPE") // 유효하지 않은 상품 유형
+			.investmentType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
@@ -302,7 +302,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))
@@ -351,7 +351,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.productType(ProductType.CASH.name())
+			.investmentType(ProductType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))
