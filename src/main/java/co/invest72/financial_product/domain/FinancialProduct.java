@@ -101,10 +101,16 @@ public class FinancialProduct {
 	}
 
 	public LocalDate getExpirationDate() {
+		if (investmentType == InvestmentType.CASH) {
+			return null;
+		}
 		return startDate.plusMonths(months.getValue());
 	}
 
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
+		if (investmentType == InvestmentType.CASH) {
+			return BigDecimal.ONE; // 일시금은 투자 즉시 100% 진행된 것으로 간주
+		}
 		if (today.isBefore(startDate)) {
 			return BigDecimal.ZERO;
 		}
@@ -118,6 +124,9 @@ public class FinancialProduct {
 	}
 
 	public long getRemainingDaysByLocalDate(LocalDate today) {
+		if (investmentType == InvestmentType.CASH) {
+			return 0; // 일시금은 만기 개념이 없으므로 남은 일수는 0
+		}
 		if (today.isAfter(getExpirationDate())) {
 			return 0;
 		}
@@ -138,5 +147,12 @@ public class FinancialProduct {
 		}
 		long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
 		return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
+	}
+
+	public BigDecimal calculateBalance(LocalDate today) {
+		if (investmentType == InvestmentType.CASH || investmentType == InvestmentType.DEPOSIT) {
+			return amount.getValue();
+		}
+		return getBalanceByLocalDate(today);
 	}
 }

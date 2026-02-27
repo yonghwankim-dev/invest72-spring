@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.investment.domain.Investment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +25,24 @@ public class FinancialProductSummaryResponse {
 	private BigDecimal progress; // 진행률
 	private long remainingDays; // 남은 일수
 	private LocalDateTime createAt; // 생성시
+
+	public static FinancialProductSummaryResponse from(
+		FinancialProduct product,
+		LocalDate today,
+		Investment investment
+	) {
+		return FinancialProductSummaryResponse.builder()
+			.id(product.getId())
+			.name(product.getName())
+			.investmentType(product.getInvestmentType().name())
+			.interestRate(product.getInterestRate().getValue())
+			.startDate(product.getStartDate())
+			.expirationDate(product.getExpirationDate())
+			.balance(product.calculateBalance(today)) // 엔티티 내부에서 타입별 계산
+			.expectedInterest(BigDecimal.valueOf(investment.getTotalInterest()))
+			.progress(product.getProgressByLocalDate(today))
+			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.createAt(product.getCreatedAt())
+			.build();
+	}
 }

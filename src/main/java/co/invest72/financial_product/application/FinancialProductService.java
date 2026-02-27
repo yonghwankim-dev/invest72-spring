@@ -1,6 +1,5 @@
 package co.invest72.financial_product.application;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -142,68 +140,13 @@ public class FinancialProductService {
 		// 기본적으로 최근 생성된 상품이 먼저 보이도록 정렬
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
+		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
-			FinancialProductSummaryResponse data = null;
-			if (product.getInvestmentType() == InvestmentType.CASH) {
-				LocalDate expirationDate = null;
-				BigDecimal expectedInterest = BigDecimal.ZERO;
-				BigDecimal progress = BigDecimal.ONE;
-				long remainingDays = 0;
-				data = FinancialProductSummaryResponse.builder()
-					.id(product.getId())
-					.name(product.getName())
-					.investmentType(product.getInvestmentType().name())
-					.interestRate(product.getInterestRate().getValue())
-					.startDate(product.getStartDate())
-					.expirationDate(expirationDate)
-					.balance(product.getAmount().getValue())
-					.expectedInterest(expectedInterest)
-					.progress(progress)
-					.remainingDays(remainingDays)
-					.createAt(product.getCreatedAt())
-					.build();
-			} else if (product.getInvestmentType() == InvestmentType.DEPOSIT) {
-				Investment investment = investmentFactory.createBy(product);
-				LocalDate today = localDateProvider.now();
-				LocalDate expirationDate = product.getExpirationDate();
-				BigDecimal expectedInterest = BigDecimal.valueOf(investment.getTotalInterest());
-				BigDecimal progress = product.getProgressByLocalDate(today);
-				long remainingDays = product.getRemainingDaysByLocalDate(today);
-				data = FinancialProductSummaryResponse.builder()
-					.id(product.getId())
-					.name(product.getName())
-					.investmentType(product.getInvestmentType().name())
-					.interestRate(product.getInterestRate().getValue())
-					.startDate(product.getStartDate())
-					.expirationDate(expirationDate)
-					.balance(product.getAmount().getValue())
-					.expectedInterest(expectedInterest)
-					.progress(progress)
-					.remainingDays(remainingDays)
-					.createAt(product.getCreatedAt())
-					.build();
-			} else if (product.getInvestmentType() == InvestmentType.SAVINGS) {
-				Investment investment = investmentFactory.createBy(product);
-				LocalDate today = localDateProvider.now();
-				LocalDate expirationDate = product.getExpirationDate();
-				BigDecimal balance = product.getBalanceByLocalDate(today);
-				BigDecimal expectedInterest = BigDecimal.valueOf(investment.getTotalInterest());
-				BigDecimal progress = product.getProgressByLocalDate(today);
-				long remainingDays = product.getRemainingDaysByLocalDate(today);
-				data = FinancialProductSummaryResponse.builder()
-					.id(product.getId())
-					.name(product.getName())
-					.investmentType(product.getInvestmentType().name())
-					.interestRate(product.getInterestRate().getValue())
-					.startDate(product.getStartDate())
-					.expirationDate(expirationDate)
-					.balance(balance)
-					.expectedInterest(expectedInterest)
-					.progress(progress)
-					.remainingDays(remainingDays)
-					.createAt(product.getCreatedAt())
-					.build();
-			}
+			FinancialProductSummaryResponse data = FinancialProductSummaryResponse.from(
+				product,
+				today,
+				investmentFactory.createBy(product)
+			);
 			result.add(data);
 		}
 

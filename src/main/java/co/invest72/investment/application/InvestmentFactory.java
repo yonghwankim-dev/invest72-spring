@@ -14,9 +14,11 @@ import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
 import co.invest72.investment.console.input.parser.InstallmentInvestmentAmountParser;
 import co.invest72.investment.console.input.parser.InvestmentAmountParser;
+import co.invest72.investment.domain.CashInvestment;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
+import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.PeriodRange;
 import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.Taxable;
@@ -46,6 +48,7 @@ public class InvestmentFactory {
 	private final Map<InvestmentKey, Function<CalculateInvestmentDto, Investment>> dtoRegistry = new HashMap<>();
 
 	public InvestmentFactory() {
+		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
@@ -105,6 +108,12 @@ public class InvestmentFactory {
 
 	private InvestmentKey createInvestmentKey(InvestmentType investmentType, InterestType interestType) {
 		return new InvestmentKey(investmentType, interestType);
+	}
+
+	private Investment cashInvestment(CalculateInvestmentDto dto) {
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue().intValue());
+		return new CashInvestment(investmentAmount);
+
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
