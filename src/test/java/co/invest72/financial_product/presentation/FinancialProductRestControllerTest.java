@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -32,6 +33,7 @@ import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -269,19 +271,24 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(product);
 
 		// when & then
+		FinancialProductSummaryResponse expectedResponse = FinancialProductSummaryResponse.builder()
+			.id(product.getId())
+			.name("현금 상품")
+			.investmentType(ProductType.CASH.name())
+			.interestRate(BigDecimal.ZERO)
+			.expirationDate(null)
+			.balance(BigDecimal.valueOf(1_000_000L))
+			.expectedInterest(BigDecimal.ZERO)
+			.progress(BigDecimal.ONE)
+			.remainingDays(0L)
+			.build();
+		String expectedJson = objectMapper.writeValueAsString(List.of(expectedResponse));
+
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())
-			.andExpect(jsonPath("$[0].id").value(product.getId()))
-			.andExpect(jsonPath("$[0].name").value("현금 상품"))
-			.andExpect(jsonPath("$[0].investmentType").value(ProductType.CASH.name()))
-			.andExpect(jsonPath("$[0].interestRate").value(0.0))
-			.andExpect(jsonPath("$[0].expirationDate").value(equalTo(null)))
-			.andExpect(jsonPath("$[0].balance").value(1_000_000))
-			.andExpect(jsonPath("$[0].expectedInterest").value(0.0))
-			.andExpect(jsonPath("$[0].progress").value(1.0))
-			.andExpect(jsonPath("$[0].remainingDays").value(0));
+			.andExpect(content().json(expectedJson));
 	}
 
 	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
