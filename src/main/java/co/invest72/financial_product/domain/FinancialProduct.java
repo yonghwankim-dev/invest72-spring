@@ -124,6 +124,11 @@ public class FinancialProduct {
 		return today.until(getExpirationDate(), ChronoUnit.DAYS);
 	}
 
+	/**
+	 * 적금 상품의 경우 월 적립액 * 경과 개월 수<br>
+	 * @param today 현재 날짜
+	 * @return 현재 잔액 (원금 기준)
+	 */
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
 		if (today.isBefore(startDate)) {
 			return BigDecimal.ZERO;
