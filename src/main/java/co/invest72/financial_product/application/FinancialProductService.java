@@ -1,6 +1,9 @@
 package co.invest72.financial_product.application;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +15,8 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductResponseDto;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -44,14 +48,14 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<FinancialProductResponseDto> getProductsByUser(User user) {
+	public List<FinancialProductDto> getProductsByUser(User user) {
 		return repository.findAllByUserId(user.getId()).stream()
 			.map(this::buildProductResponseDto)
 			.toList();
 	}
 
-	private FinancialProductResponseDto buildProductResponseDto(FinancialProduct product) {
-		return FinancialProductResponseDto.builder()
+	private FinancialProductDto buildProductResponseDto(FinancialProduct product) {
+		return FinancialProductDto.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
@@ -68,7 +72,7 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public FinancialProductResponseDto getProductDetail(User user, String productId) {
+	public FinancialProductDto getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		return buildProductResponseDto(product);
 	}
@@ -113,5 +117,32 @@ public class FinancialProductService {
 	@Transactional(readOnly = true)
 	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
 		return findFinancialProduct(user, productId);
+	}
+
+	@Transactional(readOnly = true)
+	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
+		List<FinancialProductSummaryResponse> result = new ArrayList<>();
+		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
+
+		for (FinancialProduct product : products) {
+			// LocalDate expirationDate = product.getStartDate().plusMonths(product.getMonths().getValue());
+			LocalDate expirationDate = null;
+			BigDecimal expectedInterest = BigDecimal.ZERO;
+			BigDecimal progress = BigDecimal.ONE;
+			long remainingDays = 0;
+			FinancialProductSummaryResponse summary = FinancialProductSummaryResponse.builder()
+				.id(product.getId())
+				.name(product.getName())
+				.investmentType(product.getInvestmentType().name())
+				.interestRate(product.getInterestRate().getValue())
+				.expirationDate(expirationDate)
+				.balance(product.getAmount().getValue())
+				.expectedInterest(expectedInterest)
+				.progress(progress)
+				.remainingDays(remainingDays)
+				.build();
+			result.add(summary);
+		}
+		return result;
 	}
 }

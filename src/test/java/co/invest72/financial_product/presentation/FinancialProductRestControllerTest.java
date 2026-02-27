@@ -55,6 +55,22 @@ class FinancialProductRestControllerTest {
 	private IdGenerator userIdGenerator;
 	private IdGenerator productIdGenerator;
 
+	private FinancialProduct createCashProduct(String userId) {
+		return FinancialProduct.builder()
+			.userId(userId)
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(0))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestType(InterestType.NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+	}
+
 	@BeforeEach
 	void setUp() {
 		userIdGenerator = new UserIdGenerator("user");
@@ -170,19 +186,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
 		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -208,19 +212,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProductDetail_whenProductExists_thenReturnProductDetail() throws Exception {
 		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -246,19 +238,7 @@ class FinancialProductRestControllerTest {
 	void getProductDetail_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(otherUserId)
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		// when & then
@@ -281,23 +261,34 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
+	@DisplayName("요약 상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
+	@Test
+	void getSummaryProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
+		// given
+		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").isArray())
+			.andExpect(jsonPath("$[0].id").value(product.getId()))
+			.andExpect(jsonPath("$[0].name").value("현금 상품"))
+			.andExpect(jsonPath("$[0].investmentType").value(ProductType.CASH.name()))
+			.andExpect(jsonPath("$[0].interestRate").value(0.0))
+			.andExpect(jsonPath("$[0].expirationDate").value(equalTo(null)))
+			.andExpect(jsonPath("$[0].balance").value(1_000_000))
+			.andExpect(jsonPath("$[0].expectedInterest").value(0.0))
+			.andExpect(jsonPath("$[0].progress").value(1.0))
+			.andExpect(jsonPath("$[0].remainingDays").value(0));
+	}
+
 	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
 	@Test
 	void updateProduct_whenProductExists_thenUpdateProduct() throws Exception {
 		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
@@ -334,19 +325,7 @@ class FinancialProductRestControllerTest {
 	void updateProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(otherUserId)
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
@@ -380,19 +359,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void deleteProduct_whenProductExists_thenDeleteProduct() throws Exception {
 		// given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -412,19 +379,7 @@ class FinancialProductRestControllerTest {
 	void deleteProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(otherUserId)
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
+		FinancialProduct product = createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		// when & then
