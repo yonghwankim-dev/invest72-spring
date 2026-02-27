@@ -13,17 +13,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
@@ -53,6 +56,9 @@ class FinancialProductRestControllerTest {
 	@Autowired
 	private FinancialProductRepository financialProductRepository;
 
+	@MockitoSpyBean
+	private LocalDateProvider spyLocalDateProvider;
+
 	private PrincipalUser principalUser;
 	private IdGenerator userIdGenerator;
 	private IdGenerator productIdGenerator;
@@ -74,7 +80,7 @@ class FinancialProductRestControllerTest {
 	}
 
 	private FinancialProduct createDepositProduct() {
-		FinancialProduct depositProduct = FinancialProduct.builder()
+		return FinancialProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT)
@@ -87,7 +93,6 @@ class FinancialProductRestControllerTest {
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
-		return depositProduct;
 	}
 
 	@BeforeEach
@@ -102,6 +107,8 @@ class FinancialProductRestControllerTest {
 			.build();
 
 		productIdGenerator = new ProductIdGenerator("product");
+
+		BDDMockito.given(spyLocalDateProvider.now()).willReturn(LocalDate.of(2026, 2, 27));
 	}
 
 	@AfterEach

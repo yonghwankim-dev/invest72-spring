@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -18,6 +19,8 @@ import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -29,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductService {
 
 	private final FinancialProductRepository repository;
+	private final LocalDateProvider localDateProvider;
+	private final InvestmentFactory investmentFactory;
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
@@ -158,9 +163,10 @@ public class FinancialProductService {
 					.createAt(product.getCreatedAt())
 					.build();
 			} else if (product.getInvestmentType() == InvestmentType.DEPOSIT) {
-				LocalDate today = LocalDate.of(2026, 2, 27);
+				Investment investment = investmentFactory.createBy(product);
+				LocalDate today = localDateProvider.now();
 				LocalDate expirationDate = product.getExpirationDate();
-				BigDecimal expectedInterest = BigDecimal.valueOf(50_000);
+				BigDecimal expectedInterest = BigDecimal.valueOf(investment.getTotalInterest());
 				BigDecimal progress = product.getProgressByLocalDate(today);
 				long remainingDays = product.getRemainingDaysByLocalDate(today);
 				data = FinancialProductSummaryResponse.builder()
