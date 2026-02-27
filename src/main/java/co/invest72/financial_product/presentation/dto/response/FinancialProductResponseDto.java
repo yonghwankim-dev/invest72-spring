@@ -16,7 +16,7 @@ public class FinancialProductResponseDto {
 	private String id;
 	private String userId;
 	private String name;
-	private String productType;
+	private String investmentType;
 	private BigDecimal amount;
 	private Integer months;
 	private BigDecimal interestRate;
