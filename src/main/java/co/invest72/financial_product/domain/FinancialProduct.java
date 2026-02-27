@@ -123,4 +123,15 @@ public class FinancialProduct {
 		}
 		return today.until(getExpirationDate(), ChronoUnit.DAYS);
 	}
+
+	public BigDecimal getBalanceByLocalDate(LocalDate today) {
+		if (today.isBefore(startDate)) {
+			return BigDecimal.ZERO;
+		}
+		if (today.isAfter(getExpirationDate())) {
+			return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
+		}
+		long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
+		return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
+	}
 }

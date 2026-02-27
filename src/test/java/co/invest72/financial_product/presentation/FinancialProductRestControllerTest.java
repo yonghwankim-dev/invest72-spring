@@ -95,6 +95,22 @@ class FinancialProductRestControllerTest {
 			.build();
 	}
 
+	private FinancialProduct createSavingsProduct() {
+		return FinancialProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(InterestType.COMPOUND)
+			.taxType(TaxType.STANDARD)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+	}
+
 	@BeforeEach
 	void setUp() {
 		userIdGenerator = new UserIdGenerator("user");
@@ -293,10 +309,25 @@ class FinancialProductRestControllerTest {
 		// given
 		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = createDepositProduct();
+		FinancialProduct savingsProduct = createSavingsProduct();
 		financialProductRepository.save(product);
 		financialProductRepository.save(depositProduct);
+		financialProductRepository.save(savingsProduct);
 
 		FinancialProductSummaryResponse expectedResponse1 = FinancialProductSummaryResponse.builder()
+			.id(savingsProduct.getId())
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.interestRate(BigDecimal.valueOf(0.05))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.expirationDate(LocalDate.of(2027, 1, 1))
+			.balance(BigDecimal.valueOf(1_000_000L))
+			.expectedInterest(BigDecimal.valueOf(330_017L))
+			.progress(BigDecimal.valueOf(0.1562))
+			.remainingDays(308)
+			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
 			.id(depositProduct.getId())
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
@@ -309,7 +340,7 @@ class FinancialProductRestControllerTest {
 			.remainingDays(308)
 			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
-		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummaryResponse expectedResponse3 = FinancialProductSummaryResponse.builder()
 			.id(product.getId())
 			.name("현금 상품")
 			.investmentType(ProductType.CASH.name())
@@ -323,7 +354,8 @@ class FinancialProductRestControllerTest {
 			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 
-		String expectedJson = objectMapper.writeValueAsString(Arrays.asList(expectedResponse1, expectedResponse2));
+		String expectedJson = objectMapper.writeValueAsString(
+			Arrays.asList(expectedResponse1, expectedResponse2, expectedResponse3));
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))

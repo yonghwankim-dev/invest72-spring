@@ -182,6 +182,27 @@ public class FinancialProductService {
 					.remainingDays(remainingDays)
 					.createAt(product.getCreatedAt())
 					.build();
+			} else if (product.getInvestmentType() == InvestmentType.SAVINGS) {
+				Investment investment = investmentFactory.createBy(product);
+				LocalDate today = localDateProvider.now();
+				LocalDate expirationDate = product.getExpirationDate();
+				BigDecimal balance = product.getBalanceByLocalDate(today);
+				BigDecimal expectedInterest = BigDecimal.valueOf(investment.getTotalInterest());
+				BigDecimal progress = product.getProgressByLocalDate(today);
+				long remainingDays = product.getRemainingDaysByLocalDate(today);
+				data = FinancialProductSummaryResponse.builder()
+					.id(product.getId())
+					.name(product.getName())
+					.investmentType(product.getInvestmentType().name())
+					.interestRate(product.getInterestRate().getValue())
+					.startDate(product.getStartDate())
+					.expirationDate(expirationDate)
+					.balance(balance)
+					.expectedInterest(expectedInterest)
+					.progress(progress)
+					.remainingDays(remainingDays)
+					.createAt(product.getCreatedAt())
+					.build();
 			}
 			result.add(data);
 		}
