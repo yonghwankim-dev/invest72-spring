@@ -67,7 +67,7 @@ public enum InvestmentType {
 	}
 
 	public LocalDate calculateExpirationDate(LocalDate startDate, int months) {
-		return expirationCalculator.calculateExpirationDate(startDate, months);
+		return expirationCalculator.calculate(startDate, months);
 	}
 
 	public BigDecimal calculateProgress(LocalDate startDate, LocalDate expirationDate, LocalDate today) {

@@ -4,5 +4,5 @@ import java.time.LocalDate;
 
 public interface ExpirationCalculator {
 
-	LocalDate calculateExpirationDate(LocalDate startDate, int months);
+	LocalDate calculate(LocalDate startDate, int months);
 }
