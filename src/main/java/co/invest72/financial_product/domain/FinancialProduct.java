@@ -99,22 +99,30 @@ public class FinancialProduct {
 		this.startDate = updatedProduct.getStartDate();
 	}
 
+	/**
+	 * 만기일 계산<br>
+	 * @return 만기일 (현금 상품의 경우 LocalDate.MAX 반환)
+	 */
 	public LocalDate getExpirationDate() {
 		return investmentType.calculateExpirationDate(startDate, months.getValue());
 	}
 
+	/**
+	 * 진행률 계산<br>
+	 * @param today 현재 날짜
+	 * @return 진행률 (0.0 ~ 1.0 사이의 값, 현금 상품은 항상 1.0 반환)
+	 */
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
 		return investmentType.calculateProgress(startDate, getExpirationDate(), today);
 	}
 
+	/**
+	 * 남은 일수 계산<br>
+	 * @param today 현재 날짜
+	 * @return 남은 일수 (만기일이 지났거나 일시금 상품인 경우 0 반환)
+	 */
 	public long getRemainingDaysByLocalDate(LocalDate today) {
-		if (investmentType == InvestmentType.CASH) {
-			return 0; // 일시금은 만기 개념이 없으므로 남은 일수는 0
-		}
-		if (today.isAfter(getExpirationDate())) {
-			return 0;
-		}
-		return today.until(getExpirationDate(), ChronoUnit.DAYS);
+		return investmentType.calculateRemainingDays(today, getExpirationDate());
 	}
 
 	/**
