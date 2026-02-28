@@ -49,8 +49,7 @@ public class FinancialProductRestController {
 	@GetMapping("/summary")
 	public ResponseEntity<List<FinancialProductSummaryResponse>> getSummaryProducts(
 		@AuthenticationPrincipal PrincipalUser user) {
-		List<FinancialProductSummaryResponse> list = service.getSummaryProductsByUser(user.getUser());
-		return ResponseEntity.ok(list);
+		return ResponseEntity.ok(service.getSummaryProductsByUser(user.getUser()));
 	}
 
 	// 상품 상세 조회
