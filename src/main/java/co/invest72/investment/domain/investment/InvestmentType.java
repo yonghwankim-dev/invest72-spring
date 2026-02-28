@@ -2,7 +2,10 @@ package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductMonths;
 import lombok.Getter;
 
 @Getter
@@ -39,5 +42,20 @@ public enum InvestmentType {
 
 	public long calculateRemainingDays(LocalDate today, LocalDate expirationDate) {
 		return periodStrategy.remainingDays(today, expirationDate);
+	}
+
+	public BigDecimal calculateBalance(ProductAmount amount, LocalDate startDate, LocalDate expirationDate,
+		LocalDate today, ProductMonths months) {
+		if (this == CASH || this == DEPOSIT) {
+			return amount.getValue();
+		}
+		if (today.isBefore(startDate)) {
+			return BigDecimal.ZERO;
+		}
+		if (today.isAfter(expirationDate)) {
+			return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
+		}
+		long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
+		return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
 	}
 }

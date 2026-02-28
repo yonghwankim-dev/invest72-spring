@@ -3,7 +3,6 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
@@ -131,14 +130,7 @@ public class FinancialProduct {
 	 * @return 현재 잔액 (원금 기준)
 	 */
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		if (today.isBefore(startDate)) {
-			return BigDecimal.ZERO;
-		}
-		if (today.isAfter(getExpirationDate())) {
-			return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
-		}
-		long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
-		return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
+		return investmentType.calculateBalance(amount, startDate, getExpirationDate(), today, months);
 	}
 
 	public BigDecimal calculateBalance(LocalDate today) {
