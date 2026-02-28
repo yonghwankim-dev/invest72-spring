@@ -2,6 +2,8 @@ package co.invest72.investment.domain.investment;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -184,9 +186,9 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getTotalInvestment() {
-		int totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestment();
 
-		assertEquals(1_000_000, totalInvestment);
+		assertEquals(BigDecimal.valueOf(1_000_000), totalInvestment);
 	}
 
 	@Test

@@ -2,6 +2,8 @@ package co.invest72.investment.domain.investment;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -98,7 +100,7 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalInvestment() {
-		assertEquals(12_000_000, investment.getTotalInvestment());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment());
 	}
 
 	@Test

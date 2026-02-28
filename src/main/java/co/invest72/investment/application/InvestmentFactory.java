@@ -91,7 +91,7 @@ public class InvestmentFactory {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
 			InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
 				request.getAmountType() + " " + request.getAmount());
-			productAmount = new ProductAmount(BigDecimal.valueOf(investmentAmount.getMonthlyAmount()));
+			productAmount = new ProductAmount(investmentAmount.getMonthlyAmount());
 		}
 
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
@@ -111,14 +111,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment cashInvestment(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue().intValue());
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue());
 		return new CashInvestment(investmentAmount);
-
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
 		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue().intValue()),
+			new FixedDepositAmount(dto.getAmount().getValue()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
@@ -127,7 +126,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
 		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue().intValue()),
+			new FixedDepositAmount(dto.getAmount().getValue()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())

@@ -89,12 +89,11 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public int getTotalInvestment() {
-		BigDecimal totalInvestment = investmentAmount.getAmount()
+	public BigDecimal getTotalInvestment() {
+		return investmentAmount.getAmount()
 			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
-		return roundToInt.applyAsInt(totalInvestment);
 	}
-	
+
 	@Override
 	public int getTotalInterest() {
 		BigDecimal totalInterest = details.stream()

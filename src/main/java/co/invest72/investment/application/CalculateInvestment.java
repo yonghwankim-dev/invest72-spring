@@ -1,5 +1,6 @@
 package co.invest72.investment.application;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class CalculateInvestment {
 	public CalculateInvestmentResponse calculate(Investment investment) {
 		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
 		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
-		int totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestment();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -39,7 +40,7 @@ public class CalculateInvestment {
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
-		int totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestment();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();
@@ -72,7 +73,7 @@ public class CalculateInvestment {
 
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
-		int totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestment();
 		int totalInterest = investment.getTotalInterest();
 		int totalTax = investment.getTotalTax();
 		int totalProfit = investment.getTotalProfit();

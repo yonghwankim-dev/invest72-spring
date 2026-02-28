@@ -3,6 +3,7 @@ package co.invest72.investment.application;
 import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -61,7 +62,7 @@ class CalculateInvestmentTest {
 			new MonthlyInvestmentResult(4, 1_012_500, 4_167, 1_016_667)
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
@@ -100,7 +101,7 @@ class CalculateInvestmentTest {
 		);
 
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(50_000)
 			.totalTax(0)
 			.totalProfit(1_050_000)
@@ -139,7 +140,7 @@ class CalculateInvestmentTest {
 			new MonthlyInvestmentResult(12, 1046800, 4362, 1051162)
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(51_162)
 			.totalTax(0)
 			.totalProfit(1_051_162)
@@ -165,7 +166,7 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(16_667)
 			.totalTax(2_567)
 			.totalProfit(1_014_100)
@@ -192,7 +193,7 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(3, 1_100_000, 50_000, 1_150_000)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(150_000)
 			.totalTax(23_100)
 			.totalProfit(1_126_900)
@@ -220,7 +221,7 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(2, 1_050_000, 50_000, 1_100_000)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(100_000)
 			.totalTax(0)
 			.totalProfit(1_100_000)
@@ -248,7 +249,7 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(2, 1_050_000, 4_167, 1_054_167)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
 			.totalInterest(54_167)
 			.totalTax(0)
 			.totalProfit(1_054_167)

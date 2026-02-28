@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.InterestRate;
 import testutil.BigDecimalAssertion;
 
 class FixedDepositAmountTest {
@@ -18,7 +18,7 @@ class FixedDepositAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new FixedDepositAmount(1_000_000);
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000));
 	}
 
 	@Test
@@ -28,14 +28,14 @@ class FixedDepositAmountTest {
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
-		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(-1));
+		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(BigDecimal.valueOf(-1)));
 	}
 
 	@Test
 	void shouldReturnDepositAmount() {
-		int depositAmount = investmentAmount.getDepositAmount();
+		BigDecimal depositAmount = investmentAmount.getDepositAmount();
 
-		int expectedDepositAmount = 1_000_000;
+		BigDecimal expectedDepositAmount = BigDecimal.valueOf(1_000_000);
 		assertEquals(expectedDepositAmount, depositAmount);
 	}
 

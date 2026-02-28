@@ -111,8 +111,8 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
-	public int getTotalInvestment() {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getTotalInvestment() {
+		return investmentAmount.getAmount();
 	}
 
 	@Override

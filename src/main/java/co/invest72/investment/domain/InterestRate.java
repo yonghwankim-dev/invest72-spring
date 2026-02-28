@@ -23,7 +23,7 @@ public interface InterestRate {
 	 * @param amount 투자 금액
 	 * @return 연이자
 	 */
-	BigDecimal getAnnualInterest(int amount);
+	BigDecimal getAnnualInterest(BigDecimal amount);
 
 	/**
 	 * 투자 기간에 따른 총 성장 계수를 계산합니다.

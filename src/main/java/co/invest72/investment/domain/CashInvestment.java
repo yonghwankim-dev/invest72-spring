@@ -1,5 +1,7 @@
 package co.invest72.investment.domain;
 
+import java.math.BigDecimal;
+
 import co.invest72.investment.domain.tax.TaxType;
 
 public class CashInvestment implements Investment {
@@ -41,8 +43,8 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
-	public int getTotalInvestment() {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getTotalInvestment() {
+		return investmentAmount.getAmount();
 	}
 
 	@Override
