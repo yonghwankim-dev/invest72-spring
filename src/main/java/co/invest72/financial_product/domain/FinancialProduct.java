@@ -132,11 +132,4 @@ public class FinancialProduct {
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
 		return investmentType.calculateBalance(this, today);
 	}
-
-	public BigDecimal calculateBalance(LocalDate today) {
-		if (investmentType == InvestmentType.CASH || investmentType == InvestmentType.DEPOSIT) {
-			return amount.getValue();
-		}
-		return getBalanceByLocalDate(today);
-	}
 }

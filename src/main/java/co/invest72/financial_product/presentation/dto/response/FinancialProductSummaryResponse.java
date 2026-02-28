@@ -38,7 +38,7 @@ public class FinancialProductSummaryResponse {
 			.interestRate(product.getInterestRate().getValue())
 			.startDate(product.getStartDate())
 			.expirationDate(product.getExpirationDate())
-			.balance(product.calculateBalance(today))
+			.balance(product.getBalanceByLocalDate(today))
 			.expectedInterest(BigDecimal.valueOf(investment.getTotalInterest()))
 			.progress(product.getProgressByLocalDate(today))
 			.remainingDays(product.getRemainingDaysByLocalDate(today))
