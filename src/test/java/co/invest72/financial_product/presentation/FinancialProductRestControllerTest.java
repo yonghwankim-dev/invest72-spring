@@ -346,7 +346,7 @@ class FinancialProductRestControllerTest {
 			.investmentType(ProductType.CASH.name())
 			.interestRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
-			.expirationDate(null)
+			.expirationDate(LocalDate.MAX)
 			.balance(BigDecimal.valueOf(1_000_000L))
 			.expectedInterest(BigDecimal.ZERO)
 			.progress(BigDecimal.ONE)

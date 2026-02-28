@@ -71,6 +71,21 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
+	public int getPrincipalForYear(int year) {
+		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	}
+
+	@Override
+	public int getInterestForYear(int year) {
+		return 0;
+	}
+
+	@Override
+	public int getProfitForYear(int year) {
+		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	}
+
+	@Override
 	public double getTaxRate() {
 		return 0.0;
 	}

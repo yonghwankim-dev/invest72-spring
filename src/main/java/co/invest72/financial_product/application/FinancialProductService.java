@@ -143,8 +143,8 @@ public class FinancialProductService {
 		for (FinancialProduct product : products) {
 			FinancialProductSummaryResponse data = FinancialProductSummaryResponse.from(
 				product,
-				today,
-				investmentFactory.createBy(product)
+				investmentFactory.createBy(product),
+				today
 			);
 			result.add(data);
 		}

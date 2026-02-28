@@ -28,8 +28,8 @@ public class FinancialProductSummaryResponse {
 
 	public static FinancialProductSummaryResponse from(
 		FinancialProduct product,
-		LocalDate today,
-		Investment investment
+		Investment investment,
+		LocalDate today
 	) {
 		return FinancialProductSummaryResponse.builder()
 			.id(product.getId())
@@ -38,7 +38,7 @@ public class FinancialProductSummaryResponse {
 			.interestRate(product.getInterestRate().getValue())
 			.startDate(product.getStartDate())
 			.expirationDate(product.getExpirationDate())
-			.balance(product.calculateBalance(today)) // 엔티티 내부에서 타입별 계산
+			.balance(product.calculateBalance(today))
 			.expectedInterest(BigDecimal.valueOf(investment.getTotalInterest()))
 			.progress(product.getProgressByLocalDate(today))
 			.remainingDays(product.getRemainingDaysByLocalDate(today))

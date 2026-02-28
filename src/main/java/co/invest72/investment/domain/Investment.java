@@ -86,7 +86,7 @@ public interface Investment {
 	 * @return 총 투자 금액
 	 */
 	int getTotalInvestment();
-	
+
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
@@ -116,17 +116,11 @@ public interface Investment {
 
 	String getTaxType();
 
-	default int getPrincipalForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	int getPrincipalForYear(int year);
 
-	default int getInterestForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	int getInterestForYear(int year);
 
-	default int getProfitForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	int getProfitForYear(int year);
 
 	double getTaxRate();
 }
