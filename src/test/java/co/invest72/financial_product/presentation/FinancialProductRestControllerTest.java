@@ -30,7 +30,6 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
-import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
@@ -84,11 +83,11 @@ class FinancialProductRestControllerTest {
 
 	@Test
 	@DisplayName("상품 생성 - 현금 상품을 성공적으로 생성한다")
-	void createProduct_whenProductTypeIsCash_thenSaveProduct() throws Exception {
+	void createProduct_whenInvestmentTypeIsCash_thenSaveProduct() throws Exception {
 		// given
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.investmentType(ProductType.CASH.name())
+			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.0))
@@ -127,7 +126,7 @@ class FinancialProductRestControllerTest {
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("현금 상품")
-			.investmentType(ProductType.CASH.name())
+			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
 			.months(-1) // 음수 기간
 			.interestRate(BigDecimal.valueOf(-0.01)) // 음수 이자율
@@ -189,7 +188,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$[0].id").value(notNullValue()))
 			.andExpect(jsonPath("$[0].userId").value(principalUser.getUser().getId()))
 			.andExpect(jsonPath("$[0].name").value("현금 상품"))
-			.andExpect(jsonPath("$[0].investmentType").value(ProductType.CASH.name()))
+			.andExpect(jsonPath("$[0].investmentType").value(InvestmentType.CASH.name()))
 			.andExpect(jsonPath("$[0].amount").value(1_000_000.0))
 			.andExpect(jsonPath("$[0].months").value(0))
 			.andExpect(jsonPath("$[0].interestRate").value(0.0))
@@ -214,7 +213,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.id").value(product.getId()))
 			.andExpect(jsonPath("$.userId").value(principalUser.getUser().getId()))
 			.andExpect(jsonPath("$.name").value("현금 상품"))
-			.andExpect(jsonPath("$.investmentType").value(ProductType.CASH.name()))
+			.andExpect(jsonPath("$.investmentType").value(InvestmentType.CASH.name()))
 			.andExpect(jsonPath("$.amount").value(1_000_000.0))
 			.andExpect(jsonPath("$.months").value(0))
 			.andExpect(jsonPath("$.interestRate").value(0.0))
@@ -357,7 +356,7 @@ class FinancialProductRestControllerTest {
 		FinancialProductSummaryResponse expectedResponse3 = FinancialProductSummaryResponse.builder()
 			.id(product.getId())
 			.name("현금 상품")
-			.investmentType(ProductType.CASH.name())
+			.investmentType(InvestmentType.CASH.name())
 			.interestRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
 			.expirationDate(LocalDate.MAX)
@@ -388,7 +387,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.investmentType(ProductType.CASH.name())
+			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))
@@ -425,7 +424,7 @@ class FinancialProductRestControllerTest {
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
 			.name("수정된 현금 상품")
-			.investmentType(ProductType.CASH.name())
+			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
 			.months(0)
 			.interestRate(BigDecimal.valueOf(0.00))

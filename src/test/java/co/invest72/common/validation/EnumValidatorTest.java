@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import co.invest72.financial_product.domain.ProductType;
+import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.Payload;
 
@@ -20,15 +20,15 @@ class EnumValidatorTest {
 	@BeforeEach
 	void setUp() {
 		enumValidator = new EnumValidator();
-		enumValidator.initialize(getProductTypeEnumValid());
+		enumValidator.initialize(getInvestmentTypeEnumValid());
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = ProductType.class)
+	@EnumSource(value = InvestmentType.class)
 	@DisplayName("유효 판단 - 유효한 값")
-	void isValid_whenValueIsValid_thenReturnTrue(ProductType productType) {
+	void isValid_whenValueIsValid_thenReturnTrue(InvestmentType investmentType) {
 		// Given
-		String validValue = productType.name();
+		String validValue = investmentType.name();
 
 		// When
 		boolean result = enumValidator.isValid(validValue, null);
@@ -60,7 +60,7 @@ class EnumValidatorTest {
 		Assertions.assertThat(result).isTrue();
 	}
 
-	private EnumValid getProductTypeEnumValid() {
+	private EnumValid getInvestmentTypeEnumValid() {
 		return new EnumValid() {
 
 			@Override
@@ -85,7 +85,7 @@ class EnumValidatorTest {
 
 			@Override
 			public Class<? extends Enum<?>> enumClass() {
-				return ProductType.class;
+				return InvestmentType.class;
 			}
 		};
 	}
