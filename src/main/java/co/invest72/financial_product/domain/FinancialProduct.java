@@ -101,10 +101,7 @@ public class FinancialProduct {
 	}
 
 	public LocalDate getExpirationDate() {
-		if (investmentType == InvestmentType.CASH) {
-			return LocalDate.MAX; // 일시금은 만기 개념이 없으므로 최대 날짜로 설정
-		}
-		return startDate.plusMonths(months.getValue());
+		return investmentType.calculateExpirationDate(startDate, months.getValue());
 	}
 
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
