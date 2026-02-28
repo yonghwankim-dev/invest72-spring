@@ -1,7 +1,6 @@
 package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -105,19 +104,7 @@ public class FinancialProduct {
 	}
 
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
-		if (investmentType == InvestmentType.CASH) {
-			return BigDecimal.ONE; // 일시금은 투자 즉시 100% 진행된 것으로 간주
-		}
-		if (today.isBefore(startDate)) {
-			return BigDecimal.ZERO;
-		}
-		if (today.isAfter(getExpirationDate())) {
-			return BigDecimal.ONE;
-		}
-		long totalDays = startDate.until(getExpirationDate(), ChronoUnit.DAYS);
-		long elapsedDays = startDate.until(today, ChronoUnit.DAYS);
-		return BigDecimal.valueOf(elapsedDays)
-			.divide(BigDecimal.valueOf(totalDays), 4, RoundingMode.HALF_EVEN);
+		return investmentType.calculateProgress(startDate, getExpirationDate(), today);
 	}
 
 	public long getRemainingDaysByLocalDate(LocalDate today) {
