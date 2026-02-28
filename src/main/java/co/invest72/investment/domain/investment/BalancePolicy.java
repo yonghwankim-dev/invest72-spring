@@ -2,6 +2,7 @@ package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -31,7 +32,7 @@ public enum BalancePolicy implements BalanceStrategy {
 			if (today.isAfter(product.getExpirationDate())) {
 				return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
 			}
-			long elapsedMonths = startDate.until(today, java.time.temporal.ChronoUnit.MONTHS);
+			long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
 			return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
 		}
 	}
