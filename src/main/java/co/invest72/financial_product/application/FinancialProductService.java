@@ -137,7 +137,6 @@ public class FinancialProductService {
 	@Transactional(readOnly = true)
 	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
 		List<FinancialProductSummaryResponse> result = new ArrayList<>();
-		// 기본적으로 최근 생성된 상품이 먼저 보이도록 정렬
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		LocalDate today = localDateProvider.now();
