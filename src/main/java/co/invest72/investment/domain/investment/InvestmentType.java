@@ -2,25 +2,25 @@ package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.FinancialProduct;
 import lombok.Getter;
 
 @Getter
 public enum InvestmentType {
-	CASH("현금", PeriodPolicy.INDEFINITE),
-	DEPOSIT("예금", PeriodPolicy.STANDARD),
-	SAVINGS("적금", PeriodPolicy.STANDARD),
+	CASH("현금", PeriodPolicy.INDEFINITE, BalancePolicy.FIXED),
+	DEPOSIT("예금", PeriodPolicy.STANDARD, BalancePolicy.FIXED),
+	SAVINGS("적금", PeriodPolicy.STANDARD, BalancePolicy.ACCUMULATIVE),
 	;
 
 	private final String typeName;
 	private final PeriodStrategy periodStrategy;
+	private final BalanceStrategy balanceStrategy;
 
-	InvestmentType(String typeName, PeriodStrategy periodStrategy) {
+	InvestmentType(String typeName, PeriodStrategy periodStrategy, BalanceStrategy balanceStrategy) {
 		this.typeName = typeName;
 		this.periodStrategy = periodStrategy;
+		this.balanceStrategy = balanceStrategy;
 	}
 
 	public static InvestmentType from(String type) {
@@ -44,18 +44,7 @@ public enum InvestmentType {
 		return periodStrategy.remainingDays(today, expirationDate);
 	}
 
-	public BigDecimal calculateBalance(ProductAmount amount, LocalDate startDate, LocalDate expirationDate,
-		LocalDate today, ProductMonths months) {
-		if (this == CASH || this == DEPOSIT) {
-			return amount.getValue();
-		}
-		if (today.isBefore(startDate)) {
-			return BigDecimal.ZERO;
-		}
-		if (today.isAfter(expirationDate)) {
-			return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
-		}
-		long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
-		return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
+	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
+		return balanceStrategy.calculate(product, today);
 	}
 }

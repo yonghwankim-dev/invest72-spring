@@ -125,12 +125,12 @@ public class FinancialProduct {
 	}
 
 	/**
-	 * 적금 상품의 경우 월 적립액 * 경과 개월 수<br>
+	 * 잔액 계산<br>
 	 * @param today 현재 날짜
-	 * @return 현재 잔액 (원금 기준)
+	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
 	 */
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return investmentType.calculateBalance(amount, startDate, getExpirationDate(), today, months);
+		return investmentType.calculateBalance(this, today);
 	}
 
 	public BigDecimal calculateBalance(LocalDate today) {
