@@ -30,9 +30,6 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.ProductType;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
@@ -63,22 +60,6 @@ class FinancialProductRestControllerTest {
 	private PrincipalUser principalUser;
 	private IdGenerator userIdGenerator;
 	private IdGenerator productIdGenerator;
-
-	private FinancialProduct createSavingsProduct() {
-		return FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("적금 상품")
-			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(InterestType.COMPOUND)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
-	}
 
 	@BeforeEach
 	void setUp() {
@@ -279,7 +260,8 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
 			principalUser.getUser().getId());
-		FinancialProduct savingsProduct = createSavingsProduct();
+		FinancialProduct savingsProduct = FinancialProductDataProvider.createSavingsProduct(
+			principalUser.getUser().getId());
 		financialProductRepository.save(product);
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);

@@ -43,4 +43,20 @@ public class FinancialProductDataProvider {
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 	}
+
+	public static FinancialProduct createSavingsProduct(String userId) {
+		return FinancialProduct.builder()
+			.userId(userId)
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS)
+			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.months(new ProductMonths(12))
+			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestType(InterestType.COMPOUND)
+			.taxType(TaxType.STANDARD)
+			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+	}
 }

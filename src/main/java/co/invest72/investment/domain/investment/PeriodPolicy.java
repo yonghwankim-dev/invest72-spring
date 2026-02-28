@@ -45,21 +45,12 @@ public enum PeriodPolicy implements PeriodStrategy {
 
 		@Override
 		public BigDecimal calculateProgress(LocalDate startDate, LocalDate expirationDate, LocalDate today) {
-			if (today.isBefore(startDate)) {
-				return BigDecimal.ZERO;
-			}
-			if (today.isAfter(expirationDate)) {
-				return BigDecimal.ONE;
-			}
-			long totalDays = startDate.until(expirationDate, ChronoUnit.DAYS);
-			long elapsedDays = startDate.until(today, ChronoUnit.DAYS);
-			return BigDecimal.valueOf(elapsedDays)
-				.divide(BigDecimal.valueOf(totalDays), 4, RoundingMode.HALF_EVEN);
+			return BigDecimal.ONE; // 만기가 없는 자산은 항상 100% 진행된 것으로 간주
 		}
 
 		@Override
 		public long remainingDays(LocalDate today, LocalDate expirationDate) {
 			return 0; // 만기가 없는 자산은 남은 일수가 0
 		}
-	};
+	}
 }
