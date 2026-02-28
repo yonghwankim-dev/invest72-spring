@@ -79,6 +79,7 @@ public class FinancialProductService {
 	@Transactional(readOnly = true)
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
+		LocalDate today = localDateProvider.now();
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -93,9 +94,9 @@ public class FinancialProductService {
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(product.getExpirationDate())
-			.balance(product.getBalanceByLocalDate(localDateProvider.now()))
-			.progress(product.getProgressByLocalDate(localDateProvider.now()))
-			.remainingDays(product.getRemainingDaysByLocalDate(localDateProvider.now()))
+			.balance(product.getBalanceByLocalDate(today))
+			.progress(product.getProgressByLocalDate(today))
+			.remainingDays(product.getRemainingDaysByLocalDate(today))
 			.build();
 	}
 
