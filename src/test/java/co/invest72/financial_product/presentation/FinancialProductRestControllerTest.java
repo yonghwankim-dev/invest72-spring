@@ -200,9 +200,9 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
 	}
 
-	@DisplayName("상품 상세 조회 - 사용자가 생성한 상품의 상세 정보를 조회한다")
+	@DisplayName("상품 상세 조회 - 사용자가 생성한 현금 상품의 상세 정보를 조회한다")
 	@Test
-	void getProductDetail_whenProductExists_thenReturnProductDetail() throws Exception {
+	void getProductDetail_whenProductIsCash_thenReturnProductDetail() throws Exception {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
@@ -222,7 +222,69 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.taxType").value(TaxType.NONE.name()))
 			.andExpect(jsonPath("$.taxRate").value(0.0))
 			.andExpect(jsonPath("$.startDate").value("2026-01-01"))
-			.andExpect(jsonPath("$.createdAt").value(notNullValue()));
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
+			.andExpect(jsonPath("$.expirationDate").value("+999999999-12-31"))
+			.andExpect(jsonPath("$.balance").value(1_000_000.0))
+			.andExpect(jsonPath("$.progress").value(1.0))
+			.andExpect(jsonPath("$.remainingDays").value(0));
+	}
+
+	@DisplayName("상품 상세 조회 - 사용자가 생성한 예금 상품의 상세 정보를 조회한다")
+	@Test
+	void getProductDetail_whenProductIsDeposit_thenReturnProductDetail() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId());
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId()))
+			.andExpect(jsonPath("$.userId").value(principalUser.getUser().getId()))
+			.andExpect(jsonPath("$.name").value("예금 상품"))
+			.andExpect(jsonPath("$.investmentType").value(InvestmentType.DEPOSIT.name()))
+			.andExpect(jsonPath("$.amount").value(1_000_000.0))
+			.andExpect(jsonPath("$.months").value(12))
+			.andExpect(jsonPath("$.interestRate").value(0.05))
+			.andExpect(jsonPath("$.interestType").value(InterestType.SIMPLE.name()))
+			.andExpect(jsonPath("$.taxType").value(TaxType.STANDARD.name()))
+			.andExpect(jsonPath("$.taxRate").value(0.154))
+			.andExpect(jsonPath("$.startDate").value("2026-01-01"))
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
+			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
+			.andExpect(jsonPath("$.balance").value(1_000_000.0))
+			.andExpect(jsonPath("$.progress").value(0.1562))
+			.andExpect(jsonPath("$.remainingDays").value(308));
+	}
+
+	@DisplayName("상품 상세 조회 - 사용자가 생성한 적금 상품의 상세 정보를 조회한다")
+	@Test
+	void getProductDetail_whenProductIsSavings_thenReturnProductDetail() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId());
+		financialProductRepository.save(product);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId()))
+			.andExpect(jsonPath("$.userId").value(principalUser.getUser().getId()))
+			.andExpect(jsonPath("$.name").value("적금 상품"))
+			.andExpect(jsonPath("$.investmentType").value(InvestmentType.SAVINGS.name()))
+			.andExpect(jsonPath("$.amount").value(1_000_000.0))
+			.andExpect(jsonPath("$.months").value(12))
+			.andExpect(jsonPath("$.interestRate").value(0.05))
+			.andExpect(jsonPath("$.interestType").value(InterestType.COMPOUND.name()))
+			.andExpect(jsonPath("$.taxType").value(TaxType.STANDARD.name()))
+			.andExpect(jsonPath("$.taxRate").value(0.154))
+			.andExpect(jsonPath("$.startDate").value("2026-01-01"))
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
+			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
+			.andExpect(jsonPath("$.balance").value(1_000_000.0))
+			.andExpect(jsonPath("$.progress").value(0.1562))
+			.andExpect(jsonPath("$.remainingDays").value(308));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")

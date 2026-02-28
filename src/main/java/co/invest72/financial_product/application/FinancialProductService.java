@@ -16,6 +16,7 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
+import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.application.InvestmentFactory;
@@ -76,9 +77,26 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public FinancialProductDto getProductDetail(User user, String productId) {
+	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
-		return buildProductResponseDto(product);
+		return DetailedFinancialProductResponse.builder()
+			.id(product.getId())
+			.userId(product.getUserId())
+			.name(product.getName())
+			.investmentType(product.getInvestmentType().name())
+			.amount(product.getAmount().getValue())
+			.months(product.getMonths().getValue())
+			.interestRate(product.getInterestRate().getValue())
+			.interestType(product.getInterestType().name())
+			.taxType(product.getTaxType().name())
+			.taxRate(product.getTaxRate().getValue())
+			.startDate(product.getStartDate())
+			.createdAt(product.getCreatedAt())
+			.expirationDate(product.getExpirationDate())
+			.balance(product.getBalanceByLocalDate(localDateProvider.now()))
+			.progress(product.getProgressByLocalDate(localDateProvider.now()))
+			.remainingDays(product.getRemainingDaysByLocalDate(localDateProvider.now()))
+			.build();
 	}
 
 	private FinancialProduct findFinancialProduct(User user, String productId) {

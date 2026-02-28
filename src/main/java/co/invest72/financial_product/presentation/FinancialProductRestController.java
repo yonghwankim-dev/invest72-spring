@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.CreateFinancialProductResponse;
+import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.security.PrincipalUser;
@@ -54,7 +55,8 @@ public class FinancialProductRestController {
 
 	// 상품 상세 조회
 	@GetMapping("/{id}")
-	public ResponseEntity<FinancialProductDto> getProductDetail(@AuthenticationPrincipal PrincipalUser user,
+	public ResponseEntity<DetailedFinancialProductResponse> getProductDetail(
+		@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable String id) {
 		return ResponseEntity.ok(service.getProductDetail(user.getUser(), id));
 	}
