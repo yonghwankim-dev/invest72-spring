@@ -43,6 +43,7 @@ import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import co.invest72.user.infrastructure.UserIdGenerator;
+import source.FinancialProductDataProvider;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,38 +63,6 @@ class FinancialProductRestControllerTest {
 	private PrincipalUser principalUser;
 	private IdGenerator userIdGenerator;
 	private IdGenerator productIdGenerator;
-
-	private FinancialProduct createCashProduct(String userId) {
-		return FinancialProduct.builder()
-			.userId(userId)
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.0)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
-	}
-
-	private FinancialProduct createDepositProduct() {
-		return FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("예금 상품")
-			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(InterestType.SIMPLE)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
-			.build();
-	}
 
 	private FinancialProduct createSavingsProduct() {
 		return FinancialProduct.builder()
@@ -228,7 +197,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
 		// given
-		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -254,7 +223,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProductDetail_whenProductExists_thenReturnProductDetail() throws Exception {
 		// given
-		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -280,7 +249,7 @@ class FinancialProductRestControllerTest {
 	void getProductDetail_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = createCashProduct(otherUserId);
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		// when & then
@@ -307,8 +276,9 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getSummaryProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
-		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
-		FinancialProduct depositProduct = createDepositProduct();
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
+			principalUser.getUser().getId());
 		FinancialProduct savingsProduct = createSavingsProduct();
 		financialProductRepository.save(product);
 		financialProductRepository.save(depositProduct);
@@ -369,7 +339,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void updateProduct_whenProductExists_thenUpdateProduct() throws Exception {
 		// given
-		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
@@ -406,7 +376,7 @@ class FinancialProductRestControllerTest {
 	void updateProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = createCashProduct(otherUserId);
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
@@ -440,7 +410,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void deleteProduct_whenProductExists_thenDeleteProduct() throws Exception {
 		// given
-		FinancialProduct product = createCashProduct(principalUser.getUser().getId());
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
 		// when & then
@@ -460,7 +430,7 @@ class FinancialProductRestControllerTest {
 	void deleteProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
 		// given
 		String otherUserId = userIdGenerator.generateId();
-		FinancialProduct product = createCashProduct(otherUserId);
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
 		// when & then
