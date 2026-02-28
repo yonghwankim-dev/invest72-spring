@@ -42,4 +42,45 @@ class FinancialProductTest {
 		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
+	@DisplayName("예금 상품 진행률 계산 - 기준일자가 만기일 이후인 경우 진행률은 1.0이 반환된다.")
+	@Test
+	void getProgressByLocalDate_whenExpirationDateIsBeforeToday_thenReturnOne() {
+		// Given
+		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		LocalDate today = LocalDate.of(2027, 1, 2);
+
+		// When
+		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
+
+		// Then
+		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.ONE);
+	}
+
+	@DisplayName("예금 상품 진행률 계산 - 기준일자가 만기일과 동일한 경우 진행률은 1.0이 반환된다.")
+	@Test
+	void getProgressByLocalDate_whenExpirationDateIsEqualToToday_thenReturnOne() {
+		// Given
+		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		LocalDate today = LocalDate.of(2027, 1, 1);
+
+		// When
+		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
+
+		// Then
+		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.ONE);
+	}
+
+	@DisplayName("예금 상품 진행률 계산 - 기준일자가 만기일 이전인 경우 진행률은 0.0과 1.0 사이의 값이 반환된다.")
+	@Test
+	void getProgressByLocalDate_whenExpirationDateIsAfterToday_thenReturnBetweenZeroAndOne() {
+		// Given
+		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		LocalDate today = LocalDate.of(2026, 2, 27);
+
+		// When
+		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
+
+		// Then
+		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.1562));
+	}
 }
