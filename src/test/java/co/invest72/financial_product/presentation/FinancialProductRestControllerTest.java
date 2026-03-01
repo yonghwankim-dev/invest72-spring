@@ -331,7 +331,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.startDate").value("2026-01-01"))
 			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
-			.andExpect(jsonPath("$.balance").value(1_000_000.0))
+			.andExpect(jsonPath("$.balance").value(2_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308));
 	}
@@ -384,7 +384,7 @@ class FinancialProductRestControllerTest {
 			.interestRate(BigDecimal.valueOf(0.05))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.expirationDate(LocalDate.of(2027, 1, 1))
-			.balance(BigDecimal.valueOf(1_000_000L))
+			.balance(BigDecimal.valueOf(2_000_000L))
 			.expectedInterest(BigDecimal.valueOf(330_017L))
 			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
