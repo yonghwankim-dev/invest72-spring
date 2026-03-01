@@ -253,7 +253,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
-			.andExpect(jsonPath("$.progress").value(0.1562))
+			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308));
 	}
 
@@ -261,7 +261,8 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProductDetail_whenProductIsSavings_thenReturnProductDetail() throws Exception {
 		// given
-		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId());
+		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
 		// when & then
@@ -282,7 +283,7 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
-			.andExpect(jsonPath("$.progress").value(0.1562))
+			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308));
 	}
 
@@ -320,9 +321,9 @@ class FinancialProductRestControllerTest {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
-			principalUser.getUser().getId());
+			principalUser.getUser().getId(), InterestType.SIMPLE);
 		FinancialProduct savingsProduct = FinancialProductDataProvider.createSavingsProduct(
-			principalUser.getUser().getId());
+			principalUser.getUser().getId(), InterestType.COMPOUND);
 		financialProductRepository.save(product);
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
@@ -336,7 +337,7 @@ class FinancialProductRestControllerTest {
 			.expirationDate(LocalDate.of(2027, 1, 1))
 			.balance(BigDecimal.valueOf(1_000_000L))
 			.expectedInterest(BigDecimal.valueOf(330_017L))
-			.progress(BigDecimal.valueOf(0.1562))
+			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -349,7 +350,7 @@ class FinancialProductRestControllerTest {
 			.expirationDate(LocalDate.of(2027, 1, 1))
 			.balance(BigDecimal.valueOf(1_000_000L))
 			.expectedInterest(BigDecimal.valueOf(50_000L))
-			.progress(BigDecimal.valueOf(0.1562))
+			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -44,6 +45,10 @@ public class FinancialProduct {
 	private ProductMonths months; // 기간 (개월)
 
 	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "payment_day"))
+	private PaymentDay paymentDay; // 납입일 (적금 상품에만 적용, 현금/예금은 null)
+
+	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
 	private ProductRate interestRate; // 연이율
 
@@ -69,8 +74,8 @@ public class FinancialProduct {
 
 	@Builder(toBuilder = true)
 	private FinancialProduct(String userId, String name, InvestmentType investmentType, ProductAmount amount,
-		ProductMonths months, ProductRate interestRate, InterestType interestType, TaxType taxType, ProductRate taxRate,
-		LocalDate startDate, LocalDateTime createdAt) {
+		ProductMonths months, PaymentDay paymentDay, ProductRate interestRate, InterestType interestType,
+		TaxType taxType, ProductRate taxRate, LocalDate startDate, LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
 		this.id = idGenerator.generateId();
 		this.userId = userId;
@@ -78,12 +83,22 @@ public class FinancialProduct {
 		this.investmentType = investmentType;
 		this.amount = amount;
 		this.months = months;
+		this.paymentDay = paymentDay;
 		this.interestRate = interestRate;
 		this.interestType = interestType;
 		this.taxType = taxType;
 		this.taxRate = taxRate;
 		this.startDate = startDate;
 		this.createdAt = createdAt;
+		validate();
+	}
+
+	private void validate() {
+		if (this.investmentType == InvestmentType.SAVINGS && this.paymentDay == null) {
+			throw new IllegalArgumentException("적금 상품은 납입일이 반드시 필요합니다.");
+		} else if (this.investmentType != InvestmentType.SAVINGS && this.paymentDay != null) {
+			throw new IllegalArgumentException("현금/예금 상품은 납입일이 없어야 합니다.");
+		}
 	}
 
 	public void update(FinancialProduct updatedProduct) {

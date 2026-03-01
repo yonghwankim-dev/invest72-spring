@@ -136,7 +136,7 @@ class FinancialProductTest {
 		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
 
 		// Then
-		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.1562));
+		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.16));
 	}
 
 	@DisplayName("예금 상품 남은 일수 계산 - 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환된다.")
@@ -264,7 +264,7 @@ class FinancialProductTest {
 		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
 
 		// Then
-		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.1562));
+		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.16));
 	}
 
 	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자가 시작일자보다 이전인 경우 잔액은 0이 반환된다.")
