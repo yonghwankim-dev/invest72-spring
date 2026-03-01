@@ -26,8 +26,8 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 	}
 
 	@Override
-	public double calAnnualInterest(InterestRate interestRate) {
-		return interestRate.getAnnualInterest(amount).doubleValue();
+	public BigDecimal calAnnualInterest(InterestRate interestRate) {
+		return interestRate.getAnnualInterest(amount);
 	}
 
 	@Override
@@ -37,6 +37,6 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 
 	@Override
 	public BigDecimal getAmount() {
-		return amount;
+		return getDepositAmount();
 	}
 }

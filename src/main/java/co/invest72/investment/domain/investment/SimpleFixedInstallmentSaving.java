@@ -41,79 +41,81 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public int getPrincipal() {
+	public BigDecimal getPrincipal() {
 		return getPrincipal(getFinalMonth());
 	}
 
 	@Override
-	public int getPrincipal(int month) {
+	public BigDecimal getPrincipal(int month) {
 		if (month > getFinalMonth()) {
 			return getPrincipal();
 		}
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getPrincipal());
+		return roundToWholeAmount.apply(details.get(month).getPrincipal());
 	}
 
 	@Override
-	public int getInterest() {
+	public BigDecimal getInterest() {
 		return getInterest(getFinalMonth());
 	}
 
 	@Override
-	public int getInterest(int month) {
+	public BigDecimal getInterest(int month) {
 		if (month > getFinalMonth()) {
 			return getInterest();
 		}
 		if (month < 0) {
 			return getInterest(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getInterest());
+		return roundToWholeAmount.apply(details.get(month).getInterest());
 	}
 
 	@Override
-	public int getProfit() {
+	public BigDecimal getProfit() {
 		return getProfit(getFinalMonth());
 	}
 
 	@Override
-	public int getProfit(int month) {
+	public BigDecimal getProfit(int month) {
 		if (month > getFinalMonth()) {
 			return getProfit();
 		}
 		if (month < 0) {
 			return getProfit(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getProfit());
+		return roundToWholeAmount.apply(details.get(month).getProfit());
 	}
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		return investmentAmount.getAmount()
+		BigDecimal totalInvestment = investmentAmount.getAmount()
 			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
+		return roundToWholeAmount.apply(totalInvestment);
 	}
 
 	@Override
-	public int getTotalInterest() {
+	public BigDecimal getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1) // 0월은 이자가 없음
 			.map(MonthlyInvestmentDetail::getInterest)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return roundToInt.applyAsInt(totalInterest);
+		return roundToWholeAmount.apply(totalInterest);
 	}
 
 	@Override
-	public int getTotalTax() {
-		return taxable.applyTax(getTotalInterest());
+	public BigDecimal getTotalTax() {
+		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
 	}
 
 	@Override
-	public int getTotalProfit() {
+	public BigDecimal getTotalProfit() {
 		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
 		BigDecimal interest = details.get(getFinalMonth()).getInterest();
-		BigDecimal tax = BigDecimal.valueOf(getTotalTax());
-		return roundToInt.applyAsInt(principal.add(interest).subtract(tax));
+		BigDecimal tax = getTotalTax();
+		BigDecimal totalProfit = principal.add(interest).subtract(tax);
+		return roundToWholeAmount.apply(totalProfit);
 	}
 
 	@Override
@@ -127,7 +129,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public int getPrincipalForYear(int year) {
+	public BigDecimal getPrincipalForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getPrincipalForYear(finalYear);
@@ -135,7 +137,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getPrincipal());
 	}
 
 	private int getFinalYear() {
@@ -143,7 +145,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public int getInterestForYear(int year) {
+	public BigDecimal getInterestForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getInterestForYear(finalYear);
@@ -151,11 +153,11 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getInterest());
 	}
 
 	@Override
-	public int getProfitForYear(int year) {
+	public BigDecimal getProfitForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getProfitForYear(finalYear);
@@ -163,7 +165,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getProfit());
 	}
 
 	@Override

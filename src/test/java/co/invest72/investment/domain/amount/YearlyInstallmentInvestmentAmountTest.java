@@ -38,10 +38,10 @@ class YearlyInstallmentInvestmentAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		double interest = investmentAmount.calAnnualInterest(interestRate);
+		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
 
-		double expectedInterest = 600_000;
-		assertEquals(expectedInterest, interest, 0.001);
+		BigDecimal expectedInterest = BigDecimal.valueOf(600_000);
+		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
 	}
 
 	@Test

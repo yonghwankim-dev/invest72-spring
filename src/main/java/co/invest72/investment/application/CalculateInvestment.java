@@ -20,9 +20,9 @@ public class CalculateInvestment {
 		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
 		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment();
-		int totalInterest = investment.getTotalInterest();
-		int totalTax = investment.getTotalTax();
-		int totalProfit = investment.getTotalProfit();
+		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalTax = investment.getTotalTax();
+		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 
@@ -41,9 +41,9 @@ public class CalculateInvestment {
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment();
-		int totalInterest = investment.getTotalInterest();
-		int totalTax = investment.getTotalTax();
-		int totalProfit = investment.getTotalProfit();
+		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalTax = investment.getTotalTax();
+		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateMonthlyInvestmentResponse.builder()
@@ -74,9 +74,9 @@ public class CalculateInvestment {
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment();
-		int totalInterest = investment.getTotalInterest();
-		int totalTax = investment.getTotalTax();
-		int totalProfit = investment.getTotalProfit();
+		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalTax = investment.getTotalTax();
+		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateYearlyInvestmentResponse.builder()
@@ -95,9 +95,9 @@ public class CalculateInvestment {
 
 		int years = (investment.getFinalMonth() - 1) / 12 + 1;
 		for (int year = 1; year <= years; year++) {
-			int principal = investment.getPrincipalForYear(year);
-			int interest = investment.getInterestForYear(year);
-			int profit = investment.getProfitForYear(year);
+			BigDecimal principal = investment.getPrincipalForYear(year);
+			BigDecimal interest = investment.getInterestForYear(year);
+			BigDecimal profit = investment.getProfitForYear(year);
 			details.add(new YearlyInvestmentResult(year, principal, interest, profit));
 		}
 		return details;

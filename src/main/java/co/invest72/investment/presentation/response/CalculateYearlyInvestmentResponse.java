@@ -12,16 +12,16 @@ import lombok.Getter;
 @Getter
 public class CalculateYearlyInvestmentResponse {
 	private final BigDecimal totalInvestment;
-	private final int totalInterest;
-	private final int totalTax;
-	private final int totalProfit;
+	private final BigDecimal totalInterest;
+	private final BigDecimal totalTax;
+	private final BigDecimal totalProfit;
 	private final String taxType;
 	private final String taxPercent;
 	private final List<YearlyInvestmentResult> details;
 
 	@Builder
-	public CalculateYearlyInvestmentResponse(BigDecimal totalInvestment, int totalInterest,
-		int totalTax, int totalProfit, String taxType, String taxPercent,
+	public CalculateYearlyInvestmentResponse(BigDecimal totalInvestment, BigDecimal totalInterest,
+		BigDecimal totalTax, BigDecimal totalProfit, String taxType, String taxPercent,
 		List<YearlyInvestmentResult> details) {
 		this.totalInvestment = totalInvestment;
 		this.totalInterest = totalInterest;

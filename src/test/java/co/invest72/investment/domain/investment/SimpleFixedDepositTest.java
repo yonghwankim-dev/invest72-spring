@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -51,103 +50,88 @@ class SimpleFixedDepositTest {
 	@ParameterizedTest
 	@CsvFileSource(files = "src/test/resources/simple_fixed_deposit_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedProfit) {
-		int principal = investment.getPrincipal(month);
-		int interest = investment.getInterest(month);
-		int profit = investment.getProfit(month);
+		BigDecimal principal = investment.getPrincipal(month);
+		BigDecimal interest = investment.getInterest(month);
+		BigDecimal profit = investment.getProfit(month);
 
-		assertEquals(expectedPrincipal, principal);
-		assertEquals(expectedInterest, interest);
-		assertEquals(expectedProfit, profit);
+		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
+		assertEquals(BigDecimal.valueOf(expectedInterest), interest);
+		assertEquals(BigDecimal.valueOf(expectedProfit), profit);
 	}
 
 	@Test
 	void getPrincipal() {
-		int principal = investment.getPrincipal();
+		BigDecimal principal = investment.getPrincipal();
 
-		assertEquals(1_045_833, principal);
+		assertEquals(BigDecimal.valueOf(1_045_833), principal);
 	}
 
 	@Test
 	void getPrincipal_whenMonthsIsNegative_thenReturnPrincipal() {
 		int month = -1;
 
-		int principal = investment.getPrincipal(month);
+		BigDecimal principal = investment.getPrincipal(month);
 
-		assertEquals(1_000_000, principal);
+		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
 
 	@Test
 	void getPrincipal_whenMonthsIsZero_thenReturnPrincipal() {
 		int month = 0;
 
-		int principal = investment.getPrincipal(month);
+		BigDecimal principal = investment.getPrincipal(month);
 
-		assertEquals(1_000_000, principal);
+		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
 
 	@Test
 	void getPrincipal_whenMonthsGreaterThanFinalMonth_thenReturnFinalMonthPrincipal() {
 		int month = 13;
 
-		int principal = investment.getPrincipal(month);
+		BigDecimal principal = investment.getPrincipal(month);
 
-		assertEquals(1_045_833, principal);
+		assertEquals(BigDecimal.valueOf(1_045_833), principal);
 	}
 
 	@Test
 	void getInterest() {
-		int interest = investment.getInterest();
+		BigDecimal interest = investment.getInterest();
 
-		assertEquals(4_167, interest);
+		assertEquals(BigDecimal.valueOf(4_167), interest);
 	}
 
 	@Test
 	void getInterest_whenMonthsIsZero_thenReturnZeroInterest() {
 		int months = 0;
 
-		int interest = investment.getInterest(months);
+		BigDecimal interest = investment.getInterest(months);
 
-		assertEquals(0, interest);
+		assertEquals(BigDecimal.valueOf(0), interest);
 	}
 
 	@Test
 	void getInterest_whenMonthsIsNegative_thenReturnZeroInterest() {
 		int months = -1;
 
-		int interest = investment.getInterest(months);
+		BigDecimal interest = investment.getInterest(months);
 
-		assertEquals(0, interest);
+		assertEquals(BigDecimal.valueOf(0), interest);
 	}
 
 	@Test
 	void getInterest_whenMonthGreaterThanFinalMonth_thenReturnFinalMonthInterest() {
 		int month = 13;
 
-		int interest = investment.getInterest(month);
+		BigDecimal interest = investment.getInterest(month);
 
-		assertEquals(4_167, interest);
-	}
-
-	@Test
-	void getAccumulatedInterest() {
-		int accumulatedInterest = investment.getAccInterest();
-
-		assertEquals(50_000, accumulatedInterest);
-	}
-
-	@ParameterizedTest
-	@MethodSource(value = "source.TestDataProvider#getMonthAndExpectedAccumulatedInterest")
-	void getAccumulatedInterest(int month, int expected) {
-		int accumulatedInterest = investment.getAccInterest(month);
-
-		assertEquals(expected, accumulatedInterest);
+		assertEquals(BigDecimal.valueOf(4_167), interest);
 	}
 
 	@Test
 	void getProfit() {
-		int profit = investment.getProfit();
+		BigDecimal profit = investment.getProfit();
 
-		assertEquals(1_050_000, profit);
+		assertEquals(BigDecimal.valueOf(1_050_000), profit);
 	}
 
 	@Test
@@ -161,27 +145,27 @@ class SimpleFixedDepositTest {
 	void getProfit_whenMonthsIsNegative_thenReturnProfit() {
 		int months = -1;
 
-		int profit = investment.getProfit(months);
+		BigDecimal profit = investment.getProfit(months);
 
-		assertEquals(1_000_000, profit);
+		assertEquals(BigDecimal.valueOf(1_000_000), profit);
 	}
 
 	@Test
 	void getProfit_whenMonthsIsZero_thenReturnProfit() {
 		int months = 0;
 
-		int profit = investment.getProfit(months);
+		BigDecimal profit = investment.getProfit(months);
 
-		assertEquals(1_000_000, profit);
+		assertEquals(BigDecimal.valueOf(1_000_000), profit);
 	}
 
 	@Test
 	void getProfit_whenMonthsGreaterThanFinalMonth_thenReturnFinalMonthProfit() {
 		int month = 13;
 
-		int profit = investment.getProfit(month);
+		BigDecimal profit = investment.getProfit(month);
 
-		assertEquals(1_050_000, profit);
+		assertEquals(BigDecimal.valueOf(1_050_000), profit);
 	}
 
 	@Test
@@ -193,23 +177,23 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getTotalInterest() {
-		int totalInterest = investment.getTotalInterest();
+		BigDecimal totalInterest = investment.getTotalInterest();
 
-		assertEquals(50_000, totalInterest);
+		assertEquals(BigDecimal.valueOf(50_000), totalInterest);
 	}
 
 	@Test
 	void getTotalTax() {
-		int totalTax = investment.getTotalTax();
+		BigDecimal totalTax = investment.getTotalTax();
 
-		assertEquals(7_700, totalTax);
+		assertEquals(BigDecimal.valueOf(7_700), totalTax);
 	}
 
 	@Test
 	void getTotalProfit() {
-		int totalProfit = investment.getTotalProfit();
+		BigDecimal totalProfit = investment.getTotalProfit();
 
-		assertEquals(1_042_300, totalProfit);
+		assertEquals(BigDecimal.valueOf(1_042_300), totalProfit);
 	}
 
 	@Test
@@ -221,7 +205,7 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getPrincipalForYear() {
-		assertEquals(1_000_000, investment.getPrincipalForYear(1));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(1));
 	}
 
 	@Test
@@ -231,13 +215,13 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(1_000_000, investment.getPrincipalForYear(-1));
-		assertEquals(1_000_000, investment.getPrincipalForYear(0));
-		assertEquals(1_000_000, investment.getPrincipalForYear(1));
-		assertEquals(1_050_000, investment.getPrincipalForYear(2));
-		assertEquals(1_100_000, investment.getPrincipalForYear(3));
-		assertEquals(1_150_000, investment.getPrincipalForYear(4));
-		assertEquals(1_200_000, investment.getPrincipalForYear(5));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(-1));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(0));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(1));
+		assertEquals(BigDecimal.valueOf(1_050_000), investment.getPrincipalForYear(2));
+		assertEquals(BigDecimal.valueOf(1_100_000), investment.getPrincipalForYear(3));
+		assertEquals(BigDecimal.valueOf(1_150_000), investment.getPrincipalForYear(4));
+		assertEquals(BigDecimal.valueOf(1_200_000), investment.getPrincipalForYear(5));
 	}
 
 	@Test
@@ -247,10 +231,10 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(1_000_000, investment.getPrincipalForYear(0));
-		assertEquals(1_000_000, investment.getPrincipalForYear(1));
-		assertEquals(1_000_000, investment.getPrincipalForYear(2));
-		assertEquals(1_000_000, investment.getPrincipalForYear(3));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(0));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(1));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(2));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(3));
 	}
 
 	@Test
@@ -260,13 +244,13 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(0, investment.getInterestForYear(-1));
-		assertEquals(0, investment.getInterestForYear(0));
-		assertEquals(50_000, investment.getInterestForYear(1));
-		assertEquals(50_000, investment.getInterestForYear(2));
-		assertEquals(50_000, investment.getInterestForYear(3));
-		assertEquals(50_000, investment.getInterestForYear(4));
-		assertEquals(50_000, investment.getInterestForYear(5));
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(-1));
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(0));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(1));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(2));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(3));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(4));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(5));
 	}
 
 	@Test
@@ -276,8 +260,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(50_000, investment.getInterestForYear(1));
-		assertEquals(4_167, investment.getInterestForYear(2));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(1));
+		assertEquals(BigDecimal.valueOf(4_167), investment.getInterestForYear(2));
 	}
 
 	@Test
@@ -287,9 +271,9 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(50_000, investment.getInterestForYear(1));
-		assertEquals(50_000, investment.getInterestForYear(2));
-		assertEquals(4_167, investment.getInterestForYear(3));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(1));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(2));
+		assertEquals(BigDecimal.valueOf(4_167), investment.getInterestForYear(3));
 	}
 
 	@Test
@@ -299,8 +283,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(50_000, investment.getInterestForYear(1));
-		assertEquals(50_000, investment.getInterestForYear(2));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(1));
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestForYear(2));
 	}
 
 	@Test
@@ -310,7 +294,7 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(4_167, investment.getInterestForYear(1));
+		assertEquals(BigDecimal.valueOf(4_167), investment.getInterestForYear(1));
 	}
 
 	@Test
@@ -320,13 +304,13 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(1_000_000, investment.getProfitForYear(-1));
-		assertEquals(1_000_000, investment.getProfitForYear(0));
-		assertEquals(1_050_000, investment.getProfitForYear(1));
-		assertEquals(1_100_000, investment.getProfitForYear(2));
-		assertEquals(1_150_000, investment.getProfitForYear(3));
-		assertEquals(1_200_000, investment.getProfitForYear(4));
-		assertEquals(1_250_000, investment.getProfitForYear(5));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYear(-1));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYear(0));
+		assertEquals(BigDecimal.valueOf(1_050_000), investment.getProfitForYear(1));
+		assertEquals(BigDecimal.valueOf(1_100_000), investment.getProfitForYear(2));
+		assertEquals(BigDecimal.valueOf(1_150_000), investment.getProfitForYear(3));
+		assertEquals(BigDecimal.valueOf(1_200_000), investment.getProfitForYear(4));
+		assertEquals(BigDecimal.valueOf(1_250_000), investment.getProfitForYear(5));
 	}
 
 	@Test
@@ -336,8 +320,8 @@ class SimpleFixedDepositTest {
 			.taxable(new KoreanTaxableFactory().createNonTax())
 			.build();
 
-		assertEquals(1_050_000, investment.getProfitForYear(1));
-		assertEquals(1_100_000, investment.getProfitForYear(2));
-		assertEquals(1_104_167, investment.getProfitForYear(3));
+		assertEquals(BigDecimal.valueOf(1_050_000), investment.getProfitForYear(1));
+		assertEquals(BigDecimal.valueOf(1_100_000), investment.getProfitForYear(2));
+		assertEquals(BigDecimal.valueOf(1_104_167), investment.getProfitForYear(3));
 	}
 }

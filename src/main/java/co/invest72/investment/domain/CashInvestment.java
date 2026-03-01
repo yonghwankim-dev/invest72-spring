@@ -6,60 +6,60 @@ import co.invest72.investment.domain.tax.TaxType;
 
 public class CashInvestment implements Investment {
 
-	private InvestmentAmount investmentAmount;
+	private final InvestmentAmount investmentAmount;
 
 	public CashInvestment(InvestmentAmount investmentAmount) {
 		this.investmentAmount = investmentAmount;
 	}
 
 	@Override
-	public int getPrincipal() {
+	public BigDecimal getPrincipal() {
 		return getPrincipal(getFinalMonth());
 	}
 
 	@Override
-	public int getPrincipal(int month) {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getPrincipal(int month) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
-	public int getInterest() {
+	public BigDecimal getInterest() {
 		return getInterest(getFinalMonth());
 	}
 
 	@Override
-	public int getInterest(int month) {
-		return 0;
+	public BigDecimal getInterest(int month) {
+		return BigDecimal.ZERO;
 	}
 
 	@Override
-	public int getProfit() {
+	public BigDecimal getProfit() {
 		return getProfit(getFinalMonth());
 	}
 
 	@Override
-	public int getProfit(int month) {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getProfit(int month) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		return investmentAmount.getAmount();
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
-	public int getTotalInterest() {
-		return 0;
+	public BigDecimal getTotalInterest() {
+		return BigDecimal.ZERO;
 	}
 
 	@Override
-	public int getTotalTax() {
-		return 0;
+	public BigDecimal getTotalTax() {
+		return BigDecimal.ZERO;
 	}
 
 	@Override
-	public int getTotalProfit() {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getTotalProfit() {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
@@ -73,18 +73,18 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
-	public int getPrincipalForYear(int year) {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getPrincipalForYear(int year) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
-	public int getInterestForYear(int year) {
-		return 0;
+	public BigDecimal getInterestForYear(int year) {
+		return BigDecimal.ZERO;
 	}
 
 	@Override
-	public int getProfitForYear(int year) {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getProfitForYear(int year) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
 
 	@Override
