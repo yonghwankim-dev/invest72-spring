@@ -38,23 +38,23 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
-	public int getPrincipal() {
+	public BigDecimal getPrincipal() {
 		return getPrincipal(getFinalMonth());
 	}
 
 	@Override
-	public int getPrincipal(int month) {
+	public BigDecimal getPrincipal(int month) {
 		if (month > getFinalMonth()) {
 			return getPrincipal();
 		}
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getPrincipal());
+		return roundToWholeAmount.apply(details.get(month).getPrincipal());
 	}
 
 	@Override
-	public int getInterest() {
+	public BigDecimal getInterest() {
 		return getInterest(investPeriod.getMonths());
 	}
 
@@ -65,56 +65,55 @@ public class CompoundFixedDeposit implements Investment {
 	 * @return 이자 금액=원금×(1+월이자율)^개월수−원금
 	 */
 	@Override
-	public int getInterest(int month) {
+	public BigDecimal getInterest(int month) {
 		if (month > getFinalMonth()) {
 			return getInterest();
 		}
 		if (month < 0) {
 			return getInterest(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getInterest());
+		return roundToWholeAmount.apply(details.get(month).getInterest());
 	}
 
 	@Override
-	public int getProfit() {
+	public BigDecimal getProfit() {
 		return getProfit(getFinalMonth());
 	}
 
 	@Override
-	public int getProfit(int month) {
+	public BigDecimal getProfit(int month) {
 		if (month > getFinalMonth()) {
 			return getProfit();
 		}
 		if (month < 0) {
 			return getProfit(0);
 		}
-		return roundToInt.applyAsInt(details.get(month).getProfit());
+		return roundToWholeAmount.apply(details.get(month).getProfit());
 	}
 
 	@Override
-	public int getTotalInvestment() {
-		return roundToInt.applyAsInt(investmentAmount.getAmount());
+	public BigDecimal getTotalInvestment() {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
 	}
-	
+
 	@Override
-	public int getTotalInterest() {
+	public BigDecimal getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1)
 			.map(MonthlyInvestmentDetail::getInterest)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return roundToInt.applyAsInt(totalInterest);
+		return roundToWholeAmount.apply(totalInterest);
 	}
 
 	@Override
-	public int getTotalTax() {
-		return taxable.applyTax(getTotalInterest());
+	public BigDecimal getTotalTax() {
+		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
 	}
 
 	@Override
-	public int getTotalProfit() {
-		BigDecimal totalTax = BigDecimal.valueOf(getTotalTax());
-		BigDecimal totalProfit = details.get(getFinalMonth()).getProfit().subtract(totalTax);
-		return roundToInt.applyAsInt(totalProfit);
+	public BigDecimal getTotalProfit() {
+		BigDecimal totalTax = getTotalTax();
+		return roundToWholeAmount.apply(details.get(getFinalMonth()).getProfit().subtract(totalTax));
 	}
 
 	@Override
@@ -128,7 +127,7 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
-	public int getPrincipalForYear(int year) {
+	public BigDecimal getPrincipalForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getPrincipalForYear(finalYear);
@@ -136,7 +135,7 @@ public class CompoundFixedDeposit implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getPrincipal());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getPrincipal());
 	}
 
 	private int getFinalYear() {
@@ -144,7 +143,7 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
-	public int getInterestForYear(int year) {
+	public BigDecimal getInterestForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getInterestForYear(finalYear);
@@ -152,11 +151,11 @@ public class CompoundFixedDeposit implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getInterest());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getInterest());
 	}
 
 	@Override
-	public int getProfitForYear(int year) {
+	public BigDecimal getProfitForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getProfitForYear(finalYear);
@@ -164,7 +163,7 @@ public class CompoundFixedDeposit implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return roundToInt.applyAsInt(yearlyDetails.get(year).getProfit());
+		return roundToWholeAmount.apply(yearlyDetails.get(year).getProfit());
 	}
 
 	@Override

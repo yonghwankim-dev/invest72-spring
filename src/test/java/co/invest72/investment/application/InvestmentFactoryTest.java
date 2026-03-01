@@ -5,6 +5,9 @@ import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,13 +15,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.investment.application.dto.CalculateInvestmentDto;
+import co.invest72.investment.domain.CashInvestment;
 import co.invest72.investment.domain.Investment;
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import source.FinancialProductDataProvider;
 
 class InvestmentFactoryTest {
 
@@ -117,7 +127,7 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-		assertEquals(12_000_000, investment.getTotalInvestment());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment());
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
@@ -150,5 +160,37 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(product);
 		// then
 		assertInstanceOfInvestment(expectedType, investment);
+	}
+
+	@DisplayName("현금 투자 객체 생성 - FinancialProduct 객체를 이용하여 CashInvestment 객체 생성")
+	@Test
+	void createBy_givenCashFinancialProduct_whenCreateInvestment_thenReturnCashInvestment() {
+		// given
+		FinancialProduct cashProduct = FinancialProductDataProvider.createCashProduct("user1");
+		// when
+		investment = investmentFactory.createBy(cashProduct);
+		// then
+		assertInstanceOfInvestment(CashInvestment.class, investment);
+	}
+
+	@DisplayName("현금 투자 객체 생성 - 현금의 원금이 최대치인 경우 CashInvestment 객체 생성")
+	@Test
+	void createBy_givenCashFinancialProductWithMaxAmount_whenCreateInvestment_thenReturnCashInvestment() {
+		// given
+		BigDecimal amount = new BigDecimal("10000000000000"); // 10조원
+		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
+			.type(CASH)
+			.amount(new ProductAmount(amount)) // 10조원
+			.months(new ProductMonths(0))
+			.interestRate(new AnnualInterestRate(0.0))
+			.interestType(NONE)
+			.taxType(TaxType.NONE)
+			.taxRate(new FixedTaxRate(0.0))
+			.build();
+		// when
+		investment = investmentFactory.createBy(dto);
+		// then
+		assertInstanceOfInvestment(CashInvestment.class, investment);
+		Assertions.assertThat(investment.getTotalInvestment()).isEqualByComparingTo(amount);
 	}
 }

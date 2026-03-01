@@ -95,7 +95,7 @@ class AnnualInterestRateTest {
 
 	@Test
 	void shouldReturnAnnualInterest() {
-		int amount = 1_000_000;
+		BigDecimal amount = BigDecimal.valueOf(1_000_000);
 
 		BigDecimal actualAnnualInterest = interestRate.getAnnualInterest(amount);
 

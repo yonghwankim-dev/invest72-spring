@@ -3,6 +3,7 @@ package co.invest72.investment.application;
 import static co.invest72.investment.domain.interest.InterestType.*;
 import static co.invest72.investment.domain.investment.InvestmentType.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -61,10 +62,10 @@ class CalculateInvestmentTest {
 			new MonthlyInvestmentResult(4, 1_012_500, 4_167, 1_016_667)
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(16_667)
-			.totalTax(2_567)
-			.totalProfit(1_014_100)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(16_667))
+			.totalTax(BigDecimal.valueOf(2_567))
+			.totalProfit(BigDecimal.valueOf(1_014_100))
 			.taxType(TaxType.STANDARD.getDescription())
 			.taxPercent("15.4%")
 			.details(details)
@@ -100,10 +101,10 @@ class CalculateInvestmentTest {
 		);
 
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(50_000)
-			.totalTax(0)
-			.totalProfit(1_050_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(50_000))
+			.totalTax(BigDecimal.ZERO)
+			.totalProfit(BigDecimal.valueOf(1_050_000))
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxPercent("0%")
 			.details(details)
@@ -139,10 +140,10 @@ class CalculateInvestmentTest {
 			new MonthlyInvestmentResult(12, 1046800, 4362, 1051162)
 		);
 		CalculateMonthlyInvestmentResponse expected = CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(51_162)
-			.totalTax(0)
-			.totalProfit(1_051_162)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(51_162))
+			.totalTax(BigDecimal.valueOf(0))
+			.totalProfit(BigDecimal.valueOf(1_051_162))
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxPercent("0%")
 			.details(details)
@@ -165,10 +166,10 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(1, 1_000_000, 16_667, 1_016_667)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(16_667)
-			.totalTax(2_567)
-			.totalProfit(1_014_100)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(16_667))
+			.totalTax(BigDecimal.valueOf(2_567))
+			.totalProfit(BigDecimal.valueOf(1_014_100))
 			.taxType(TaxType.STANDARD.getDescription())
 			.taxPercent("15.4%")
 			.details(details)
@@ -192,10 +193,10 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(3, 1_100_000, 50_000, 1_150_000)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(150_000)
-			.totalTax(23_100)
-			.totalProfit(1_126_900)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(150_000))
+			.totalTax(BigDecimal.valueOf(23_100))
+			.totalProfit(BigDecimal.valueOf(1_126_900))
 			.taxType(TaxType.STANDARD.getDescription())
 			.taxPercent("15.4%")
 			.details(details)
@@ -220,10 +221,10 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(2, 1_050_000, 50_000, 1_100_000)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(100_000)
-			.totalTax(0)
-			.totalProfit(1_100_000)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(100_000))
+			.totalTax(BigDecimal.valueOf(0))
+			.totalProfit(BigDecimal.valueOf(1_100_000))
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxPercent("0%")
 			.details(details)
@@ -248,10 +249,10 @@ class CalculateInvestmentTest {
 			new YearlyInvestmentResult(2, 1_050_000, 4_167, 1_054_167)
 		);
 		CalculateYearlyInvestmentResponse expected = CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(1_000_000)
-			.totalInterest(54_167)
-			.totalTax(0)
-			.totalProfit(1_054_167)
+			.totalInvestment(BigDecimal.valueOf(1_000_000))
+			.totalInterest(BigDecimal.valueOf(54_167))
+			.totalTax(BigDecimal.ZERO)
+			.totalProfit(BigDecimal.valueOf(1_054_167))
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxPercent("0%")
 			.details(details)

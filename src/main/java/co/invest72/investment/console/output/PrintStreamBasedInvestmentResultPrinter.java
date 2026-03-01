@@ -1,12 +1,15 @@
 package co.invest72.investment.console.output;
 
 import java.io.PrintStream;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 
 public class PrintStreamBasedInvestmentResultPrinter implements InvestmentResultPrinter {
 
+	private static final DecimalFormat COMMA_FORMATTER = new DecimalFormat("#,###");
 	private final PrintStream out;
 
 	public PrintStreamBasedInvestmentResultPrinter(PrintStream out) {
@@ -14,30 +17,33 @@ public class PrintStreamBasedInvestmentResultPrinter implements InvestmentResult
 	}
 
 	@Override
-	public void printTotalPrincipal(int amount) {
+	public void printTotalPrincipal(BigDecimal amount) {
 		out.println("원금 합계: " + formattedAmount(amount) + "원");
 	}
 
-	private String formattedAmount(int amount) {
-		return String.format("%,d", amount);
+	private String formattedAmount(BigDecimal amount) {
+		if (amount == null) {
+			return "0";
+		}
+		return COMMA_FORMATTER.format(amount);
 	}
 
 	@Override
-	public void printInterest(int amount) {
+	public void printInterest(BigDecimal amount) {
 		out.println("세전 이자: " + formattedAmount(amount) + "원");
 	}
 
 	@Override
-	public void printTax(int amount) {
-		if (amount > 0) {
-			amount = -amount; // Tax is shown as a negative value
+	public void printTax(BigDecimal amount) {
+		if (amount.compareTo(BigDecimal.ZERO) > 0) {
+			amount = amount.negate();
 		}
 		String formatted = String.format("이자 과세: %s원", formattedAmount(amount));
 		out.println(formatted);
 	}
 
 	@Override
-	public void printTotalProfit(int amount) {
+	public void printTotalProfit(BigDecimal amount) {
 		out.println("세후 수령액: " + formattedAmount(amount) + "원");
 	}
 

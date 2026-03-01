@@ -34,8 +34,8 @@ public class AnnualInterestRate implements InterestRate {
 	}
 
 	@Override
-	public BigDecimal getAnnualInterest(int amount) {
-		return BigDecimal.valueOf(amount * this.annualRate);
+	public BigDecimal getAnnualInterest(BigDecimal amount) {
+		return amount.multiply(getAnnualRate());
 	}
 
 	@Override

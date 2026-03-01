@@ -7,28 +7,27 @@ import co.invest72.investment.domain.LumpSumInvestmentAmount;
 
 public class FixedDepositAmount implements LumpSumInvestmentAmount {
 
-	private final int amount;
+	private final BigDecimal amount;
 
 	public FixedDepositAmount(int amount) {
+		this(BigDecimal.valueOf(amount));
+	}
+
+	public FixedDepositAmount(BigDecimal amount) {
 		this.amount = amount;
-		if (amount < 0) {
+		if (amount.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("investment.Investment amount must be non-negative.");
 		}
 	}
 
 	@Override
-	public int getDepositAmount() {
+	public BigDecimal getDepositAmount() {
 		return amount;
 	}
 
 	@Override
-	public int calCompoundInterest(double totalGrowthFactor) {
-		return (int)(Math.round(amount * totalGrowthFactor) - amount);
-	}
-
-	@Override
-	public double calAnnualInterest(InterestRate interestRate) {
-		return interestRate.getAnnualInterest(amount).doubleValue();
+	public BigDecimal calAnnualInterest(InterestRate interestRate) {
+		return interestRate.getAnnualInterest(amount);
 	}
 
 	@Override
@@ -38,6 +37,6 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 
 	@Override
 	public BigDecimal getAmount() {
-		return BigDecimal.valueOf(amount);
+		return getDepositAmount();
 	}
 }

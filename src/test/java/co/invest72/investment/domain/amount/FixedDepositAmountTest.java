@@ -4,12 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.InterestRate;
 import testutil.BigDecimalAssertion;
 
 class FixedDepositAmountTest {
@@ -18,7 +20,7 @@ class FixedDepositAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new FixedDepositAmount(1_000_000);
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000));
 	}
 
 	@Test
@@ -28,14 +30,14 @@ class FixedDepositAmountTest {
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
-		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(-1));
+		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(BigDecimal.valueOf(-1)));
 	}
 
 	@Test
 	void shouldReturnDepositAmount() {
-		int depositAmount = investmentAmount.getDepositAmount();
+		BigDecimal depositAmount = investmentAmount.getDepositAmount();
 
-		int expectedDepositAmount = 1_000_000;
+		BigDecimal expectedDepositAmount = BigDecimal.valueOf(1_000_000);
 		assertEquals(expectedDepositAmount, depositAmount);
 	}
 
@@ -43,10 +45,22 @@ class FixedDepositAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		double interest = investmentAmount.calAnnualInterest(interestRate);
+		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
 
-		double expectedInterest = 50_000;
-		assertEquals(expectedInterest, interest, 0.001);
+		BigDecimal expectedInterest = BigDecimal.valueOf(50_000);
+		Assertions.assertThat(interest).isEqualByComparingTo(expectedInterest);
+	}
+
+	@DisplayName("연이자 계산 - 예치금이 10조원인 상태에서 이자를 정확히 계삲되어야 한다.")
+	@Test
+	void calAnnualInterest_shouldReturnAnnualInterest() {
+		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000")); // 10조원
+		InterestRate interestRate = new AnnualInterestRate(0.05);
+
+		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
+
+		BigDecimal expectedInterest = new BigDecimal("500000000000"); // 5천억
+		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
 	}
 
 	@Test

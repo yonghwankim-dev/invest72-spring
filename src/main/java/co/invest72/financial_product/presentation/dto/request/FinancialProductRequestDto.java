@@ -8,6 +8,7 @@ import co.invest72.common.validation.FinancialAmount;
 import co.invest72.common.validation.FinancialMonths;
 import co.invest72.common.validation.FinancialProductName;
 import co.invest72.common.validation.FinancialRate;
+import co.invest72.common.validation.PaymentDay;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -32,6 +33,9 @@ public class FinancialProductRequestDto {
 
 	@FinancialMonths
 	private Integer months;
+
+	@PaymentDay
+	private Integer paymentDay; // 납입일 (적금 상품에만 적용, 현금/예금은 null)
 
 	@FinancialRate
 	private BigDecimal interestRate;
