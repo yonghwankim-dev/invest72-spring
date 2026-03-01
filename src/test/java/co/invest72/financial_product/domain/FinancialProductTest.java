@@ -183,7 +183,7 @@ class FinancialProductTest {
 
 	@DisplayName("예금 상품 현재 잔액 계산 - 기준일자가 언제든지 잔액은 원금이 반환된다.")
 	@Test
-	void getBalanceByLocalDate_whenStartDateIsAfterToday_thenReturnZeroForDeposit() {
+	void getBalanceByLocalDate_whenDepositProduct_thenReturnPrincipal() {
 		// Given
 		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
 		// 시작일을 오늘보다 2개월 이전으로 설정
