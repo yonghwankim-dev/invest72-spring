@@ -2,16 +2,11 @@ package co.invest72.investment.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.function.Function;
-import java.util.function.ToIntFunction;
+import java.util.function.UnaryOperator;
 
 public interface Investment {
 
-	ToIntFunction<BigDecimal> roundToInt = amount -> amount
-		.setScale(0, RoundingMode.HALF_EVEN)
-		.intValueExact();
-
-	Function<BigDecimal, BigDecimal> roundToWholeAmount = amount -> amount
+	UnaryOperator<BigDecimal> roundToWholeAmount = amount -> amount
 		.setScale(0, RoundingMode.HALF_EVEN);
 
 	/**
