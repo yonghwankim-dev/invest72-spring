@@ -1,5 +1,7 @@
 package co.invest72.investment.presentation.response;
 
+import java.math.BigDecimal;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,11 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MonthlyInvestmentResult {
 	private final int month;
-	private final int principal;
-	private final int interest;
-	private final int profit;
+	private final BigDecimal principal;
+	private final BigDecimal interest;
+	private final BigDecimal profit;
+
+	public MonthlyInvestmentResult(int month, int principal, int interest, int profit) {
+		this(month, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.valueOf(profit));
+	}
 }

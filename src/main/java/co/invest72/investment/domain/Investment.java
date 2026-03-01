@@ -2,20 +2,19 @@ package co.invest72.investment.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.function.ToIntFunction;
+import java.util.function.UnaryOperator;
 
 public interface Investment {
 
-	ToIntFunction<BigDecimal> roundToInt = amount -> amount
-		.setScale(0, RoundingMode.HALF_EVEN)
-		.intValueExact();
+	UnaryOperator<BigDecimal> roundToWholeAmount = amount -> amount
+		.setScale(0, RoundingMode.HALF_EVEN);
 
 	/**
 	 * 만기 시점의 원금 금액을 반환합니다.
 	 *
 	 * @return 원금 금액
 	 */
-	int getPrincipal();
+	BigDecimal getPrincipal();
 
 	/**
 	 * 지정된 월 회차(month)의 원금 금액을 반환합니다.
@@ -23,7 +22,7 @@ public interface Investment {
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 원금 금액
 	 */
-	int getPrincipal(int month);
+	BigDecimal getPrincipal(int month);
 
 	/**
 	 * 만기 시점의 이자 금액을 반환합니다.
@@ -32,7 +31,7 @@ public interface Investment {
 	 * </p>
 	 * @return 이자 금액
 	 */
-	int getInterest();
+	BigDecimal getInterest();
 
 	/**
 	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.
@@ -42,24 +41,7 @@ public interface Investment {
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 이자 금액
 	 */
-	int getInterest(int month);
-
-	/**
-	 * 만기 시점의 누적 이자 금액을 반환합니다.
-	 * @return 누적 이자 금액
-	 */
-	default int getAccInterest() {
-		return getAccInterest(getFinalMonth());
-	}
-
-	/**
-	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
-	 * @param month 회차 (기본 1부터 시작)
-	 * @return 누적 이자 금액
-	 */
-	default int getAccInterest(int month) {
-		throw new UnsupportedOperationException("not implemented yet");
-	}
+	BigDecimal getInterest(int month);
 
 	/**
 	 * 만기 시점의 수익 금액을 반환합니다.
@@ -68,7 +50,7 @@ public interface Investment {
 	 * </p>
 	 * @return 총 투자 금액
 	 */
-	int getProfit();
+	BigDecimal getProfit();
 
 	/**
 	 * 지정된 월 회차(month)의 수익 금액을 반환합니다.
@@ -79,31 +61,31 @@ public interface Investment {
 	 * @param month 회차 (1부터 시작)
 	 * @return 총 투자 금액
 	 */
-	int getProfit(int month);
+	BigDecimal getProfit(int month);
 
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액
 	 */
-	int getTotalInvestment();
-	
+	BigDecimal getTotalInvestment();
+
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	int getTotalInterest();
+	BigDecimal getTotalInterest();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	int getTotalTax();
+	BigDecimal getTotalTax();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.
 	 * @return 총 수익 금액
 	 */
-	int getTotalProfit();
+	BigDecimal getTotalProfit();
 
 	/**
 	 * 투자 기간의 마지막 월을 반환합니다
@@ -116,17 +98,11 @@ public interface Investment {
 
 	String getTaxType();
 
-	default int getPrincipalForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	BigDecimal getPrincipalForYear(int year);
 
-	default int getInterestForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	BigDecimal getInterestForYear(int year);
 
-	default int getProfitForYear(int year) {
-		throw new UnsupportedOperationException("implement not yeted");
-	}
+	BigDecimal getProfitForYear(int year);
 
 	double getTaxRate();
 }

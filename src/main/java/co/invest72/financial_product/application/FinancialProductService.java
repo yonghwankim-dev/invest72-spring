@@ -1,20 +1,28 @@
 package co.invest72.financial_product.application;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductResponseDto;
+import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +32,19 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductService {
 
 	private final FinancialProductRepository repository;
+	private final LocalDateProvider localDateProvider;
+	private final InvestmentFactory investmentFactory;
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
+		PaymentDay paymentDay = dto.getPaymentDay() != null ? new PaymentDay(dto.getPaymentDay()) : null;
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(user.getId())
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
 			.amount(new ProductAmount(dto.getAmount()))
 			.months(new ProductMonths(dto.getMonths()))
+			.paymentDay(paymentDay)
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
@@ -44,14 +56,14 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<FinancialProductResponseDto> getProductsByUser(User user) {
+	public List<FinancialProductDto> getProductsByUser(User user) {
 		return repository.findAllByUserId(user.getId()).stream()
 			.map(this::buildProductResponseDto)
 			.toList();
 	}
 
-	private FinancialProductResponseDto buildProductResponseDto(FinancialProduct product) {
-		return FinancialProductResponseDto.builder()
+	private FinancialProductDto buildProductResponseDto(FinancialProduct product) {
+		return FinancialProductDto.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
@@ -68,9 +80,29 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public FinancialProductResponseDto getProductDetail(User user, String productId) {
+	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
-		return buildProductResponseDto(product);
+		LocalDate today = localDateProvider.now();
+		Integer paymentDay = product.getPaymentDay() != null ? product.getPaymentDay().getValue() : null;
+		return DetailedFinancialProductResponse.builder()
+			.id(product.getId())
+			.userId(product.getUserId())
+			.name(product.getName())
+			.investmentType(product.getInvestmentType().name())
+			.amount(product.getAmount().getValue())
+			.months(product.getMonths().getValue())
+			.paymentDay(paymentDay)
+			.interestRate(product.getInterestRate().getValue())
+			.interestType(product.getInterestType().name())
+			.taxType(product.getTaxType().name())
+			.taxRate(product.getTaxRate().getValue())
+			.startDate(product.getStartDate())
+			.createdAt(product.getCreatedAt())
+			.expirationDate(product.getExpirationDate())
+			.balance(product.getBalanceByLocalDate(today))
+			.progress(product.getProgressByLocalDate(today))
+			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.build();
 	}
 
 	private FinancialProduct findFinancialProduct(User user, String productId) {
@@ -113,5 +145,46 @@ public class FinancialProductService {
 	@Transactional(readOnly = true)
 	public FinancialProduct getProductByUserAndProductId(User user, String productId) {
 		return findFinancialProduct(user, productId);
+	}
+
+	/**
+	 * 상품 요약 목록 조회
+	 * <p>
+	 * 정렬 기준<br>
+	 * - 1차 정렬 기준 : 시작일자 내림차순<br>
+	 * - 2차 정렬 기준 : 만기일 오름차순<br>
+	 * - 3차 정렬 기준 : 금액 내림차순<br>
+	 * - 4차 정렬 기준 : 생성일자 오름차순<br>
+	 * - 마지막 정렬 기준 : 식별자 오름차순<br>
+	 * @param user 조회 대상 사용자
+	 * @return 상품 요약 정보 리스트
+	 */
+	@Transactional(readOnly = true)
+	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
+		List<FinancialProductSummaryResponse> result = new ArrayList<>();
+		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
+
+		LocalDate today = localDateProvider.now();
+		for (FinancialProduct product : products) {
+			FinancialProductSummaryResponse data = FinancialProductSummaryResponse.from(
+				product,
+				investmentFactory.createBy(product),
+				today
+			);
+			result.add(data);
+		}
+
+		return result.stream()
+			.sorted(getFinancialProductSummaryResponseComparator())
+			.toList();
+	}
+
+	private Comparator<FinancialProductSummaryResponse> getFinancialProductSummaryResponseComparator() {
+		return Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
+				Comparator.nullsLast(Comparator.naturalOrder()))
+			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummaryResponse::getCreatedAt)
+			.thenComparing(FinancialProductSummaryResponse::getId);
 	}
 }

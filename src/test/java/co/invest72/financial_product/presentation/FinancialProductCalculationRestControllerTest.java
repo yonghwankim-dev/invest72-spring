@@ -29,6 +29,7 @@ import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
+import source.FinancialProductDataProvider;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -131,19 +132,8 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsSimpleSaving_thenReturnsCalculationResult() throws Exception {
 		// Given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("단리-적금")
-			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(SIMPLE)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
+		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			SIMPLE);
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
@@ -153,10 +143,10 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.totalInvestment").value(12_000_000))
 			.andExpect(jsonPath("$.totalInterest").value(325_000))
-			.andExpect(jsonPath("$.totalTax").value(0))
-			.andExpect(jsonPath("$.totalProfit").value(12_325_000))
-			.andExpect(jsonPath("$.taxType").value("비과세"))
-			.andExpect(jsonPath("$.taxPercent").value("0%"))
+			.andExpect(jsonPath("$.totalTax").value(50050))
+			.andExpect(jsonPath("$.totalProfit").value(12_274_950))
+			.andExpect(jsonPath("$.taxType").value(TaxType.STANDARD.getDescription()))
+			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andDo(MockMvcResultHandlers.print());
@@ -166,19 +156,8 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsCompoundSaving_thenReturnsCalculationResult() throws Exception {
 		// Given
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(principalUser.getUser().getId())
-			.name("복리-적금")
-			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
+		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			COMPOUND);
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
@@ -188,10 +167,10 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.totalInvestment").value(12_000_000))
 			.andExpect(jsonPath("$.totalInterest").value(330_017))
-			.andExpect(jsonPath("$.totalTax").value(0))
-			.andExpect(jsonPath("$.totalProfit").value(12_330_017))
-			.andExpect(jsonPath("$.taxType").value("비과세"))
-			.andExpect(jsonPath("$.taxPercent").value("0%"))
+			.andExpect(jsonPath("$.totalTax").value(50_823))
+			.andExpect(jsonPath("$.totalProfit").value(12_279_194))
+			.andExpect(jsonPath("$.taxType").value(TaxType.STANDARD.getDescription()))
+			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andDo(MockMvcResultHandlers.print());

@@ -7,23 +7,27 @@ import co.invest72.investment.domain.InterestRate;
 
 public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestmentAmount {
 
-	private final int amount;
+	private final BigDecimal amount;
 
 	public MonthlyInstallmentInvestmentAmount(int amount) {
+		this(BigDecimal.valueOf(amount));
+	}
+
+	public MonthlyInstallmentInvestmentAmount(BigDecimal amount) {
 		this.amount = amount;
-		if (amount < 0) {
+		if (amount.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("investment.Investment amount must be non-negative.");
 		}
 	}
 
 	@Override
-	public int getMonthlyAmount() {
+	public BigDecimal getMonthlyAmount() {
 		return this.amount;
 	}
 
 	@Override
-	public double calAnnualInterest(InterestRate interestRate) {
-		return interestRate.getAnnualInterest(amount).doubleValue();
+	public BigDecimal calAnnualInterest(InterestRate interestRate) {
+		return interestRate.getAnnualInterest(amount);
 	}
 
 	@Override
@@ -33,6 +37,6 @@ public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestment
 
 	@Override
 	public BigDecimal getAmount() {
-		return BigDecimal.valueOf(amount);
+		return amount;
 	}
 }

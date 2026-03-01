@@ -1,5 +1,6 @@
 package co.invest72.investment.presentation.response;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,17 +11,17 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class CalculateMonthlyInvestmentResponse {
-	private final int totalInvestment;
-	private final int totalInterest;
-	private final int totalTax;
-	private final int totalProfit;
+	private final BigDecimal totalInvestment;
+	private final BigDecimal totalInterest;
+	private final BigDecimal totalTax;
+	private final BigDecimal totalProfit;
 	private final String taxType;
 	private final String taxPercent;
 	private final List<MonthlyInvestmentResult> details;
 
 	@Builder
-	public CalculateMonthlyInvestmentResponse(int totalInvestment, int totalInterest,
-		int totalTax, int totalProfit, String taxType, String taxPercent,
+	public CalculateMonthlyInvestmentResponse(BigDecimal totalInvestment, BigDecimal totalInterest,
+		BigDecimal totalTax, BigDecimal totalProfit, String taxType, String taxPercent,
 		List<MonthlyInvestmentResult> details) {
 		this.totalInvestment = totalInvestment;
 		this.totalInterest = totalInterest;

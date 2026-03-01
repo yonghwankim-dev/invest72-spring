@@ -3,6 +3,7 @@ package co.invest72.investment.console.output;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,7 @@ class PrintStreamBasedInvestmentResultPrinterTest {
 
 	@Test
 	void printTotalPrincipal() {
-		printer.printTotalPrincipal(12_000_000);
+		printer.printTotalPrincipal(BigDecimal.valueOf(12_000_000));
 
 		String output = outputStream.toString();
 		Assertions.assertEquals("원금 합계: 12,000,000원\n", output);
@@ -43,7 +44,7 @@ class PrintStreamBasedInvestmentResultPrinterTest {
 
 	@Test
 	void printInterest() {
-		printer.printInterest(330_017);
+		printer.printInterest(BigDecimal.valueOf(330_017));
 
 		String output = outputStream.toString();
 		Assertions.assertEquals("세전 이자: 330,017원\n", output);
@@ -52,7 +53,7 @@ class PrintStreamBasedInvestmentResultPrinterTest {
 	@ParameterizedTest
 	@MethodSource(value = "taxSource")
 	void printTax_shouldMinus_whenTaxIsPositive(int amount, String expectedFormattedAmount) {
-		printer.printTax(amount);
+		printer.printTax(BigDecimal.valueOf(amount));
 
 		String output = outputStream.toString();
 		Assertions.assertEquals("이자 과세: " + expectedFormattedAmount + "원\n", output);
@@ -60,7 +61,7 @@ class PrintStreamBasedInvestmentResultPrinterTest {
 
 	@Test
 	void printTotalProfit() {
-		printer.printTotalProfit(1_051_162);
+		printer.printTotalProfit(BigDecimal.valueOf(1_051_162));
 
 		String output = outputStream.toString();
 		Assertions.assertEquals("세후 수령액: 1,051,162원\n", output);

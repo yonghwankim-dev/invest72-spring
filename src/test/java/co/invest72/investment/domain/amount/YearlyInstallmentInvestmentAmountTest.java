@@ -8,8 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.InterestRate;
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import testutil.BigDecimalAssertion;
 
 class YearlyInstallmentInvestmentAmountTest {
@@ -28,20 +28,20 @@ class YearlyInstallmentInvestmentAmountTest {
 
 	@Test
 	void shouldReturnAmount() {
-		int amount = investmentAmount.getMonthlyAmount();
+		BigDecimal monthlyAmount = investmentAmount.getMonthlyAmount();
 
-		int expectedAmount = 1_000_000;
-		assertEquals(expectedAmount, amount);
+		BigDecimal expectedAmount = BigDecimal.valueOf(1_000_000);
+		assertEquals(expectedAmount, monthlyAmount);
 	}
 
 	@Test
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		double interest = investmentAmount.calAnnualInterest(interestRate);
+		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
 
-		double expectedInterest = 600_000;
-		assertEquals(expectedInterest, interest, 0.001);
+		BigDecimal expectedInterest = BigDecimal.valueOf(600_000);
+		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
 	}
 
 	@Test

@@ -1,0 +1,94 @@
+package co.invest72.investment.domain;
+
+import java.math.BigDecimal;
+
+import co.invest72.investment.domain.tax.TaxType;
+
+public class CashInvestment implements Investment {
+
+	private final InvestmentAmount investmentAmount;
+
+	public CashInvestment(InvestmentAmount investmentAmount) {
+		this.investmentAmount = investmentAmount;
+	}
+
+	@Override
+	public BigDecimal getPrincipal() {
+		return getPrincipal(getFinalMonth());
+	}
+
+	@Override
+	public BigDecimal getPrincipal(int month) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public BigDecimal getInterest() {
+		return getInterest(getFinalMonth());
+	}
+
+	@Override
+	public BigDecimal getInterest(int month) {
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getProfit() {
+		return getProfit(getFinalMonth());
+	}
+
+	@Override
+	public BigDecimal getProfit(int month) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public BigDecimal getTotalInvestment() {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public BigDecimal getTotalInterest() {
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getTotalTax() {
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getTotalProfit() {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public int getFinalMonth() {
+		return 0;
+	}
+
+	@Override
+	public String getTaxType() {
+		return TaxType.NONE.getDescription();
+	}
+
+	@Override
+	public BigDecimal getPrincipalForYear(int year) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public BigDecimal getInterestForYear(int year) {
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getProfitForYear(int year) {
+		return roundToWholeAmount.apply(investmentAmount.getAmount());
+	}
+
+	@Override
+	public double getTaxRate() {
+		return 0.0;
+	}
+}
