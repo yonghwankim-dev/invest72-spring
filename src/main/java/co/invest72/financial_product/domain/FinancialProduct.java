@@ -94,11 +94,7 @@ public class FinancialProduct {
 	}
 
 	private void validate() {
-		if (this.investmentType == InvestmentType.SAVINGS && this.paymentDay == null) {
-			throw new IllegalArgumentException("적금 상품은 납입일이 반드시 필요합니다.");
-		} else if (this.investmentType != InvestmentType.SAVINGS && this.paymentDay != null) {
-			throw new IllegalArgumentException("현금/예금 상품은 납입일이 없어야 합니다.");
-		}
+		this.investmentType.validate(this.paymentDay);
 	}
 
 	public void update(FinancialProduct updatedProduct) {
