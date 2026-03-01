@@ -18,6 +18,7 @@ public class DetailedFinancialProductResponse {
 	private String investmentType;
 	private BigDecimal amount;
 	private Integer months;
+	private Integer paymentDay;
 	private BigDecimal interestRate;
 	private String interestType;
 	private String taxType;

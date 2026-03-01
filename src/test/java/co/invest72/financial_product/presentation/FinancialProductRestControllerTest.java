@@ -173,6 +173,55 @@ class FinancialProductRestControllerTest {
 			.andDo(MockMvcResultHandlers.print());
 	}
 
+	@DisplayName("상품 생성 - 단리-예금 상품")
+	@Test
+	void createProduct_whenInvestmentTypeIsDeposit_thenSaveProduct() throws Exception {
+		// given
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
+
+	@DisplayName("상품 생성 - 복리-적금 상품")
+	@Test
+	void createProduct_whenInvestmentTypeIsSavings_thenSaveProduct() throws Exception {
+		// given
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
+
 	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {

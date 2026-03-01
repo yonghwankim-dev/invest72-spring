@@ -22,6 +22,7 @@ import co.invest72.financial_product.presentation.dto.response.FinancialProductS
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,14 @@ public class FinancialProductService {
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
+		PaymentDay paymentDay = dto.getPaymentDay() != null ? new PaymentDay(dto.getPaymentDay()) : null;
 		FinancialProduct product = FinancialProduct.builder()
 			.userId(user.getId())
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
 			.amount(new ProductAmount(dto.getAmount()))
 			.months(new ProductMonths(dto.getMonths()))
+			.paymentDay(paymentDay)
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
@@ -80,6 +83,7 @@ public class FinancialProductService {
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
+		Integer paymentDay = product.getPaymentDay() != null ? product.getPaymentDay().getValue() : null;
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -87,6 +91,7 @@ public class FinancialProductService {
 			.investmentType(product.getInvestmentType().name())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
+			.paymentDay(paymentDay)
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
