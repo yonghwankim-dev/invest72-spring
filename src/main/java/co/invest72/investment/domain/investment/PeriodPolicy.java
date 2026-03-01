@@ -10,21 +10,35 @@ public enum PeriodPolicy implements PeriodStrategy {
 	STANDARD {
 		@Override
 		public LocalDate calculateExpiration(LocalDate startDate, int months) {
+			if (months < 0) {
+				throw new IllegalArgumentException("개월 수는 음수일 수 없습니다.");
+			}
 			return startDate.plusMonths(months);
 		}
 
 		@Override
 		public BigDecimal calculateProgress(LocalDate startDate, LocalDate expirationDate, LocalDate today) {
+			if (startDate.isEqual(expirationDate)) {
+				return BigDecimal.ONE; // 시작일자와 만기일자가 동일한 경우 진행률은 100%
+			}
+			if (startDate.isAfter(expirationDate)) {
+				throw new IllegalArgumentException("시작일자는 만기일자보다 이전이어야 합니다.");
+			}
 			if (today.isBefore(startDate)) {
 				return BigDecimal.ZERO;
 			}
 			if (today.isAfter(expirationDate)) {
 				return BigDecimal.ONE;
 			}
-			long totalDays = startDate.until(expirationDate, ChronoUnit.DAYS);
-			long elapsedDays = startDate.until(today, ChronoUnit.DAYS);
-			return BigDecimal.valueOf(elapsedDays)
-				.divide(BigDecimal.valueOf(totalDays), 4, RoundingMode.HALF_EVEN);
+			try {
+				long totalDays = startDate.until(expirationDate, ChronoUnit.DAYS);
+				long elapsedDays = startDate.until(today, ChronoUnit.DAYS);
+				return BigDecimal.valueOf(elapsedDays)
+					.divide(BigDecimal.valueOf(totalDays), 2, RoundingMode.HALF_EVEN);
+			} catch (ArithmeticException e) {
+				return BigDecimal.ZERO; // 총 일수가 0인 경우 진행률을 0으로 처리
+			}
+
 		}
 
 		@Override
