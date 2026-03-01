@@ -178,6 +178,6 @@ public class FinancialProductService {
 			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
 				Comparator.nullsLast(Comparator.naturalOrder()))
 			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getCreateAt);
+			.thenComparing(FinancialProductSummaryResponse::getCreatedAt);
 	}
 }

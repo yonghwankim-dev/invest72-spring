@@ -338,7 +338,7 @@ class FinancialProductRestControllerTest {
 			.expectedInterest(BigDecimal.valueOf(330_017L))
 			.progress(BigDecimal.valueOf(0.1562))
 			.remainingDays(308)
-			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
 			.id(depositProduct.getId())
@@ -351,7 +351,7 @@ class FinancialProductRestControllerTest {
 			.expectedInterest(BigDecimal.valueOf(50_000L))
 			.progress(BigDecimal.valueOf(0.1562))
 			.remainingDays(308)
-			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 		FinancialProductSummaryResponse expectedResponse3 = FinancialProductSummaryResponse.builder()
 			.id(product.getId())
@@ -364,7 +364,7 @@ class FinancialProductRestControllerTest {
 			.expectedInterest(BigDecimal.ZERO)
 			.progress(BigDecimal.ONE)
 			.remainingDays(0L)
-			.createAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 
 		String expectedJson = objectMapper.writeValueAsString(

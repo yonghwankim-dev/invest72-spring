@@ -78,7 +78,6 @@ public class InvestmentFactory {
 	}
 
 	public Investment createBy(CalculateInvestmentRequest request) {
-
 		InvestmentType investmentType = InvestmentType.from(request.getType());
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());

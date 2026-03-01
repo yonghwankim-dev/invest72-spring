@@ -24,7 +24,7 @@ public class FinancialProductSummaryResponse {
 	private BigDecimal expectedInterest; // 예상 이자
 	private BigDecimal progress; // 진행률
 	private long remainingDays; // 남은 일수
-	private LocalDateTime createAt; // 생성시
+	private LocalDateTime createdAt; // 생성시
 
 	public static FinancialProductSummaryResponse from(
 		FinancialProduct product,
@@ -42,7 +42,7 @@ public class FinancialProductSummaryResponse {
 			.expectedInterest(investment.getTotalInterest())
 			.progress(product.getProgressByLocalDate(today))
 			.remainingDays(product.getRemainingDaysByLocalDate(today))
-			.createAt(product.getCreatedAt())
+			.createdAt(product.getCreatedAt())
 			.build();
 	}
 }
