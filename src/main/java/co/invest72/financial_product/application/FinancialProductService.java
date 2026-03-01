@@ -150,6 +150,7 @@ public class FinancialProductService {
 	 * - 2차 정렬 기준 : 만기일 오름차순<br>
 	 * - 3차 정렬 기준 : 금액 내림차순<br>
 	 * - 4차 정렬 기준 : 생성일자 오름차순<br>
+	 * - 마지막 정렬 기준 : 식별자 오름차순<br>
 	 * @param user 조회 대상 사용자
 	 * @return 상품 요약 정보 리스트
 	 */
@@ -178,6 +179,7 @@ public class FinancialProductService {
 			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
 				Comparator.nullsLast(Comparator.naturalOrder()))
 			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getCreatedAt);
+			.thenComparing(FinancialProductSummaryResponse::getCreatedAt)
+			.thenComparing(FinancialProductSummaryResponse::getId);
 	}
 }
