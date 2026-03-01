@@ -25,6 +25,7 @@ public enum BalancePolicy implements BalanceStrategy {
 			LocalDate startDate = product.getStartDate();
 			ProductAmount amount = product.getAmount();
 			ProductMonths months = product.getMonths();
+			PaymentDay paymentDay = product.getPaymentDay();
 
 			if (today.isBefore(startDate)) {
 				return BigDecimal.ZERO;
@@ -33,6 +34,9 @@ public enum BalancePolicy implements BalanceStrategy {
 				return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
 			}
 			long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
+			if (paymentDay != null && paymentDay.isPaidOn(today)) {
+				elapsedMonths++;
+			}
 			return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));
 		}
 	}
