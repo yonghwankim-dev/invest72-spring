@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
@@ -63,11 +62,6 @@ public class FinancialProductService {
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
-		Integer paymentDay = null;
-		// todo: 각 상품 유형별로 paymentDay를 가져오는 로직이 중복되고 있는데, 이를 개선할 방법이 있을까?
-		if (product instanceof SavingsProduct savingsProduct) {
-			paymentDay = savingsProduct.getPaymentDay().getValue();
-		}
 
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
@@ -76,7 +70,7 @@ public class FinancialProductService {
 			.investmentType(product.getInvestmentType().name())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
-			.paymentDay(paymentDay)
+			.paymentDay(product.getPaymentDayValue())
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())

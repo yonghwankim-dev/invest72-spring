@@ -333,7 +333,9 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(2_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
-			.andExpect(jsonPath("$.remainingDays").value(308));
+			.andExpect(jsonPath("$.remainingDays").value(308))
+			.andExpect(jsonPath("$.paymentDay").value(15));
+
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")

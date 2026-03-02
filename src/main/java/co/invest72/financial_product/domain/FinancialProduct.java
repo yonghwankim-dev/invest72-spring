@@ -114,6 +114,13 @@ public abstract class FinancialProduct {
 		this.createdAt = b.createdAt;
 	}
 
+	/**
+	 * 잔액 계산<br>
+	 * @param today 현재 날짜
+	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
+	 */
+	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
+
 	public void update(FinancialProduct updatedProduct) {
 		this.name = updatedProduct.getName();
 		this.investmentType = updatedProduct.getInvestmentType();
@@ -153,13 +160,6 @@ public abstract class FinancialProduct {
 	}
 
 	/**
-	 * 잔액 계산<br>
-	 * @param today 현재 날짜
-	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
-	 */
-	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
-
-	/**
 	 * 납입일 여부 확인<br>
 	 * 현금/예금은 기본적으로 항상 false, 적금은 paymentDay에 따라 true/false 반환
 	 * @param today 현재 날짜
@@ -167,5 +167,14 @@ public abstract class FinancialProduct {
 	 */
 	public boolean isPaidOn(LocalDate today) {
 		return false;
+	}
+
+	/**
+	 * 납입일 계산<br>
+	 * 현금/예금은 납입일이 없으므로 null 반환, 적금은 paymentDay 값을 반환
+	 * @return 납입일
+	 */
+	public Integer getPaymentDayValue() {
+		return null;
 	}
 }

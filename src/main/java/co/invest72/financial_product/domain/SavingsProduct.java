@@ -67,4 +67,9 @@ public class SavingsProduct extends FinancialProduct {
 	public boolean isPaidOn(LocalDate today) {
 		return paymentDay.isPaidOn(today);
 	}
+
+	@Override
+	public Integer getPaymentDayValue() {
+		return paymentDay.getValue();
+	}
 }
