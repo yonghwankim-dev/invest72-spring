@@ -14,20 +14,20 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("SAVINGS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder(toBuilder = true)
 public class SavingsProduct extends FinancialProduct {
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "payment_day", nullable = false))
 	private PaymentDay paymentDay;
 
-	@Builder(toBuilder = true)
 	public SavingsProduct(
 		String userId,
 		String name,

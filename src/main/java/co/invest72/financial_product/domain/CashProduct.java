@@ -10,16 +10,16 @@ import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("CASH")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder(toBuilder = true)
 public class CashProduct extends FinancialProduct {
-	@Builder(toBuilder = true)
 	protected CashProduct(
 		String userId,
 		String name,
@@ -35,7 +35,7 @@ public class CashProduct extends FinancialProduct {
 		super(userId, name, investmentType, amount, months, interestRate, interestType, taxType, taxRate, startDate,
 			createdAt);
 	}
-
+	
 	@Override
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
 		return getInvestmentType().calculateBalance(this, today);

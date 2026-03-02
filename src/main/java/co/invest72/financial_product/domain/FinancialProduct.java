@@ -19,12 +19,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Inheritance(strategy = jakarta.persistence.InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "product_type", discriminatorType = jakarta.persistence.DiscriminatorType.STRING)
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder(toBuilder = true)
 public abstract class FinancialProduct {
 	@Id
 	private String id;
@@ -96,7 +98,7 @@ public abstract class FinancialProduct {
 		this.startDate = startDate;
 		this.createdAt = createdAt;
 	}
-
+	
 	public void update(FinancialProduct updatedProduct) {
 		this.name = updatedProduct.getName();
 		this.investmentType = updatedProduct.getInvestmentType();

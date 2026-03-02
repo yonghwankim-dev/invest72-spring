@@ -12,11 +12,13 @@ import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("DEPOSIT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder(toBuilder = true)
 public class DepositProduct extends FinancialProduct {
 	protected DepositProduct(
 		String userId,
