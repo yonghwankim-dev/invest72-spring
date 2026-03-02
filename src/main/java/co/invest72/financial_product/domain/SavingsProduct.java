@@ -59,6 +59,15 @@ public class SavingsProduct extends FinancialProduct {
 	}
 
 	@Override
+	public void update(FinancialProduct updatedProduct) {
+		super.update(updatedProduct);
+		if (updatedProduct instanceof SavingsProduct updatedSavings) {
+			this.paymentDay = updatedSavings.getPaymentDay();
+			validatePaymentDay();
+		}
+	}
+
+	@Override
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
 		return getInvestmentType().calculateBalance(this, today);
 	}

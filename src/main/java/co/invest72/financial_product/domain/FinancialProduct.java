@@ -121,9 +121,13 @@ public abstract class FinancialProduct {
 	 */
 	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
 
+	/**
+	 * 상품 정보 업데이트<br>
+	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)
+	 * @param updatedProduct 업데이트된 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)
+	 */
 	public void update(FinancialProduct updatedProduct) {
 		this.name = updatedProduct.getName();
-		this.investmentType = updatedProduct.getInvestmentType();
 		this.amount = updatedProduct.getAmount();
 		this.months = updatedProduct.getMonths();
 		this.interestRate = updatedProduct.getInterestRate();

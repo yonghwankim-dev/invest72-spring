@@ -16,6 +16,7 @@ import co.invest72.financial_product.presentation.dto.response.DetailedFinancial
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -96,13 +97,29 @@ public class FinancialProductService {
 		}
 	}
 
+	/**
+	 * 상품 정보 업데이트<br>
+	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)<br>
+	 * 상품 수정시 투자 유형(InvestmentType)은 변경할 수 없다.<br>
+	 * @param user 업데이트 요청을 하는 사용자 (상품 소유자와 일치해야 함)
+	 * @param productId 업데이트할 상품의 ID
+	 * @param dto 업데이트할 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)
+	 */
 	@Transactional
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		// 기존 상품 조회 및 검증
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
+		validateInvestmentType(dto, existingProduct);
 		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
 		FinancialProduct updatedProduct = financialProductFactory.create(user.getId(), dto);
 		existingProduct.update(updatedProduct);
+	}
+
+	private static void validateInvestmentType(FinancialProductRequestDto dto, FinancialProduct existingProduct) {
+		InvestmentType dtoInvestmentType = InvestmentType.valueOf(dto.getInvestmentType());
+		if (existingProduct.getInvestmentType() != dtoInvestmentType) {
+			throw new IllegalArgumentException("투자 상품 유형은 변경할 수 없습니다.");
+		}
 	}
 
 	@Transactional
