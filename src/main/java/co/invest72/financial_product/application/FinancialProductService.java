@@ -9,23 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.financial_product.domain.CashProduct;
-import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.interest.InterestType;
-import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -36,67 +27,12 @@ public class FinancialProductService {
 	private final FinancialProductRepository repository;
 	private final LocalDateProvider localDateProvider;
 	private final InvestmentFactory investmentFactory;
+	private final FinancialProductFactory financialProductFactory;
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
-		// TODO: dto를 사용하여 FinancialProduct를 생성하는 FinancialProductFactory 생성
-		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
-		FinancialProduct product = null;
-		switch (investmentType) {
-			case CASH -> product = createCashProduct(user, dto);
-			case DEPOSIT -> product = createDepositProduct(user, dto);
-			case SAVINGS -> product = createSavingsProduct(user, dto);
-		}
+		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
-	}
-
-	private FinancialProduct createSavingsProduct(User user, FinancialProductRequestDto dto) {
-		return SavingsProduct.builder()
-			.userId(user.getId())
-			.name(dto.getName())
-			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(new ProductAmount(dto.getAmount()))
-			.months(new ProductMonths(dto.getMonths()))
-			.paymentDay(new PaymentDay(dto.getPaymentDay()))
-			.interestRate(new ProductRate(dto.getInterestRate()))
-			.interestType(InterestType.valueOf(dto.getInterestType()))
-			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
-			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
-			.build();
-	}
-
-	private FinancialProduct createDepositProduct(User user, FinancialProductRequestDto dto) {
-		return DepositProduct.builder()
-			.userId(user.getId())
-			.name(dto.getName())
-			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(new ProductAmount(dto.getAmount()))
-			.months(new ProductMonths(dto.getMonths()))
-			.interestRate(new ProductRate(dto.getInterestRate()))
-			.interestType(InterestType.valueOf(dto.getInterestType()))
-			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
-			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
-			.build();
-	}
-
-	private FinancialProduct createCashProduct(User user, FinancialProductRequestDto dto) {
-		return CashProduct.builder()
-			.userId(user.getId())
-			.name(dto.getName())
-			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(new ProductAmount(dto.getAmount()))
-			.months(new ProductMonths(dto.getMonths()))
-			.interestRate(new ProductRate(dto.getInterestRate()))
-			.interestType(InterestType.valueOf(dto.getInterestType()))
-			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
-			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
-			.build();
 	}
 
 	@Transactional(readOnly = true)
@@ -171,13 +107,7 @@ public class FinancialProductService {
 		// 기존 상품 조회 및 검증
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
-		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
-		FinancialProduct updatedProduct = null;
-		switch (investmentType) {
-			case CASH -> updatedProduct = createCashProduct(user, dto);
-			case DEPOSIT -> updatedProduct = createDepositProduct(user, dto);
-			case SAVINGS -> updatedProduct = createSavingsProduct(user, dto);
-		}
+		FinancialProduct updatedProduct = financialProductFactory.create(user.getId(), dto);
 		existingProduct.update(updatedProduct);
 	}
 
