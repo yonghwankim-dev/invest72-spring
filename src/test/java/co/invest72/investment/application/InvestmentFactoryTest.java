@@ -11,8 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -152,14 +150,21 @@ class InvestmentFactoryTest {
 	}
 
 	@DisplayName("투자 객체 생성 - FinancialProduct 객체를 이용하여 Investment 객체 생성")
-	@ParameterizedTest(name = "{2} 객체 생성 테스트")
-	@MethodSource(value = "source.FinancialProductTestDataProvider#provideFinancialProducts")
-	void createBy_givenFinancialProduct_whenCreateInvestment_thenReturnInvestment(FinancialProduct product,
-		Class<?> expectedType, String ignored) {
-		// when
-		investment = investmentFactory.createBy(product);
-		// then
-		assertInstanceOfInvestment(expectedType, investment);
+	@Test
+	void createBy_givenFinancialProduct_whenCreateInvestment_thenReturnInvestment() {
+		// given
+		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user1");
+		FinancialProduct simpleDeposit = FinancialProductDataProvider.createDepositProduct("user1");
+		FinancialProduct simpleSavings = FinancialProductDataProvider.createSavingsProduct("user1");
+		FinancialProduct compoundDeposit = FinancialProductDataProvider.createDepositProduct("user1", COMPOUND);
+		FinancialProduct compoundSavings = FinancialProductDataProvider.createSavingsProduct("user1", COMPOUND);
+
+		// when & then
+		assertInstanceOfInvestment(CashInvestment.class, investmentFactory.createBy(cash));
+		assertInstanceOfInvestment(SimpleFixedDeposit.class, investmentFactory.createBy(simpleDeposit));
+		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investmentFactory.createBy(simpleSavings));
+		assertInstanceOfInvestment(CompoundFixedDeposit.class, investmentFactory.createBy(compoundDeposit));
+		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investmentFactory.createBy(compoundSavings));
 	}
 
 	@DisplayName("현금 투자 객체 생성 - FinancialProduct 객체를 이용하여 CashInvestment 객체 생성")

@@ -13,6 +13,16 @@ class FinancialProductTest {
 
 	private FinancialProduct financialProduct;
 
+	@DisplayName("현금 상품 객체 생성")
+	@Test
+	void constructor_whenCreatingCashProduct_thenCreateSuccessfully() {
+		// Given & When
+		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
+
+		// Then
+		Assertions.assertThat(financialProduct).isNotNull();
+	}
+
 	@DisplayName("현금 상품 만기일 계산 - 현금 상품은 만기일이 LocalDate.MAX로 설정된다.")
 	@Test
 	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax() {
