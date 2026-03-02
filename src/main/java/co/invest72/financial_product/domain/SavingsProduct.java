@@ -47,6 +47,13 @@ public class SavingsProduct extends FinancialProduct {
 		validatePaymentDay();
 	}
 
+	// 빌더 패턴을 사용할 때 부모 클래스의 필드와 자식 클래스의 필드를 모두 초기화할 수 있도록 생성자 정의
+	protected SavingsProduct(SavingsProductBuilder<?, ?> b) {
+		super(b); // 부모 필드 초기화
+		this.paymentDay = b.paymentDay; // 자식 필드 초기화
+		validatePaymentDay();
+	}
+
 	private void validatePaymentDay() {
 		this.getInvestmentType().validate(paymentDay);
 	}

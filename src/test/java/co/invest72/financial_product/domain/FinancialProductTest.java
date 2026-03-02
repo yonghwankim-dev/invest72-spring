@@ -364,9 +364,11 @@ class FinancialProductTest {
 		SavingsProduct savings = (SavingsProduct)FinancialProductDataProvider.createSavingsProduct("user-1");
 
 		// when
-		Assertions.assertThatThrownBy(() -> savings.toBuilder()
-				.paymentDay(null)
-				.build())
+		Throwable throwable = Assertions.catchThrowable(() -> savings.toBuilder()
+			.paymentDay(null)
+			.build());
+		// then
+		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("적금 상품은 납입일이 반드시 필요합니다.");
 	}

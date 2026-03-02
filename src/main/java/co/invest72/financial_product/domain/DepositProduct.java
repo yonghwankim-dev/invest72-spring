@@ -36,6 +36,10 @@ public class DepositProduct extends FinancialProduct {
 			createdAt);
 	}
 
+	public DepositProduct(DepositProductBuilder<?, ?> b) {
+		super(b);
+	}
+
 	@Override
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
 		return getInvestmentType().calculateBalance(this, today);

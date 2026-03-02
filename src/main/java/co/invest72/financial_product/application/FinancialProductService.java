@@ -39,7 +39,7 @@ public class FinancialProductService {
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
-		InvestmentType investmentType = InvestmentType.from(dto.getInvestmentType());
+		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		FinancialProduct product = null;
 		switch (investmentType) {
 			case CASH -> product = createCashProduct(user, dto);
@@ -170,7 +170,7 @@ public class FinancialProductService {
 		// 기존 상품 조회 및 검증
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
-		InvestmentType investmentType = InvestmentType.from(dto.getInvestmentType());
+		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		FinancialProduct updatedProduct = null;
 		switch (investmentType) {
 			case CASH -> updatedProduct = createCashProduct(user, dto);

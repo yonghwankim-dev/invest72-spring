@@ -38,7 +38,7 @@ public abstract class FinancialProduct {
 	private String name;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "product_type", nullable = false, length = 100)
+	@Column(name = "investment_type", nullable = false, length = 100)
 	private InvestmentType investmentType;
 
 	@Embedded
@@ -98,7 +98,22 @@ public abstract class FinancialProduct {
 		this.startDate = startDate;
 		this.createdAt = createdAt;
 	}
-	
+
+	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
+		this.id = b.id != null ? b.id : idGenerator.generateId(); // 빌더에서 ID가 주어지지 않으면 생성
+		this.userId = b.userId;
+		this.name = b.name;
+		this.investmentType = b.investmentType;
+		this.amount = b.amount;
+		this.months = b.months;
+		this.interestRate = b.interestRate;
+		this.interestType = b.interestType;
+		this.taxType = b.taxType;
+		this.taxRate = b.taxRate;
+		this.startDate = b.startDate;
+		this.createdAt = b.createdAt;
+	}
+
 	public void update(FinancialProduct updatedProduct) {
 		this.name = updatedProduct.getName();
 		this.investmentType = updatedProduct.getInvestmentType();
