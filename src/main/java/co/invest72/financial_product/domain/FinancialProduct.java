@@ -7,23 +7,25 @@ import java.time.LocalDateTime;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.Builder;
+import jakarta.persistence.Inheritance;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Inheritance(strategy = jakarta.persistence.InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "product_type", discriminatorType = jakarta.persistence.DiscriminatorType.STRING)
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
-public class FinancialProduct {
+public abstract class FinancialProduct {
 	@Id
 	private String id;
 
@@ -43,10 +45,6 @@ public class FinancialProduct {
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "months", nullable = false))
 	private ProductMonths months; // 기간 (개월)
-
-	@Embedded
-	@AttributeOverride(name = "value", column = @Column(name = "payment_day"))
-	private PaymentDay paymentDay; // 납입일 (적금 상품에만 적용, 현금/예금은 null)
 
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
@@ -72,10 +70,18 @@ public class FinancialProduct {
 
 	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
 
-	@Builder(toBuilder = true)
-	private FinancialProduct(String userId, String name, InvestmentType investmentType, ProductAmount amount,
-		ProductMonths months, PaymentDay paymentDay, ProductRate interestRate, InterestType interestType,
-		TaxType taxType, ProductRate taxRate, LocalDate startDate, LocalDateTime createdAt) {
+	protected FinancialProduct(
+		String userId,
+		String name,
+		InvestmentType investmentType,
+		ProductAmount amount,
+		ProductMonths months,
+		ProductRate interestRate,
+		InterestType interestType,
+		TaxType taxType,
+		ProductRate taxRate,
+		LocalDate startDate,
+		LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
 		this.id = idGenerator.generateId();
 		this.userId = userId;
@@ -83,18 +89,12 @@ public class FinancialProduct {
 		this.investmentType = investmentType;
 		this.amount = amount;
 		this.months = months;
-		this.paymentDay = paymentDay;
 		this.interestRate = interestRate;
 		this.interestType = interestType;
 		this.taxType = taxType;
 		this.taxRate = taxRate;
 		this.startDate = startDate;
 		this.createdAt = createdAt;
-		validate();
-	}
-
-	private void validate() {
-		this.investmentType.validate(this.paymentDay);
 	}
 
 	public void update(FinancialProduct updatedProduct) {
@@ -140,7 +140,15 @@ public class FinancialProduct {
 	 * @param today 현재 날짜
 	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
 	 */
-	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return investmentType.calculateBalance(this, today);
+	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
+
+	/**
+	 * 납입일 여부 확인<br>
+	 * 현금/예금은 기본적으로 항상 false, 적금은 paymentDay에 따라 true/false 반환
+	 * @param today 현재 날짜
+	 * @return 납입일 여부 (현금/예금은 항상 false, 적금은 paymentDay에 따라 true/false 반환)
+	 */
+	public boolean isPaidOn(LocalDate today) {
+		return false;
 	}
 }
