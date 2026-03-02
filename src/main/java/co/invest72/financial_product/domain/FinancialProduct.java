@@ -139,6 +139,9 @@ public abstract class FinancialProduct {
 	}
 
 	private void validateUpdate(FinancialProduct updatedProduct) {
+		if (!getId().equals(updatedProduct.getId())) {
+			throw new IllegalArgumentException("상품 ID는 변경할 수 없습니다.");
+		}
 		if (!getUserId().equals(updatedProduct.getUserId())) {
 			throw new IllegalArgumentException("상품 소유자(userId)는 변경할 수 없습니다.");
 		}
