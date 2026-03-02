@@ -23,17 +23,36 @@ public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
 
+	/**
+	 * 상품 ID 없이 금융 상품 생성 (신규 생성 시 사용)
+	 * @param userId 사용자 ID
+	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
+	 * @return 생성된 금융 상품 객체
+	 */
 	public FinancialProduct create(String userId, FinancialProductRequestDto dto) {
+		String productId = null;
+		return create(productId, userId, dto);
+	}
+
+	/**
+	 * 상품 ID를 포함하여 금융 상품 생성 (업데이트 시 사용)
+	 * @param productId 상품 ID (업데이트 시 기존 상품의 ID를 유지하기 위해 사용)
+	 * @param userId 사용자 ID
+	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
+	 * @return 생성된 금융 상품 객체
+	 */
+	public FinancialProduct create(String productId, String userId, FinancialProductRequestDto dto) {
 		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		return switch (investmentType) {
-			case CASH -> createCashProduct(userId, dto);
-			case DEPOSIT -> createDepositProduct(userId, dto);
-			case SAVINGS -> createSavingsProduct(userId, dto);
+			case CASH -> createCashProduct(productId, userId, dto);
+			case DEPOSIT -> createDepositProduct(productId, userId, dto);
+			case SAVINGS -> createSavingsProduct(productId, userId, dto);
 		};
 	}
 
-	private FinancialProduct createCashProduct(String userId, FinancialProductRequestDto dto) {
+	private FinancialProduct createCashProduct(String productId, String userId, FinancialProductRequestDto dto) {
 		return CashProduct.builder()
+			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
@@ -48,8 +67,9 @@ public class FinancialProductFactory {
 			.build();
 	}
 
-	private FinancialProduct createDepositProduct(String userId, FinancialProductRequestDto dto) {
+	private FinancialProduct createDepositProduct(String productId, String userId, FinancialProductRequestDto dto) {
 		return DepositProduct.builder()
+			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
@@ -64,8 +84,9 @@ public class FinancialProductFactory {
 			.build();
 	}
 
-	private FinancialProduct createSavingsProduct(String userId, FinancialProductRequestDto dto) {
+	private FinancialProduct createSavingsProduct(String productId, String userId, FinancialProductRequestDto dto) {
 		return SavingsProduct.builder()
+			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))

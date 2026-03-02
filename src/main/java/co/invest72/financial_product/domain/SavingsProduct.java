@@ -60,11 +60,17 @@ public class SavingsProduct extends FinancialProduct {
 
 	@Override
 	public void update(FinancialProduct updatedProduct) {
+		SavingsProduct updatedSavings = validateUpdate(updatedProduct);
 		super.update(updatedProduct);
-		if (updatedProduct instanceof SavingsProduct updatedSavings) {
-			this.paymentDay = updatedSavings.getPaymentDay();
-			validatePaymentDay();
+		this.paymentDay = updatedSavings.getPaymentDay();
+		validatePaymentDay();
+	}
+
+	private SavingsProduct validateUpdate(FinancialProduct updatedProduct) {
+		if (!(updatedProduct instanceof SavingsProduct updatedSavings)) {
+			throw new IllegalArgumentException("업데이트된 상품은 SavingsProduct여야 합니다.");
 		}
+		return updatedSavings;
 	}
 
 	@Override

@@ -614,6 +614,63 @@ class FinancialProductRestControllerTest {
 			.andExpect(status().isBadRequest());
 	}
 
+	@DisplayName("상품 수정 - 사용자는 적금 상품을 예금 상품으로 변경하지 못한다.")
+	@Test
+	void updateProduct_whenChangingInvestmentTypeFromSavingsToDeposit_thenReturnBadRequest() throws Exception {
+		// given
+		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			InterestType.COMPOUND);
+		financialProductRepository.save(savings);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", savings.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("상품 수정 - 사용자는 예금 상품을 적금 상품으로 변경하지 못한다.")
+	@Test
+	void updateProduct_whenChangingInvestmentTypeFromDepositToSavings_thenReturnBadRequest() throws Exception {
+		// given
+		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId(),
+			InterestType.SIMPLE);
+		financialProductRepository.save(deposit);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", deposit.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
 	@DisplayName("상품 수정 - 다른 사용자가 생성한 상품을 수정하려고 하면 400 Bad Request를 반환한다")
 	@Test
 	void updateProduct_whenProductBelongsToAnotherUser_thenReturnBadRequest() throws Exception {
