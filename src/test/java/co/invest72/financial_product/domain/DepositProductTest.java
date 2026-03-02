@@ -51,4 +51,22 @@ class DepositProductTest {
 			.hasMessage("상품 소유자(userId)는 변경할 수 없습니다.");
 	}
 
+	@DisplayName("상품 수정 - 예금 상품은 투자 유형을 변경할 수 없다")
+	@Test
+	void update_whenInvestmentTypeChanged_thenThrowException() {
+		// Given
+		FinancialProduct originalProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
+			.userId("user-1") // userId는 원래 값으로 유지
+			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.build();
+
+		// When
+		Throwable throwable = Assertions.catchThrowable(() -> originalProduct.update(updatedProduct));
+
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("투자 유형(InvestmentType)은 변경할 수 없습니다.");
+	}
 }
