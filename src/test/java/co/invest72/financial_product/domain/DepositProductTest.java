@@ -75,8 +75,8 @@ class DepositProductTest {
 		// Given
 		FinancialProduct originalProduct = FinancialProductDataProvider.createDepositProduct("user-1");
 		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
-			.userId(originalProduct.getId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
+			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
 			.build();
 
 		// When
@@ -86,5 +86,41 @@ class DepositProductTest {
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("투자 유형(InvestmentType)은 변경할 수 없습니다.");
+	}
+
+	@DisplayName("상품 수정 - 예금 상품은 생성시간을 변경할 수 없다")
+	@Test
+	void update_whenCreatedAtChanged_thenThrowException() {
+		// Given
+		FinancialProduct originalProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
+			.userId(originalProduct.getId()) // userId는 원래 값으로 유지
+			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay()) // createdAt 변경
+			.build();
+
+		// When
+		Throwable throwable = Assertions.catchThrowable(() -> originalProduct.update(updatedProduct));
+
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("상품 소유자(userId)는 변경할 수 없습니다.");
+	}
+
+	@DisplayName("상품 수정 - 예금 상품을 적금 상품으로 업데이트할 수 없다")
+	@Test
+	void update_whenUpdatedProductIsNotDeposit_thenThrowException() {
+		// Given
+		FinancialProduct originalProduct = FinancialProductDataProvider.createDepositProduct("user-1");
+		FinancialProduct updatedProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
+
+		// When
+		Throwable throwable = Assertions.catchThrowable(() -> originalProduct.update(updatedProduct));
+
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("업데이트된 상품은 DepositProduct여야 합니다.");
 	}
 }

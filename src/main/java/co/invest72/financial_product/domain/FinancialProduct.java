@@ -127,6 +127,7 @@ public abstract class FinancialProduct {
 	 * @param updatedProduct 업데이트된 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)
 	 */
 	public void update(FinancialProduct updatedProduct) {
+		validateUpdate(updatedProduct);
 		this.name = updatedProduct.getName();
 		this.amount = updatedProduct.getAmount();
 		this.months = updatedProduct.getMonths();
@@ -135,6 +136,18 @@ public abstract class FinancialProduct {
 		this.taxType = updatedProduct.getTaxType();
 		this.taxRate = updatedProduct.getTaxRate();
 		this.startDate = updatedProduct.getStartDate();
+	}
+
+	private void validateUpdate(FinancialProduct updatedProduct) {
+		if (!getUserId().equals(updatedProduct.getUserId())) {
+			throw new IllegalArgumentException("상품 소유자(userId)는 변경할 수 없습니다.");
+		}
+		if (!getInvestmentType().equals(updatedProduct.getInvestmentType())) {
+			throw new IllegalArgumentException("투자 유형(InvestmentType)은 변경할 수 없습니다.");
+		}
+		if (!getCreatedAt().equals(updatedProduct.getCreatedAt())) {
+			throw new IllegalArgumentException("생성 날짜(createdAt)는 변경할 수 없습니다.");
+		}
 	}
 
 	/**

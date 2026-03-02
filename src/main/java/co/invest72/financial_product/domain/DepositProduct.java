@@ -36,20 +36,12 @@ public class DepositProduct extends FinancialProduct {
 			.taxRate(updatedProduct.getTaxRate())
 			.startDate(updatedProduct.getStartDate())
 			.build();
-		super.update(updateDeposit);
+		super.update(updatedProduct);
 	}
 
 	private void validateUpdate(FinancialProduct updatedProduct) {
 		if (!(updatedProduct instanceof DepositProduct)) {
 			throw new IllegalArgumentException("업데이트된 상품은 DepositProduct여야 합니다.");
-		}
-		// 변경 불가능한 필드의 변경을 요청하는 경우 예외가 발생해야 한다. 단, id와 createdAt 필드는 업데이트 시 무시되고 기존 값이 유지되므로,
-		// id, createdAt 변경 요청은 예외가 발생하지 않고 무시된다.
-		if (!getUserId().equals(updatedProduct.getUserId())) {
-			throw new IllegalArgumentException("상품 소유자(userId)는 변경할 수 없습니다.");
-		}
-		if (!getInvestmentType().equals(updatedProduct.getInvestmentType())) {
-			throw new IllegalArgumentException("투자 유형(InvestmentType)은 변경할 수 없습니다.");
 		}
 	}
 }

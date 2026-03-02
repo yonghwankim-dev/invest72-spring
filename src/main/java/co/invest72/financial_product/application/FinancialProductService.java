@@ -107,7 +107,7 @@ public class FinancialProductService {
 	@Transactional
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
-		FinancialProduct updatedProduct = financialProductFactory.create(existingProduct.getId(), user.getId(), dto);
+		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
 		existingProduct.update(updatedProduct);
 	}
 

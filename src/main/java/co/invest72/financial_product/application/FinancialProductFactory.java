@@ -1,5 +1,7 @@
 package co.invest72.financial_product.application;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import co.invest72.common.time.LocalDateProvider;
@@ -43,14 +45,33 @@ public class FinancialProductFactory {
 	 */
 	public FinancialProduct create(String productId, String userId, FinancialProductRequestDto dto) {
 		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
+		LocalDateTime createdAt = localDateProvider.nowDateTime();
 		return switch (investmentType) {
-			case CASH -> createCashProduct(productId, userId, dto);
-			case DEPOSIT -> createDepositProduct(productId, userId, dto);
-			case SAVINGS -> createSavingsProduct(productId, userId, dto);
+			case CASH -> createCashProduct(productId, userId, createdAt, dto);
+			case DEPOSIT -> createDepositProduct(productId, userId, createdAt, dto);
+			case SAVINGS -> createSavingsProduct(productId, userId, createdAt, dto);
 		};
 	}
 
-	private FinancialProduct createCashProduct(String productId, String userId, FinancialProductRequestDto dto) {
+	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequestDto dto) {
+		InvestmentType investmentType = base.getInvestmentType();
+		validateInvestmentType(base, dto);
+		return switch (investmentType) {
+			case CASH -> createCashProduct(base.getId(), base.getUserId(), base.getCreatedAt(), dto);
+			case DEPOSIT -> createDepositProduct(base.getId(), base.getUserId(), base.getCreatedAt(), dto);
+			case SAVINGS -> createSavingsProduct(base.getId(), base.getUserId(), base.getCreatedAt(), dto);
+		};
+	}
+
+	private void validateInvestmentType(FinancialProduct base, FinancialProductRequestDto dto) {
+		InvestmentType newInvestmentType = InvestmentType.valueOf(dto.getInvestmentType());
+		if (base.getInvestmentType() != newInvestmentType) {
+			throw new IllegalArgumentException("상품 유형은 변경할 수 없습니다.");
+		}
+	}
+
+	private FinancialProduct createCashProduct(String productId, String userId, LocalDateTime createdAt,
+		FinancialProductRequestDto dto) {
 		return CashProduct.builder()
 			.id(productId)
 			.userId(userId)
@@ -63,11 +84,12 @@ public class FinancialProductFactory {
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new ProductRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
+			.createdAt(createdAt)
 			.build();
 	}
 
-	private FinancialProduct createDepositProduct(String productId, String userId, FinancialProductRequestDto dto) {
+	private FinancialProduct createDepositProduct(String productId, String userId, LocalDateTime createdAt,
+		FinancialProductRequestDto dto) {
 		return DepositProduct.builder()
 			.id(productId)
 			.userId(userId)
@@ -80,11 +102,12 @@ public class FinancialProductFactory {
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new ProductRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
+			.createdAt(createdAt)
 			.build();
 	}
 
-	private FinancialProduct createSavingsProduct(String productId, String userId, FinancialProductRequestDto dto) {
+	private FinancialProduct createSavingsProduct(String productId, String userId, LocalDateTime createdAt,
+		FinancialProductRequestDto dto) {
 		return SavingsProduct.builder()
 			.id(productId)
 			.userId(userId)
@@ -98,7 +121,7 @@ public class FinancialProductFactory {
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new ProductRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
-			.createdAt(localDateProvider.nowDateTime())
+			.createdAt(createdAt)
 			.build();
 	}
 }
