@@ -6,12 +6,14 @@ import java.math.RoundingMode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class ProductRate {
 
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");

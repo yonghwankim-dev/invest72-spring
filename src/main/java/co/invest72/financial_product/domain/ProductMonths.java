@@ -3,12 +3,14 @@ package co.invest72.financial_product.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode
 public class ProductMonths {
 	@Column(name = "months", nullable = false)
 	private Integer value;

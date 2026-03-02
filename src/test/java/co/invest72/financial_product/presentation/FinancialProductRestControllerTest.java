@@ -465,6 +465,50 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.startDate").value("2026-02-01"));
 	}
 
+	@DisplayName("상품 수정 - 사용자는 현금 상품의 특정 정보를 수정할 수 없다")
+	@Test
+	void updateProduct_whenProductIsCash_thenDoNotUpdateImmutableFields() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		financialProductRepository.save(product);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("수정된 현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(12) // 현금 상품은 기간이 0이어야 하지만, 수정 요청에서는 12로 변경하려고 함
+			.interestRate(BigDecimal.valueOf(0.05)) // 현금 상품은 이자율이 0이어야 하지만, 수정 요청에서는 0.05로 변경하려고 함
+			.interestType(InterestType.COMPOUND.name()) // 현금 상품은 이자 유형이 NONE이어야 하지만, 수정 요청에서는 COMPOUND로 변경하려고 함
+			.taxType(TaxType.STANDARD.name()) // 현금 상품은 세금 유형이 NONE이어야 하지만, 수정 요청에서는 STANDARD로 변경하려고 함
+			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("Invalid request"));
+
+		// 현금 상품이 수정되지 않았는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId())) // ID는 변경되지 않아야 함
+			.andExpect(jsonPath("$.name").value("현금 상품")) // 이름은 수정되지 않아야 함
+			.andExpect(jsonPath("$.amount").value(1_000_000.0)) // 금액은 수정되지 않아야 함
+			.andExpect(jsonPath("$.months").value(0)) // 기간은 수정되지 않아야 함
+			.andExpect(jsonPath("$.interestRate").value(0.0)) // 이자율은 수정되지 않아야 함
+			.andExpect(jsonPath("$.interestType").value(InterestType.NONE.name())) // 이자 유형은 수정되지 않아야 함
+			.andExpect(jsonPath("$.taxType").value(TaxType.NONE.name())) // 세금 유형은 수정되지 않아야 함
+			.andExpect(jsonPath("$.taxRate").value(0.0)) // 세율은 수정되지 않아야 함
+			.andExpect(jsonPath("$.startDate").value("2026-01-01")) // 시작일은 수정되지 않아야 함
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
+			.andExpect(jsonPath("$.createdAt").value(startsWith("2026-01-01T")));
+	}
+
 	@DisplayName("상품 수정 - 사용자는 예금 상품을 수정한다")
 	@Test
 	void updateProduct_whenProductIsDeposit_thenUpdateProduct() throws Exception {
