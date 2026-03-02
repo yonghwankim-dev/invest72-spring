@@ -13,7 +13,7 @@ import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
 class DepositProductTest {
-
+	
 	/**
 	 * 변경되면 안되는 정보가 변경된 예금 상품 객체 생성
 	 * @return 변경되면 안되는 정보가 변경된 예금 상품 객체

@@ -24,22 +24,11 @@ public class DepositProduct extends FinancialProduct {
 
 	@Override
 	public void update(FinancialProduct updatedProduct) {
-		validateUpdate(updatedProduct);
-		// 수정 가능한 필드만 업데이트
-		FinancialProduct updateDeposit = this.toBuilder()
-			.name(updatedProduct.getName())
-			.amount(updatedProduct.getAmount())
-			.months(updatedProduct.getMonths())
-			.interestRate(updatedProduct.getInterestRate())
-			.interestType(updatedProduct.getInterestType())
-			.taxType(updatedProduct.getTaxType())
-			.taxRate(updatedProduct.getTaxRate())
-			.startDate(updatedProduct.getStartDate())
-			.build();
+		validateOnUpdate(updatedProduct);
 		super.update(updatedProduct);
 	}
 
-	private void validateUpdate(FinancialProduct updatedProduct) {
+	private void validateOnUpdate(FinancialProduct updatedProduct) {
 		if (!(updatedProduct instanceof DepositProduct)) {
 			throw new IllegalArgumentException("업데이트된 상품은 DepositProduct여야 합니다.");
 		}
