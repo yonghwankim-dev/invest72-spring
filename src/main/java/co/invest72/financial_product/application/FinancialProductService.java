@@ -39,6 +39,7 @@ public class FinancialProductService {
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
+		// TODO: dto를 사용하여 FinancialProduct를 생성하는 FinancialProductFactory 생성
 		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		FinancialProduct product = null;
 		switch (investmentType) {
