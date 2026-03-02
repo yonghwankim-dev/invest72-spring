@@ -2,12 +2,8 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import co.invest72.investment.domain.interest.InterestType;
-import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -28,25 +24,6 @@ public class SavingsProduct extends FinancialProduct {
 	@AttributeOverride(name = "value", column = @Column(name = "payment_day", nullable = false))
 	private PaymentDay paymentDay;
 
-	public SavingsProduct(
-		String userId,
-		String name,
-		InvestmentType investmentType,
-		ProductAmount amount,
-		ProductMonths months,
-		ProductRate interestRate,
-		InterestType interestType,
-		TaxType taxType,
-		ProductRate taxRate,
-		LocalDate startDate,
-		LocalDateTime createdAt,
-		PaymentDay paymentDay) {
-		super(userId, name, investmentType, amount, months, interestRate, interestType, taxType, taxRate,
-			startDate, createdAt);
-		this.paymentDay = paymentDay;
-		validatePaymentDay();
-	}
-
 	// 빌더 패턴을 사용할 때 부모 클래스의 필드와 자식 클래스의 필드를 모두 초기화할 수 있도록 생성자 정의
 	protected SavingsProduct(SavingsProductBuilder<?, ?> b) {
 		super(b); // 부모 필드 초기화
@@ -60,13 +37,13 @@ public class SavingsProduct extends FinancialProduct {
 
 	@Override
 	public void update(FinancialProduct updatedProduct) {
-		SavingsProduct updatedSavings = validateUpdate(updatedProduct);
+		SavingsProduct updatedSavings = validateOnUpdate(updatedProduct);
 		super.update(updatedProduct);
 		this.paymentDay = updatedSavings.getPaymentDay();
 		validatePaymentDay();
 	}
 
-	private SavingsProduct validateUpdate(FinancialProduct updatedProduct) {
+	private SavingsProduct validateOnUpdate(FinancialProduct updatedProduct) {
 		if (!(updatedProduct instanceof SavingsProduct updatedSavings)) {
 			throw new IllegalArgumentException("업데이트된 상품은 SavingsProduct여야 합니다.");
 		}
