@@ -2,18 +2,17 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class ProductRate {
 
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
@@ -36,5 +35,20 @@ public class ProductRate {
 	@Override
 	public String toString() {
 		return "ProductRate=%s%%".formatted(value);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ProductRate that = (ProductRate)o;
+		return value.compareTo(that.value) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value);
 	}
 }
