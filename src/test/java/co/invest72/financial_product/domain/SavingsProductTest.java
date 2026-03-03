@@ -7,9 +7,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -23,10 +25,10 @@ class SavingsProductTest {
 			.investmentType(InvestmentType.DEPOSIT)
 			.amount(new ProductAmount(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.06)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
 			.build();
@@ -140,10 +142,10 @@ class SavingsProductTest {
 			.investmentType(InvestmentType.DEPOSIT) // 투자 유형 변경
 			.amount(new ProductAmount(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.06)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();

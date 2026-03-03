@@ -21,7 +21,7 @@ public class NonTax implements Taxable {
 	}
 
 	@Override
-	public double getTaxRate() {
-		return 0.0;
+	public BigDecimal getTaxRate() {
+		return BigDecimal.ZERO;
 	}
 }

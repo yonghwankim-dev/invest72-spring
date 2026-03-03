@@ -69,10 +69,10 @@ public class InvestmentFactory {
 			.type(product.getInvestmentType())
 			.amount(product.getAmount())
 			.months(product.getMonths())
-			.interestRate(new AnnualInterestRate(product.getInterestRate().getValue().doubleValue()))
+			.interestRate(new AnnualInterestRate(product.getInterestRate().getValue()))
 			.interestType(product.getInterestType())
 			.taxType(product.getTaxType())
-			.taxRate(new FixedTaxRate(product.getTaxRate().getValue().doubleValue()))
+			.taxRate(product.getTaxRate())
 			.build();
 		return createBy(dto);
 	}
@@ -134,7 +134,7 @@ public class InvestmentFactory {
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue().intValue());
+			dto.getAmount().getValue());
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
@@ -145,7 +145,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue().intValue());
+			dto.getAmount().getValue());
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),

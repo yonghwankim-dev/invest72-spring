@@ -3,24 +3,38 @@ package co.invest72.investment.domain.tax;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import co.invest72.investment.domain.TaxRate;
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class FixedTaxRate implements TaxRate {
 
-	private final double rate;
+	private BigDecimal value;
 
-	public FixedTaxRate(double rate) {
-		this.rate = rate;
-		if (this.rate < 0 || this.rate >= 1) {
+	public FixedTaxRate(double value) {
+		this(BigDecimal.valueOf(value));
+	}
+
+	public FixedTaxRate(BigDecimal value) {
+		this.value = value;
+		validate();
+	}
+
+	private void validate() {
+		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(BigDecimal.ONE) >= 0) {
 			throw new IllegalArgumentException("Tax rate must be between 0 and 1 (exclusive).");
 		}
 	}
 
 	@Override
 	public int applyTo(int amount) {
-		return BigDecimal.valueOf(rate)
+		return value
 			.multiply(BigDecimal.valueOf(amount), MathContext.DECIMAL64)
 			.setScale(0, RoundingMode.HALF_EVEN)
 			.intValueExact();
@@ -28,13 +42,12 @@ public class FixedTaxRate implements TaxRate {
 
 	@Override
 	public BigDecimal applyTo(BigDecimal amount) {
-		return BigDecimal.valueOf(rate)
-			.multiply(amount, MathContext.DECIMAL64);
+		return value.multiply(amount);
 	}
 
 	@Override
-	public double getRate() {
-		return this.rate;
+	public BigDecimal getValue() {
+		return value;
 	}
 
 	@Override
@@ -44,11 +57,14 @@ public class FixedTaxRate implements TaxRate {
 		if (object == null || getClass() != object.getClass())
 			return false;
 		FixedTaxRate that = (FixedTaxRate)object;
-		return Double.compare(rate, that.rate) == 0;
+		return value.compareTo(that.value) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(rate);
+		if (value == null) {
+			return 0;
+		}
+		return value.stripTrailingZeros().hashCode();
 	}
 }
