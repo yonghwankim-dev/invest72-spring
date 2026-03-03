@@ -75,7 +75,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(BigDecimal.valueOf(product.getTaxRate().getRate()))
+			.taxRate(BigDecimal.valueOf(product.getTaxRate().getValue()))
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.build();
@@ -97,7 +97,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(BigDecimal.valueOf(product.getTaxRate().getRate()))
+			.taxRate(BigDecimal.valueOf(product.getTaxRate().getValue()))
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(product.getExpirationDate())

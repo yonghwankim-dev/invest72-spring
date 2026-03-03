@@ -41,7 +41,7 @@ public class FixedTaxRate implements TaxRate {
 	}
 
 	@Override
-	public double getRate() {
+	public double getValue() {
 		return rate.doubleValue();
 	}
 
