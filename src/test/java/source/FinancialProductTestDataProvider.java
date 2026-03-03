@@ -4,24 +4,16 @@ import static co.invest72.investment.domain.interest.InterestType.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
 
 import co.invest72.financial_product.domain.FinancialProduct;
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.investment.domain.CashInvestment;
-import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
-import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
-import co.invest72.investment.domain.tax.TaxType;
 
 public class FinancialProductTestDataProvider {
 	public static Stream<Arguments> provideFinancialProducts() {
@@ -41,20 +33,11 @@ public class FinancialProductTestDataProvider {
 		);
 	}
 
-	private static FinancialProduct createFinancialProduct(String name, InvestmentType investmentType,
-		InterestType interestType) {
-		return FinancialProduct.builder()
-			.userId("user-" + UUID.randomUUID())
-			.name(name)
-			.investmentType(investmentType)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
-			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
-			.interestType(interestType)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
-			.startDate(LocalDate.now())
-			.createdAt(LocalDateTime.now())
-			.build();
+	public static Stream<Arguments> daysBeforePaymentDay() {
+		return Stream.of(
+			Arguments.of(LocalDate.of(2026, 2, 14), BigDecimal.valueOf(1_000_000)),
+			Arguments.of(LocalDate.of(2026, 2, 16), BigDecimal.valueOf(2_000_000))
+		);
 	}
+
 }

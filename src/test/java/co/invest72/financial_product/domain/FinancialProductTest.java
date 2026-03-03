@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.investment.domain.investment.PaymentDay;
 import source.FinancialProductDataProvider;
@@ -314,12 +316,11 @@ class FinancialProductTest {
 	}
 
 	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자의 days가 납입일 이전이라면 잔액이 1개월분 적립되어야 한다")
-	@Test
-	void getBalanceByLocalDate_whenDaysBeforePaymentDay_thenAccOneMonth() {
+	@ParameterizedTest(name = "기준일자: {0}")
+	@MethodSource(value = "source.FinancialProductTestDataProvider#daysBeforePaymentDay")
+	void getBalanceByLocalDate_whenDaysBeforePaymentDay_thenAccOneMonth(LocalDate today, BigDecimal expectedBalance) {
 		// Given
 		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 14);
-		BigDecimal expectedBalance = BigDecimal.valueOf(1_000_000);
 
 		// When
 		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
@@ -334,21 +335,6 @@ class FinancialProductTest {
 		// Given
 		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
 		LocalDate today = LocalDate.of(2026, 2, 15);
-		BigDecimal expectedBalance = BigDecimal.valueOf(2_000_000);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자의 days가 납입일 이후라면 잔액이 2개월분 적립되어야 한다")
-	@Test
-	void getBalanceByLocalDate_whenDaysAfterPaymentDay_thenAccTwoMonths() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 16);
 		BigDecimal expectedBalance = BigDecimal.valueOf(2_000_000);
 
 		// When
@@ -379,9 +365,11 @@ class FinancialProductTest {
 		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct("user-1");
 
 		// when
-		Assertions.assertThatThrownBy(() -> deposit.toBuilder()
-				.paymentDay(new PaymentDay(15))
-				.build())
+		Throwable throwable = Assertions.catchThrowable(() -> deposit.toBuilder()
+			.paymentDay(new PaymentDay(15))
+			.build());
+		// then
+		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("예금 상품은 납입일이 없어야 합니다.");
 	}
