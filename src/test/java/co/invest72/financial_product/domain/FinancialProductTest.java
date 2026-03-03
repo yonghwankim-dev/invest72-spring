@@ -351,9 +351,11 @@ class FinancialProductTest {
 		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user-1");
 
 		// when
-		Assertions.assertThatThrownBy(() -> cash.toBuilder()
-				.paymentDay(new PaymentDay(15))
-				.build())
+		Throwable throwable = Assertions.catchThrowable(() -> cash.toBuilder()
+			.paymentDay(new PaymentDay(15))
+			.build());
+		// then
+		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("현금 상품은 납입일이 없어야 합니다.");
 	}
@@ -381,9 +383,11 @@ class FinancialProductTest {
 		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct("user-1");
 
 		// when
-		Assertions.assertThatThrownBy(() -> savings.toBuilder()
-				.paymentDay(null)
-				.build())
+		Throwable throwable = Assertions.catchThrowable(() -> savings.toBuilder()
+			.paymentDay(null)
+			.build());
+		// then
+		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("적금 상품은 납입일이 반드시 필요합니다.");
 	}
