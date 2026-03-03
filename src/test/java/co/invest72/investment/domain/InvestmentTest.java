@@ -27,9 +27,9 @@ class InvestmentTest {
 		investmentFactory = new InvestmentFactory();
 	}
 
-	@DisplayName("적금 상품 수익 계산 - FinancialProduct 객체를 이용하여 적금 상품의 최대 수익 계산")
+	@DisplayName("적금 상품 수익 계산 - 최대값 검증")
 	@Test
-	void calculateMaxValue_whenSavingsProduct_thenReturnMaxValue() {
+	void calculateSavingsInvestmentProfit_whenMaxValues_thenCalculateCorrectly() {
 		// Given
 		FinancialProduct financialProduct = FinancialProduct.builder()
 			.userId("user-1")
@@ -38,10 +38,10 @@ class InvestmentTest {
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestRate(new ProductRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
 			.taxType(TaxType.STANDARD)
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.154)))
+			.taxRate(new ProductRate(BigDecimal.valueOf(9.9999)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();

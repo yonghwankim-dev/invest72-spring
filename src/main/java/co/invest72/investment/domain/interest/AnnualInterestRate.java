@@ -2,6 +2,7 @@ package co.invest72.investment.domain.interest;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
@@ -9,28 +10,34 @@ import co.invest72.investment.domain.InvestPeriod;
 
 public class AnnualInterestRate implements InterestRate {
 
-	private final double annualRate;
+	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
 
-	public AnnualInterestRate(double annualRate) {
-		this.annualRate = annualRate;
-		if (this.annualRate < 0) {
-			throw new IllegalArgumentException("Annual totalInterest rate must be non-negative.");
-		}
-		if (this.annualRate >= 1.0) {
-			throw new IllegalArgumentException("Annual totalInterest rate must be less than 100%.");
+	private final BigDecimal value;
+
+	public AnnualInterestRate(double value) {
+		this(BigDecimal.valueOf(value));
+	}
+
+	public AnnualInterestRate(BigDecimal value) {
+		this.value = value;
+		validate(this.value);
+	}
+
+	private void validate(BigDecimal value) {
+		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(MAX_RATE) > 0) {
+			BigDecimal maxRatePercent = MAX_RATE.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_EVEN);
+			throw new IllegalArgumentException("금리는 0% 이상 " + maxRatePercent + "% 이하이어야 합니다.");
 		}
 	}
 
 	@Override
 	public BigDecimal getAnnualRate() {
-		return BigDecimal.valueOf(this.annualRate);
+		return value;
 	}
 
 	@Override
 	public BigDecimal getMonthlyRate() {
-		BigDecimal dividend = BigDecimal.valueOf(this.annualRate);
-		BigDecimal divisor = BigDecimal.valueOf(12);
-		return dividend.divide(divisor, MathContext.DECIMAL64);
+		return value.divide(BigDecimal.valueOf(12), MathContext.DECIMAL64);
 	}
 
 	@Override
@@ -74,11 +81,11 @@ public class AnnualInterestRate implements InterestRate {
 		if (object == null || getClass() != object.getClass())
 			return false;
 		AnnualInterestRate that = (AnnualInterestRate)object;
-		return Double.compare(annualRate, that.annualRate) == 0;
+		return value.compareTo(that.value) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(annualRate);
+		return Objects.hash(value);
 	}
 }
