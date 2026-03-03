@@ -59,7 +59,7 @@ class AnnualInterestRateTest {
 			() -> new AnnualInterestRate(-0.01));
 	}
 
-	@DisplayName("객체 최대값 검증 - 연이율은 최대 9.9999%까지 허용")
+	@DisplayName("객체 최대값 검증 - 연이율은 최대 999.99%까지 허용")
 	@Test
 	void shouldCreateAnnualInterestRate_givenMaxAnnualRate() {
 		BigDecimal maxAnnualRate = BigDecimal.valueOf(9.9999);
