@@ -117,3 +117,11 @@
 ### 3.5 세금우대 퍼센트
 
 - 범위: 0.00 ~ 0.99 (0% ~ 99%)
+
+### Docker Compose 실행 방법
+
+로컬 개발 환경에서 실행시 `docker-compose.yml` 파일과 함께 `docker-compose.local.yaml` 파일을 사용하여 서비스를 실행하려면 아래 명령어를 사용하세요:
+
+```bash
+$ docker-compose -f docker-compose.yml -f docker-compose.local.yaml up -d
+```
