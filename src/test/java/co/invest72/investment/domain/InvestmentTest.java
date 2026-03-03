@@ -12,6 +12,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
+import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -32,7 +33,7 @@ class InvestmentTest {
 	@Test
 	void calculateSavingsInvestmentProfit_whenMaxValues_thenCalculateCorrectly() {
 		// Given
-		FinancialProduct financialProduct = FinancialProduct.builder()
+		FinancialProduct financialProduct = SavingsProduct.builder()
 			.userId("user-1")
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS)

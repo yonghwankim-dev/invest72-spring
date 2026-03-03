@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -25,7 +26,7 @@ class CashProductTest {
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
 			.interestType(InterestType.COMPOUND)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
 			.build();
@@ -303,7 +304,7 @@ class CashProductTest {
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.1))) // taxRate 변경
+			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.1))) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -332,7 +333,7 @@ class CashProductTest {
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.05))) // interestRate 변경
 			.interestType(InterestType.COMPOUND) // interestType 변경
 			.taxType(TaxType.NON_TAX) // taxType 변경
-			.taxRate(new ProductRate(BigDecimal.ZERO)) // taxRate 변경
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO)) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();

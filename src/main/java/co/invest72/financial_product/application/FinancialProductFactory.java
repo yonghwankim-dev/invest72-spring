@@ -16,6 +16,7 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import lombok.RequiredArgsConstructor;
 
@@ -82,7 +83,7 @@ public class FinancialProductFactory {
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
+			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();
@@ -100,7 +101,7 @@ public class FinancialProductFactory {
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
+			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();
@@ -119,7 +120,7 @@ public class FinancialProductFactory {
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
+			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();
