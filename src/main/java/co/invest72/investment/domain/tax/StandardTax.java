@@ -29,7 +29,7 @@ public class StandardTax implements Taxable {
 	}
 
 	@Override
-	public double getTaxRate() {
-		return taxRate.getValue().doubleValue();
+	public BigDecimal getTaxRate() {
+		return taxRate.getValue();
 	}
 }
