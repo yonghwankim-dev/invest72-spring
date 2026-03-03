@@ -169,7 +169,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public double getTaxRate() {
+	public BigDecimal getTaxRate() {
 		return taxable.getTaxRate();
 	}
 }

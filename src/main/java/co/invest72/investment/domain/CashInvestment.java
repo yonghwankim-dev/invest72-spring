@@ -88,7 +88,7 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
-	public double getTaxRate() {
-		return 0.0;
+	public BigDecimal getTaxRate() {
+		return BigDecimal.ZERO;
 	}
 }

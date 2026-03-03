@@ -9,5 +9,5 @@ public interface Taxable {
 
 	String getTaxType();
 
-	double getTaxRate();
+	BigDecimal getTaxRate();
 }
