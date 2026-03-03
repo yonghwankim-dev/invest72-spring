@@ -7,23 +7,27 @@ import java.time.LocalDateTime;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.Builder;
+import jakarta.persistence.Inheritance;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
+@Inheritance(strategy = jakarta.persistence.InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "product_type", discriminatorType = jakarta.persistence.DiscriminatorType.STRING)
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
-public class FinancialProduct {
+@SuperBuilder(toBuilder = true)
+public abstract class FinancialProduct {
 	@Id
 	private String id;
 
@@ -34,7 +38,7 @@ public class FinancialProduct {
 	private String name;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "product_type", nullable = false, length = 100)
+	@Column(name = "investment_type", nullable = false, length = 100)
 	private InvestmentType investmentType;
 
 	@Embedded
@@ -43,10 +47,6 @@ public class FinancialProduct {
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "months", nullable = false))
 	private ProductMonths months; // 기간 (개월)
-
-	@Embedded
-	@AttributeOverride(name = "value", column = @Column(name = "payment_day"))
-	private PaymentDay paymentDay; // 납입일 (적금 상품에만 적용, 현금/예금은 null)
 
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
@@ -72,10 +72,18 @@ public class FinancialProduct {
 
 	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
 
-	@Builder(toBuilder = true)
-	private FinancialProduct(String userId, String name, InvestmentType investmentType, ProductAmount amount,
-		ProductMonths months, PaymentDay paymentDay, ProductRate interestRate, InterestType interestType,
-		TaxType taxType, ProductRate taxRate, LocalDate startDate, LocalDateTime createdAt) {
+	protected FinancialProduct(
+		String userId,
+		String name,
+		InvestmentType investmentType,
+		ProductAmount amount,
+		ProductMonths months,
+		ProductRate interestRate,
+		InterestType interestType,
+		TaxType taxType,
+		ProductRate taxRate,
+		LocalDate startDate,
+		LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
 		this.id = idGenerator.generateId();
 		this.userId = userId;
@@ -83,23 +91,44 @@ public class FinancialProduct {
 		this.investmentType = investmentType;
 		this.amount = amount;
 		this.months = months;
-		this.paymentDay = paymentDay;
 		this.interestRate = interestRate;
 		this.interestType = interestType;
 		this.taxType = taxType;
 		this.taxRate = taxRate;
 		this.startDate = startDate;
 		this.createdAt = createdAt;
-		validate();
 	}
 
-	private void validate() {
-		this.investmentType.validate(this.paymentDay);
+	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
+		this.id = b.id != null ? b.id : idGenerator.generateId(); // 빌더에서 ID가 주어지지 않으면 생성
+		this.userId = b.userId;
+		this.name = b.name;
+		this.investmentType = b.investmentType;
+		this.amount = b.amount;
+		this.months = b.months;
+		this.interestRate = b.interestRate;
+		this.interestType = b.interestType;
+		this.taxType = b.taxType;
+		this.taxRate = b.taxRate;
+		this.startDate = b.startDate;
+		this.createdAt = b.createdAt;
 	}
 
+	/**
+	 * 잔액 계산<br>
+	 * @param today 현재 날짜
+	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
+	 */
+	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
+
+	/**
+	 * 상품 정보 업데이트<br>
+	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)
+	 * @param updatedProduct 업데이트된 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)
+	 */
 	public void update(FinancialProduct updatedProduct) {
+		validateUpdate(updatedProduct);
 		this.name = updatedProduct.getName();
-		this.investmentType = updatedProduct.getInvestmentType();
 		this.amount = updatedProduct.getAmount();
 		this.months = updatedProduct.getMonths();
 		this.interestRate = updatedProduct.getInterestRate();
@@ -107,6 +136,21 @@ public class FinancialProduct {
 		this.taxType = updatedProduct.getTaxType();
 		this.taxRate = updatedProduct.getTaxRate();
 		this.startDate = updatedProduct.getStartDate();
+	}
+
+	private void validateUpdate(FinancialProduct updatedProduct) {
+		if (!getId().equals(updatedProduct.getId())) {
+			throw new IllegalArgumentException("상품 ID는 변경할 수 없습니다.");
+		}
+		if (!getUserId().equals(updatedProduct.getUserId())) {
+			throw new IllegalArgumentException("상품 소유자(userId)는 변경할 수 없습니다.");
+		}
+		if (!getInvestmentType().equals(updatedProduct.getInvestmentType())) {
+			throw new IllegalArgumentException("투자 유형(InvestmentType)은 변경할 수 없습니다.");
+		}
+		if (!getCreatedAt().equals(updatedProduct.getCreatedAt())) {
+			throw new IllegalArgumentException("생성 날짜(createdAt)는 변경할 수 없습니다.");
+		}
 	}
 
 	/**
@@ -136,11 +180,21 @@ public class FinancialProduct {
 	}
 
 	/**
-	 * 잔액 계산<br>
+	 * 납입일 여부 확인<br>
+	 * 현금/예금은 기본적으로 항상 false, 적금은 paymentDay에 따라 true/false 반환
 	 * @param today 현재 날짜
-	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
+	 * @return 납입일 여부 (현금/예금은 항상 false, 적금은 paymentDay에 따라 true/false 반환)
 	 */
-	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return investmentType.calculateBalance(this, today);
+	public boolean isPaidOn(LocalDate today) {
+		return false;
+	}
+
+	/**
+	 * 납입일 계산<br>
+	 * 현금/예금은 납입일이 없으므로 null 반환, 적금은 paymentDay 값을 반환
+	 * @return 납입일
+	 */
+	public Integer getPaymentDayValue() {
+		return null;
 	}
 }

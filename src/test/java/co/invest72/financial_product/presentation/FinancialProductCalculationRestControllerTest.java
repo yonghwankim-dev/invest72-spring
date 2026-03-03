@@ -20,6 +20,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -62,7 +63,7 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsSimpleDeposit_thenReturnsCalculationResult() throws Exception {
 		// Given
-		FinancialProduct product = FinancialProduct.builder()
+		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
@@ -97,7 +98,7 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsCompoundDeposit_thenReturnsCalculationResult() throws Exception {
 		// Given
-		FinancialProduct product = FinancialProduct.builder()
+		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("복리-예금")
 			.investmentType(InvestmentType.DEPOSIT)

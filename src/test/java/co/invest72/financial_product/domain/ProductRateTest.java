@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -23,5 +24,14 @@ class ProductRateTest {
 	void newInstance_whenRateIsInvalid_thenThrowException(BigDecimal value) {
 		Assertions.assertThatThrownBy(() -> new ProductRate(value))
 			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@DisplayName("객체 대소비교 - 동일한 비율")
+	@Test
+	void equals_whenSameValue_thenReturnTrue() {
+		ProductRate rate1 = new ProductRate(new BigDecimal("0.0500"));
+		ProductRate rate2 = new ProductRate(new BigDecimal("0.05"));
+
+		Assertions.assertThat(rate1).isEqualTo(rate2);
 	}
 }

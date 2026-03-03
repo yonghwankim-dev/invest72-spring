@@ -7,12 +7,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.investment.domain.investment.PaymentDay;
 import source.FinancialProductDataProvider;
 
 class FinancialProductTest {
 
 	private FinancialProduct financialProduct;
+
+	@DisplayName("현금 상품 객체 생성")
+	@Test
+	void constructor_whenCreatingCashProduct_thenCreateSuccessfully() {
+		// Given & When
+		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
+
+		// Then
+		Assertions.assertThat(financialProduct).isNotNull();
+	}
 
 	@DisplayName("현금 상품 만기일 계산 - 현금 상품은 만기일이 LocalDate.MAX로 설정된다.")
 	@Test
@@ -358,44 +367,18 @@ class FinancialProductTest {
 		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
 	}
 
-	@DisplayName("객체 생성 - 현금 상품 생성시 이체일이 초기화되는 경우 예외가 발생한다.")
-	@Test
-	void constructor_whenCreatingCashProduct_thenThrowExceptionIfPaymentDayIsSet() {
-		// Given
-		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user-1");
-
-		// when
-		Assertions.assertThatThrownBy(() -> cash.toBuilder()
-				.paymentDay(new PaymentDay(15))
-				.build())
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("현금 상품은 납입일이 없어야 합니다.");
-	}
-
-	@DisplayName("객체 생성 - 예금 상품 생성시 이체일이 초기화된 경우 예외가 발생한다.")
-	@Test
-	void constructor_whenCreatingDepositProduct_thenThrowExceptionIfPaymentDayIsSet() {
-		// Given
-		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct("user-1");
-
-		// when
-		Assertions.assertThatThrownBy(() -> deposit.toBuilder()
-				.paymentDay(new PaymentDay(15))
-				.build())
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("예금 상품은 납입일이 없어야 합니다.");
-	}
-
 	@DisplayName("객체 생성 - 적금 상품 생성시 이체일이 초기화되지 않는 경우 예외가 발생한다.")
 	@Test
 	void constructor_whenCreatingSavingsProduct_thenThrowExceptionIfPaymentDayIsNotSet() {
 		// Given
-		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct("user-1");
+		SavingsProduct savings = (SavingsProduct)FinancialProductDataProvider.createSavingsProduct("user-1");
 
 		// when
-		Assertions.assertThatThrownBy(() -> savings.toBuilder()
-				.paymentDay(null)
-				.build())
+		Throwable throwable = Assertions.catchThrowable(() -> savings.toBuilder()
+			.paymentDay(null)
+			.build());
+		// then
+		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("적금 상품은 납입일이 반드시 필요합니다.");
 	}

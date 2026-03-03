@@ -333,7 +333,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(2_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
-			.andExpect(jsonPath("$.remainingDays").value(308));
+			.andExpect(jsonPath("$.remainingDays").value(308))
+			.andExpect(jsonPath("$.paymentDay").value(15));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")
@@ -428,9 +429,9 @@ class FinancialProductRestControllerTest {
 			.andDo(MockMvcResultHandlers.print());
 	}
 
-	@DisplayName("상품 수정 - 사용자가 생성한 상품을 수정한다")
+	@DisplayName("상품 수정 - 사용자가 생성한 현금 상품을 수정한다")
 	@Test
-	void updateProduct_whenProductExists_thenUpdateProduct() throws Exception {
+	void updateProduct_whenProductIsCash_thenUpdateProduct() throws Exception {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
@@ -462,6 +463,212 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.name").value("수정된 현금 상품"))
 			.andExpect(jsonPath("$.amount").value(2_000_000.0))
 			.andExpect(jsonPath("$.startDate").value("2026-02-01"));
+	}
+
+	@DisplayName("상품 수정 - 사용자는 현금 상품의 특정 정보를 수정할 수 없다")
+	@Test
+	void updateProduct_whenProductIsCash_thenDoNotUpdateImmutableFields() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		financialProductRepository.save(product);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("수정된 현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(12) // 현금 상품은 기간이 0이어야 하지만, 수정 요청에서는 12로 변경하려고 함
+			.interestRate(BigDecimal.valueOf(0.05)) // 현금 상품은 이자율이 0이어야 하지만, 수정 요청에서는 0.05로 변경하려고 함
+			.interestType(InterestType.COMPOUND.name()) // 현금 상품은 이자 유형이 NONE이어야 하지만, 수정 요청에서는 COMPOUND로 변경하려고 함
+			.taxType(TaxType.STANDARD.name()) // 현금 상품은 세금 유형이 NONE이어야 하지만, 수정 요청에서는 STANDARD로 변경하려고 함
+			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("Invalid request"));
+
+		// 현금 상품이 수정되지 않았는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId())) // ID는 변경되지 않아야 함
+			.andExpect(jsonPath("$.name").value("현금 상품")) // 이름은 수정되지 않아야 함
+			.andExpect(jsonPath("$.amount").value(1_000_000.0)) // 금액은 수정되지 않아야 함
+			.andExpect(jsonPath("$.months").value(0)) // 기간은 수정되지 않아야 함
+			.andExpect(jsonPath("$.interestRate").value(0.0)) // 이자율은 수정되지 않아야 함
+			.andExpect(jsonPath("$.interestType").value(InterestType.NONE.name())) // 이자 유형은 수정되지 않아야 함
+			.andExpect(jsonPath("$.taxType").value(TaxType.NONE.name())) // 세금 유형은 수정되지 않아야 함
+			.andExpect(jsonPath("$.taxRate").value(0.0)) // 세율은 수정되지 않아야 함
+			.andExpect(jsonPath("$.startDate").value("2026-01-01")) // 시작일은 수정되지 않아야 함
+			.andExpect(jsonPath("$.createdAt").value(notNullValue()))
+			.andExpect(jsonPath("$.createdAt").value(startsWith("2026-01-01T")));
+	}
+
+	@DisplayName("상품 수정 - 사용자는 예금 상품을 수정한다")
+	@Test
+	void updateProduct_whenProductIsDeposit_thenUpdateProduct() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId(),
+			InterestType.SIMPLE);
+		financialProductRepository.save(product);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("수정된 예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(12)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isNoContent());
+
+		// 상품이 수정되었는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId())) // ID는 변경되지 않아야 함
+			.andExpect(jsonPath("$.name").value("수정된 예금 상품"))
+			.andExpect(jsonPath("$.amount").value(2_000_000.0))
+			.andExpect(jsonPath("$.startDate").value("2026-02-01"))
+			.andExpect(jsonPath("$.months").value(12));
+	}
+
+	@DisplayName("상품 수정 - 사용자는 적금 상품을 수정한다")
+	@Test
+	void updateProduct_whenProductIsSavings_thenUpdateProduct() throws Exception {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			InterestType.COMPOUND);
+		financialProductRepository.save(product);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("수정된 적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(2_000_000L))
+			.months(12)
+			.paymentDay(20)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 2, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isNoContent());
+
+		// 상품이 수정되었는지 검증
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(product.getId())) // ID는 변경되지 않아야 함
+			.andExpect(jsonPath("$.name").value("수정된 적금 상품"))
+			.andExpect(jsonPath("$.amount").value(2_000_000.0))
+			.andExpect(jsonPath("$.startDate").value("2026-02-01"))
+			.andExpect(jsonPath("$.paymentDay").value(20));
+	}
+
+	@DisplayName("상품 수정 - 사용자는 기존 현금 상품을 적금 상품으로 변경하지 못한다.")
+	@Test
+	void updateProduct_whenChangingInvestmentType_thenReturnBadRequest() throws Exception {
+		// given
+		FinancialProduct cash = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		financialProductRepository.save(cash);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", cash.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("상품 수정 - 사용자는 적금 상품을 예금 상품으로 변경하지 못한다.")
+	@Test
+	void updateProduct_whenChangingInvestmentTypeFromSavingsToDeposit_thenReturnBadRequest() throws Exception {
+		// given
+		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct(principalUser.getUser().getId(),
+			InterestType.COMPOUND);
+		financialProductRepository.save(savings);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", savings.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("상품 수정 - 사용자는 예금 상품을 적금 상품으로 변경하지 못한다.")
+	@Test
+	void updateProduct_whenChangingInvestmentTypeFromDepositToSavings_thenReturnBadRequest() throws Exception {
+		// given
+		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId(),
+			InterestType.SIMPLE);
+		financialProductRepository.save(deposit);
+
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", deposit.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("상품 수정 - 다른 사용자가 생성한 상품을 수정하려고 하면 400 Bad Request를 반환한다")
