@@ -30,6 +30,6 @@ public class TaxBenefit implements Taxable {
 
 	@Override
 	public double getTaxRate() {
-		return taxRate.getRate();
+		return taxRate.getValue();
 	}
 }

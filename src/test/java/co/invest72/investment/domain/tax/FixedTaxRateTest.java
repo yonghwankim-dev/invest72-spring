@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.investment.domain.TaxRate;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 
 class FixedTaxRateTest {
 
@@ -53,7 +52,7 @@ class FixedTaxRateTest {
 
 	@Test
 	void shouldReturnRate_whenGetRate() {
-		double rate = fixedTaxRate.getRate();
+		double rate = fixedTaxRate.getValue();
 
 		double expectedRate = 0.154;
 		assertEquals(expectedRate, rate);
