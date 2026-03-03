@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class SavingsProduct extends FinancialProduct {
 	@Embedded
-	@AttributeOverride(name = "value", column = @Column(name = "payment_day", nullable = false))
+	@AttributeOverride(name = "value", column = @Column(name = "payment_day"))
 	private PaymentDay paymentDay;
 
 	// 빌더 패턴을 사용할 때 부모 클래스의 필드와 자식 클래스의 필드를 모두 초기화할 수 있도록 생성자 정의
