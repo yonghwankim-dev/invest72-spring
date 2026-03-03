@@ -36,12 +36,12 @@ class InvestmentTest {
 			.userId("user-1")
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
+			.amount(new ProductAmount(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
 			.interestRate(new ProductRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
-			.taxType(TaxType.TAX_BENEFIT)
+			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
@@ -54,7 +54,9 @@ class InvestmentTest {
 		BigDecimal totalProfit = investment.getTotalProfit();
 
 		// Then
-		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("11988000000"));
+		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("119880000000000000"));
+		Assertions.assertThat(totalInterest).isEqualByComparingTo(new BigDecimal("598844561494500000000"));
+		Assertions.assertThat(totalTax).isEqualByComparingTo(new BigDecimal("92222062470153000000"));
+		Assertions.assertThat(totalProfit).isEqualByComparingTo(new BigDecimal("506742379024347000000"));
 	}
-
 }

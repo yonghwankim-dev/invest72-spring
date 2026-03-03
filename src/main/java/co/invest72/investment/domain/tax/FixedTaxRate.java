@@ -43,8 +43,7 @@ public class FixedTaxRate implements TaxRate {
 
 	@Override
 	public BigDecimal applyTo(BigDecimal amount) {
-		return value
-			.multiply(amount, MathContext.DECIMAL64);
+		return value.multiply(amount);
 	}
 
 	@Override
