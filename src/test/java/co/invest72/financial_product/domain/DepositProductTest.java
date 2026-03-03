@@ -13,7 +13,7 @@ import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
 class DepositProductTest {
-	
+
 	/**
 	 * 변경되면 안되는 정보가 변경된 예금 상품 객체 생성
 	 * @return 변경되면 안되는 정보가 변경된 예금 상품 객체
@@ -54,7 +54,7 @@ class DepositProductTest {
 			.hasMessage("상품 ID는 변경할 수 없습니다.");
 	}
 
-	@DisplayName("상품 수정 - 예금 상품은 사용자 식별자 아디이를 변경할 수 없다")
+	@DisplayName("상품 수정 - 예금 상품은 사용자 식별자(userId) 변경할 수 없다")
 	@Test
 	void update_whenUserIdChanged_thenThrowException() {
 		// Given
