@@ -30,6 +30,6 @@ public class StandardTax implements Taxable {
 
 	@Override
 	public double getTaxRate() {
-		return taxRate.getValue();
+		return taxRate.getValue().doubleValue();
 	}
 }

@@ -41,8 +41,8 @@ public class FixedTaxRate implements TaxRate {
 	}
 
 	@Override
-	public double getValue() {
-		return value.doubleValue();
+	public BigDecimal getValue() {
+		return value;
 	}
 
 	@Override
