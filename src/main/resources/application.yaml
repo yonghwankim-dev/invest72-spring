@@ -2,9 +2,9 @@ spring:
   profiles:
     include: secret
   datasource:
-    url: jdbc:postgresql://localhost:5432/invest72
-    username: invest72
-    password: invest72@
+    url: ${DB_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

@@ -13,12 +13,11 @@ services:
     image: postgres:17
     restart: always
     environment:
-      POSTGRES_USER: invest72
-      POSTGRES_PASSWORD: invest72@
-      POSTGRES_DB: invest72
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
+    env_file:
+      - .env.local
     volumes:
       - db-data:/var/lib/postgresql
 volumes:
