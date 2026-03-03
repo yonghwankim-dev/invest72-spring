@@ -1,6 +1,5 @@
 package co.invest72.financial_product.application;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(BigDecimal.valueOf(product.getTaxRate().getValue()))
+			.taxRate(product.getTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.build();
@@ -97,7 +96,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(BigDecimal.valueOf(product.getTaxRate().getValue()))
+			.taxRate(product.getTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(product.getExpirationDate())

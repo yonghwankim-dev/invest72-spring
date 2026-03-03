@@ -2,6 +2,7 @@ package co.invest72.investment.domain.tax;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -52,9 +53,9 @@ class FixedTaxRateTest {
 
 	@Test
 	void shouldReturnRate_whenGetRate() {
-		double rate = fixedTaxRate.getValue();
+		BigDecimal value = fixedTaxRate.getValue();
 
 		double expectedRate = 0.154;
-		assertEquals(expectedRate, rate);
+		assertEquals(BigDecimal.valueOf(expectedRate), value);
 	}
 }
