@@ -134,7 +134,7 @@ public class InvestmentFactory {
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue().intValue());
+			dto.getAmount().getValue());
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
@@ -145,7 +145,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue().intValue());
+			dto.getAmount().getValue());
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
