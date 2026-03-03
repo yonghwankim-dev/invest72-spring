@@ -29,8 +29,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.5.11'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.5.11'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.5.11'
-    // h2 database for testing
-    implementation 'com.h2database:h2:2.4.240'
+
+    // PostgreSQL 드라이버 추가
+    runtimeOnly 'org.postgresql:postgresql'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok'
@@ -38,6 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test:6.5.8'
     testImplementation 'org.apache.commons:commons-csv:1.14.1'
+    testImplementation 'com.h2database:h2:2.3.232'
 }
 
 test {

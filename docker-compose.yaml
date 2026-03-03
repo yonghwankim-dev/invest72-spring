@@ -6,3 +6,22 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    depends_on:
+      - db
+    networks:
+      - default
+  db:
+    container_name: invest72-db
+    image: postgres:17.0-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - default
+volumes:
+  db-data:
+networks:
+  default:
+    driver: bridge
