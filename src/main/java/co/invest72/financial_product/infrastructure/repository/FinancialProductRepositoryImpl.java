@@ -3,6 +3,7 @@ package co.invest72.financial_product.infrastructure.repository;
 import java.util.List;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import co.invest72.financial_product.domain.FinancialProduct;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 @Primary
+@Profile("!test")
 public class FinancialProductRepositoryImpl implements FinancialProductRepository {
 
 	private final JpaFinancialProductRepository jpaRepository;

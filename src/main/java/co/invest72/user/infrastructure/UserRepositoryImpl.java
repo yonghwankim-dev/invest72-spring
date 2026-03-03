@@ -3,6 +3,7 @@ package co.invest72.user.infrastructure;
 import java.util.Optional;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import co.invest72.user.domain.User;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 @Primary
+@Profile("!test")
 public class UserRepositoryImpl implements UserRepository {
 
 	private final JpaUserRepository jpaUserRepository;

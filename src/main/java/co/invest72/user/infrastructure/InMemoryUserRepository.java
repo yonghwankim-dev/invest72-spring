@@ -4,12 +4,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import co.invest72.user.domain.User;
 import co.invest72.user.domain.UserRepository;
 
 @Repository
+@Profile("test")
 public class InMemoryUserRepository implements UserRepository {
 
 	private final Map<String, User> userStore = new ConcurrentHashMap<>();
