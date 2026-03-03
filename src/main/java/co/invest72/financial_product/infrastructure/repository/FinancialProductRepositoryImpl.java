@@ -21,11 +21,16 @@ public class FinancialProductRepositoryImpl implements FinancialProductRepositor
 		return jpaRepository.save(product).getId();
 	}
 
+	/**
+	 * ID로 금융 상품을 조회합니다.
+	 * ID로 조회된 금융 상품이 존재하지 않으면 null을 반환합니다.
+	 * @param id 조회할 금융 상품의 ID
+	 * @return 조회된 금융 상품, 존재하지 않으면 null
+	 */
 	@Override
 	public FinancialProduct findByProductId(String id) {
 		return jpaRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("금융 상품을 찾을 수 없습니다. ID: " + id));
-
+			.orElse(null);
 	}
 
 	@Override
