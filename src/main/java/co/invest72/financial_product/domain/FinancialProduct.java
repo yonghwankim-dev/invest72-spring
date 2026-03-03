@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
+import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
@@ -62,7 +63,7 @@ public class FinancialProduct {
 
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "tax_rate", nullable = false, precision = 5, scale = 4))
-	private ProductRate taxRate; // 세율 (예: 0.15 for 15%)
+	private TaxRate taxRate; // 세율 (예: 0.15 for 15%)
 
 	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate; // 투자 시작일
@@ -75,7 +76,7 @@ public class FinancialProduct {
 	@Builder(toBuilder = true)
 	private FinancialProduct(String userId, String name, InvestmentType investmentType, ProductAmount amount,
 		ProductMonths months, PaymentDay paymentDay, ProductRate interestRate, InterestType interestType,
-		TaxType taxType, ProductRate taxRate, LocalDate startDate, LocalDateTime createdAt) {
+		TaxType taxType, TaxRate taxRate, LocalDate startDate, LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
 		this.id = idGenerator.generateId();
 		this.userId = userId;

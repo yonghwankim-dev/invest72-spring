@@ -1,5 +1,6 @@
 package co.invest72.financial_product.application;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,7 @@ public class FinancialProductService {
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
+			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(LocalDateTime.now())
 			.build();
@@ -73,7 +75,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(product.getTaxRate().getValue())
+			.taxRate(BigDecimal.valueOf(product.getTaxRate().getRate()))
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.build();
@@ -95,7 +97,7 @@ public class FinancialProductService {
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
-			.taxRate(product.getTaxRate().getValue())
+			.taxRate(BigDecimal.valueOf(product.getTaxRate().getRate()))
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(product.getExpirationDate())
@@ -130,7 +132,7 @@ public class FinancialProductService {
 			.interestRate(new ProductRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
+			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.build();
 		existingProduct.update(updatedProduct);

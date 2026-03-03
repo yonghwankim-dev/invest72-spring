@@ -9,18 +9,26 @@ import co.invest72.investment.domain.TaxRate;
 
 public class FixedTaxRate implements TaxRate {
 
-	private final double rate;
+	private final BigDecimal rate;
 
 	public FixedTaxRate(double rate) {
+		this(BigDecimal.valueOf(rate));
+	}
+
+	public FixedTaxRate(BigDecimal rate) {
 		this.rate = rate;
-		if (this.rate < 0 || this.rate >= 1) {
+		validate();
+	}
+
+	private void validate() {
+		if (rate == null || rate.compareTo(BigDecimal.ZERO) < 0 || rate.compareTo(BigDecimal.ONE) >= 0) {
 			throw new IllegalArgumentException("Tax rate must be between 0 and 1 (exclusive).");
 		}
 	}
 
 	@Override
 	public int applyTo(int amount) {
-		return BigDecimal.valueOf(rate)
+		return rate
 			.multiply(BigDecimal.valueOf(amount), MathContext.DECIMAL64)
 			.setScale(0, RoundingMode.HALF_EVEN)
 			.intValueExact();
@@ -28,13 +36,13 @@ public class FixedTaxRate implements TaxRate {
 
 	@Override
 	public BigDecimal applyTo(BigDecimal amount) {
-		return BigDecimal.valueOf(rate)
+		return rate
 			.multiply(amount, MathContext.DECIMAL64);
 	}
 
 	@Override
 	public double getRate() {
-		return this.rate;
+		return rate.doubleValue();
 	}
 
 	@Override
@@ -44,7 +52,7 @@ public class FixedTaxRate implements TaxRate {
 		if (object == null || getClass() != object.getClass())
 			return false;
 		FixedTaxRate that = (FixedTaxRate)object;
-		return Double.compare(rate, that.rate) == 0;
+		return rate.compareTo(that.rate) == 0;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 
 class InvestmentTest {
@@ -40,8 +41,8 @@ class InvestmentTest {
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
 			.interestRate(new ProductRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new ProductRate(BigDecimal.valueOf(9.9999)))
+			.taxType(TaxType.TAX_BENEFIT)
+			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
