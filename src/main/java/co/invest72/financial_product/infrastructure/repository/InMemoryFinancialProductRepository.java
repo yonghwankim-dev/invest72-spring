@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 
 @Repository
+@Profile("test")
 public class InMemoryFinancialProductRepository implements FinancialProductRepository {
 	private final Map<String, FinancialProduct> storage = new ConcurrentHashMap<>();
 
