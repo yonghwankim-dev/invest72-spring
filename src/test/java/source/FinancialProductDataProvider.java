@@ -8,8 +8,8 @@ import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.domain.SavingsProduct;
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
@@ -24,7 +24,7 @@ public class FinancialProductDataProvider {
 			.investmentType(InvestmentType.CASH)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.0)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.interestType(InterestType.NONE)
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
@@ -55,7 +55,7 @@ public class FinancialProductDataProvider {
 			.investmentType(InvestmentType.DEPOSIT)
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(interestType)
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
@@ -89,7 +89,7 @@ public class FinancialProductDataProvider {
 			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(interestType)
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))

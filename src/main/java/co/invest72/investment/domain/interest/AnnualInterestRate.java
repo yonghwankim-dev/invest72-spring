@@ -7,12 +7,19 @@ import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Embeddable
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AnnualInterestRate implements InterestRate {
 
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
 
-	private final BigDecimal value;
+	private BigDecimal value;
 
 	public AnnualInterestRate(double value) {
 		this(BigDecimal.valueOf(value));

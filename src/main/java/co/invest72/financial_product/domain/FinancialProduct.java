@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
@@ -51,7 +52,7 @@ public abstract class FinancialProduct {
 
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
-	private ProductRate interestRate; // 연이율
+	private AnnualInterestRate interestRate; // 연이율
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "interest_type", nullable = false, length = 100)
@@ -79,7 +80,7 @@ public abstract class FinancialProduct {
 		InvestmentType investmentType,
 		ProductAmount amount,
 		ProductMonths months,
-		ProductRate interestRate,
+		AnnualInterestRate interestRate,
 		InterestType interestType,
 		TaxType taxType,
 		FixedTaxRate taxRate,
