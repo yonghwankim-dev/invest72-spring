@@ -27,6 +27,7 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
@@ -72,7 +73,7 @@ class FinancialProductCalculationRestControllerTest {
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
 			.interestType(SIMPLE)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
 			.build();
@@ -107,7 +108,7 @@ class FinancialProductCalculationRestControllerTest {
 			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
 			.interestType(COMPOUND)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
 			.build();
