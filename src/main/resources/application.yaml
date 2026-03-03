@@ -2,13 +2,19 @@ spring:
   profiles:
     include: secret
   datasource:
-    url: jdbc:h2:mem:fineAnts;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      path: /h2-console
+    url: jdbc:postgresql://localhost:5432/invest72
+    username: invest72
+    password: invest72@
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # 실행되는 SQL을 콘솔에 보기 좋게 출력
+        format_sql: true
+    show-sql: true
 
 app:
   oauth2:
