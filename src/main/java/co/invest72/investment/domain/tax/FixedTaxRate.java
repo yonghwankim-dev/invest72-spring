@@ -63,6 +63,6 @@ public class FixedTaxRate implements TaxRate {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(value == null ? null : value.stripTrailingZeros());
 	}
 }
