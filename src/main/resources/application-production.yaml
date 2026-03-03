@@ -2,3 +2,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        show_sql: false
+
