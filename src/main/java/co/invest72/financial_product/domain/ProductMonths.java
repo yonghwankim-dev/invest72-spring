@@ -25,7 +25,7 @@ public class ProductMonths {
 			throw new IllegalArgumentException("기간은 0개월 이상이어야 합니다.");
 		}
 		if (value > 11988) {
-			throw new IllegalArgumentException("기간은 11988개월(999년) 초과할 수 없습니다.");
+			throw new IllegalArgumentException("기간은 11988개월(999년)을 초과할 수 없습니다.");
 		}
 	}
 
