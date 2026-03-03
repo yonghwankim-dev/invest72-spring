@@ -13,10 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentDay {
 	@Column(name = "payment_day")
-	private int value;
+	private Integer value;
 
-	public PaymentDay(int value) {
+	public PaymentDay(Integer value) {
 		this.value = value;
+		if (this.value == null) {
+			throw new IllegalArgumentException("납입일은 필수입니다.");
+		}
 		if (this.value < 1 || this.value > 31) {
 			throw new IllegalArgumentException("납입일은 1일부터 31일까지 가능합니다.");
 		}
