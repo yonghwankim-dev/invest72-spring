@@ -1,7 +1,6 @@
 package co.invest72.financial_product.application;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,18 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.domain.ProductAmount;
-import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.financial_product.domain.ProductRate;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.interest.InterestType;
-import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -34,24 +26,11 @@ public class FinancialProductService {
 	private final FinancialProductRepository repository;
 	private final LocalDateProvider localDateProvider;
 	private final InvestmentFactory investmentFactory;
+	private final FinancialProductFactory financialProductFactory;
 
 	@Transactional
 	public String createProduct(User user, FinancialProductRequestDto dto) {
-		PaymentDay paymentDay = dto.getPaymentDay() != null ? new PaymentDay(dto.getPaymentDay()) : null;
-		FinancialProduct product = FinancialProduct.builder()
-			.userId(user.getId())
-			.name(dto.getName())
-			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(new ProductAmount(dto.getAmount()))
-			.months(new ProductMonths(dto.getMonths()))
-			.paymentDay(paymentDay)
-			.interestRate(new ProductRate(dto.getInterestRate()))
-			.interestType(InterestType.valueOf(dto.getInterestType()))
-			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
-			.startDate(dto.getStartDate())
-			.createdAt(LocalDateTime.now())
-			.build();
+		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
 	}
 
@@ -83,7 +62,7 @@ public class FinancialProductService {
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
-		Integer paymentDay = product.getPaymentDay() != null ? product.getPaymentDay().getValue() : null;
+
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -91,7 +70,7 @@ public class FinancialProductService {
 			.investmentType(product.getInvestmentType().name())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
-			.paymentDay(paymentDay)
+			.paymentDay(product.getPaymentDayValue())
 			.interestRate(product.getInterestRate().getValue())
 			.interestType(product.getInterestType().name())
 			.taxType(product.getTaxType().name())
@@ -117,22 +96,18 @@ public class FinancialProductService {
 		}
 	}
 
+	/**
+	 * 상품 정보 업데이트<br>
+	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경
+	 * 상품 수정시 투자 유형(InvestmentType)은 변경할 수 없다.<br>
+	 * @param user 업데이트 요청을 하는 사용자 (상품 소유자와 일치해야 함)
+	 * @param productId 업데이트할 상품의 ID
+	 * @param dto 업데이트할 상품 정보
+	 */
 	@Transactional
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
-		// 기존 상품 조회 및 검증
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
-		// 업데이트된 상품 정보로 새로운 객체 생성 (ID, userId, createdAt는 유지)
-		FinancialProduct updatedProduct = existingProduct.toBuilder()
-			.name(dto.getName())
-			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(new ProductAmount(dto.getAmount()))
-			.months(new ProductMonths(dto.getMonths()))
-			.interestRate(new ProductRate(dto.getInterestRate()))
-			.interestType(InterestType.valueOf(dto.getInterestType()))
-			.taxType(TaxType.valueOf(dto.getTaxType()))
-			.taxRate(new ProductRate(dto.getTaxRate()))
-			.startDate(dto.getStartDate())
-			.build();
+		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
 		existingProduct.update(updatedProduct);
 	}
 

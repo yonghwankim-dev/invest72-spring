@@ -23,18 +23,18 @@ public enum BalancePolicy implements BalanceStrategy {
 		@Override
 		public BigDecimal calculate(FinancialProduct product, LocalDate today) {
 			LocalDate startDate = product.getStartDate();
+			LocalDate expirationDate = product.getExpirationDate();
 			ProductAmount amount = product.getAmount();
 			ProductMonths months = product.getMonths();
-			PaymentDay paymentDay = product.getPaymentDay();
 
 			if (today.isBefore(startDate)) {
 				return BigDecimal.ZERO;
 			}
-			if (today.isAfter(product.getExpirationDate())) {
+			if (today.isAfter(expirationDate)) {
 				return amount.getValue().multiply(BigDecimal.valueOf(months.getValue()));
 			}
-			long elapsedMonths = startDate.until(today, ChronoUnit.MONTHS);
-			if (paymentDay != null && paymentDay.isPaidOn(today)) {
+			long elapsedMonths = ChronoUnit.MONTHS.between(startDate, today);
+			if (product.isPaidOn(today)) {
 				elapsedMonths++;
 			}
 			return amount.getValue().multiply(BigDecimal.valueOf(elapsedMonths));

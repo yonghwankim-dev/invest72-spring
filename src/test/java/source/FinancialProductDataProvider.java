@@ -3,10 +3,13 @@ package source;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.financial_product.domain.CashProduct;
+import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductRate;
+import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
@@ -14,7 +17,7 @@ import co.invest72.investment.domain.tax.TaxType;
 
 public class FinancialProductDataProvider {
 	public static FinancialProduct createCashProduct(String userId) {
-		return FinancialProduct.builder()
+		return CashProduct.builder()
 			.userId(userId)
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH)
@@ -45,7 +48,7 @@ public class FinancialProductDataProvider {
 	 * @return 예금 상품 객체
 	 */
 	public static FinancialProduct createDepositProduct(String userId, InterestType interestType) {
-		return FinancialProduct.builder()
+		return DepositProduct.builder()
 			.userId(userId)
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT)
@@ -78,7 +81,7 @@ public class FinancialProductDataProvider {
 	 * @return 적금 상품 객체
 	 */
 	public static FinancialProduct createSavingsProduct(String userId, InterestType interestType) {
-		return FinancialProduct.builder()
+		return SavingsProduct.builder()
 			.userId(userId)
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS)
