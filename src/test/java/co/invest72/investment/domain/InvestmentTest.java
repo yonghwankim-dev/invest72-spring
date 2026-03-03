@@ -39,7 +39,7 @@ class InvestmentTest {
 			.investmentType(InvestmentType.SAVINGS)
 			.amount(new ProductAmount(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
-			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
+			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.interestRate(new ProductRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
 			.taxType(TaxType.STANDARD)
