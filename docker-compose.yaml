@@ -8,6 +8,8 @@ services:
     restart: always
     depends_on:
       - db
+    networks:
+      - default
   db:
     container_name: invest72-db
     image: postgres:17
@@ -20,5 +22,10 @@ services:
       - .env.local
     volumes:
       - db-data:/var/lib/postgresql
+    networks:
+      - default
 volumes:
   db-data:
+networks:
+  default:
+    driver: bridge
