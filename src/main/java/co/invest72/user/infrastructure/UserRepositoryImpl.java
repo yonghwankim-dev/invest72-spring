@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public Optional<User> findByProviderId(String providerId) {
-		return jpaUserRepository.findById(providerId);
+		return jpaUserRepository.findByProviderId(providerId);
 	}
 
 	@Override
