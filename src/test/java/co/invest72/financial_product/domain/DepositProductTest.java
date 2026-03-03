@@ -82,7 +82,6 @@ class DepositProductTest {
 		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
 
