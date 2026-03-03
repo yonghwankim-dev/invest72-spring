@@ -3,7 +3,6 @@ package co.invest72.investment.domain.tax;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import co.invest72.investment.domain.TaxRate;
 import jakarta.persistence.Embeddable;
@@ -63,6 +62,9 @@ public class FixedTaxRate implements TaxRate {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value == null ? null : value.stripTrailingZeros());
+		if (value == null) {
+			return 0;
+		}
+		return value.stripTrailingZeros().hashCode();
 	}
 }

@@ -2,7 +2,6 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -49,6 +48,9 @@ public class ProductRate {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value == null ? null : value.stripTrailingZeros());
+		if (value == null) {
+			return 0;
+		}
+		return value.stripTrailingZeros().hashCode();
 	}
 }
