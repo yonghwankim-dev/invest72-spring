@@ -7,5 +7,5 @@ public interface TaxRate {
 
 	BigDecimal applyTo(BigDecimal amount);
 
-	double getRate();
+	BigDecimal getValue();
 }

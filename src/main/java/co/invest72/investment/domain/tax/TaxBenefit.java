@@ -29,7 +29,7 @@ public class TaxBenefit implements Taxable {
 	}
 
 	@Override
-	public double getTaxRate() {
-		return taxRate.getRate();
+	public BigDecimal getTaxRate() {
+		return taxRate.getValue();
 	}
 }

@@ -1,6 +1,5 @@
 package co.invest72.investment.domain.interest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static testutil.BigDecimalAssertion.*;
 
 import java.math.BigDecimal;
@@ -8,6 +7,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -59,9 +59,21 @@ class AnnualInterestRateTest {
 			() -> new AnnualInterestRate(-0.01));
 	}
 
+	@DisplayName("객체 최대값 검증 - 연이율은 최대 999.99%까지 허용")
 	@Test
-	void shouldThrowException_whenInterestRateEqualMoreThan100Percent() {
-		assertThrows(IllegalArgumentException.class, () -> new AnnualInterestRate(1.0));
+	void shouldCreateAnnualInterestRate_givenMaxAnnualRate() {
+		BigDecimal maxAnnualRate = BigDecimal.valueOf(9.9999);
+		AnnualInterestRate annualInterestRate = new AnnualInterestRate(maxAnnualRate);
+
+		assertBigDecimalEquals(maxAnnualRate, annualInterestRate.getAnnualRate());
+	}
+
+	@DisplayName("객체 최대값 검증 - 연이율은 최대 9.9999%까지 허용, 초과 시 예외 발생")
+	@Test
+	void shouldThrowException_whenAnnualRateExceedsMax() {
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> new AnnualInterestRate(10.0));
+
 	}
 
 	@Test

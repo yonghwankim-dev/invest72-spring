@@ -7,8 +7,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -22,10 +24,10 @@ class CashProductTest {
 			.investmentType(InvestmentType.SAVINGS)
 			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L)))
 			.months(new ProductMonths(12))
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05)))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(InterestType.COMPOUND)
 			.taxType(TaxType.NON_TAX)
-			.taxRate(new ProductRate(BigDecimal.ZERO))
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
 			.build();
@@ -213,7 +215,7 @@ class CashProductTest {
 			.name("Updated Cash Product") // 이름 변경
 			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.06))) // interestRate 변경
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06))) // interestRate 변경
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -303,7 +305,7 @@ class CashProductTest {
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
-			.taxRate(new ProductRate(BigDecimal.valueOf(0.1))) // taxRate 변경
+			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.1))) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -329,10 +331,10 @@ class CashProductTest {
 			.name("Updated Deposit Product") // 이름 변경
 			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(new ProductMonths(12)) // months 변경
-			.interestRate(new ProductRate(BigDecimal.valueOf(0.05))) // interestRate 변경
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05))) // interestRate 변경
 			.interestType(InterestType.COMPOUND) // interestType 변경
 			.taxType(TaxType.NON_TAX) // taxType 변경
-			.taxRate(new ProductRate(BigDecimal.ZERO)) // taxRate 변경
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO)) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();

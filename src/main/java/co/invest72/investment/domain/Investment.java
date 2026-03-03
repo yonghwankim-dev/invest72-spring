@@ -104,5 +104,5 @@ public interface Investment {
 
 	BigDecimal getProfitForYear(int year);
 
-	double getTaxRate();
+	BigDecimal getTaxRate();
 }
