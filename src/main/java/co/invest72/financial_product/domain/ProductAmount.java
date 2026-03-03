@@ -1,18 +1,17 @@
 package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class ProductAmount {
 
 	private static final BigDecimal MAX_AMOUNT = new BigDecimal("10000000000000"); // 10조원
@@ -38,5 +37,20 @@ public class ProductAmount {
 		if (value.compareTo(MAX_AMOUNT) > 0) {
 			throw new IllegalArgumentException("금액은 10조원을 초과할 수 없습니다.");
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ProductAmount that = (ProductAmount)o;
+		return value.compareTo(that.value) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value == null ? null : value.stripTrailingZeros());
 	}
 }

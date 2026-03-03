@@ -49,6 +49,6 @@ public class ProductRate {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(value == null ? null : value.stripTrailingZeros());
 	}
 }
