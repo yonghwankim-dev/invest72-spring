@@ -116,7 +116,7 @@ jobs:
               # .env 파일 생성
               cat << "EOF" > .env.production
               ${{ secrets.ENV }}
-              EOF
+          EOF
           
               # 최신 설정 파일 다운로드 (또는 git pull)
               curl -O https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.inputs.branch_name || github.ref_name }}/docker-compose.yaml
@@ -125,7 +125,7 @@ jobs:
               # GitHub Secrets에 저장된 원본 시크릿 내용을 서버 파일로 생성
               cat << "EOF" > ./config/application-secret.yaml
               ${{ secrets.APPLICATION_SECRET_YAML }}
-              EOF
+          EOF
           
               # 기존 컨테이너 중지 및 최신 이미지 실행
               docker compose -f docker-compose.production.yaml pull
