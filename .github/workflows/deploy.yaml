@@ -11,6 +11,12 @@ on:
         required: true
         default: 'main'
 
+env:
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/invest72-app
+  DEPLOY_PROFILE: production
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -18,6 +24,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # 수동 배포 시 branch_name 사용, 아니면 트리거된 ref 사용
+          ref: ${{ github.event.inputs.branch_name || github.ref }}
           submodules: true
           token: ${{ secrets.SUBMODULE_GITHUB_TOKEN }}
       ## JDK 설정
@@ -96,7 +104,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
       - name: SSH into GCE and deploy
         run: |
-          gcloud compute ssh ${{ secrets.GCE_INSTANCE_NAME }} \
+          gcloud compute ssh nemo@${{ secrets.GCE_INSTANCE_NAME }} \
             --zone=${{ secrets.GCE_INSTANCE_ZONE }} \
             --command="
               mkdir -p ~/invest72
@@ -106,8 +114,8 @@ jobs:
               echo '${{ secrets.ENV }}' > .env.production
           
               # 최신 설정 파일 다운로드 (또는 git pull)
-              curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.yaml
-              curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.production.yaml
+              curl -O https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.inputs.branch_name || github.ref_name }}/docker-compose.yaml
+              curl -O https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.inputs.branch_name || github.ref_name }}/docker-compose.production.yaml
           
               # 기존 컨테이너 중지 및 최신 이미지 실행
               docker compose -f docker-compose.production.yaml pull

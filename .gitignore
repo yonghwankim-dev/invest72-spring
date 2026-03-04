@@ -43,4 +43,5 @@ bin/
 /.idea/
 
 /.env.local
+/.env.production
 /src/main/resources/application-secret.yml
