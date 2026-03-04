@@ -115,7 +115,7 @@ jobs:
           
               # .env 파일 생성
               cat << "EOF" > .env.production
-              ${{ secrets.ENV }}
+          ${{ secrets.ENV }}
           EOF
           
               # 최신 설정 파일 다운로드 (또는 git pull)
@@ -124,7 +124,7 @@ jobs:
           
               # GitHub Secrets에 저장된 원본 시크릿 내용을 서버 파일로 생성
               cat << "EOF" > ./config/application-secret.yaml
-              ${{ secrets.APPLICATION_SECRET_YAML }}
+          ${{ secrets.APPLICATION_SECRET_YAML }}
           EOF
           
               # 기존 컨테이너 중지 및 최신 이미지 실행
