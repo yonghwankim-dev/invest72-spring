@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'co.nemo'
-version = '1.1.0'
+version = '1.2.0'
 
 java {
     toolchain {
@@ -46,3 +46,10 @@ test {
     useJUnitPlatform()
 }
 
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+    from('./invest72-config')
+    include('application*.yml')
+    into('./src/main/resources')
+}

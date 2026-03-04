@@ -42,6 +42,5 @@ bin/
 .DS_Store
 /.idea/
 
-src/main/resources/application-secret.yaml
-
-.env.local
+/.env.local
+/src/main/resources/application-secret.yml
