@@ -46,10 +46,8 @@ test {
     useJUnitPlatform()
 }
 
-processResources.dependsOn('copySecret')
-
-tasks.register('copySecret', Copy) {
-    from('./invest72-config')
-    include('application*.yml')
-    into('./src/main/resources')
+tasks.named('bootJar') {
+    // 빌드 결과물(Jar)에서 실 서비스용 시크릿 파일을 제외합니다.
+    exclude("**/application-secret.yaml")
+    exclude("**/application-secret.yml")
 }
