@@ -1,3 +1,3 @@
 [submodule "invest72-config"]
 	path = invest72-config
-	url = https://github.com/yonghwankim-dev/invest72-config.git
+	url = git@github.com:yonghwankim-dev/invest72-config.git
