@@ -111,7 +111,9 @@ jobs:
               cd ~/invest72
           
               # .env 파일 생성
-              echo '${{ secrets.ENV }}' > .env.production
+              cat << 'EOF' > .env.production
+              ${{ secrets.ENV }}
+              EOF
           
               # 최신 설정 파일 다운로드 (또는 git pull)
               curl -O https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.inputs.branch_name || github.ref_name }}/docker-compose.yaml
