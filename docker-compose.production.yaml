@@ -2,6 +2,11 @@ services:
   app:
     ports:
       - "8080:8080"
+    volumes:
+      - ./config/application-secret.yaml:/app/config/application-secret.yaml
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - SPRING_CONFIG_IMPORT=file:/app/config/application-secret.yaml
     env_file:
       - .env.production
     extends:

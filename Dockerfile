@@ -1,7 +1,8 @@
 FROM eclipse-temurin:17-jdk-jammy
+ARG PROJECT_VERSION
 # 작성자 및 메타데이터 추가
 LABEL maintainer="yonghwankim.dev@gmail.com" \
-      version="1.0.8" \
+      version=$PROJECT_VERSION \
       description="Invest72 Application - Spring Boot App" \
       created="2025-11-26" \
       org.opencontainers.image.source="https://github.com/yonghwankim-dev/invest72" \
