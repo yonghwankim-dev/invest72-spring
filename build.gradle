@@ -46,8 +46,17 @@ test {
     useJUnitPlatform()
 }
 
-tasks.named('bootJar') {
-    // 빌드 결과물(Jar)에서 실 서비스용 시크릿 파일을 제외합니다.
+// 1. 서브모듈의 시크릿 파일을 리소스 폴더로 복사하는 태스크
+task copySecret(type: Copy) {
+    from 'invest72-config/application-secret.yaml'  // 서브모듈 경로
+    into 'src/main/resources'                      // 로컬 리소스 경로
+}
+
+// 2. 로컬에서 애플리케이션을 실행(bootRun)하거나 컴파일할 때만 복사 실행
+processResources.dependsOn copySecret
+
+// 3. [중요] 빌드 결과물(Jar)에서는 해당 파일을 제외 (배포 환경 보안용)
+bootJar {
     exclude("**/application-secret.yaml")
     exclude("**/application-secret.yml")
 }

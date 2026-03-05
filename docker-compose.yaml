@@ -3,8 +3,6 @@ services:
   app:
     container_name: invest72-app
     image: nemo1107/invest72-app:latest
-    ports:
-      - "8080:8080"
     restart: always
     depends_on:
       - db
@@ -17,11 +15,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     networks:
       - default
-volumes:
-  db-data:
 networks:
   default:
     driver: bridge

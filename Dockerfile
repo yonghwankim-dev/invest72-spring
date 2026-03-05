@@ -10,5 +10,4 @@ LABEL maintainer="yonghwankim.dev@gmail.com" \
       org.opencontainers.image.licenses="MIT"
 WORKDIR /app
 COPY ./build/libs/invest72-*.jar ./invest72.jar
-EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "invest72.jar"]

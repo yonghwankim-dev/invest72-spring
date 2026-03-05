@@ -44,4 +44,6 @@ bin/
 
 /.env.local
 /.env.production
+/src/main/resources/application-secret.yaml
 /src/main/resources/application-secret.yml
+/pgdata

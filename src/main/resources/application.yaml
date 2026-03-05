@@ -1,6 +1,10 @@
 spring:
   profiles:
-    include: secret
+    group:
+      local: local, secret
+      production: production, secret
+      test: test, secret
+    default: local
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:invest72}
     username: ${POSTGRES_USER:invest72}
@@ -15,7 +19,12 @@ spring:
         # 실행되는 SQL을 콘솔에 보기 좋게 출력
         format_sql: true
     show-sql: true
+server:
+  servlet:
+    session:
+      cookie:
+        name: INVEST72_SESSION
+        http-only: true
+        secure: true
+        same-site: none
 
-app:
-  oauth2:
-    authorized-redirect-uri: http://localhost:3000/

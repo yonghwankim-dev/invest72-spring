@@ -6,4 +6,6 @@ spring:
     properties:
       hibernate:
         show_sql: false
-
+app:
+  oauth2:
+    authorized-redirect-uri: https://invest72.web.app/ # Firebase Hosting 주소
