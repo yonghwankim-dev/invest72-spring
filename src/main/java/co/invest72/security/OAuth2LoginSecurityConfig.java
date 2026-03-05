@@ -73,10 +73,15 @@ public class OAuth2LoginSecurityConfig {
 
 	@Bean
 	public CookieSerializer cookieSerializer() {
-		DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-		serializer.setSameSite("None"); // Cross-site 요청에도 쿠키 전송 허용
-		serializer.setUseSecureCookie(true); // SameSite=None 설정 시 Secure는 필수
-		serializer.setCookiePath("/"); // 쿠키 경로 설정
-		return serializer;
+		DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+
+		// 쿠키 설정
+		cookieSerializer.setCookiePath("/");
+		cookieSerializer.setCookieName("INVEST72-API_SESSION");
+		cookieSerializer.setUseSecureCookie(true);
+		cookieSerializer.setUseHttpOnlyCookie(true);
+		cookieSerializer.setSameSite("None");
+
+		return cookieSerializer;
 	}
 }
