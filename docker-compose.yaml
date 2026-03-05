@@ -17,11 +17,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     networks:
       - default
-volumes:
-  db-data:
 networks:
   default:
     driver: bridge

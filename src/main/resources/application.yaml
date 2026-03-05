@@ -1,6 +1,10 @@
 spring:
   profiles:
-    include: secret
+    group:
+      local: local, secret
+      production: production, secret
+      test: test, secret
+    default: local
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:invest72}
     username: ${POSTGRES_USER:invest72}

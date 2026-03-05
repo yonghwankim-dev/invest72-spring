@@ -18,5 +18,3 @@ services:
     extends:
       file: docker-compose.yaml
       service: db
-volumes:
-  db-data:
