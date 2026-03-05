@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.session.web.http.CookieSerializer;
-import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -69,19 +67,5 @@ public class OAuth2LoginSecurityConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
-	}
-
-	@Bean
-	public CookieSerializer cookieSerializer() {
-		DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-
-		// 쿠키 설정
-		cookieSerializer.setCookiePath("/");
-		cookieSerializer.setCookieName("INVEST72-API_SESSION");
-		cookieSerializer.setUseSecureCookie(true);
-		cookieSerializer.setUseHttpOnlyCookie(true);
-		cookieSerializer.setSameSite("None");
-
-		return cookieSerializer;
 	}
 }
