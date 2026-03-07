@@ -20,7 +20,7 @@ public class CacheConfig {
 	public CacheManager cacheManager() {
 		SimpleCacheManager cacheManager = new SimpleCacheManager();
 		cacheManager.setCaches(Arrays.asList(
-			buildCache("userMe", Duration.ofMinutes(5), 100),
+			buildCache("userMe", Duration.ofMinutes(5), 200),
 			buildCache("productSummary", Duration.ofMinutes(30), 100),
 			buildCache("productDetail", Duration.ofMinutes(30), 100),
 			buildCache("productCalculate", Duration.ofMinutes(30), 100)
@@ -28,9 +28,9 @@ public class CacheConfig {
 		return cacheManager;
 	}
 
-	private CaffeineCache buildCache(String name, Duration minutes, int size) {
+	private CaffeineCache buildCache(String name, Duration ttl, int size) {
 		return new CaffeineCache(name, Caffeine.newBuilder()
-			.expireAfterWrite(minutes)
+			.expireAfterWrite(ttl)
 			.maximumSize(size)
 			.build());
 
