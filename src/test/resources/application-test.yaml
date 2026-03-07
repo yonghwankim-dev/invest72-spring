@@ -18,6 +18,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 app:
+  oauth2:
+    authorized-redirect-uri: http://localhost:3000/
   cors:
     allowed-origins: [ "http://localhost:3000/" ]
     allowed-methods: [ "GET", "POST", "PUT", "PATCH","DELETE", "OPTIONS" ]

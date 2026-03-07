@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,7 @@ public class FinancialProductService {
 	private final FinancialProductFactory financialProductFactory;
 
 	@Transactional
+	@CacheEvict(value = {"productSummary"}, key = "#user.id")
 	public String createProduct(User user, FinancialProductRequestDto dto) {
 		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
@@ -59,6 +63,7 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
+	@Cacheable(value = "productDetail", key = "#user.id + '-' + #productId")
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
@@ -105,6 +110,12 @@ public class FinancialProductService {
 	 * @param dto 업데이트할 상품 정보
 	 */
 	@Transactional
+	@Caching(evict = {
+		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
+		@CacheEvict(value = "productSummary", key = "#user.id"),
+		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
+	})
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
@@ -112,6 +123,12 @@ public class FinancialProductService {
 	}
 
 	@Transactional
+	@Caching(evict = {
+		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
+		@CacheEvict(value = "productSummary", key = "#user.id"),
+		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
+	})
 	public void deleteProduct(User user, String productId) {
 		findFinancialProduct(user, productId);
 		repository.deleteByProductId(productId);
@@ -135,6 +152,7 @@ public class FinancialProductService {
 	 * @return 상품 요약 정보 리스트
 	 */
 	@Transactional(readOnly = true)
+	@Cacheable(value = "productSummary", key = "#user.id")
 	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
 		List<FinancialProductSummaryResponse> result = new ArrayList<>();
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
