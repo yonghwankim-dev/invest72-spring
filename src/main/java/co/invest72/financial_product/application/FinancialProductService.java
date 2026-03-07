@@ -63,7 +63,7 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	@Cacheable(value = "productDetail", key = "#productId")
+	@Cacheable(value = "productDetail", key = "#user.id + '-' + #productId")
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
@@ -114,7 +114,7 @@ public class FinancialProductService {
 		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
 		@CacheEvict(value = "productSummary", key = "#user.id"),
 		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
-		@CacheEvict(value = "productDetail", key = "#productId")
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
 	})
 	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
@@ -127,7 +127,7 @@ public class FinancialProductService {
 		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
 		@CacheEvict(value = "productSummary", key = "#user.id"),
 		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
-		@CacheEvict(value = "productDetail", key = "#productId")
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
 	})
 	public void deleteProduct(User user, String productId) {
 		findFinancialProduct(user, productId);
