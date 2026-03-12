@@ -19,11 +19,18 @@ public class Money implements Comparable<Money> {
 		this.value = value;
 		this.currency = currency;
 		validate(this.value);
+		validateCurrency(this.currency);
 	}
 
 	private void validate(BigDecimal value) {
 		if (value == null) {
 			throw new IllegalArgumentException("금액은 null일 수 없습니다.");
+		}
+	}
+
+	private void validateCurrency(Currency currency) {
+		if (currency == null) {
+			throw new IllegalArgumentException("통화는 null일 수 없습니다.");
 		}
 	}
 
