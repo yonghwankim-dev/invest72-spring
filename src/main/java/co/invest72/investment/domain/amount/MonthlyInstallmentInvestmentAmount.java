@@ -4,19 +4,26 @@ import java.math.BigDecimal;
 
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
+import co.invest72.money.domain.Money;
 
 public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestmentAmount {
 
 	private final BigDecimal value;
+	private final Money moneyValue;
 
 	public MonthlyInstallmentInvestmentAmount(int value) {
 		this(BigDecimal.valueOf(value));
 	}
 
 	public MonthlyInstallmentInvestmentAmount(BigDecimal value) {
-		this.value = value;
-		if (value.compareTo(BigDecimal.ZERO) < 0) {
-			throw new IllegalArgumentException("investment.Investment amount must be non-negative.");
+		this(Money.of(value, "KRW"));
+	}
+
+	public MonthlyInstallmentInvestmentAmount(Money money) {
+		this.value = money.getValue();
+		this.moneyValue = money;
+		if (this.moneyValue.getValue().compareTo(BigDecimal.ZERO) < 0) {
+			throw new IllegalArgumentException("금액은 음수일 수 없습니다.");
 		}
 	}
 
