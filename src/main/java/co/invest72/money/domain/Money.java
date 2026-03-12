@@ -3,12 +3,13 @@ package co.invest72.money.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-public class Money {
+public class Money implements Comparable<Money> {
 
 	@Getter
 	private final BigDecimal value;
@@ -44,9 +45,18 @@ public class Money {
 	}
 
 	private void validate(Money money) {
+		if (money == null) {
+			throw new IllegalArgumentException("Money 객체는 null일 수 없습니다.");
+		}
 		if (!this.currency.equalsIgnoreCase(money.currency)) {
 			throw new IllegalArgumentException("통화가 일치하지 않습니다.");
 		}
+	}
+
+	@Override
+	public int compareTo(@Nonnull Money other) {
+		validate(other);
+		return this.value.compareTo(other.value);
 	}
 
 	@Override

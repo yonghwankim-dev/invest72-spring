@@ -71,4 +71,28 @@ class MoneyTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("통화가 일치하지 않습니다.");
 	}
+
+	@DisplayName("대소 비교 - 같은 통화의 돈을 비교할때 0을 반환해야 한다.")
+	@Test
+	void compareTo_whenSameCurrency_thenReturnZero() {
+		// given
+		Money money1 = Money.dollar(5);
+		Money money2 = Money.dollar(5);
+		// when
+		int result = money1.compareTo(money2);
+		// then
+		Assertions.assertThat(result).isZero();
+	}
+
+	@DisplayName("대소 비교 - 비교하려는 돈이 null인 경우 예외가 발생해야 한다.")
+	@Test
+	void compareTo_whenOtherIsNull_thenThrowException() {
+		// given
+		Money money1 = Money.dollar(5);
+		Money money2 = null;
+		// when & then
+		Assertions.assertThatThrownBy(() -> money1.compareTo(money2))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Money 객체는 null일 수 없습니다.");
+	}
 }
