@@ -11,10 +11,14 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 	private final Money moneyAmount;
 
 	public FixedDepositAmount(BigDecimal amount, String currency) {
-		if (amount.compareTo(BigDecimal.ZERO) < 0) {
+		this(Money.of(amount, currency));
+	}
+
+	public FixedDepositAmount(Money money) {
+		if (money.getValue().compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("투자 금액은 음수일 수 없습니다.");
 		}
-		this.moneyAmount = Money.of(amount, currency);
+		this.moneyAmount = money;
 	}
 
 	@Override
