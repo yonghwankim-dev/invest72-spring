@@ -39,7 +39,7 @@ public class InstallmentInvestmentAmountReader implements InvestmentAmountReader
 			return new MonthlyInstallmentInvestmentAmount(Money.of(BigDecimal.valueOf(amount), "KRW"));
 		} else {
 			int amount = Integer.parseInt(parts[1]);
-			return new YearlyInstallmentInvestmentAmount(amount);
+			return new YearlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(amount)));
 		}
 	}
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.money.domain.Money;
 import testutil.BigDecimalAssertion;
 
 class YearlyInstallmentInvestmentAmountTest {
@@ -18,7 +19,7 @@ class YearlyInstallmentInvestmentAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new YearlyInstallmentInvestmentAmount(12_000_000);
+		investmentAmount = new YearlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(12_000_000)));
 	}
 
 	@Test
