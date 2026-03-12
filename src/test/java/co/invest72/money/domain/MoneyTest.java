@@ -48,7 +48,7 @@ class MoneyTest {
 			.isNotEqualTo(money2);
 	}
 
-	@DisplayName("달러 덧셈 - 두개의 달러를 더했을 때, 새로운 달러 객체가 반환되어야 한다.")
+	@DisplayName("덧셈 - 두개의 달러를 더했을 때, 새로운 달러 객체가 반환되어야 한다.")
 	@Test
 	void add_whenMoneyIsDollar_thenReturnNewSumDollar() {
 		// given
@@ -58,5 +58,17 @@ class MoneyTest {
 		Money result = fiveBucks.add(tenBucks);
 		// then
 		Assertions.assertThat(result).isEqualTo(Money.dollar(15));
+	}
+
+	@DisplayName("덧셈 - 통화가 다른 돈을 더하려고 할 때, 예외가 발생해야 한다.")
+	@Test
+	void add_whenCurrentIsDifferent_thenThrowException() {
+		// given
+		Money fiveBucks = Money.dollar(5);
+		Money oneThousandWon = Money.won(1000);
+		// when & then
+		Assertions.assertThatThrownBy(() -> fiveBucks.add(oneThousandWon))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("통화가 일치하지 않습니다.");
 	}
 }
