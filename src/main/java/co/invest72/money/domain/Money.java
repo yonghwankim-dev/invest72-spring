@@ -3,14 +3,27 @@ package co.invest72.money.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class Money {
 
+	@Getter
 	private final BigDecimal value;
 	private final String currency;
 
 	private Money(BigDecimal value, String currency) {
 		this.value = value;
 		this.currency = currency;
+		validate(this.value);
+	}
+
+	private void validate(BigDecimal value) {
+		if (value == null) {
+			throw new IllegalArgumentException("금액은 null일 수 없습니다.");
+		}
 	}
 
 	public static Money dollar(int value) {
@@ -18,7 +31,11 @@ public class Money {
 	}
 
 	public static Money won(int value) {
-		return new Money(BigDecimal.valueOf(value), "KRW");
+		return won(BigDecimal.valueOf(value));
+	}
+
+	public static Money won(BigDecimal value) {
+		return new Money(value, "KRW");
 	}
 
 	public Money add(Money addend) {
@@ -44,6 +61,6 @@ public class Money {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value, currency);
+		return Objects.hash(value.stripTrailingZeros(), currency);
 	}
 }
