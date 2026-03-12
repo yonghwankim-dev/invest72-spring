@@ -25,7 +25,7 @@ public class ProductAmount {
 	private Money value;
 
 	/**
-	 * 금액은 0원 이상이어야 하며, 10조원을 초과할 수 없습니다.
+	 * 금액을 나타내는 객체를 생성한다. 금액은 0원 이상 99999조원 이하이어야 한다.
 	 *
 	 * @param value 금액
 	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
