@@ -32,7 +32,7 @@ class SimpleFixedDepositTest {
 
 	@BeforeEach
 	void setUp() {
-		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(1_000_000);
+		LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000));
 		PeriodRange periodRange = new PeriodYearRange(1);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(periodRange.toMonths());
 		InterestRate interestRate = new AnnualInterestRate(0.05);

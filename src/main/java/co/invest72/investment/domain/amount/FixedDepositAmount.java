@@ -11,10 +11,6 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 	private final BigDecimal amount;
 	private final Money moneyAmount;
 
-	public FixedDepositAmount(int amount) {
-		this(BigDecimal.valueOf(amount));
-	}
-
 	public FixedDepositAmount(BigDecimal amount) {
 		this(amount, "KRW");
 	}

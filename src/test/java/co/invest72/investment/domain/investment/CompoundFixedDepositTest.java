@@ -28,7 +28,7 @@ class CompoundFixedDepositTest {
 
 	@BeforeEach
 	void setUp() {
-		LumpSumInvestmentAmount depositAmount = new FixedDepositAmount(1_000_000);
+		LumpSumInvestmentAmount depositAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000));
 		InvestPeriod investPeriod = new YearlyInvestPeriod(1);
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		TaxableFactory taxableFactory = new KoreanTaxableFactory();
