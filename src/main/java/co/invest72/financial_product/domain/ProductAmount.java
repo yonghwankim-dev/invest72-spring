@@ -1,9 +1,13 @@
 package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
+import co.invest72.money.domain.Money;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +19,10 @@ public class ProductAmount {
 
 	private static final BigDecimal MAX_AMOUNT = new BigDecimal("10000000000000"); // 10조원
 
-	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
-	private BigDecimal value;
+	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "amount", nullable = false, precision = 19, scale = 2))
+	@AttributeOverride(name = "currency", column = @Column(name = "currency", nullable = false, length = 3))
+	private Money value;
 
 	/**
 	 * 금액은 0원 이상이어야 하며, 10조원을 초과할 수 없습니다.
@@ -25,8 +31,8 @@ public class ProductAmount {
 	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
 	 */
 	public ProductAmount(BigDecimal value) {
-		this.value = value;
-		validate(this.value);
+		this.value = Money.won(value);
+		validate(value);
 	}
 
 	private void validate(BigDecimal value) {
@@ -38,6 +44,10 @@ public class ProductAmount {
 		}
 	}
 
+	public BigDecimal getValue() {
+		return value.getValue();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -45,14 +55,11 @@ public class ProductAmount {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProductAmount that = (ProductAmount)o;
-		return value.compareTo(that.value) == 0;
+		return this.value.equals(that.value);
 	}
 
 	@Override
 	public int hashCode() {
-		if (value == null) {
-			return 0;
-		}
-		return value.stripTrailingZeros().hashCode();
+		return Objects.hash(value);
 	}
 }
