@@ -36,10 +36,10 @@ class FixedDepositAmountTest {
 
 	@Test
 	void shouldReturnDepositAmount() {
-		BigDecimal depositAmount = investmentAmount.getDepositAmount();
+		Money depositAmount = investmentAmount.getDepositAmount();
 
-		BigDecimal expectedDepositAmount = BigDecimal.valueOf(1_000_000);
-		assertEquals(expectedDepositAmount, depositAmount);
+		Money expected = Money.won(1_000_000);
+		assertEquals(expected, depositAmount);
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class FixedDepositAmountTest {
 	@DisplayName("금액 반환 - 원화 Money 타입 예치금 반환")
 	@Test
 	void getDepositAmount_temp_shouldReturnMoney() {
-		Money depositAmount = investmentAmount.getDepositAmount_temp();
+		Money depositAmount = investmentAmount.getDepositAmount();
 
 		Money expected = Money.won(1_000_000);
 		Assertions.assertThat(depositAmount).isEqualTo(expected);
@@ -86,9 +86,9 @@ class FixedDepositAmountTest {
 
 	@DisplayName("금액 반환 - 달러 Money 타입 예치금 반환")
 	@Test
-	void getDepositAmount_temp_shouldReturnMoneyInDollars() {
+	void getDepositAmount_shouldReturnMoneyInDollars() {
 		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(5), "USD");
-		Money depositAmount = investmentAmount.getDepositAmount_temp();
+		Money depositAmount = investmentAmount.getDepositAmount();
 
 		Money expected = Money.dollar(5);
 		Assertions.assertThat(depositAmount).isEqualTo(expected);

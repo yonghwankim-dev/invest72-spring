@@ -22,12 +22,7 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 	}
 
 	@Override
-	public BigDecimal getDepositAmount() {
-		return amount.getValue();
-	}
-
-	@Override
-	public Money getDepositAmount_temp() {
+	public Money getDepositAmount() {
 		return amount;
 	}
 
@@ -43,6 +38,6 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 
 	@Override
 	public BigDecimal getAmount() {
-		return getDepositAmount();
+		return getDepositAmount().getValue();
 	}
 }
