@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.money.domain.Money;
 import testutil.BigDecimalAssertion;
 
 class MonthlyInstallmentInvestmentAmountTest {
@@ -16,7 +17,7 @@ class MonthlyInstallmentInvestmentAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new MonthlyInstallmentInvestmentAmount(1_000_000);
+		investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(1_000_000)));
 	}
 
 	@Test
@@ -50,6 +51,6 @@ class MonthlyInstallmentInvestmentAmountTest {
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
 		Assertions.assertThrows(IllegalArgumentException.class,
-			() -> new MonthlyInstallmentInvestmentAmount(-1_000_000));
+			() -> new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(-1_000_000))));
 	}
 }

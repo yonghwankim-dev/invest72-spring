@@ -2,6 +2,7 @@ package co.invest72.investment.domain.period;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
+import co.invest72.money.domain.Money;
 
 class YearlyInvestPeriodTest {
 
@@ -62,7 +64,8 @@ class YearlyInvestPeriodTest {
 
 	@Test
 	void shouldReturnTotalPrincipal() {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(1_000_000);
+		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
+			Money.won(BigDecimal.valueOf(1_000_000)));
 		InvestPeriod investPeriod = new YearlyInvestPeriod(10);
 
 		int totalPrincipal = investPeriod.getTotalPrincipal(investmentAmount);

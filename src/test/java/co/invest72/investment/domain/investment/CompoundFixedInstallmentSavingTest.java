@@ -22,6 +22,7 @@ import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Money;
 
 class CompoundFixedInstallmentSavingTest {
 
@@ -30,7 +31,8 @@ class CompoundFixedInstallmentSavingTest {
 
 	@BeforeEach
 	void setUp() {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(1_000_000);
+		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
+			Money.won(BigDecimal.valueOf(1_000_000)));
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(12);
 		InterestRate annualInterestRateRate = new AnnualInterestRate(0.05);
 		taxableFactory = new KoreanTaxableFactory();

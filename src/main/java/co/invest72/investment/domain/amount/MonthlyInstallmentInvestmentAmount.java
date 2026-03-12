@@ -11,14 +11,6 @@ public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestment
 	private final BigDecimal value;
 	private final Money moneyValue;
 
-	public MonthlyInstallmentInvestmentAmount(int value) {
-		this(BigDecimal.valueOf(value));
-	}
-
-	public MonthlyInstallmentInvestmentAmount(BigDecimal value) {
-		this(Money.of(value, "KRW"));
-	}
-
 	public MonthlyInstallmentInvestmentAmount(Money money) {
 		this.value = money.getValue();
 		this.moneyValue = money;

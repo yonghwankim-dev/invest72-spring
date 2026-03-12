@@ -42,6 +42,7 @@ import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.domain.tax.resolver.KoreanStringBasedTaxableResolver;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Money;
 
 public class InvestmentFactory {
 
@@ -133,8 +134,8 @@ public class InvestmentFactory {
 	}
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue());
+		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.of(
+			dto.getAmount().getValue(), "KRW"));
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
@@ -145,7 +146,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			dto.getAmount().getValue());
+			Money.of(dto.getAmount().getValue(), "KRW"));
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
