@@ -3,11 +3,8 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import co.invest72.money.domain.Money;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +16,11 @@ public class ProductAmount {
 
 	private static final BigDecimal MAX_AMOUNT = new BigDecimal("99999999999999999"); // 99999조
 
-	@Embedded
-	@AttributeOverride(name = "value", column = @Column(name = "amount", nullable = false, precision = 19, scale = 2))
-	@AttributeOverride(name = "currency", column = @Column(name = "currency", nullable = false, length = 3))
-	private Money value;
+	@Getter
+	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
+	private BigDecimal value;
+	@Column(name = "currency", nullable = false, length = 3)
+	private String currency;
 
 	/**
 	 * 금액을 나타내는 객체를 생성한다. 금액은 0원 이상 99999조원 이하이어야 한다.
@@ -31,21 +29,32 @@ public class ProductAmount {
 	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
 	 */
 	public ProductAmount(BigDecimal value) {
-		this.value = Money.won(value);
-		validate(this.value);
+		this(value, "KRW");
 	}
 
-	private void validate(Money value) {
-		if (value == null || value.compareTo(Money.won(BigDecimal.ZERO)) < 0) {
+	public ProductAmount(BigDecimal value, String currency) {
+		this.value = value;
+		this.currency = currency;
+		validate(this.value);
+		validateCurrency(this.currency);
+	}
+
+	private void validate(BigDecimal value) {
+		if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("금액은 0원 이상이어야 합니다.");
 		}
-		if (value.compareTo(Money.won(MAX_AMOUNT)) > 0) {
+		if (value.compareTo(MAX_AMOUNT) > 0) {
 			throw new IllegalArgumentException("금액은 99999조원을 초과할 수 없습니다.");
 		}
 	}
 
-	public BigDecimal getValue() {
-		return value.getValue();
+	private void validateCurrency(String currency) {
+		if (currency == null || currency.trim().isEmpty()) {
+			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
+		}
+		if (currency.length() != 3) {
+			throw new IllegalArgumentException("통화 코드는 3자리여야 합니다.");
+		}
 	}
 
 	@Override
@@ -55,11 +64,11 @@ public class ProductAmount {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProductAmount that = (ProductAmount)o;
-		return this.value.equals(that.value);
+		return this.value.compareTo(that.value) == 0 && Objects.equals(this.currency, that.currency);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(value.stripTrailingZeros(), currency);
 	}
 }
