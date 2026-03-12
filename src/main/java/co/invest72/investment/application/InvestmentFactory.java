@@ -110,13 +110,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment cashInvestment(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue());
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), "KRW");
 		return new CashInvestment(investmentAmount);
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
 		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue()),
+			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
@@ -125,7 +125,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
 		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue()),
+			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())

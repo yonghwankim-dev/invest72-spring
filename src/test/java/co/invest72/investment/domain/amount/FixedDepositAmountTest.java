@@ -21,7 +21,7 @@ class FixedDepositAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000));
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000), "KRW");
 	}
 
 	@Test
@@ -31,7 +31,7 @@ class FixedDepositAmountTest {
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
-		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(BigDecimal.valueOf(-1)));
+		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(BigDecimal.valueOf(-1), "KRW"));
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class FixedDepositAmountTest {
 	@DisplayName("연이자 계산 - 예치금이 10조원인 상태에서 이자를 정확히 계삲되어야 한다.")
 	@Test
 	void calAnnualInterest_shouldReturnAnnualInterest() {
-		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000")); // 10조원
+		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000"), "KRW"); // 10조원
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
 		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
