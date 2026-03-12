@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.money.domain.Money;
 import testutil.BigDecimalAssertion;
 
 class FixedDepositAmountTest {
@@ -63,6 +64,7 @@ class FixedDepositAmountTest {
 		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
 	}
 
+	@DisplayName("월이자 계산 - 연이율이 5%인 경우에 월이자가 정확히 계산되어야 한다.")
 	@Test
 	void calMonthlyInterest_shouldReturnMonthlyInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
@@ -71,5 +73,24 @@ class FixedDepositAmountTest {
 
 		BigDecimal expectedInterest = BigDecimal.valueOf(4166.666666666667000000);
 		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
+	}
+
+	@DisplayName("금액 반환 - 원화 Money 타입 예치금 반환")
+	@Test
+	void getDepositAmount_temp_shouldReturnMoney() {
+		Money depositAmount = investmentAmount.getDepositAmount_temp();
+
+		Money expected = Money.won(1_000_000);
+		Assertions.assertThat(depositAmount).isEqualTo(expected);
+	}
+
+	@DisplayName("금액 반환 - 달러 Money 타입 예치금 반환")
+	@Test
+	void getDepositAmount_temp_shouldReturnMoneyInDollars() {
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(5), "USD");
+		Money depositAmount = investmentAmount.getDepositAmount_temp();
+
+		Money expected = Money.dollar(5);
+		Assertions.assertThat(depositAmount).isEqualTo(expected);
 	}
 }

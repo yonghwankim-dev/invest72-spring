@@ -16,9 +16,9 @@ public class ProductAmount {
 
 	private static final BigDecimal MAX_AMOUNT = new BigDecimal("99999999999999999"); // 99999조
 
-	@Getter
 	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
 	private BigDecimal value;
+
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 

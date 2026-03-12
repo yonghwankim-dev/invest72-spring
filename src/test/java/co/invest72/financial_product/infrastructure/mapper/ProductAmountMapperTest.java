@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.money.domain.Money;
 
-class MoneyMapperTest {
+class ProductAmountMapperTest {
 
-	private MoneyMapper mapper;
+	private ProductAmountMapper mapper;
 
 	@BeforeEach
 	void setUp() {
-		mapper = new MoneyMapper();
+		mapper = new ProductAmountMapper();
 	}
 
 	@DisplayName("ProductAmount 변환 - Money 객체를 ProductAmount로 변환할 때, 올바른 금액이 반환되어야 한다.")

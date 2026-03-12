@@ -6,7 +6,7 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.money.domain.Money;
 
 @Component
-public class MoneyMapper {
+public class ProductAmountMapper {
 
 	public ProductAmount toProductAmount(Money money) {
 		if (money == null) {

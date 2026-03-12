@@ -84,4 +84,9 @@ public class Money implements Comparable<Money> {
 	public int hashCode() {
 		return Objects.hash(value.stripTrailingZeros(), currency);
 	}
+
+	@Override
+	public String toString() {
+		return value.stripTrailingZeros() + currency.getCode();
+	}
 }
