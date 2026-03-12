@@ -8,37 +8,37 @@ import co.invest72.money.domain.Money;
 
 public class FixedDepositAmount implements LumpSumInvestmentAmount {
 
-	private final Money moneyAmount;
+	private final Money amount;
 
 	public FixedDepositAmount(BigDecimal amount, String currency) {
 		this(Money.of(amount, currency));
 	}
 
-	public FixedDepositAmount(Money money) {
-		if (money.getValue().compareTo(BigDecimal.ZERO) < 0) {
+	public FixedDepositAmount(Money amount) {
+		if (amount.getValue().compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("투자 금액은 음수일 수 없습니다.");
 		}
-		this.moneyAmount = money;
+		this.amount = amount;
 	}
 
 	@Override
 	public BigDecimal getDepositAmount() {
-		return moneyAmount.getValue();
+		return amount.getValue();
 	}
 
 	@Override
 	public Money getDepositAmount_temp() {
-		return moneyAmount;
+		return amount;
 	}
 
 	@Override
 	public BigDecimal calAnnualInterest(InterestRate interestRate) {
-		return interestRate.getAnnualInterest(moneyAmount.getValue());
+		return interestRate.getAnnualInterest(amount.getValue());
 	}
 
 	@Override
 	public BigDecimal calMonthlyInterest(InterestRate interestRate) {
-		return interestRate.calMonthlyInterest(moneyAmount.getValue());
+		return interestRate.calMonthlyInterest(amount.getValue());
 	}
 
 	@Override
