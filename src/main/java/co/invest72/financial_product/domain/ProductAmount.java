@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductAmount {
 
-	private static final BigDecimal MAX_AMOUNT = new BigDecimal("10000000000000"); // 10조원
+	private static final BigDecimal MAX_AMOUNT = new BigDecimal("99999999999999999"); // 99999조
 
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "amount", nullable = false, precision = 19, scale = 2))
@@ -32,15 +32,15 @@ public class ProductAmount {
 	 */
 	public ProductAmount(BigDecimal value) {
 		this.value = Money.won(value);
-		validate(value);
+		validate(this.value);
 	}
 
-	private void validate(BigDecimal value) {
-		if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
+	private void validate(Money value) {
+		if (value == null || value.compareTo(Money.won(BigDecimal.ZERO)) < 0) {
 			throw new IllegalArgumentException("금액은 0원 이상이어야 합니다.");
 		}
-		if (value.compareTo(MAX_AMOUNT) > 0) {
-			throw new IllegalArgumentException("금액은 10조원을 초과할 수 없습니다.");
+		if (value.compareTo(Money.won(MAX_AMOUNT)) > 0) {
+			throw new IllegalArgumentException("금액은 99999조원을 초과할 수 없습니다.");
 		}
 	}
 

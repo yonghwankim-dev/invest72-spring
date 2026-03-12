@@ -39,6 +39,10 @@ public class Money implements Comparable<Money> {
 		return new Money(value, "KRW");
 	}
 
+	public static Money of(BigDecimal value, String currency) {
+		return new Money(value, currency);
+	}
+
 	public Money add(Money addend) {
 		validate(addend);
 		return new Money(this.value.add(addend.value), this.currency);

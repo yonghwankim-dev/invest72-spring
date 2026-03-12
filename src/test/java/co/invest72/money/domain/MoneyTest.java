@@ -1,5 +1,7 @@
 package co.invest72.money.domain;
 
+import java.math.BigDecimal;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,5 +96,17 @@ class MoneyTest {
 		Assertions.assertThatThrownBy(() -> money1.compareTo(money2))
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("Money 객체는 null일 수 없습니다.");
+	}
+
+	@DisplayName("달러 생성 - 달러 생성 시, 통화는 USD로 설정되어야 한다.")
+	@Test
+	void dollar_whenCreateDollar_thenCurrencyIsUSD() {
+		// given
+		BigDecimal value = BigDecimal.valueOf(5);
+		String currency = "USD";
+		// when
+		Money money = Money.of(value, currency);
+		// then
+		Assertions.assertThat(money).isEqualTo(Money.dollar(5));
 	}
 }
