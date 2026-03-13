@@ -86,7 +86,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		BigDecimal totalInvestment = investmentAmount.getAmountMoney().getValue()
+		BigDecimal totalInvestment = investmentAmount.getAmount().getValue()
 			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
 		return roundToWholeAmount.apply(totalInvestment);
 	}

@@ -1,7 +1,5 @@
 package co.invest72.investment.domain.amount;
 
-import java.math.BigDecimal;
-
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.money.domain.Money;
@@ -32,12 +30,8 @@ public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestment
 		return interestRate.calMonthlyInterest(amount);
 	}
 
-	public BigDecimal getAmount() {
-		return amount.getValue();
-	}
-
 	@Override
-	public Money getAmountMoney() {
+	public Money getAmount() {
 		return amount;
 	}
 }

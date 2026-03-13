@@ -25,15 +25,15 @@ public class SimpleFixedDepositYearlyDetailFactory {
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 
-		BigDecimal principal = investmentAmount.getAmountMoney().getValue();
+		BigDecimal principal = investmentAmount.getAmount().getValue();
 		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmountMoney().getValue();
+		BigDecimal profit = investmentAmount.getAmount().getValue();
 		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			BigDecimal months = BigDecimal.valueOf(calculateMonthsInYear(i));
-			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmountMoney().getValue())
+			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmount().getValue())
 				.multiply(months);
 			profit = principal.add(interest);
 			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));

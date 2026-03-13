@@ -8,5 +8,5 @@ public interface InvestmentAmount {
 
 	Money calMonthlyInterest(InterestRate interestRate);
 
-	Money getAmountMoney();
+	Money getAmount();
 }

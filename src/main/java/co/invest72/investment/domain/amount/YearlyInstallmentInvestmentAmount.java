@@ -31,12 +31,8 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 		return interestRate.calMonthlyInterest(amount);
 	}
 
-	public BigDecimal getAmount() {
-		return amount.getValue();
-	}
-
 	@Override
-	public Money getAmountMoney() {
+	public Money getAmount() {
 		return amount;
 	}
 }

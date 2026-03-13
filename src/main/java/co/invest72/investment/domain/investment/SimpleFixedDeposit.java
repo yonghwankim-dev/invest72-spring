@@ -90,7 +90,7 @@ public class SimpleFixedDeposit implements Investment {
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
+		return roundToWholeAmount.apply(investmentAmount.getAmount().getValue());
 	}
 
 	@Override
