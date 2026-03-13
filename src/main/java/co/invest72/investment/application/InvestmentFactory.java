@@ -11,6 +11,7 @@ import java.util.function.Function;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
 import co.invest72.investment.console.input.parser.InstallmentInvestmentAmountParser;
 import co.invest72.investment.console.input.parser.InvestmentAmountParser;
@@ -47,13 +48,15 @@ import co.invest72.money.domain.Money;
 public class InvestmentFactory {
 
 	private final Map<InvestmentKey, Function<CalculateInvestmentDto, Investment>> dtoRegistry = new HashMap<>();
+	private final ProductAmountMapper productAmountMapper;
 
-	public InvestmentFactory() {
+	public InvestmentFactory(ProductAmountMapper productAmountMapper) {
 		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
+		this.productAmountMapper = productAmountMapper;
 	}
 
 	public Investment createBy(CalculateInvestmentDto dto) {
@@ -91,7 +94,7 @@ public class InvestmentFactory {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
 			InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
 				request.getAmountType() + " " + request.getAmount());
-			productAmount = new ProductAmount(investmentAmount.getMonthlyAmount().getValue());
+			productAmount = productAmountMapper.toProductAmount(investmentAmount.getMonthlyAmount());
 		}
 
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
