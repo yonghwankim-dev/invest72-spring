@@ -42,16 +42,6 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		return getPrincipalMoney(getFinalMonth()).getValue();
 	}
 
-	public BigDecimal getPrincipal(int month) {
-		if (month > getFinalMonth()) {
-			return getPrincipal();
-		}
-		if (month < 0) {
-			return getPrincipalMoney(0).getValue();
-		}
-		return roundToWholeAmount.apply(details.get(month).getPrincipal());
-	}
-
 	@Override
 	public Money getPrincipalMoney(int month) {
 		if (month > getFinalMonth()) {
