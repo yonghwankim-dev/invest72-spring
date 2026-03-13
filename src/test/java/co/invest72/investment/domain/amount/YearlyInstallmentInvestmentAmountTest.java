@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,10 +40,10 @@ class YearlyInstallmentInvestmentAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
+		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
 
-		BigDecimal expectedInterest = BigDecimal.valueOf(600_000);
-		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
+		Money expectedInterest = Money.won(BigDecimal.valueOf(600_000));
+		Assertions.assertThat(interest).isEqualTo(expectedInterest);
 	}
 
 	@Test

@@ -22,8 +22,8 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 	}
 
 	@Override
-	public BigDecimal calAnnualInterest(InterestRate interestRate) {
-		return interestRate.getAnnualInterest(amount).getValue();
+	public Money calAnnualInterestMoney(InterestRate interestRate) {
+		return interestRate.getAnnualInterest(amount);
 	}
 
 	@Override

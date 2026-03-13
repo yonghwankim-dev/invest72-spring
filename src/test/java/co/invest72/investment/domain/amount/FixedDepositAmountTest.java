@@ -46,10 +46,10 @@ class FixedDepositAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
+		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
 
-		BigDecimal expectedInterest = BigDecimal.valueOf(50_000);
-		Assertions.assertThat(interest).isEqualByComparingTo(expectedInterest);
+		Money expectedInterest = Money.won(BigDecimal.valueOf(50_000));
+		Assertions.assertThat(interest).isEqualTo(expectedInterest);
 	}
 
 	@DisplayName("연이자 계산 - 예치금이 10조원인 상태에서 이자를 정확히 계삲되어야 한다.")
@@ -58,10 +58,10 @@ class FixedDepositAmountTest {
 		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000"), "KRW"); // 10조원
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal interest = investmentAmount.calAnnualInterest(interestRate);
+		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
 
-		BigDecimal expectedInterest = new BigDecimal("500000000000"); // 5천억
-		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
+		Money expectedInterest = Money.won(new BigDecimal("500000000000")); // 5천억
+		Assertions.assertThat(interest).isEqualTo(expectedInterest);
 	}
 
 	@DisplayName("월이자 계산 - 연이율이 5%인 경우에 월이자가 정확히 계산되어야 한다.")
