@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
 import co.invest72.investment.domain.CashInvestment;
 import co.invest72.investment.domain.Investment;
@@ -40,7 +41,8 @@ class InvestmentFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
