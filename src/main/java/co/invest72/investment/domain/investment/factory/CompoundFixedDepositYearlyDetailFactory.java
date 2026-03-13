@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.money.domain.Money;
 
 public class CompoundFixedDepositYearlyDetailFactory {
 
@@ -25,26 +26,28 @@ public class CompoundFixedDepositYearlyDetailFactory {
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 
-		BigDecimal principal = investmentAmount.getAmount().getValue();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount().getValue();
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		Money principal = investmentAmount.getAmount();
+		// todo: 원화가 아닌 통화도 지원하도록 수정 필요
+		Money interest = Money.won(BigDecimal.ZERO);
+		Money profit = investmentAmount.getAmount();
+		result.add(new YearlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 
 		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			BigDecimal months = BigDecimal.valueOf(calculateMonthsInYear(i));
 			interest = calculateInterest(principal, months);
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new YearlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
 		}
 		return result;
 	}
 
-	private BigDecimal calculateInterest(BigDecimal principal, BigDecimal months) {
-		BigDecimal total = principal;
+	// TODO: 복리 예금용 이자 계산 방식 추가 필요 to InterestRate
+	private Money calculateInterest(Money principal, BigDecimal months) {
+		Money total = principal;
 		BigDecimal growthFactor = interestRate.calGrowthFactor();
 		for (int i = 0; i < months.intValue(); i++) {
-			total = total.multiply(growthFactor);
+			total = total.times(growthFactor);
 		}
 		return total.subtract(principal);
 	}

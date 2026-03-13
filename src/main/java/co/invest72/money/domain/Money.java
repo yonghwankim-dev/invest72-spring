@@ -60,6 +60,11 @@ public class Money implements Comparable<Money> {
 		return new Money(this.value.add(addend.value), this.currency);
 	}
 
+	public Money subtract(Money subtrahend) {
+		validate(subtrahend);
+		return new Money(this.value.subtract(subtrahend.value), this.currency);
+	}
+
 	public Money times(int multiplier) {
 		return times(BigDecimal.valueOf(multiplier));
 	}
