@@ -10,6 +10,7 @@ import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.investment.factory.SimpleFixedInstallmentSavingMonthlyDetailFactory;
 import co.invest72.investment.domain.investment.factory.SimpleFixedInstallmentSavingYearlyDetailFactory;
+import co.invest72.money.domain.Money;
 import lombok.Builder;
 
 /**
@@ -90,9 +91,8 @@ public class SimpleFixedInstallmentSaving implements Investment {
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		BigDecimal totalInvestment = investmentAmount.getAmount().getValue()
-			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
-		return roundToWholeAmount.apply(totalInvestment);
+		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
+		return roundToWholeAmount.apply(totalInvestment.getValue());
 	}
 
 	@Override
