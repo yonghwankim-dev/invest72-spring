@@ -19,7 +19,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getPrincipal(int month) {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override
@@ -39,12 +39,12 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getProfit(int month) {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getTotalProfit() {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getPrincipalForYear(int year) {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getProfitForYear(int year) {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override

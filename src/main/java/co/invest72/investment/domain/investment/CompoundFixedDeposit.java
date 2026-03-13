@@ -93,7 +93,7 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public BigDecimal getTotalInvestment() {
-		return roundToWholeAmount.apply(investmentAmount.getAmount());
+		return roundToWholeAmount.apply(investmentAmount.getAmountMoney().getValue());
 	}
 
 	@Override

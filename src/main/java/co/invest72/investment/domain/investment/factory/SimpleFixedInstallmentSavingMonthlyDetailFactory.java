@@ -32,8 +32,8 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
-			accInvestmentAmount = accInvestmentAmount.add(investmentAmount.getAmount());
-			principal = profit.add(investmentAmount.getAmount());
+			accInvestmentAmount = accInvestmentAmount.add(investmentAmount.getAmountMoney().getValue());
+			principal = profit.add(investmentAmount.getAmountMoney().getValue());
 			interest = interestRate.getMonthlyRate().multiply(accInvestmentAmount);
 			profit = principal.add(interest);
 			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));

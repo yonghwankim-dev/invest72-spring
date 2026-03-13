@@ -13,7 +13,6 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.money.domain.Money;
-import testutil.BigDecimalAssertion;
 
 class FixedDepositAmountTest {
 
@@ -69,10 +68,10 @@ class FixedDepositAmountTest {
 	void calMonthlyInterest_shouldReturnMonthlyInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal interest = investmentAmount.calMonthlyInterest(interestRate);
+		Money interest = investmentAmount.calMonthlyInterest(interestRate);
 
-		BigDecimal expectedInterest = BigDecimal.valueOf(4166.666666666667000000);
-		BigDecimalAssertion.assertBigDecimalEquals(expectedInterest, interest);
+		Money expectedInterest = Money.won(BigDecimal.valueOf(4166.666666666667000000));
+		Assertions.assertThat(interest).isEqualTo(expectedInterest);
 	}
 
 	@DisplayName("금액 반환 - 원화 Money 타입 예치금 반환")

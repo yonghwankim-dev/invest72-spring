@@ -12,7 +12,6 @@ import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.money.domain.Money;
-import testutil.BigDecimalAssertion;
 
 class YearlyInstallmentInvestmentAmountTest {
 
@@ -50,9 +49,9 @@ class YearlyInstallmentInvestmentAmountTest {
 	void calMonthlyInterest_shouldReturnMonthlyInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
+		Money monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
 
-		BigDecimal expectedMonthlyInterest = BigDecimal.valueOf(50_000);
-		BigDecimalAssertion.assertBigDecimalEquals(expectedMonthlyInterest, monthlyInterest);
+		Money expectedMonthlyInterest = Money.won(BigDecimal.valueOf(50_000));
+		Assertions.assertThat(monthlyInterest).isEqualTo(expectedMonthlyInterest);
 	}
 }

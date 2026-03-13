@@ -33,7 +33,7 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 		int years = getFinalYear();
 		for (int i = 1; i <= years; i++) {
 			BigDecimal months = BigDecimal.valueOf(Math.min(12, investPeriod.getMonths() - (i - 1) * 12));
-			BigDecimal value = investmentAmount.getAmount().multiply(months);
+			BigDecimal value = investmentAmount.getAmountMoney().getValue().multiply(months);
 			principal = profit.add(value);
 
 			interest = calculateYearlyInterest(profit, months.intValue());
@@ -54,7 +54,7 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 		BigDecimal interest;
 		BigDecimal profit = baseProfit;
 		for (int i = 1; i <= month; i++) {
-			principal = profit.add(investmentAmount.getAmount());
+			principal = profit.add(investmentAmount.getAmountMoney().getValue());
 			interest = interestRate.getMonthlyRate().multiply(principal);
 			profit = principal.add(interest);
 			result = result.add(interest);

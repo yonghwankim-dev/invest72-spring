@@ -36,12 +36,12 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 			int monthsInYear = calculateMonthsInYear(year);
 
 			// 1. 기초 원금 (이전 연도까지 쌓인 순수 투자 원금)
-			BigDecimal openingPrincipal = investmentAmount.getAmount()
+			BigDecimal openingPrincipal = investmentAmount.getAmountMoney().getValue()
 				.multiply(BigDecimal.valueOf((year - 1) * 12L));
 
 			// 2. principal : 당해 연도 누적 원금 (이전 총액 + 당해 신규 적립금)
 			// 샘플 데이터 구조상 profit(이월총액) + 당해 적립금
-			BigDecimal yearlyContribution = investmentAmount.getAmount()
+			BigDecimal yearlyContribution = investmentAmount.getAmountMoney().getValue()
 				.multiply(BigDecimal.valueOf(monthsInYear));
 			principal = profit.add(yearlyContribution);
 
@@ -53,7 +53,7 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 			// b: 이번 연도에 새로 적립하는 금액들에 대한 단리 적금 이자
 			// 등차수열 공식을 이용하여 monthsInYear에 따라 가변적으로 계산
 			long sumOfMonths = (long)monthsInYear * (monthsInYear + 1) / 2;
-			BigDecimal b = investmentAmount.getAmount()
+			BigDecimal b = investmentAmount.getAmountMoney().getValue()
 				.multiply(interestRate.getMonthlyRate())
 				.multiply(BigDecimal.valueOf(sumOfMonths));
 
