@@ -27,8 +27,7 @@ public class CompoundFixedDepositMonthlyDetailFactory {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 
 		Money principal = investmentAmount.getAmount();
-		// TODO: 원화가 아닌 통화도 지원하도록 수정 필요
-		Money interest = Money.won(BigDecimal.ZERO);
+		Money interest = Money.of(BigDecimal.ZERO, principal.getCurrency());
 		Money profit = investmentAmount.getAmount();
 		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 

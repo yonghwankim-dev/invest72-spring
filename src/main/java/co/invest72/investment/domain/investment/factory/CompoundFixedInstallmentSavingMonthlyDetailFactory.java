@@ -26,10 +26,9 @@ public class CompoundFixedInstallmentSavingMonthlyDetailFactory {
 
 	public List<MonthlyInvestmentDetail> createDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		// todo: 원화가 아닌 통화도 지원하도록 수정 필요
-		Money principal = Money.won(BigDecimal.ZERO);
-		Money interest = Money.won(BigDecimal.ZERO);
-		Money profit = Money.won(BigDecimal.ZERO);
+		Money principal = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
+		Money interest = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
+		Money profit = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 
 		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
