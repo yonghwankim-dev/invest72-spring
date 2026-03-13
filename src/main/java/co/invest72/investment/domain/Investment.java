@@ -21,6 +21,10 @@ public interface Investment {
 	 */
 	BigDecimal getPrincipal();
 
+	default Money getPrincipalMoney() {
+		throw new UnsupportedOperationException("getPrincipalMoney() is not supported");
+	}
+
 	/**
 	 * 지정된 월 회차(month)의 원금 금액을 Money 객체로 반환합니다.
 	 * @param month 회차 (기본 1부터 시작)

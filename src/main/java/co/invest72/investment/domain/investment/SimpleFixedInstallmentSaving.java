@@ -47,6 +47,11 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public Money getPrincipalMoney() {
+		return getPrincipal(getFinalMonth());
+	}
+
+	@Override
 	public Money getPrincipal(int month) {
 		if (month > getFinalMonth()) {
 			return getPrincipal(getFinalMonth());
