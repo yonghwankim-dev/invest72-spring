@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.money.domain.Money;
 
 public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
@@ -25,21 +26,21 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
+		Money principal = Money.won(BigDecimal.ZERO);
+		Money interest = Money.won(BigDecimal.ZERO);
+		Money profit = Money.won(BigDecimal.ZERO);
 
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		result.add(new YearlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 		int years = getFinalYear();
 		for (int i = 1; i <= years; i++) {
 			BigDecimal months = BigDecimal.valueOf(Math.min(12, investPeriod.getMonths() - (i - 1) * 12));
-			BigDecimal value = investmentAmount.getAmount().getValue().multiply(months);
+			Money value = investmentAmount.getAmount().times(months);
 			principal = profit.add(value);
 
 			interest = calculateYearlyInterest(profit, months.intValue());
 
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new YearlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
 		}
 		return result;
 	}
@@ -48,14 +49,14 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 
-	private BigDecimal calculateYearlyInterest(BigDecimal baseProfit, int month) {
-		BigDecimal principal;
-		BigDecimal result = BigDecimal.ZERO;
-		BigDecimal interest;
-		BigDecimal profit = baseProfit;
+	private Money calculateYearlyInterest(Money baseProfit, int month) {
+		Money principal;
+		Money result = Money.won(BigDecimal.ZERO);
+		Money interest;
+		Money profit = baseProfit;
 		for (int i = 1; i <= month; i++) {
-			principal = profit.add(investmentAmount.getAmount().getValue());
-			interest = interestRate.getMonthlyRate().multiply(principal);
+			principal = profit.add(investmentAmount.getAmount());
+			interest = interestRate.calMonthlyInterest(principal);
 			profit = principal.add(interest);
 			result = result.add(interest);
 		}
