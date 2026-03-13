@@ -15,10 +15,9 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getPrincipal() {
-		return getPrincipal(getFinalMonth());
+		return getPrincipalMoney(getFinalMonth()).getValue();
 	}
 
-	@Override
 	public BigDecimal getPrincipal(int month) {
 		return roundToWholeMoney.apply(investmentAmount.getAmount()).getValue();
 	}

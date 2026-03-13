@@ -22,16 +22,6 @@ public interface Investment {
 	BigDecimal getPrincipal();
 
 	/**
-	 * 지정된 월 회차(month)의 원금 금액을 반환합니다.
-	 *
-	 * @param month 회차 (기본 1부터 시작)
-	 * @return 원금 금액
-	 */
-	default BigDecimal getPrincipal(int month) {
-		return getPrincipalMoney(month).getValue();
-	}
-
-	/**
 	 * 지정된 월 회차(month)의 원금 금액을 Money 객체로 반환합니다.
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 원금 금액을 Money 객체로 반환

@@ -23,6 +23,7 @@ import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Money;
+import testutil.BigDecimalAssertion;
 
 class CompoundFixedInstallmentSavingTest {
 
@@ -49,7 +50,7 @@ class CompoundFixedInstallmentSavingTest {
 	@ParameterizedTest
 	@CsvFileSource(files = "src/test/resources/compound_fixed_installment_saving_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
-		BigDecimal principal = investment.getPrincipal(month);
+		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
 		BigDecimal interest = investment.getInterest(month);
 		BigDecimal totalProfit = investment.getProfit(month);
 
@@ -60,14 +61,14 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getPrincipal() {
-		assertEquals(BigDecimal.valueOf(12_278_855), investment.getPrincipal());
+		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(12_278_855), investment.getPrincipal());
 	}
 
 	@Test
 	void getPrincipal_whenMonthIsZero_thenReturnPrincipal() {
 		int months = 0;
 
-		BigDecimal principal = investment.getPrincipal(months);
+		BigDecimal principal = investment.getPrincipalMoney(months).getValue();
 
 		assertEquals(BigDecimal.ZERO, principal);
 	}
