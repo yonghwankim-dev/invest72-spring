@@ -120,4 +120,16 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(result).isTrue();
 	}
+
+	@DisplayName("달러 곱셈")
+	@Test
+	void times_whenMoneyIsDollar_thenReturnMultipliedDollar() {
+		// given
+		Money fiveBucks = Money.dollar(5);
+		int multiplier = 3;
+		// when
+		Money result = fiveBucks.times(multiplier);
+		// then
+		Assertions.assertThat(result).isEqualTo(Money.dollar(15));
+	}
 }

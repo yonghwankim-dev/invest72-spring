@@ -12,7 +12,7 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 
 	public YearlyInstallmentInvestmentAmount(Money amount) {
 		this.amount = amount;
-		if (this.amount.getValue().compareTo(BigDecimal.ZERO) < 0) {
+		if (this.amount.isNegative()) {
 			throw new IllegalArgumentException("금액은 음수일 수 없습니다.");
 		}
 	}

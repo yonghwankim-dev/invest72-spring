@@ -55,6 +55,10 @@ public class Money implements Comparable<Money> {
 		return new Money(this.value.add(addend.value), this.currency);
 	}
 
+	public Money times(int multiplier) {
+		return new Money(this.value.multiply(BigDecimal.valueOf(multiplier)), this.currency);
+	}
+
 	private void validate(Money money) {
 		if (money == null) {
 			throw new IllegalArgumentException("Money 객체는 null일 수 없습니다.");
