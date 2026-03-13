@@ -10,6 +10,7 @@ import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.investment.factory.SimpleFixedDepositMonthlyDetailFactory;
 import co.invest72.investment.domain.investment.factory.SimpleFixedDepositYearlyDetailFactory;
+import co.invest72.money.domain.Money;
 import lombok.Builder;
 
 /**
@@ -54,6 +55,18 @@ public class SimpleFixedDeposit implements Investment {
 			return getPrincipal(0);
 		}
 		return roundToWholeAmount.apply(details.get(month).getPrincipal());
+	}
+
+	@Override
+	public Money getPrincipalMoney(int month) {
+		if (month > getFinalMonth()) {
+			return getPrincipalMoney(getFinalMonth());
+		}
+		if (month < 0) {
+			return getPrincipalMoney(0);
+		}
+		BigDecimal principal = details.get(month).getPrincipal();
+		return roundToWholeMoney.apply(Money.of(principal, investmentAmount.getAmount().getCurrency()));
 	}
 
 	@Override

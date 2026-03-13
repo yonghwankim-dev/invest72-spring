@@ -3,6 +3,7 @@ package co.invest72.investment.domain;
 import java.math.BigDecimal;
 
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Money;
 
 public class CashInvestment implements Investment {
 
@@ -20,6 +21,11 @@ public class CashInvestment implements Investment {
 	@Override
 	public BigDecimal getPrincipal(int month) {
 		return roundToWholeMoney.apply(investmentAmount.getAmount()).getValue();
+	}
+
+	@Override
+	public Money getPrincipalMoney(int month) {
+		return roundToWholeMoney.apply(investmentAmount.getAmount());
 	}
 
 	@Override
