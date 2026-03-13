@@ -40,7 +40,7 @@ class YearlyInstallmentInvestmentAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
+		Money interest = investmentAmount.calAnnualInterest(interestRate);
 
 		Money expectedInterest = Money.won(BigDecimal.valueOf(600_000));
 		Assertions.assertThat(interest).isEqualTo(expectedInterest);

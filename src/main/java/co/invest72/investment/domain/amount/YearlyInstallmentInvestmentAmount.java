@@ -22,7 +22,7 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 	}
 
 	@Override
-	public Money calAnnualInterestMoney(InterestRate interestRate) {
+	public Money calAnnualInterest(InterestRate interestRate) {
 		return interestRate.getAnnualInterest(amount);
 	}
 

@@ -46,7 +46,7 @@ class FixedDepositAmountTest {
 	void shouldReturnInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
+		Money interest = investmentAmount.calAnnualInterest(interestRate);
 
 		Money expectedInterest = Money.won(BigDecimal.valueOf(50_000));
 		Assertions.assertThat(interest).isEqualTo(expectedInterest);
@@ -58,7 +58,7 @@ class FixedDepositAmountTest {
 		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000"), "KRW"); // 10조원
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		Money interest = investmentAmount.calAnnualInterestMoney(interestRate);
+		Money interest = investmentAmount.calAnnualInterest(interestRate);
 
 		Money expectedInterest = Money.won(new BigDecimal("500000000000")); // 5천억
 		Assertions.assertThat(interest).isEqualTo(expectedInterest);
