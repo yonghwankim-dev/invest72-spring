@@ -144,4 +144,28 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(result).isEqualTo(Money.dollar(BigDecimal.valueOf(2.5)));
 	}
+
+	@DisplayName("달러 나눗셈 - 분모가 0이면 0이 반환되어야 한다.")
+	@Test
+	void divide_whenDivisorIsZero_thenReturnZero() {
+		// given
+		Money fiveBucks = Money.dollar(5);
+		BigDecimal divisor = BigDecimal.ZERO;
+		// when
+		Money result = fiveBucks.divide(divisor);
+		// then
+		Assertions.assertThat(result).isEqualTo(Money.dollar(BigDecimal.ZERO));
+	}
+
+	@DisplayName("달러 나눗셈 - 분모가 null이면 예외가 발생해야 한다.")
+	@Test
+	void divide_whenDivisorIsNull_thenThrowException() {
+		// given
+		Money fiveBucks = Money.dollar(5);
+		BigDecimal divisor = null;
+		// when & then
+		Assertions.assertThatThrownBy(() -> fiveBucks.divide(divisor))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("분모는 null일 수 없습니다.");
+	}
 }

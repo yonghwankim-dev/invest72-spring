@@ -77,7 +77,19 @@ public class Money implements Comparable<Money> {
 		}
 	}
 
+	/**
+	 * 금액을 분모로 나눈 결과를 반환합니다. 분모가 0인 경우, 0을 반환합니다.
+	 * @param divisor 분모
+	 * @return 나눗셈 결과를 담은 새로운 Money 객체
+	 * @throws IllegalArgumentException divisor가 null인 경우
+	 */
 	public Money divide(BigDecimal divisor) {
+		if (divisor == null) {
+			throw new IllegalArgumentException("분모는 null일 수 없습니다.");
+		}
+		if (divisor.compareTo(BigDecimal.ZERO) == 0) {
+			return new Money(BigDecimal.ZERO, this.currency);
+		}
 		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
 		return new Money(newValue, currency);
 	}
