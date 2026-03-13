@@ -41,7 +41,6 @@ public class CompoundFixedDepositYearlyDetailFactory {
 		return result;
 	}
 
-	// TODO: 복리 예금용 이자 계산 방식 추가 필요 to InterestRate
 	private Money calculateInterest(Money principal, BigDecimal months) {
 		Money total = principal;
 		BigDecimal growthFactor = interestRate.calGrowthFactor();
