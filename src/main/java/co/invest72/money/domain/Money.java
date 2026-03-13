@@ -55,6 +55,10 @@ public class Money implements Comparable<Money> {
 		return new Money(value, Currency.of(currency));
 	}
 
+	public static Money of(BigDecimal value, Currency currency) {
+		return new Money(value, currency);
+	}
+
 	public Money add(Money addend) {
 		validate(addend);
 		return new Money(this.value.add(addend.value), this.currency);

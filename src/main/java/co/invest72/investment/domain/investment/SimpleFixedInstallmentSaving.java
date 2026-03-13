@@ -92,7 +92,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	@Override
 	public BigDecimal getTotalInvestment() {
 		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
-		return roundToWholeAmount.apply(totalInvestment.getValue());
+		return roundToWholeMoney.apply(totalInvestment).getValue();
 	}
 
 	@Override

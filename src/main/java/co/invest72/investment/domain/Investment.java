@@ -4,10 +4,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.UnaryOperator;
 
+import co.invest72.money.domain.Money;
+
 public interface Investment {
 
 	UnaryOperator<BigDecimal> roundToWholeAmount = amount -> amount
 		.setScale(0, RoundingMode.HALF_EVEN);
+
+	UnaryOperator<Money> roundToWholeMoney = money ->
+		Money.of(roundToWholeAmount.apply(money.getValue()), money.getCurrency());
 
 	/**
 	 * 만기 시점의 원금 금액을 반환합니다.
