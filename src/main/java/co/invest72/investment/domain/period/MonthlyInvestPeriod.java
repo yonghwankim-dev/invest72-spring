@@ -24,6 +24,9 @@ public class MonthlyInvestPeriod implements InvestPeriod {
 
 	@Override
 	public int getTotalPrincipal(InstallmentInvestmentAmount investmentAmount) {
-		return investmentAmount.getMonthlyAmount().multiply(BigDecimal.valueOf(periodRange.toMonths())).intValue();
+		return investmentAmount.getMonthlyAmount()
+			.getValue()
+			.multiply(BigDecimal.valueOf(periodRange.toMonths()))
+			.intValue();
 	}
 }

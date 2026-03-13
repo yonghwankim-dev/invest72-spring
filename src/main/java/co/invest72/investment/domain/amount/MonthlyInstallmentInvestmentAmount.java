@@ -18,8 +18,8 @@ public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestment
 	}
 
 	@Override
-	public BigDecimal getMonthlyAmount() {
-		return this.amount.getValue();
+	public Money getMonthlyAmount() {
+		return amount;
 	}
 
 	@Override

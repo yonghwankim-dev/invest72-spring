@@ -42,9 +42,9 @@ class MonthlyInstallmentInvestmentAmountTest {
 
 	@Test
 	void shouldReturnAmount() {
-		BigDecimal amount = investmentAmount.getMonthlyAmount();
+		Money amount = investmentAmount.getMonthlyAmount();
 
-		BigDecimal expected = BigDecimal.valueOf(1_000_000);
+		Money expected = Money.won(BigDecimal.valueOf(1_000_000));
 		Assertions.assertEquals(expected, amount);
 	}
 

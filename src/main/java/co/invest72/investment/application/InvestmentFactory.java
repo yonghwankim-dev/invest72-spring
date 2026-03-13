@@ -91,7 +91,7 @@ public class InvestmentFactory {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
 			InstallmentInvestmentAmount investmentAmount = (InstallmentInvestmentAmount)investmentAmountParser.parse(
 				request.getAmountType() + " " + request.getAmount());
-			productAmount = new ProductAmount(investmentAmount.getMonthlyAmount());
+			productAmount = new ProductAmount(investmentAmount.getMonthlyAmount().getValue());
 		}
 
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()

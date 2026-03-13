@@ -18,8 +18,10 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 	}
 
 	@Override
-	public BigDecimal getMonthlyAmount() {
-		return this.amount.getValue().divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN);
+	public Money getMonthlyAmount() {
+		BigDecimal monthlyAmount = amount.getValue()
+			.divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN);
+		return Money.of(monthlyAmount, amount.getCurrency().getCode());
 	}
 
 	@Override
