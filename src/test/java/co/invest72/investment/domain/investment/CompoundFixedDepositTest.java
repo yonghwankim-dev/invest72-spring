@@ -44,7 +44,7 @@ class CompoundFixedDepositTest {
 	@ParameterizedTest
 	@CsvFileSource(files = "src/test/resources/compound_fixed_deposit_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
-		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
+		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month);
 		BigDecimal totalProfit = investment.getProfit(month);
 
@@ -62,21 +62,21 @@ class CompoundFixedDepositTest {
 
 	@Test
 	void getPrincipal_whenMonthIsNegative() {
-		BigDecimal principal = investment.getPrincipalMoney(-1).getValue();
+		BigDecimal principal = investment.getPrincipal(-1).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
 
 	@Test
 	void getPrincipal_whenMonthIsZero() {
-		BigDecimal principal = investment.getPrincipalMoney(0).getValue();
+		BigDecimal principal = investment.getPrincipal(0).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
 
 	@Test
 	void getPrincipal_whenMonthGreaterThanFinalMonth() {
-		BigDecimal principal = investment.getPrincipalMoney(13).getValue();
+		BigDecimal principal = investment.getPrincipal(13).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_046_800), principal);
 	}

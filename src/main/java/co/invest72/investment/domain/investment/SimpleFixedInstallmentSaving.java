@@ -43,16 +43,16 @@ public class SimpleFixedInstallmentSaving implements Investment {
 
 	@Override
 	public BigDecimal getPrincipal() {
-		return getPrincipalMoney(getFinalMonth()).getValue();
+		return getPrincipal(getFinalMonth()).getValue();
 	}
 
 	@Override
-	public Money getPrincipalMoney(int month) {
+	public Money getPrincipal(int month) {
 		if (month > getFinalMonth()) {
-			return getPrincipalMoney(getFinalMonth());
+			return getPrincipal(getFinalMonth());
 		}
 		if (month < 0) {
-			return getPrincipalMoney(0);
+			return getPrincipal(0);
 		}
 		BigDecimal principal = details.get(month).getPrincipal();
 		return roundToWholeMoney.apply(Money.of(principal, investmentAmount.getAmount().getCurrency()));

@@ -50,7 +50,7 @@ class SimpleFixedDepositTest {
 	@ParameterizedTest
 	@CsvFileSource(files = "src/test/resources/simple_fixed_deposit_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedProfit) {
-		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
+		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month);
 		BigDecimal profit = investment.getProfit(month);
 
@@ -70,7 +70,7 @@ class SimpleFixedDepositTest {
 	void getPrincipal_whenMonthsIsNegative_thenReturnPrincipal() {
 		int month = -1;
 
-		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
+		BigDecimal principal = investment.getPrincipal(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
@@ -79,7 +79,7 @@ class SimpleFixedDepositTest {
 	void getPrincipal_whenMonthsIsZero_thenReturnPrincipal() {
 		int month = 0;
 
-		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
+		BigDecimal principal = investment.getPrincipal(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), principal);
 	}
@@ -88,7 +88,7 @@ class SimpleFixedDepositTest {
 	void getPrincipal_whenMonthsGreaterThanFinalMonth_thenReturnFinalMonthPrincipal() {
 		int month = 13;
 
-		BigDecimal principal = investment.getPrincipalMoney(month).getValue();
+		BigDecimal principal = investment.getPrincipal(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_045_833), principal);
 	}

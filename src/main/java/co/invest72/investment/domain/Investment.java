@@ -26,7 +26,7 @@ public interface Investment {
 	 * @param month 회차 (기본 1부터 시작)
 	 * @return 원금 금액을 Money 객체로 반환
 	 */
-	Money getPrincipalMoney(int month);
+	Money getPrincipal(int month);
 
 	/**
 	 * 만기 시점의 이자 금액을 반환합니다.
