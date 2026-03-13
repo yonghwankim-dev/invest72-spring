@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
+import co.invest72.money.domain.Money;
 
 class AnnualInterestRateTest {
 
@@ -107,12 +108,12 @@ class AnnualInterestRateTest {
 
 	@Test
 	void shouldReturnAnnualInterest() {
-		BigDecimal amount = BigDecimal.valueOf(1_000_000);
+		Money amount = Money.won(BigDecimal.valueOf(1_000_000));
 
-		BigDecimal actualAnnualInterest = interestRate.getAnnualInterest(amount);
+		Money actualAnnualInterest = interestRate.getAnnualInterest(amount);
 
-		BigDecimal expectedAnnualInterest = BigDecimal.valueOf(50_000);
-		assertBigDecimalEquals(expectedAnnualInterest, actualAnnualInterest);
+		Money expectedAnnualInterest = Money.won(BigDecimal.valueOf(50_000));
+		org.assertj.core.api.Assertions.assertThat(actualAnnualInterest).isEqualTo(expectedAnnualInterest);
 	}
 
 	@ParameterizedTest

@@ -56,7 +56,11 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money times(int multiplier) {
-		return new Money(this.value.multiply(BigDecimal.valueOf(multiplier)), this.currency);
+		return times(BigDecimal.valueOf(multiplier));
+	}
+
+	public Money times(BigDecimal multiplier) {
+		return new Money(this.value.multiply(multiplier), this.currency);
 	}
 
 	private void validate(Money money) {

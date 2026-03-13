@@ -2,6 +2,8 @@ package co.invest72.investment.domain;
 
 import java.math.BigDecimal;
 
+import co.invest72.money.domain.Money;
+
 public interface InterestRate {
 	/**
 	 * 연이자율을 반환합니다.
@@ -23,7 +25,7 @@ public interface InterestRate {
 	 * @param amount 투자 금액
 	 * @return 연이자
 	 */
-	BigDecimal getAnnualInterest(BigDecimal amount);
+	Money getAnnualInterest(Money amount);
 
 	/**
 	 * 투자 기간에 따른 총 성장 계수를 계산합니다.
