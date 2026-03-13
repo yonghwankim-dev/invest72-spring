@@ -109,4 +109,15 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(money).isEqualTo(Money.dollar(5));
 	}
+
+	@DisplayName("음수인지 체크 - 음수인 경우 true를 반환해야 한다.")
+	@Test
+	void isNegative_whenValueIsNegative_thenReturnTrue() {
+		// given
+		Money money = Money.dollar(-5);
+		// when
+		boolean result = money.isNegative();
+		// then
+		Assertions.assertThat(result).isTrue();
+	}
 }

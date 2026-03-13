@@ -64,6 +64,10 @@ public class Money implements Comparable<Money> {
 		}
 	}
 
+	public boolean isNegative() {
+		return this.value.compareTo(BigDecimal.ZERO) < 0;
+	}
+
 	@Override
 	public int compareTo(@Nonnull Money other) {
 		validate(other);
