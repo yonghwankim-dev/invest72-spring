@@ -88,22 +88,24 @@ class AnnualInterestRateTest {
 
 	@Test
 	void shouldReturnMonthlyInterest() {
-		int amount = 1_000_000;
+		Money amount = Money.won(1_000_000);
 
-		BigDecimal actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
+		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		BigDecimal expectedMonthlyInterest = BigDecimal.valueOf(4166.66666667);
-		assertBigDecimalEquals(expectedMonthlyInterest, actualMonthlyInterest);
+		org.assertj.core.api.Assertions.assertThat(actualMonthlyInterest)
+			.isEqualTo(Money.won(BigDecimal.valueOf(4166.66666667)))
+			.isEqualTo(Money.won(BigDecimal.valueOf(4166.67)));
 	}
 
 	@Test
 	void calMonthlyInterest_givenBigDecimalAmount() {
-		BigDecimal amount = BigDecimal.valueOf(1_000_000);
+		Money amount = Money.won(BigDecimal.valueOf(1_000_000));
 
-		BigDecimal actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
+		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		BigDecimal expectedMonthlyInterest = BigDecimal.valueOf(4166.66666667);
-		assertBigDecimalEquals(expectedMonthlyInterest, actualMonthlyInterest);
+		org.assertj.core.api.Assertions.assertThat(actualMonthlyInterest)
+			.isEqualTo(Money.won(BigDecimal.valueOf(4166.66666667)))
+			.isEqualTo(Money.won(BigDecimal.valueOf(4166.67)));
 	}
 
 	@Test

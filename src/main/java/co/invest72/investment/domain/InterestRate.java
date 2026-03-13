@@ -47,8 +47,6 @@ public interface InterestRate {
 	 * @return 성장 계수
 	 */
 	BigDecimal calGrowthFactor();
-
-	BigDecimal calMonthlyInterest(int amount);
-
-	BigDecimal calMonthlyInterest(BigDecimal amount);
+	
+	Money calMonthlyInterest(Money amount);
 }

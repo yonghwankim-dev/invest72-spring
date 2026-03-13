@@ -73,15 +73,10 @@ public class AnnualInterestRate implements InterestRate {
 	public BigDecimal calGrowthFactor() {
 		return getMonthlyRate().add(BigDecimal.ONE);
 	}
-
+	
 	@Override
-	public BigDecimal calMonthlyInterest(int amount) {
-		return calMonthlyInterest(BigDecimal.valueOf(amount));
-	}
-
-	@Override
-	public BigDecimal calMonthlyInterest(BigDecimal amount) {
-		return amount.multiply(getMonthlyRate());
+	public Money calMonthlyInterest(Money amount) {
+		return amount.times(getMonthlyRate());
 	}
 
 	@Override

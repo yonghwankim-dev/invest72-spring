@@ -29,7 +29,7 @@ public class MonthlyInstallmentInvestmentAmount implements InstallmentInvestment
 
 	@Override
 	public BigDecimal calMonthlyInterest(InterestRate interestRate) {
-		return interestRate.calMonthlyInterest(amount.getValue());
+		return interestRate.calMonthlyInterest(amount).getValue();
 	}
 
 	@Override

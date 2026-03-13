@@ -1,6 +1,7 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import jakarta.annotation.Nonnull;
@@ -89,7 +90,12 @@ public class Money implements Comparable<Money> {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Money money = (Money)o;
-		return this.value.compareTo(money.value) == 0 && this.currency.equals(money.currency);
+		return compareToValue(money) == 0 && this.currency.equals(money.currency);
+	}
+
+	private int compareToValue(Money other) {
+		return this.value.setScale(2, RoundingMode.HALF_EVEN)
+			.compareTo(other.value.setScale(2, RoundingMode.HALF_EVEN));
 	}
 
 	@Override
