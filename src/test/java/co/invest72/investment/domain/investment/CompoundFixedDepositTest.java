@@ -55,7 +55,7 @@ class CompoundFixedDepositTest {
 
 	@Test
 	void getPrincipal() {
-		BigDecimal principal = investment.getPrincipal();
+		BigDecimal principal = investment.getPrincipal().getValue();
 
 		assertEquals(BigDecimal.valueOf(1_046_800), principal);
 	}

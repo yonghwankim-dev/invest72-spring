@@ -61,7 +61,8 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getPrincipal() {
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(12_278_855), investment.getPrincipal());
+		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(12_278_855),
+			investment.getPrincipal().getValue());
 	}
 
 	@Test
