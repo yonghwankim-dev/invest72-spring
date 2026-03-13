@@ -1,7 +1,6 @@
 package co.invest72.investment.domain.amount;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InterestRate;
@@ -19,9 +18,7 @@ public class YearlyInstallmentInvestmentAmount implements InstallmentInvestmentA
 
 	@Override
 	public Money getMonthlyAmount() {
-		BigDecimal monthlyAmount = amount.getValue()
-			.divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN);
-		return Money.of(monthlyAmount, amount.getCurrency().getCode());
+		return amount.divide(BigDecimal.valueOf(12));
 	}
 
 	@Override

@@ -132,4 +132,16 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(result).isEqualTo(Money.dollar(15));
 	}
+
+	@DisplayName("달러 나눗셈 - Money를 BigDecimal로 나눌 때, 새로운 Money 객체가 반환되어야 한다.")
+	@Test
+	void divide_whenMoneyIsDollar_thenReturnDividedDollar() {
+		// given
+		Money fiveBucks = Money.dollar(5);
+		BigDecimal divisor = BigDecimal.valueOf(2);
+		// when
+		Money result = fiveBucks.divide(divisor);
+		// then
+		Assertions.assertThat(result).isEqualTo(Money.dollar(BigDecimal.valueOf(2.5)));
+	}
 }

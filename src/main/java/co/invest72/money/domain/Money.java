@@ -36,7 +36,11 @@ public class Money implements Comparable<Money> {
 	}
 
 	public static Money dollar(int value) {
-		return new Money(BigDecimal.valueOf(value), Currency.dollar());
+		return dollar(BigDecimal.valueOf(value));
+	}
+
+	public static Money dollar(BigDecimal value) {
+		return new Money(value, Currency.dollar());
 	}
 
 	public static Money won(int value) {
@@ -71,6 +75,11 @@ public class Money implements Comparable<Money> {
 		if (!this.currency.equals(money.currency)) {
 			throw new IllegalArgumentException("통화가 일치하지 않습니다.");
 		}
+	}
+
+	public Money divide(BigDecimal divisor) {
+		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
+		return new Money(newValue, currency);
 	}
 
 	public boolean isNegative() {
