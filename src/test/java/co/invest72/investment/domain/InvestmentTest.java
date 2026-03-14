@@ -54,7 +54,7 @@ class InvestmentTest {
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 
 		// Then
 		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("10000000000000"));
@@ -86,7 +86,7 @@ class InvestmentTest {
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 
 		// Then
 		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("119880000000000000"));

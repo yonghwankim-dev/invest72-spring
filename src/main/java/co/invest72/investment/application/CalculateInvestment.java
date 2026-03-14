@@ -22,7 +22,7 @@ public class CalculateInvestment {
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 
@@ -43,7 +43,7 @@ public class CalculateInvestment {
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateMonthlyInvestmentResponse.builder()
@@ -76,7 +76,7 @@ public class CalculateInvestment {
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateYearlyInvestmentResponse.builder()

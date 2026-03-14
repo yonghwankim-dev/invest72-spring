@@ -78,7 +78,7 @@ public interface Investment {
 	 * 만기까지의 총 수익 금액을 반환합니다.
 	 * @return 총 수익 금액
 	 */
-	Money getTotalProfitMoney();
+	Money getTotalProfit();
 
 	/**
 	 * 투자 기간의 마지막 월을 반환합니다
