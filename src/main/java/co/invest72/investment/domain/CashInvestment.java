@@ -25,12 +25,12 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getInterest() {
-		return getInterest(getFinalMonth());
+		return getInterestMoney(getFinalMonth()).getValue();
 	}
 
 	@Override
-	public BigDecimal getInterest(int month) {
-		return BigDecimal.ZERO;
+	public Money getInterestMoney(int month) {
+		return Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 	}
 
 	@Override

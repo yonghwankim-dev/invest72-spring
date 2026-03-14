@@ -57,7 +57,7 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public BigDecimal getInterest() {
-		return getInterest(investPeriod.getMonths());
+		return getInterestMoney(investPeriod.getMonths()).getValue();
 	}
 
 	/**
@@ -67,14 +67,16 @@ public class CompoundFixedDeposit implements Investment {
 	 * @return 이자 금액=원금×(1+월이자율)^개월수−원금
 	 */
 	@Override
-	public BigDecimal getInterest(int month) {
+	public Money getInterestMoney(int month) {
 		if (month > getFinalMonth()) {
-			return getInterest();
+			return getInterestMoney(getFinalMonth());
 		}
 		if (month < 0) {
-			return getInterest(0);
+			return getInterestMoney(0);
 		}
-		return roundToWholeAmount.apply(details.get(month).getInterest());
+		BigDecimal value = details.get(month).getInterest();
+		Money interest = Money.of(value, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(interest);
 	}
 
 	@Override
