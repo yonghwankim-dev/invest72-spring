@@ -149,7 +149,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalTax() {
-		assertEquals(BigDecimal.valueOf(50_050), investment.getTotalTax());
+		assertEquals(BigDecimal.valueOf(50_050), investment.getTotalTaxMoney().getValue());
 	}
 
 	@Test

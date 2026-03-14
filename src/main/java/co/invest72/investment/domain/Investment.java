@@ -72,11 +72,7 @@ public interface Investment {
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	BigDecimal getTotalTax();
-
-	default Money getTotalTaxMoney() {
-		throw new UnsupportedOperationException("총 세금 금액 계산이 지원되지 않는 투자 유형입니다.");
-	}
+	Money getTotalTaxMoney();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.
