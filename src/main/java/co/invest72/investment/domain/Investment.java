@@ -60,11 +60,7 @@ public interface Investment {
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액
 	 */
-	BigDecimal getTotalInvestment();
-
-	default Money getTotalInvestmentMoney() {
-		throw new UnsupportedOperationException("getTotalInvestment() is not supported for this investment type.");
-	}
+	Money getTotalInvestmentMoney();
 
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.

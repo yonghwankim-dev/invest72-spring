@@ -96,12 +96,7 @@ public class CompoundFixedDeposit implements Investment {
 		Money profit = Money.of(value, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(profit);
 	}
-
-	@Override
-	public BigDecimal getTotalInvestment() {
-		return roundToWholeAmount.apply(investmentAmount.getAmount().getValue());
-	}
-
+	
 	@Override
 	public Money getTotalInvestmentMoney() {
 		return roundToWholeMoney.apply(investmentAmount.getAmount());

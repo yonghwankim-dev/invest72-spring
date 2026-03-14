@@ -51,7 +51,7 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestmentMoney().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
@@ -83,7 +83,7 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestmentMoney().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();

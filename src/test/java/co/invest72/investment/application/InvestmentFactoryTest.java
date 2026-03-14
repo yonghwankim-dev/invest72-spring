@@ -127,7 +127,7 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestmentMoney().getValue());
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
@@ -198,6 +198,6 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(dto);
 		// then
 		assertInstanceOfInvestment(CashInvestment.class, investment);
-		Assertions.assertThat(investment.getTotalInvestment()).isEqualByComparingTo(amount);
+		Assertions.assertThat(investment.getTotalInvestmentMoney().getValue()).isEqualByComparingTo(amount);
 	}
 }

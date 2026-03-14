@@ -19,7 +19,7 @@ public class CalculateInvestment {
 	public CalculateInvestmentResponse calculate(Investment investment) {
 		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
 		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestmentMoney().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
@@ -40,7 +40,7 @@ public class CalculateInvestment {
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestmentMoney().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
@@ -73,7 +73,7 @@ public class CalculateInvestment {
 
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment();
+		BigDecimal totalInvestment = investment.getTotalInvestmentMoney().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
