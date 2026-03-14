@@ -181,6 +181,20 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public Money getProfitForYearMoney(int year) {
+		int finalYear = getFinalYear();
+		if (year > finalYear) {
+			return getProfitForYearMoney(finalYear);
+		}
+		if (year < 0) {
+			return getProfitForYearMoney(0);
+		}
+		BigDecimal profit = yearlyDetails.get(year).getProfit();
+		Money profitMoney = Money.of(profit, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(profitMoney);
+	}
+
+	@Override
 	public BigDecimal getTaxRate() {
 		return taxable.getTaxRate();
 	}

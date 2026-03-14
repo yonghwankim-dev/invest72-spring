@@ -107,5 +107,12 @@ public interface Investment {
 
 	BigDecimal getProfitForYear(int year);
 
+	/**
+	 * 지정된 연도(year)의 수익 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 수익 금액을 Money 객체로 반환
+	 */
+	Money getProfitForYearMoney(int year);
+
 	BigDecimal getTaxRate();
 }

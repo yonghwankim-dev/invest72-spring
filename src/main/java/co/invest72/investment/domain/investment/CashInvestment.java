@@ -91,6 +91,11 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
+	public Money getProfitForYearMoney(int year) {
+		return roundToWholeMoney.apply(investmentAmount.getAmount());
+	}
+
+	@Override
 	public BigDecimal getTaxRate() {
 		return BigDecimal.ZERO;
 	}
