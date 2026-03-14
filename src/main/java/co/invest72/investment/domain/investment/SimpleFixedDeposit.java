@@ -64,6 +64,11 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
+	public Money getInterestMoney() {
+		return getInterest(getFinalMonth());
+	}
+
+	@Override
 	public Money getInterest(int month) {
 		if (month > getFinalMonth()) {
 			return getInterest(getFinalMonth());

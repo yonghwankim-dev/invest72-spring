@@ -60,6 +60,11 @@ public class CompoundFixedDeposit implements Investment {
 		return getInterest(investPeriod.getMonths()).getValue();
 	}
 
+	@Override
+	public Money getInterestMoney() {
+		return getInterest(investPeriod.getMonths());
+	}
+
 	/**
 	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
 	 *

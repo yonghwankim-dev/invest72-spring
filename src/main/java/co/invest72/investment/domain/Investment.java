@@ -32,6 +32,11 @@ public interface Investment {
 	 */
 	BigDecimal getInterest();
 
+	default Money getInterestMoney() {
+		throw new UnsupportedOperationException(
+			"getInterestMoney() is not supported. Use getInterest() to get interest as BigDecimal.");
+	}
+
 	/**
 	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.
 	 * @param month 회차 (1부터 시작)
