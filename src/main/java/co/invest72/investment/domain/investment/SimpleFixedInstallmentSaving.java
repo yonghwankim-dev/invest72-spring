@@ -100,6 +100,12 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public Money getTotalInvestmentMoney() {
+		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
+		return roundToWholeMoney.apply(totalInvestment);
+	}
+
+	@Override
 	public BigDecimal getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1) // 0월은 이자가 없음
