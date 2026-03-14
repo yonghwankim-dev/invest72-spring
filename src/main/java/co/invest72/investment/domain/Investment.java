@@ -66,12 +66,7 @@ public interface Investment {
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	BigDecimal getTotalInterest();
-
-	default Money getTotalInterestMoney() {
-		throw new UnsupportedOperationException(
-			"getTotalInterestMoney() is not supported. Please implement getTotalInterest() and convert it to Money in the calling code.");
-	}
+	Money getTotalInterestMoney();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.

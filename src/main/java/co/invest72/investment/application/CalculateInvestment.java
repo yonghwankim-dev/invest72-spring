@@ -20,7 +20,7 @@ public class CalculateInvestment {
 		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
 		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalInterest = investment.getTotalInterestMoney().getValue();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
@@ -41,7 +41,7 @@ public class CalculateInvestment {
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalInterest = investment.getTotalInterestMoney().getValue();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
@@ -74,7 +74,7 @@ public class CalculateInvestment {
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest();
+		BigDecimal totalInterest = investment.getTotalInterestMoney().getValue();
 		BigDecimal totalTax = investment.getTotalTax();
 		BigDecimal totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();

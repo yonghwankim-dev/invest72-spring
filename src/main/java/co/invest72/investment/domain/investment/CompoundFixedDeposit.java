@@ -103,15 +103,6 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
-	public BigDecimal getTotalInterest() {
-		BigDecimal totalInterest = details.stream()
-			.skip(1)
-			.map(MonthlyInvestmentDetail::getInterest)
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return roundToWholeAmount.apply(totalInterest);
-	}
-
-	@Override
 	public Money getTotalInterestMoney() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1)
@@ -123,7 +114,7 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public BigDecimal getTotalTax() {
-		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
+		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterestMoney().getValue()));
 	}
 
 	@Override

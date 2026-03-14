@@ -135,7 +135,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalInterest() {
-		assertEquals(BigDecimal.valueOf(325_000), investment.getTotalInterest());
+		assertEquals(BigDecimal.valueOf(325_000), investment.getTotalInterestMoney().getValue());
 	}
 
 	@Test
@@ -144,7 +144,7 @@ class SimpleFixedInstallmentSavingTest {
 			.investPeriod(new MonthlyInvestPeriod(25))
 			.build();
 
-		assertEquals(BigDecimal.valueOf(1_354_167), investment.getTotalInterest());
+		assertEquals(BigDecimal.valueOf(1_354_167), investment.getTotalInterestMoney().getValue());
 	}
 
 	@Test
