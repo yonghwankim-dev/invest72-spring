@@ -32,7 +32,7 @@ public interface Investment {
 	 */
 	BigDecimal getInterest();
 
-	Money getInterestMoney(int month);
+	Money getInterest(int month);
 
 	/**
 	 * 만기 시점의 수익 금액을 반환합니다.

@@ -64,7 +64,7 @@ public class CalculateInvestment {
 			result.add(new MonthlyInvestmentResult(
 				month,
 				investment.getPrincipal(month).getValue(),
-				investment.getInterestMoney(month).getValue(),
+				investment.getInterest(month).getValue(),
 				investment.getProfit(month)
 			));
 		}

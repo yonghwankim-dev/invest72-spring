@@ -51,7 +51,7 @@ class CompoundFixedInstallmentSavingTest {
 	@CsvFileSource(files = "src/test/resources/compound_fixed_installment_saving_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
 		BigDecimal principal = investment.getPrincipal(month).getValue();
-		BigDecimal interest = investment.getInterestMoney(month).getValue();
+		BigDecimal interest = investment.getInterest(month).getValue();
 		BigDecimal totalProfit = investment.getProfit(month);
 
 		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
@@ -83,7 +83,7 @@ class CompoundFixedInstallmentSavingTest {
 	void getInterest_whenMonthIsZero_thenReturnZeroInterest() {
 		int months = 0;
 
-		BigDecimal interest = investment.getInterestMoney(months).getValue();
+		BigDecimal interest = investment.getInterest(months).getValue();
 
 		assertEquals(BigDecimal.ZERO, interest);
 	}
