@@ -1,7 +1,9 @@
-package co.invest72.investment.domain;
+package co.invest72.investment.domain.investment;
 
 import java.math.BigDecimal;
 
+import co.invest72.investment.domain.Investment;
+import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Money;
 
