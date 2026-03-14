@@ -32,6 +32,11 @@ public interface Investment {
 	 */
 	BigDecimal getInterest();
 
+	/**
+	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.
+	 * @param month 회차 (1부터 시작)
+	 * @return 이자 금액
+	 */
 	Money getInterest(int month);
 
 	/**
