@@ -93,6 +93,10 @@ public interface Investment {
 
 	BigDecimal getPrincipalForYear(int year);
 
+	default Money getPrincipalForYearMoney(int year) {
+		throw new UnsupportedOperationException("getPrincipalForYearMoney is not supported");
+	}
+
 	BigDecimal getInterestForYear(int year);
 
 	BigDecimal getProfitForYear(int year);
