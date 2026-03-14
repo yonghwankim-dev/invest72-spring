@@ -96,7 +96,7 @@ public interface Investment {
 	 * @param year 연도 (1부터 시작)
 	 * @return 원금 금액을 Money 객체로 반환
 	 */
-	Money getPrincipalForYearMoney(int year);
+	Money getPrincipalForYear(int year);
 
 	BigDecimal getInterestForYear(int year);
 

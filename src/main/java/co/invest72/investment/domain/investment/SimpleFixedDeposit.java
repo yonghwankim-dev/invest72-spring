@@ -135,19 +135,19 @@ public class SimpleFixedDeposit implements Investment {
 	public String getTaxType() {
 		return taxable.getTaxType();
 	}
-	
+
 	private int getFinalYear() {
 		return (getFinalMonth() - 1) / 12 + 1;
 	}
 
 	@Override
-	public Money getPrincipalForYearMoney(int year) {
+	public Money getPrincipalForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
-			return getPrincipalForYearMoney(finalYear);
+			return getPrincipalForYear(finalYear);
 		}
 		if (year < 0) {
-			return getPrincipalForYearMoney(0);
+			return getPrincipalForYear(0);
 		}
 		BigDecimal principal = yearlyDetails.get(year).getPrincipal();
 		Money principalMoney = Money.of(principal, investmentAmount.getAmount().getCurrency());
