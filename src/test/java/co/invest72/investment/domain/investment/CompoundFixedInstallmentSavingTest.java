@@ -168,12 +168,12 @@ class CompoundFixedInstallmentSavingTest {
 			.investPeriod(new YearlyInvestPeriod(3))
 			.build();
 
-		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYearMoney(-1).getValue());
-		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYearMoney(0).getValue());
-		assertEquals(BigDecimal.valueOf(330_017), investment.getInterestForYearMoney(1).getValue());
-		assertEquals(BigDecimal.valueOf(960_844), investment.getInterestForYearMoney(2).getValue());
-		assertEquals(BigDecimal.valueOf(1_623_946), investment.getInterestForYearMoney(3).getValue());
-		assertEquals(BigDecimal.valueOf(1_623_946), investment.getInterestForYearMoney(4).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(-1).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(0).getValue());
+		assertEquals(BigDecimal.valueOf(330_017), investment.getInterestForYear(1).getValue());
+		assertEquals(BigDecimal.valueOf(960_844), investment.getInterestForYear(2).getValue());
+		assertEquals(BigDecimal.valueOf(1_623_946), investment.getInterestForYear(3).getValue());
+		assertEquals(BigDecimal.valueOf(1_623_946), investment.getInterestForYear(4).getValue());
 	}
 
 	@Test
@@ -184,12 +184,12 @@ class CompoundFixedInstallmentSavingTest {
 			.taxable(nonTax)
 			.build();
 
-		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYearMoney(-1).getValue());
-		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYearMoney(0).getValue());
-		assertEquals(BigDecimal.valueOf(330_017), investment.getInterestForYearMoney(1).getValue());
-		assertEquals(BigDecimal.valueOf(960_844), investment.getInterestForYearMoney(2).getValue());
-		assertEquals(BigDecimal.valueOf(109_545), investment.getInterestForYearMoney(3).getValue());
-		assertEquals(BigDecimal.valueOf(109_545), investment.getInterestForYearMoney(4).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(-1).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getInterestForYear(0).getValue());
+		assertEquals(BigDecimal.valueOf(330_017), investment.getInterestForYear(1).getValue());
+		assertEquals(BigDecimal.valueOf(960_844), investment.getInterestForYear(2).getValue());
+		assertEquals(BigDecimal.valueOf(109_545), investment.getInterestForYear(3).getValue());
+		assertEquals(BigDecimal.valueOf(109_545), investment.getInterestForYear(4).getValue());
 	}
 
 	@Test

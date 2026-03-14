@@ -153,15 +153,15 @@ public class SimpleFixedDeposit implements Investment {
 		Money principalMoney = Money.of(principal, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(principalMoney);
 	}
-	
+
 	@Override
-	public Money getInterestForYearMoney(int year) {
+	public Money getInterestForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
-			return getInterestForYearMoney(finalYear);
+			return getInterestForYear(finalYear);
 		}
 		if (year < 0) {
-			return getInterestForYearMoney(0);
+			return getInterestForYear(0);
 		}
 		BigDecimal interest = yearlyDetails.get(year).getInterest();
 		Money interestMoney = Money.of(interest, investmentAmount.getAmount().getCurrency());
