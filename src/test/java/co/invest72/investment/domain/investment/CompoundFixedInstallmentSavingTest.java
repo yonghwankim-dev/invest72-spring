@@ -76,7 +76,7 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getInterest() {
-		assertEquals(BigDecimal.valueOf(51_162), investment.getInterestMoney().getValue());
+		assertEquals(BigDecimal.valueOf(51_162), investment.getInterest().getValue());
 	}
 
 	@Test

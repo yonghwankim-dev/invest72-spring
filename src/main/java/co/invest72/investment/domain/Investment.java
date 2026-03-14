@@ -23,7 +23,11 @@ public interface Investment {
 	 */
 	Money getPrincipal(int month);
 
-	Money getInterestMoney();
+	/**
+	 * 만기 시점의 이자 금액을 반환합니다.
+	 * @return 이자 금액
+	 */
+	Money getInterest();
 
 	/**
 	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.

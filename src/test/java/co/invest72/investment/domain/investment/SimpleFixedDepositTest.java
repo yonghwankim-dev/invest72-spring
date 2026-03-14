@@ -95,7 +95,7 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getInterest() {
-		BigDecimal interest = investment.getInterestMoney().getValue();
+		BigDecimal interest = investment.getInterest().getValue();
 
 		assertEquals(BigDecimal.valueOf(4_167), interest);
 	}
