@@ -92,9 +92,9 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		Money profit = Money.of(value, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(profit);
 	}
-	
+
 	@Override
-	public Money getTotalInvestmentMoney() {
+	public Money getTotalInvestment() {
 		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
 		return roundToWholeMoney.apply(totalInvestment);
 	}

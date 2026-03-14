@@ -60,7 +60,7 @@ public interface Investment {
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액
 	 */
-	Money getTotalInvestmentMoney();
+	Money getTotalInvestment();
 
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.

@@ -104,7 +104,7 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalInvestment() {
-		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestmentMoney().getValue());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment().getValue());
 	}
 
 	@Test
