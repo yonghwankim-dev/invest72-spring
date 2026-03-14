@@ -163,19 +163,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		Money interestMoney = Money.of(interest, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(interestMoney);
 	}
-
-	@Override
-	public BigDecimal getProfitForYear(int year) {
-		int finalYear = getFinalYear();
-		if (year > finalYear) {
-			return getProfitForYear(finalYear);
-		}
-		if (year < 0) {
-			return getProfitForYear(0);
-		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getProfit());
-	}
-
+	
 	@Override
 	public Money getProfitForYearMoney(int year) {
 		int finalYear = getFinalYear();
