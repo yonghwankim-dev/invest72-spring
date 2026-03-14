@@ -105,6 +105,16 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public Money getTotalInterestMoney() {
+		BigDecimal totalInterest = details.stream()
+			.skip(1)
+			.map(MonthlyInvestmentDetail::getInterest)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+		Money money = Money.of(totalInterest, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(money);
+	}
+
+	@Override
 	public BigDecimal getTotalTax() {
 		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
 	}

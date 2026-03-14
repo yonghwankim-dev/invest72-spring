@@ -109,6 +109,16 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
+	public Money getTotalInterestMoney() {
+		BigDecimal totalInterest = details.stream()
+			.skip(1) // 0월은 이자가 없음
+			.map(MonthlyInvestmentDetail::getInterest)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+		Money money = Money.of(totalInterest, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(money);
+	}
+
+	@Override
 	public BigDecimal getTotalTax() {
 		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
 	}
