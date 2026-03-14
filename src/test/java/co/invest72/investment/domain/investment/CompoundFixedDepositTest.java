@@ -46,7 +46,7 @@ class CompoundFixedDepositTest {
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
 		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month).getValue();
-		BigDecimal totalProfit = investment.getProfitMoney(month).getValue();
+		BigDecimal totalProfit = investment.getProfit(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
 		assertEquals(BigDecimal.valueOf(expectedInterest), interest);

@@ -49,7 +49,7 @@ class SimpleFixedInstallmentSavingTest {
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
 		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month).getValue();
-		BigDecimal totalProfit = investment.getProfitMoney(month).getValue();
+		BigDecimal totalProfit = investment.getProfit(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
 		assertEquals(BigDecimal.valueOf(expectedInterest), interest);
@@ -111,21 +111,21 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getProfit() {
-		assertEquals(BigDecimal.valueOf(0), investment.getProfitMoney(-1).getValue());
-		assertEquals(BigDecimal.valueOf(0), investment.getProfitMoney(0).getValue());
-		assertEquals(BigDecimal.valueOf(1_004_167), investment.getProfitMoney(1).getValue());
-		assertEquals(BigDecimal.valueOf(2_012_500), investment.getProfitMoney(2).getValue());
-		assertEquals(BigDecimal.valueOf(3_025_000), investment.getProfitMoney(3).getValue());
-		assertEquals(BigDecimal.valueOf(4_041_667), investment.getProfitMoney(4).getValue());
-		assertEquals(BigDecimal.valueOf(5_062_500), investment.getProfitMoney(5).getValue());
-		assertEquals(BigDecimal.valueOf(6_087_500), investment.getProfitMoney(6).getValue());
-		assertEquals(BigDecimal.valueOf(7_116_667), investment.getProfitMoney(7).getValue());
-		assertEquals(BigDecimal.valueOf(8_150_000), investment.getProfitMoney(8).getValue());
-		assertEquals(BigDecimal.valueOf(9_187_500), investment.getProfitMoney(9).getValue());
-		assertEquals(BigDecimal.valueOf(10_229_167), investment.getProfitMoney(10).getValue());
-		assertEquals(BigDecimal.valueOf(11_275_000), investment.getProfitMoney(11).getValue());
-		assertEquals(BigDecimal.valueOf(12_325_000), investment.getProfitMoney(12).getValue());
-		assertEquals(BigDecimal.valueOf(12_325_000), investment.getProfitMoney(13).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getProfit(-1).getValue());
+		assertEquals(BigDecimal.valueOf(0), investment.getProfit(0).getValue());
+		assertEquals(BigDecimal.valueOf(1_004_167), investment.getProfit(1).getValue());
+		assertEquals(BigDecimal.valueOf(2_012_500), investment.getProfit(2).getValue());
+		assertEquals(BigDecimal.valueOf(3_025_000), investment.getProfit(3).getValue());
+		assertEquals(BigDecimal.valueOf(4_041_667), investment.getProfit(4).getValue());
+		assertEquals(BigDecimal.valueOf(5_062_500), investment.getProfit(5).getValue());
+		assertEquals(BigDecimal.valueOf(6_087_500), investment.getProfit(6).getValue());
+		assertEquals(BigDecimal.valueOf(7_116_667), investment.getProfit(7).getValue());
+		assertEquals(BigDecimal.valueOf(8_150_000), investment.getProfit(8).getValue());
+		assertEquals(BigDecimal.valueOf(9_187_500), investment.getProfit(9).getValue());
+		assertEquals(BigDecimal.valueOf(10_229_167), investment.getProfit(10).getValue());
+		assertEquals(BigDecimal.valueOf(11_275_000), investment.getProfit(11).getValue());
+		assertEquals(BigDecimal.valueOf(12_325_000), investment.getProfit(12).getValue());
+		assertEquals(BigDecimal.valueOf(12_325_000), investment.getProfit(13).getValue());
 	}
 
 	@Test

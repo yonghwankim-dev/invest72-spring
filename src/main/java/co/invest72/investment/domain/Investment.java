@@ -54,7 +54,7 @@ public interface Investment {
 	 * @param month 회차 (1부터 시작)
 	 * @return 총 투자 금액
 	 */
-	Money getProfitMoney(int month);
+	Money getProfit(int month);
 
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
