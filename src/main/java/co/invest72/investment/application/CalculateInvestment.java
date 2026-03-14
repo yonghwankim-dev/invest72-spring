@@ -96,7 +96,7 @@ public class CalculateInvestment {
 		int years = (investment.getFinalMonth() - 1) / 12 + 1;
 		for (int year = 1; year <= years; year++) {
 			BigDecimal principal = investment.getPrincipalForYear(year).getValue();
-			BigDecimal interest = investment.getInterestForYear(year);
+			BigDecimal interest = investment.getInterestForYearMoney(year).getValue();
 			BigDecimal profit = investment.getProfitForYear(year);
 			details.add(new YearlyInvestmentResult(year, principal, interest, profit));
 		}

@@ -98,11 +98,12 @@ public interface Investment {
 	 */
 	Money getPrincipalForYear(int year);
 
-	BigDecimal getInterestForYear(int year);
-
-	default Money getInterestForYearMoney(int year) {
-		throw new UnsupportedOperationException("getInterestForYearMoney is not supported for this investment type");
-	}
+	/**
+	 * 지정된 연도(year)의 이자 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 이자 금액을 Money 객체로 반환
+	 */
+	Money getInterestForYearMoney(int year);
 
 	BigDecimal getProfitForYear(int year);
 

@@ -153,19 +153,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		Money principalMoney = Money.of(principal, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(principalMoney);
 	}
-
-	@Override
-	public BigDecimal getInterestForYear(int year) {
-		int finalYear = getFinalYear();
-		if (year > finalYear) {
-			return getInterestForYear(finalYear);
-		}
-		if (year < 0) {
-			return getInterestForYear(0);
-		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getInterest());
-	}
-
+	
 	@Override
 	public Money getInterestForYearMoney(int year) {
 		int finalYear = getFinalYear();
