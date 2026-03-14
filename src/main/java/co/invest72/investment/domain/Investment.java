@@ -100,6 +100,10 @@ public interface Investment {
 
 	BigDecimal getInterestForYear(int year);
 
+	default Money getInterestForYearMoney(int year) {
+		throw new UnsupportedOperationException("getInterestForYearMoney is not supported for this investment type");
+	}
+
 	BigDecimal getProfitForYear(int year);
 
 	BigDecimal getTaxRate();

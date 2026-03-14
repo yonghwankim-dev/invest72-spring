@@ -86,6 +86,11 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
+	public Money getInterestForYearMoney(int year) {
+		return Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
+	}
+
+	@Override
 	public BigDecimal getProfitForYear(int year) {
 		return roundToWholeMoney.apply(investmentAmount.getAmount()).getValue();
 	}
