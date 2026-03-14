@@ -35,12 +35,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public BigDecimal getProfit() {
-		return getProfit(getFinalMonth());
-	}
-
-	@Override
-	public BigDecimal getProfit(int month) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount()).getValue();
+		return getProfitMoney(getFinalMonth()).getValue();
 	}
 
 	@Override

@@ -78,18 +78,7 @@ public class SimpleFixedDeposit implements Investment {
 
 	@Override
 	public BigDecimal getProfit() {
-		return getProfit(getFinalMonth());
-	}
-
-	@Override
-	public BigDecimal getProfit(int month) {
-		if (month > getFinalMonth()) {
-			return getProfit();
-		}
-		if (month < 0) {
-			return getProfit(0);
-		}
-		return roundToWholeAmount.apply(details.get(month).getProfit());
+		return getProfitMoney(getFinalMonth()).getValue();
 	}
 
 	@Override

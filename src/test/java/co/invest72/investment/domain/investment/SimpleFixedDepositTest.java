@@ -52,7 +52,7 @@ class SimpleFixedDepositTest {
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedProfit) {
 		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month).getValue();
-		BigDecimal profit = investment.getProfit(month);
+		BigDecimal profit = investment.getProfitMoney(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
 		assertEquals(BigDecimal.valueOf(expectedInterest), interest);
@@ -145,7 +145,7 @@ class SimpleFixedDepositTest {
 	void getProfit_whenMonthsIsNegative_thenReturnProfit() {
 		int months = -1;
 
-		BigDecimal profit = investment.getProfit(months);
+		BigDecimal profit = investment.getProfitMoney(months).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), profit);
 	}
@@ -154,7 +154,7 @@ class SimpleFixedDepositTest {
 	void getProfit_whenMonthsIsZero_thenReturnProfit() {
 		int months = 0;
 
-		BigDecimal profit = investment.getProfit(months);
+		BigDecimal profit = investment.getProfitMoney(months).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_000_000), profit);
 	}
@@ -163,7 +163,7 @@ class SimpleFixedDepositTest {
 	void getProfit_whenMonthsGreaterThanFinalMonth_thenReturnFinalMonthProfit() {
 		int month = 13;
 
-		BigDecimal profit = investment.getProfit(month);
+		BigDecimal profit = investment.getProfitMoney(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(1_050_000), profit);
 	}

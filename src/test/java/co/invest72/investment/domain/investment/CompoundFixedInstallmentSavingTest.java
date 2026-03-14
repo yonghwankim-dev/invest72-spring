@@ -52,7 +52,7 @@ class CompoundFixedInstallmentSavingTest {
 	void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedTotalProfit) {
 		BigDecimal principal = investment.getPrincipal(month).getValue();
 		BigDecimal interest = investment.getInterest(month).getValue();
-		BigDecimal totalProfit = investment.getProfit(month);
+		BigDecimal totalProfit = investment.getProfitMoney(month).getValue();
 
 		assertEquals(BigDecimal.valueOf(expectedPrincipal), principal);
 		assertEquals(BigDecimal.valueOf(expectedInterest), interest);
@@ -97,7 +97,7 @@ class CompoundFixedInstallmentSavingTest {
 	void getTotalProfit_whenMonthIsZero_thenReturnZeroTotalProfit() {
 		int months = 0;
 
-		BigDecimal totalProfit = investment.getProfit(months);
+		BigDecimal totalProfit = investment.getProfitMoney(months).getValue();
 
 		assertEquals(BigDecimal.ZERO, totalProfit);
 	}
