@@ -85,6 +85,11 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
+	public Money getProfitMoney() {
+		return getProfit(getFinalMonth());
+	}
+
+	@Override
 	public Money getProfit(int month) {
 		if (month > getFinalMonth()) {
 			return getProfit(getFinalMonth());
