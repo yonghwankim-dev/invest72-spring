@@ -55,6 +55,19 @@ public interface Investment {
 	 * @return 총 투자 금액
 	 */
 	BigDecimal getProfit(int month);
+	
+	/**
+	 * 지정된 월 회차(month)의 수익 금액을 반환합니다.
+	 * <p>
+	 * 해당 금액은 원금 + 이자 - 세금 입니다.
+	 * </p>
+	 *
+	 * @param month 회차 (1부터 시작)
+	 * @return 총 투자 금액
+	 */
+	default Money getProfitMoney(int month) {
+		throw new UnsupportedOperationException("getProfit(int month) 메서드는 해당 투자 유형에서 지원되지 않습니다.");
+	}
 
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
