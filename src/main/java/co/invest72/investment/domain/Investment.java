@@ -110,7 +110,7 @@ public interface Investment {
 	 * @param year 연도 (1부터 시작)
 	 * @return 수익 금액을 Money 객체로 반환
 	 */
-	Money getProfitForYearMoney(int year);
+	Money getProfitForYear(int year);
 
 	BigDecimal getTaxRate();
 }

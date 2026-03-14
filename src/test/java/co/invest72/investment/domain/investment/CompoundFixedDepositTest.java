@@ -178,11 +178,11 @@ class CompoundFixedDepositTest {
 			.investPeriod(new YearlyInvestPeriod(3))
 			.build();
 
-		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYearMoney(-1).getValue());
-		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYearMoney(0).getValue());
-		assertEquals(BigDecimal.valueOf(1_051_162), investment.getProfitForYearMoney(1).getValue());
-		assertEquals(BigDecimal.valueOf(1_104_941), investment.getProfitForYearMoney(2).getValue());
-		assertEquals(BigDecimal.valueOf(1_161_472), investment.getProfitForYearMoney(3).getValue());
-		assertEquals(BigDecimal.valueOf(1_161_472), investment.getProfitForYearMoney(4).getValue());
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYear(-1).getValue());
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getProfitForYear(0).getValue());
+		assertEquals(BigDecimal.valueOf(1_051_162), investment.getProfitForYear(1).getValue());
+		assertEquals(BigDecimal.valueOf(1_104_941), investment.getProfitForYear(2).getValue());
+		assertEquals(BigDecimal.valueOf(1_161_472), investment.getProfitForYear(3).getValue());
+		assertEquals(BigDecimal.valueOf(1_161_472), investment.getProfitForYear(4).getValue());
 	}
 }

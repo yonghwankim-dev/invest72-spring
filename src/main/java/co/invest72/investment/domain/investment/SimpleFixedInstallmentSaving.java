@@ -167,15 +167,15 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		Money interestMoney = Money.of(interest, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(interestMoney);
 	}
-	
+
 	@Override
-	public Money getProfitForYearMoney(int year) {
+	public Money getProfitForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
-			return getProfitForYearMoney(finalYear);
+			return getProfitForYear(finalYear);
 		}
 		if (year < 0) {
-			return getProfitForYearMoney(0);
+			return getProfitForYear(0);
 		}
 		BigDecimal profit = yearlyDetails.get(year).getProfit();
 		Money profitMoney = Money.of(profit, investmentAmount.getAmount().getCurrency());
