@@ -13,6 +13,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
@@ -27,7 +28,8 @@ class InvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 	}
 
 	@DisplayName("예금 상품 수익 계산 - 최대값 검증")
@@ -49,10 +51,10 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment();
-		BigDecimal totalInterest = investment.getTotalInterest();
-		BigDecimal totalTax = investment.getTotalTax();
-		BigDecimal totalProfit = investment.getTotalProfit();
+		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
+		BigDecimal totalInterest = investment.getTotalInterest().getValue();
+		BigDecimal totalTax = investment.getTotalTax().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 
 		// Then
 		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("10000000000000"));
@@ -81,10 +83,10 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment();
-		BigDecimal totalInterest = investment.getTotalInterest();
-		BigDecimal totalTax = investment.getTotalTax();
-		BigDecimal totalProfit = investment.getTotalProfit();
+		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
+		BigDecimal totalInterest = investment.getTotalInterest().getValue();
+		BigDecimal totalTax = investment.getTotalTax().getValue();
+		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 
 		// Then
 		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("119880000000000000"));

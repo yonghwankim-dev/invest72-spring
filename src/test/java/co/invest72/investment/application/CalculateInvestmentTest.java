@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.domain.period.PeriodType;
@@ -29,7 +30,8 @@ class CalculateInvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()

@@ -10,8 +10,10 @@ public class ProductAmountTestDataProvider {
 			Arguments.of(new java.math.BigDecimal("0")),
 			Arguments.of(new java.math.BigDecimal("0.01")),
 			Arguments.of(new java.math.BigDecimal("1000")),
-			Arguments.of(new java.math.BigDecimal("9999999999999.99")),
-			Arguments.of(new java.math.BigDecimal("10000000000000"))
+			Arguments.of(new java.math.BigDecimal("9999999999999.99"), "10조 미만"),
+			Arguments.of(new java.math.BigDecimal("10000000000000"), "10조"),
+			Arguments.of(new java.math.BigDecimal("99999999999999998.99"), "99999조 미만"),
+			Arguments.of(new java.math.BigDecimal("99999999999999999"), "99999조")
 		);
 	}
 
@@ -20,8 +22,8 @@ public class ProductAmountTestDataProvider {
 			Arguments.of((java.math.BigDecimal)null),
 			Arguments.of(new java.math.BigDecimal("-0.01")),
 			Arguments.of(new java.math.BigDecimal("-1")),
-			Arguments.of(new java.math.BigDecimal("10000000000000.01")),
-			Arguments.of(new java.math.BigDecimal("10000000000001"))
+			Arguments.of(new java.math.BigDecimal("100000000000000000.01")),
+			Arguments.of(new java.math.BigDecimal("100000000000000000"))
 		);
 	}
 }

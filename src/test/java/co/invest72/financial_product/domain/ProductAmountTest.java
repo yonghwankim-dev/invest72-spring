@@ -35,4 +35,12 @@ class ProductAmountTest {
 		Assertions.assertThat(amount1).isEqualTo(amount2);
 		Assertions.assertThat(amount1.hashCode()).hasSameHashCodeAs(amount2.hashCode());
 	}
+
+	@DisplayName("객체 생성 - 통화가 null이면 예외가 발생한다")
+	@Test
+	void newInstance_whenCurrencyIsNull_thenThrowException() {
+		Assertions.assertThatThrownBy(() -> new ProductAmount(new BigDecimal("1000"), null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("통화는 null이거나 빈 문자열일 수 없습니다.");
+	}
 }
