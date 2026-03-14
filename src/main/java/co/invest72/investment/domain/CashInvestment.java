@@ -47,9 +47,9 @@ public class CashInvestment implements Investment {
 	public Money getTotalInvestment() {
 		return roundToWholeMoney.apply(investmentAmount.getAmount());
 	}
-	
+
 	@Override
-	public Money getTotalInterestMoney() {
+	public Money getTotalInterest() {
 		return Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 	}
 

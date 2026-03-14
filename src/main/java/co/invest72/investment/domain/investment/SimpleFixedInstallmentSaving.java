@@ -100,7 +100,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public Money getTotalInterestMoney() {
+	public Money getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1) // 0월은 이자가 없음
 			.map(MonthlyInvestmentDetail::getInterest)
@@ -111,7 +111,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 
 	@Override
 	public BigDecimal getTotalTax() {
-		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterestMoney().getValue()));
+		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest().getValue()));
 	}
 
 	@Override

@@ -125,7 +125,7 @@ class CompoundFixedDepositTest {
 
 	@Test
 	void getTotalInterest() {
-		BigDecimal totalInterest = investment.getTotalInterestMoney().getValue();
+		BigDecimal totalInterest = investment.getTotalInterest().getValue();
 
 		assertEquals(BigDecimal.valueOf(51_162), totalInterest);
 	}

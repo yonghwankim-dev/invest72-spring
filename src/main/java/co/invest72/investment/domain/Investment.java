@@ -66,7 +66,7 @@ public interface Investment {
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	Money getTotalInterestMoney();
+	Money getTotalInterest();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.
