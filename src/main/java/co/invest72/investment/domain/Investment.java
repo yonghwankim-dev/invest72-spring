@@ -43,7 +43,7 @@ public interface Investment {
 	 * </p>
 	 * @return 총 투자 금액
 	 */
-	Money getProfitMoney();
+	Money getProfit();
 
 	/**
 	 * 지정된 월 회차(month)의 수익 금액을 반환합니다.

@@ -34,7 +34,7 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
-	public Money getProfitMoney() {
+	public Money getProfit() {
 		return getProfit(getFinalMonth());
 	}
 
