@@ -90,7 +90,7 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getProfit() {
-		assertEquals(BigDecimal.valueOf(12_330_017), investment.getProfit());
+		assertEquals(BigDecimal.valueOf(12_330_017), investment.getProfitMoney().getValue());
 	}
 
 	@Test
@@ -119,7 +119,7 @@ class CompoundFixedInstallmentSavingTest {
 
 	@Test
 	void getTotalProfit() {
-		assertEquals(BigDecimal.valueOf(12_330_017), investment.getProfit());
+		assertEquals(BigDecimal.valueOf(12_330_017), investment.getProfitMoney().getValue());
 	}
 
 	@Test

@@ -75,12 +75,7 @@ public class SimpleFixedDeposit implements Investment {
 		Money interest = Money.of(value, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(interest);
 	}
-
-	@Override
-	public BigDecimal getProfit() {
-		return getProfit(getFinalMonth()).getValue();
-	}
-
+	
 	@Override
 	public Money getProfitMoney() {
 		return getProfit(getFinalMonth());

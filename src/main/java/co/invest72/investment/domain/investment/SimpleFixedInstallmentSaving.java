@@ -74,12 +74,7 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		BigDecimal value = details.get(month).getInterest();
 		return roundToWholeMoney.apply(Money.of(value, investmentAmount.getAmount().getCurrency()));
 	}
-
-	@Override
-	public BigDecimal getProfit() {
-		return getProfit(getFinalMonth()).getValue();
-	}
-
+	
 	@Override
 	public Money getProfitMoney() {
 		return getProfit(getFinalMonth());

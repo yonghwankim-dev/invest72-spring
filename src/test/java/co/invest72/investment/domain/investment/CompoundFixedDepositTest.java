@@ -111,7 +111,7 @@ class CompoundFixedDepositTest {
 
 	@Test
 	void getProfit() {
-		BigDecimal totalProfit = investment.getProfit();
+		BigDecimal totalProfit = investment.getProfitMoney().getValue();
 
 		assertEquals(BigDecimal.valueOf(1_051_162), totalProfit);
 	}

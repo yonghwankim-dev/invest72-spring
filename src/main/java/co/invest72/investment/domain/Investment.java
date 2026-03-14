@@ -43,18 +43,7 @@ public interface Investment {
 	 * </p>
 	 * @return 총 투자 금액
 	 */
-	BigDecimal getProfit();
-
-	/**
-	 * 만기 시점의 수익 금액을 반환합니다.
-	 * <p>
-	 * 해당 금액은 원금 + 이자 - 세금 입니다.
-	 * </p>
-	 * @return 총 투자 금액
-	 */
-	default Money getProfitMoney() {
-		throw new UnsupportedOperationException("getProfitMoney() is not supported. Use getProfit() instead.");
-	}
+	Money getProfitMoney();
 
 	/**
 	 * 지정된 월 회차(month)의 수익 금액을 반환합니다.
