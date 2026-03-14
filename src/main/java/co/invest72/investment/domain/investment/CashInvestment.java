@@ -74,12 +74,7 @@ public class CashInvestment implements Investment {
 	public String getTaxType() {
 		return TaxType.NONE.getDescription();
 	}
-
-	@Override
-	public BigDecimal getPrincipalForYear(int year) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount()).getValue();
-	}
-
+	
 	@Override
 	public Money getPrincipalForYearMoney(int year) {
 		return roundToWholeMoney.apply(investmentAmount.getAmount());

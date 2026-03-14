@@ -91,11 +91,12 @@ public interface Investment {
 
 	String getTaxType();
 
-	BigDecimal getPrincipalForYear(int year);
-
-	default Money getPrincipalForYearMoney(int year) {
-		throw new UnsupportedOperationException("getPrincipalForYearMoney is not supported");
-	}
+	/**
+	 * 지정된 연도(year)의 원금 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 원금 금액을 Money 객체로 반환
+	 */
+	Money getPrincipalForYearMoney(int year);
 
 	BigDecimal getInterestForYear(int year);
 

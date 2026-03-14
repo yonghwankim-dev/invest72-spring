@@ -137,18 +137,6 @@ public class CompoundFixedDeposit implements Investment {
 		return taxable.getTaxType();
 	}
 
-	@Override
-	public BigDecimal getPrincipalForYear(int year) {
-		int finalYear = getFinalYear();
-		if (year > finalYear) {
-			return getPrincipalForYear(finalYear);
-		}
-		if (year < 0) {
-			return getPrincipalForYear(0);
-		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getPrincipal());
-	}
-
 	private int getFinalYear() {
 		return (getFinalMonth() - 1) / 12 + 1;
 	}

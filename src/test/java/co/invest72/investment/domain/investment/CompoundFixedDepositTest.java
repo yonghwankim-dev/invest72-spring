@@ -150,12 +150,12 @@ class CompoundFixedDepositTest {
 			.investPeriod(new YearlyInvestPeriod(3))
 			.build();
 
-		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(-1));
-		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(0));
-		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYear(1));
-		assertEquals(BigDecimal.valueOf(1_051_162), investment.getPrincipalForYear(2));
-		assertEquals(BigDecimal.valueOf(1_104_941), investment.getPrincipalForYear(3));
-		assertEquals(BigDecimal.valueOf(1_104_941), investment.getPrincipalForYear(4));
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYearMoney(-1).getValue());
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYearMoney(0).getValue());
+		assertEquals(BigDecimal.valueOf(1_000_000), investment.getPrincipalForYearMoney(1).getValue());
+		assertEquals(BigDecimal.valueOf(1_051_162), investment.getPrincipalForYearMoney(2).getValue());
+		assertEquals(BigDecimal.valueOf(1_104_941), investment.getPrincipalForYearMoney(3).getValue());
+		assertEquals(BigDecimal.valueOf(1_104_941), investment.getPrincipalForYearMoney(4).getValue());
 	}
 
 	@Test
