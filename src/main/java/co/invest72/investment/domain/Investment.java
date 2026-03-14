@@ -23,19 +23,7 @@ public interface Investment {
 	 */
 	Money getPrincipal(int month);
 
-	/**
-	 * 만기 시점의 이자 금액을 반환합니다.
-	 * <p>
-	 * 해당 금액은 세전 이자 금액입니다.
-	 * </p>
-	 * @return 이자 금액
-	 */
-	BigDecimal getInterest();
-
-	default Money getInterestMoney() {
-		throw new UnsupportedOperationException(
-			"getInterestMoney() is not supported. Use getInterest() to get interest as BigDecimal.");
-	}
+	Money getInterestMoney();
 
 	/**
 	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.

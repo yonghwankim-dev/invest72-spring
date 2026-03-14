@@ -22,12 +22,7 @@ public class CashInvestment implements Investment {
 	public Money getPrincipal(int month) {
 		return roundToWholeMoney.apply(investmentAmount.getAmount());
 	}
-
-	@Override
-	public BigDecimal getInterest() {
-		return getInterest(getFinalMonth()).getValue();
-	}
-
+	
 	@Override
 	public Money getInterestMoney() {
 		return getInterest(getFinalMonth());

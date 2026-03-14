@@ -82,7 +82,7 @@ class SimpleFixedInstallmentSavingTest {
 
 	@Test
 	void getInterest_whenMonthIsFinalMonth() {
-		assertEquals(BigDecimal.valueOf(50_000), investment.getInterest());
+		assertEquals(BigDecimal.valueOf(50_000), investment.getInterestMoney().getValue());
 	}
 
 	@Test

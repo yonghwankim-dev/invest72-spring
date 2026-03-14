@@ -56,11 +56,6 @@ public class CompoundFixedDeposit implements Investment {
 	}
 
 	@Override
-	public BigDecimal getInterest() {
-		return getInterest(investPeriod.getMonths()).getValue();
-	}
-
-	@Override
 	public Money getInterestMoney() {
 		return getInterest(investPeriod.getMonths());
 	}
