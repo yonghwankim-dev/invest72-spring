@@ -184,7 +184,7 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getTotalTax() {
-		BigDecimal totalTax = investment.getTotalTaxMoney().getValue();
+		BigDecimal totalTax = investment.getTotalTax().getValue();
 
 		assertEquals(BigDecimal.valueOf(7_700), totalTax);
 	}

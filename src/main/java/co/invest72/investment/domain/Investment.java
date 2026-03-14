@@ -72,7 +72,7 @@ public interface Investment {
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	Money getTotalTaxMoney();
+	Money getTotalTax();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.

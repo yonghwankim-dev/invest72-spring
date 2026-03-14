@@ -52,9 +52,9 @@ public class CashInvestment implements Investment {
 	public Money getTotalInterest() {
 		return Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 	}
-	
+
 	@Override
-	public Money getTotalTaxMoney() {
+	public Money getTotalTax() {
 		return Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 	}
 

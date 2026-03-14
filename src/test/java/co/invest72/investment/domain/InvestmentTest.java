@@ -53,7 +53,7 @@ class InvestmentTest {
 		// When
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTaxMoney().getValue();
+		BigDecimal totalTax = investment.getTotalTax().getValue();
 		BigDecimal totalProfit = investment.getTotalProfit();
 
 		// Then
@@ -85,7 +85,7 @@ class InvestmentTest {
 		// When
 		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
 		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTaxMoney().getValue();
+		BigDecimal totalTax = investment.getTotalTax().getValue();
 		BigDecimal totalProfit = investment.getTotalProfit();
 
 		// Then
