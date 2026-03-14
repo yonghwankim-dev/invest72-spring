@@ -117,15 +117,6 @@ public class SimpleFixedDeposit implements Investment {
 	}
 
 	@Override
-	public BigDecimal getTotalProfit() {
-		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
-		BigDecimal interest = details.get(getFinalMonth()).getInterest();
-		BigDecimal tax = getTotalTax().getValue();
-		BigDecimal totalProfit = principal.add(interest).subtract(tax);
-		return roundToWholeAmount.apply(totalProfit);
-	}
-
-	@Override
 	public Money getTotalProfitMoney() {
 		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
 		BigDecimal interest = details.get(getFinalMonth()).getInterest();

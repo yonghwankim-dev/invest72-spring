@@ -191,7 +191,7 @@ class SimpleFixedDepositTest {
 
 	@Test
 	void getTotalProfit() {
-		BigDecimal totalProfit = investment.getTotalProfit();
+		BigDecimal totalProfit = investment.getTotalProfitMoney().getValue();
 
 		assertEquals(BigDecimal.valueOf(1_042_300), totalProfit);
 	}
