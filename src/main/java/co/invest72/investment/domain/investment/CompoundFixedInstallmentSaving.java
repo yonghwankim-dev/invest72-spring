@@ -111,6 +111,13 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
+	public Money getTotalTaxMoney() {
+		BigDecimal tax = taxable.applyTax(getTotalInterest().getValue());
+		Money taxMoney = Money.of(tax, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(taxMoney);
+	}
+
+	@Override
 	public BigDecimal getTotalProfit() {
 		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
 		BigDecimal interest = details.get(getFinalMonth()).getInterest();
