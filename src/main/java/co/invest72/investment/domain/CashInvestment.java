@@ -64,6 +64,11 @@ public class CashInvestment implements Investment {
 	}
 
 	@Override
+	public Money getTotalProfitMoney() {
+		return roundToWholeMoney.apply(investmentAmount.getAmount());
+	}
+
+	@Override
 	public int getFinalMonth() {
 		return 0;
 	}

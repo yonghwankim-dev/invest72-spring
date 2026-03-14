@@ -81,6 +81,15 @@ public interface Investment {
 	BigDecimal getTotalProfit();
 
 	/**
+	 * 만기까지의 총 수익 금액을 반환합니다.
+	 * @return 총 수익 금액
+	 */
+	default Money getTotalProfitMoney() {
+		throw new UnsupportedOperationException(
+			"getTotalProfitMoney() is not supported. Please use getTotalProfit() instead.");
+	}
+
+	/**
 	 * 투자 기간의 마지막 월을 반환합니다
 	 * <p>
 	 * 예를 들어 투자 기간이 1년이면 12를 반환한다.
