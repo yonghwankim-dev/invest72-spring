@@ -65,4 +65,9 @@ public final class Currency {
 	public int hashCode() {
 		return Objects.hash(code.toUpperCase());
 	}
+
+	@Override
+	public String toString() {
+		return code;
+	}
 }

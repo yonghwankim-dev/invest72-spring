@@ -48,4 +48,16 @@ class CurrencyTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("통화 코드(code)는 3자리여야 합니다.");
 	}
+
+	@DisplayName("통화 비교 - 동일한 통화 코드를 가진 객체들끼리는 동일한 객체로 간주")
+	@Test
+	void equals_whenSameCurrencyCode_thenReturnTrue() {
+		// given
+		Currency currency1 = Currency.of("USD");
+		Currency currency2 = Currency.dollar();
+		// when & then
+		Assertions.assertThat(currency1)
+			.hasSameHashCodeAs(currency2)
+			.isEqualTo(currency2);
+	}
 }
