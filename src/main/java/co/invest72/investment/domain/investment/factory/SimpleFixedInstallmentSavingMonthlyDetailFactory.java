@@ -23,7 +23,10 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 		Money interest = Money.of(BigDecimal.ZERO, currentCurrency);
 		Money profit = Money.of(BigDecimal.ZERO, currentCurrency);
 
-		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
+		result.add(new MonthlyInvestmentDetail(0,
+			Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
+			Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
+			Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			accInvestmentAmount = accInvestmentAmount.add(investmentAmount.getAmount());
 			principal = profit.add(investmentAmount.getAmount());
