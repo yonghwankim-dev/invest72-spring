@@ -6,13 +6,20 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 통화 단위를 나타내는 클래스입니다. ISO 4217 통화 코드를 사용하여 통화를 표현합니다.
+ * 예를 들어, "USD"는 미국 달러, "KRW"는 한국 원화를 나타냅니다.
+ */
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
-public class Currency {
+public final class Currency {
 	private final String code;
 
 	private Currency(String code) {
 		this.code = code;
+		if (this.code == null) {
+			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
+		}
 	}
 
 	public static Currency of(String code) {
