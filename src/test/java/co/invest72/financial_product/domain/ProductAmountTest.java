@@ -11,9 +11,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 class ProductAmountTest {
 
 	@DisplayName("금액이 범위 안에 있는 경우 인스턴스가 생성되어야 한다.")
-	@ParameterizedTest(name = "금액: {0}")
+	@ParameterizedTest(name = "금액: {0}, 설명: {1}")
 	@MethodSource(value = "source.ProductAmountTestDataProvider#validAmounts")
-	void newInstance_whenAmountIsValid_thenCreateInstance(BigDecimal value) {
+	void newInstance_whenAmountIsValid_thenCreateInstance(BigDecimal value, String ignored) {
 		Assertions.assertThatCode(() -> new ProductAmount(value))
 			.doesNotThrowAnyException();
 	}
