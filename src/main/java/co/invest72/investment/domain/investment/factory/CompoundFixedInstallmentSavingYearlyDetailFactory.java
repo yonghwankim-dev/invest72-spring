@@ -60,7 +60,7 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
 	private Money calculateYearlyInterest(Money baseProfit, int month) {
 		Money principal;
-		Money result = Money.won(BigDecimal.ZERO);
+		Money result = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 		Money interest;
 		Money profit = baseProfit;
 		for (int i = 1; i <= month; i++) {
