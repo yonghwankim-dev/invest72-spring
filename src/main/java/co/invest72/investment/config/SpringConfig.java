@@ -8,12 +8,10 @@ import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxFormatter;
 import co.invest72.investment.application.TaxPercentFormatter;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
 public class SpringConfig {
-	
+
 	@Bean
 	public CalculateInvestment calculateMonthlyInvestment(TaxFormatter taxFormatter) {
 		return new CalculateInvestment(taxFormatter);
