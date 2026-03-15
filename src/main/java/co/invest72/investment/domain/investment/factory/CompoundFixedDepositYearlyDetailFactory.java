@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.money.domain.Money;
 
 public class CompoundFixedDepositYearlyDetailFactory {
 
@@ -25,26 +26,26 @@ public class CompoundFixedDepositYearlyDetailFactory {
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 
-		BigDecimal principal = investmentAmount.getAmount();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount();
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		Money principal = investmentAmount.getAmount();
+		Money interest = Money.of(BigDecimal.ZERO, principal.getCurrency());
+		Money profit = investmentAmount.getAmount();
+		result.add(new YearlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 
 		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			BigDecimal months = BigDecimal.valueOf(calculateMonthsInYear(i));
 			interest = calculateInterest(principal, months);
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new YearlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
 		}
 		return result;
 	}
 
-	private BigDecimal calculateInterest(BigDecimal principal, BigDecimal months) {
-		BigDecimal total = principal;
+	private Money calculateInterest(Money principal, BigDecimal months) {
+		Money total = principal;
 		BigDecimal growthFactor = interestRate.calGrowthFactor();
 		for (int i = 0; i < months.intValue(); i++) {
-			total = total.multiply(growthFactor);
+			total = total.times(growthFactor);
 		}
 		return total.subtract(principal);
 	}

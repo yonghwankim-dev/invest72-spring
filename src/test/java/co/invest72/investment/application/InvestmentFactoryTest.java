@@ -15,10 +15,11 @@ import org.junit.jupiter.api.Test;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
-import co.invest72.investment.domain.CashInvestment;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.investment.domain.investment.CashInvestment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
@@ -40,7 +41,8 @@ class InvestmentFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
@@ -125,7 +127,7 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment().getValue());
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
@@ -196,6 +198,6 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(dto);
 		// then
 		assertInstanceOfInvestment(CashInvestment.class, investment);
-		Assertions.assertThat(investment.getTotalInvestment()).isEqualByComparingTo(amount);
+		Assertions.assertThat(investment.getTotalInvestment().getValue()).isEqualByComparingTo(amount);
 	}
 }

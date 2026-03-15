@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import testutil.BigDecimalAssertion;
+import co.invest72.money.domain.Money;
 
 class MonthlyInstallmentInvestmentAmountTest {
 
@@ -16,40 +16,40 @@ class MonthlyInstallmentInvestmentAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new MonthlyInstallmentInvestmentAmount(1_000_000);
+		investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(1_000_000)));
 	}
 
 	@Test
 	void shouldReturnAnnualInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal annualInterest = investmentAmount.calAnnualInterest(interestRate);
+		Money annualInterest = investmentAmount.calAnnualInterest(interestRate);
 
-		BigDecimal expectedAnnualInterest = BigDecimal.valueOf(50_000);
-		BigDecimalAssertion.assertBigDecimalEquals(expectedAnnualInterest, annualInterest);
+		Money expectedAnnualInterest = Money.won(BigDecimal.valueOf(50_000));
+		Assertions.assertEquals(expectedAnnualInterest, annualInterest);
 	}
 
 	@Test
 	void calMonthlyInterest_shouldReturnMonthlyInterest() {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
-		BigDecimal monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
+		Money monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
 
-		BigDecimal expectedMonthlyInterest = BigDecimal.valueOf(4166.666667);
-		BigDecimalAssertion.assertBigDecimalEquals(expectedMonthlyInterest, monthlyInterest);
+		Money expectedMonthlyInterest = Money.won(BigDecimal.valueOf(4166.666667));
+		org.assertj.core.api.Assertions.assertThat(monthlyInterest).isEqualTo(expectedMonthlyInterest);
 	}
 
 	@Test
 	void shouldReturnAmount() {
-		BigDecimal amount = investmentAmount.getMonthlyAmount();
+		Money amount = investmentAmount.getMonthlyAmount();
 
-		BigDecimal expected = BigDecimal.valueOf(1_000_000);
+		Money expected = Money.won(BigDecimal.valueOf(1_000_000));
 		Assertions.assertEquals(expected, amount);
 	}
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
 		Assertions.assertThrows(IllegalArgumentException.class,
-			() -> new MonthlyInstallmentInvestmentAmount(-1_000_000));
+			() -> new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(-1_000_000))));
 	}
 }

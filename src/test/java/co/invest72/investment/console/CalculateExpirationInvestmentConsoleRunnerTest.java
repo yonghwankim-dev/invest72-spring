@@ -24,6 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxPercentFormatter;
@@ -105,7 +106,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
 		investment = new CalculateInvestment(new TaxPercentFormatter());
-		InvestmentFactory factory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		InvestmentFactory factory = new InvestmentFactory(productAmountMapper);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,
@@ -132,7 +134,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		calculateInvestmentRequestReader = new CalculateInvestmentRequestReader(reader, guidePrinter);
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
-		InvestmentFactory factory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		InvestmentFactory factory = new InvestmentFactory(productAmountMapper);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,

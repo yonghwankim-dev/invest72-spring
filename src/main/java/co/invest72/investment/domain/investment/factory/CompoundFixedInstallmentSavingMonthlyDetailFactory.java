@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
+import co.invest72.money.domain.Money;
 
 public class CompoundFixedInstallmentSavingMonthlyDetailFactory {
 
@@ -25,16 +26,16 @@ public class CompoundFixedInstallmentSavingMonthlyDetailFactory {
 
 	public List<MonthlyInvestmentDetail> createDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
+		Money principal = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
+		Money interest = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
+		Money profit = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 
-		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
+		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit.add(investmentAmount.getAmount());
-			interest = interestRate.getMonthlyRate().multiply(principal);
+			interest = interestRate.calMonthlyInterest(principal);
 			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new MonthlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
 		}
 		return result;
 	}

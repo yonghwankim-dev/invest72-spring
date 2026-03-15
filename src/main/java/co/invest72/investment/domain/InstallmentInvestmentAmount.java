@@ -1,7 +1,7 @@
 package co.invest72.investment.domain;
 
-import java.math.BigDecimal;
+import co.invest72.money.domain.Money;
 
 public interface InstallmentInvestmentAmount extends InvestmentAmount {
-	BigDecimal getMonthlyAmount();
+	Money getMonthlyAmount();
 }

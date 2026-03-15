@@ -8,6 +8,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.money.domain.Money;
 
 public class SimpleFixedDepositYearlyDetailFactory {
 
@@ -25,18 +26,17 @@ public class SimpleFixedDepositYearlyDetailFactory {
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 
-		BigDecimal principal = investmentAmount.getAmount();
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = investmentAmount.getAmount();
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		Money principal = investmentAmount.getAmount();
+		Money interest = Money.won(BigDecimal.ZERO);
+		Money profit = investmentAmount.getAmount();
+		result.add(new YearlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 
 		for (int i = 1; i <= getFinalYear(); i++) {
 			principal = profit;
 			BigDecimal months = BigDecimal.valueOf(calculateMonthsInYear(i));
-			interest = interestRate.getMonthlyRate().multiply(investmentAmount.getAmount())
-				.multiply(months);
+			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount()).times(months);
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new YearlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
 		}
 		return result;
 	}
