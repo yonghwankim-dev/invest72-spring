@@ -38,4 +38,14 @@ class CurrencyTest {
 			.hasMessage("통화 코드(code)는 빈 문자열일 수 없습니다.");
 	}
 
+	@DisplayName("통화 생성 - 통화 코드는 3자리여야 한다")
+	@Test
+	void newInstance_whenCurrencyCodeIsNotThreeLetters_thenThrowException() {
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> Currency.of("US"));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("통화 코드(code)는 3자리여야 합니다.");
+	}
 }

@@ -25,6 +25,10 @@ public final class Currency {
 		if (normalizedCode.isEmpty()) {
 			throw new IllegalArgumentException("통화 코드(code)는 빈 문자열일 수 없습니다.");
 		}
+
+		if (normalizedCode.length() != 3) {
+			throw new IllegalArgumentException("통화 코드(code)는 3자리여야 합니다.");
+		}
 	}
 
 	public static Currency of(String code) {
