@@ -14,18 +14,6 @@ import co.invest72.money.domain.Money;
 
 public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 
-	private final InvestmentAmount investmentAmount;
-	private final InterestRate interestRate;
-	private final InvestPeriod investPeriod;
-
-	public SimpleFixedInstallmentSavingMonthlyDetailFactory(InvestmentAmount investmentAmount,
-		InterestRate interestRate,
-		InvestPeriod investPeriod) {
-		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
-		this.investPeriod = investPeriod;
-	}
-
 	public List<MonthlyInvestmentDetail> createDetails(InvestmentAmount investmentAmount, InterestRate interestRate,
 		InvestPeriod investPeriod) {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();

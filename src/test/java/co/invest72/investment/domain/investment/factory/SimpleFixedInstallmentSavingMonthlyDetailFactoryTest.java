@@ -28,7 +28,6 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
-			investmentAmount, interestRate, investPeriod
 		);
 
 		// When
@@ -56,7 +55,6 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
-			investmentAmount, interestRate, investPeriod
 		);
 
 		// When
