@@ -170,4 +170,16 @@ class MoneyTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("분모는 null일 수 없습니다.");
 	}
+
+	@DisplayName("해시코드 비교 - 동일한 금액과 통화를 가진 객체들끼리는 동일한 해시코드를 가져야 한다.")
+	@Test
+	void hashCode_whenSameValueAndCurrency_thenHashCodesAreEqual() {
+		// given
+		Money money1 = Money.won(BigDecimal.valueOf(4166.66666667));
+		Money money2 = Money.won(BigDecimal.valueOf(4166.67));
+		// when & then
+		Assertions.assertThat(money1)
+			.hasSameHashCodeAs(money2)
+			.isEqualTo(money2);
+	}
 }
