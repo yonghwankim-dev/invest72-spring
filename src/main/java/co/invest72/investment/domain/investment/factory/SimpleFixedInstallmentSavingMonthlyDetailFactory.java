@@ -6,8 +6,10 @@ import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
+import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
@@ -26,10 +28,11 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 
 	public List<MonthlyInvestmentDetail> createDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
-		Money accInvestmentAmount = Money.won(BigDecimal.ZERO);
-		Money principal = Money.won(BigDecimal.ZERO);
-		Money interest = Money.won(BigDecimal.ZERO);
-		Money profit = Money.won(BigDecimal.ZERO);
+		Currency currentCurrency = investmentAmount.getAmount().getCurrency();
+		Money accInvestmentAmount = Money.of(BigDecimal.ZERO, currentCurrency);
+		Money principal = Money.of(BigDecimal.ZERO, currentCurrency);
+		Money interest = Money.of(BigDecimal.ZERO, currentCurrency);
+		Money profit = Money.of(BigDecimal.ZERO, currentCurrency);
 
 		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
@@ -37,7 +40,13 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 			principal = profit.add(investmentAmount.getAmount());
 			interest = interestRate.calMonthlyInterest(accInvestmentAmount);
 			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
+			result.add(new MonthlyInvestmentDetail(
+					i,
+					Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
+					Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
+					Investment.roundToTwoDecimalPlaces.apply(profit.getValue())
+				)
+			);
 		}
 		return result;
 	}
