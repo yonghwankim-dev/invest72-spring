@@ -38,16 +38,18 @@ class MoneyTest {
 		Assertions.assertThat(money).isNotNull();
 	}
 
-	@DisplayName("금액 비교 - 원화와 달러를 비교했을때 달라야 한다.")
+	@DisplayName("금액 비교 - 다른 통화와 비교시 예외가 발생해야 한다.")
 	@Test
-	void equals_whenSameValueButDifferentCurrency_thenReturnFalse() {
+	void equals_whenDifferentCurrency_thenReturnFalse() {
 		// given
 		Money money1 = Money.dollar(5);
 		Money money2 = Money.won(5);
-		// when & then
-		Assertions.assertThat(money1)
-			.doesNotHaveSameHashCodeAs(money2)
-			.isNotEqualTo(money2);
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> money1.equals(money2));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("통화가 일치하지 않습니다.");
 	}
 
 	@DisplayName("덧셈 - 두개의 달러를 더했을 때, 새로운 달러 객체가 반환되어야 한다.")

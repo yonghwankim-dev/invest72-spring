@@ -3,6 +3,7 @@ package co.invest72.money.domain;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 import jakarta.annotation.Nonnull;
 import lombok.AccessLevel;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 public class Money implements Comparable<Money> {
+
+	private static final UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = money -> money.setScale(2,
+		RoundingMode.HALF_EVEN);
 
 	private final BigDecimal value;
 	private final Currency currency;
@@ -110,7 +114,9 @@ public class Money implements Comparable<Money> {
 	@Override
 	public int compareTo(@Nonnull Money other) {
 		validate(other);
-		return this.compareToValue(other);
+		BigDecimal roundedThisValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
+		BigDecimal roundedOtherValue = roundToTwoDecimalPlaces.apply(other.value.stripTrailingZeros());
+		return roundedThisValue.compareTo(roundedOtherValue);
 	}
 
 	@Override
@@ -119,18 +125,14 @@ public class Money implements Comparable<Money> {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		Money money = (Money)o;
-		return compareToValue(money) == 0 && this.currency.equals(money.currency);
-	}
-
-	private int compareToValue(Money other) {
-		return this.value.setScale(2, RoundingMode.HALF_EVEN)
-			.compareTo(other.value.setScale(2, RoundingMode.HALF_EVEN));
+		Money other = (Money)o;
+		return this.compareTo(other) == 0 && this.currency.equals(other.currency);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value.stripTrailingZeros(), currency);
+		BigDecimal roundedValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
+		return Objects.hash(roundedValue, currency);
 	}
 
 	@Override
