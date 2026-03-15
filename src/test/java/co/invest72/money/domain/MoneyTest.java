@@ -175,11 +175,13 @@ class MoneyTest {
 	@Test
 	void hashCode_whenSameValueAndCurrency_thenHashCodesAreEqual() {
 		// given
-		Money money1 = Money.won(BigDecimal.valueOf(4166.66666667));
-		Money money2 = Money.won(BigDecimal.valueOf(4166.67));
-		// when & then
-		Assertions.assertThat(money1)
-			.hasSameHashCodeAs(money2)
-			.isEqualTo(money2);
+		Money money1 = Money.won(BigDecimal.valueOf(1.234));
+		Money money2 = Money.won(BigDecimal.valueOf(1.23));
+		// when
+		boolean equalsActual = money1.equals(money2);
+		boolean hashCodeActual = money1.hashCode() == money2.hashCode();
+		// then
+		Assertions.assertThat(equalsActual).isTrue();
+		Assertions.assertThat(hashCodeActual).isTrue();
 	}
 }
