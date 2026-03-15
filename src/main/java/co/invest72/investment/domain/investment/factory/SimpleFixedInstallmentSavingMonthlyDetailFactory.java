@@ -26,7 +26,8 @@ public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 		this.investPeriod = investPeriod;
 	}
 
-	public List<MonthlyInvestmentDetail> createDetails() {
+	public List<MonthlyInvestmentDetail> createDetails(InvestmentAmount investmentAmount, InterestRate interestRate,
+		InvestPeriod investPeriod) {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 		Currency currentCurrency = investmentAmount.getAmount().getCurrency();
 		Money accInvestmentAmount = Money.of(BigDecimal.ZERO, currentCurrency);
