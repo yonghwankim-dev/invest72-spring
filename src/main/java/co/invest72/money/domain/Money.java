@@ -110,7 +110,7 @@ public class Money implements Comparable<Money> {
 	@Override
 	public int compareTo(@Nonnull Money other) {
 		validate(other);
-		return this.value.compareTo(other.value);
+		return this.compareToValue(other);
 	}
 
 	@Override
