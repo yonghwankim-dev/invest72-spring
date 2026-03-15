@@ -16,12 +16,20 @@ public final class Currency {
 	private final String code;
 
 	private Currency(String code) {
-		this.code = code;
-		if (this.code == null) {
+		if (code == null) {
+			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
+		}
+		String normalizedCode = code.trim().toUpperCase();
+		validate(normalizedCode);
+		this.code = normalizedCode;
+	}
+
+	private void validate(String code) {
+		if (code == null) {
 			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
 		}
 
-		String normalizedCode = this.code.trim().toUpperCase();
+		String normalizedCode = code.trim().toUpperCase();
 		if (normalizedCode.isEmpty()) {
 			throw new IllegalArgumentException("통화 코드(code)는 빈 문자열일 수 없습니다.");
 		}
