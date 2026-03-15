@@ -20,6 +20,11 @@ public final class Currency {
 		if (this.code == null) {
 			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
 		}
+
+		String normalizedCode = this.code.trim().toUpperCase();
+		if (normalizedCode.isEmpty()) {
+			throw new IllegalArgumentException("통화 코드(code)는 빈 문자열일 수 없습니다.");
+		}
 	}
 
 	public static Currency of(String code) {

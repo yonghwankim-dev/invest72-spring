@@ -27,4 +27,15 @@ class CurrencyTest {
 			.hasMessage("통화 코드(code)는 null일 수 없습니다.");
 	}
 
+	@DisplayName("통화 생성 - 비어있는 문자열을 전달하면 예외가 발생해야 한다")
+	@Test
+	void newInstance_whenCurrencyIsEmpty_thenThrowException() {
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> Currency.of(""));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("통화 코드(code)는 빈 문자열일 수 없습니다.");
+	}
+
 }
