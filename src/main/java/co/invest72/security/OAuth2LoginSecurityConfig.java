@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,9 +30,18 @@ public class OAuth2LoginSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		// 필터 등록
+		http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // 인증 필터 이후에 실행
+
 		http
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.csrf(AbstractHttpConfigurer::disable)
+			.csrf(configurer ->
+				// 쿠키 기반의 CSRF 토큰 저장소 설정 (프론트엔드가 토큰을 읽을 수 있게 함)
+				// withHttpOnlyFalse()로 설정하여 JavaScript에서 CSRF 토큰에 접근할 수 있도록 허용
+				configurer.csrfTokenRepository(cookieCsrfTokenRepository())
+					// 요청 헤더명 지정 (기본값은 X-XSRF-TOKEN)
+					.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+			)
 			.sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED) // 세션 필요 시 생성
 				.maximumSessions(1) // 중복 로그인 제한 옵션
 			)
@@ -67,5 +78,16 @@ public class OAuth2LoginSecurityConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+	private CookieCsrfTokenRepository cookieCsrfTokenRepository() {
+		CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+		repository.setCookieCustomizer(cookie -> {
+			cookie.path("/"); // 쿠키 경로 설정
+			cookie.secure(true); // HTTPS에서만 전송
+			cookie.httpOnly(false); // JavaScript에서 접근 가능하도록 설정
+			cookie.sameSite("None"); // SameSite=None으로 설정하여 크로스사이트 요청에서도 쿠키가 전송되도록 함
+		});
+		return repository;
 	}
 }

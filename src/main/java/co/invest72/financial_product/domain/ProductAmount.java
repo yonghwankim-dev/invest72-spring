@@ -18,6 +18,9 @@ public class ProductAmount {
 	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
 	private BigDecimal value;
 
+	@Column(name = "currency", nullable = false, length = 3)
+	private String currency;
+
 	/**
 	 * 금액은 0원 이상이어야 하며, 10조원을 초과할 수 없습니다.
 	 *
@@ -26,6 +29,8 @@ public class ProductAmount {
 	 */
 	public ProductAmount(BigDecimal value) {
 		this.value = value;
+		// TODO: 다양한 통화 지원을 위해 currency 필드를 추가하고, 생성자에서 통화도 함께 받도록 변경할 수 있습니다.
+		this.currency = "KRW"; // 기본 통화는 원화로 설정
 		validate(this.value);
 	}
 
