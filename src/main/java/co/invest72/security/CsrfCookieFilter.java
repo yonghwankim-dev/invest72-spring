@@ -24,7 +24,6 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
 		if (csrfToken != null) {
 			// 토큰을 명시적으로 get하는 시점에 CookieCsrfTokenRepository가 쿠키를 생성 및 저장합니다.
 			csrfToken.getToken();
-			log.debug("CSRF Token added to response cookies: {}", csrfToken.getToken());
 		}
 		filterChain.doFilter(request, response);
 	}
