@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -42,8 +43,11 @@ public class OAuth2LoginSecurityConfig {
 					// 요청 헤더명 지정 (기본값은 X-XSRF-TOKEN)
 					.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 			)
-			.sessionManagement(session -> session.sessionCreationPolicy(IF_REQUIRED) // 세션 필요 시 생성
-				.maximumSessions(1) // 중복 로그인 제한 옵션
+			.sessionManagement(session -> {
+					session.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession);
+					session.sessionCreationPolicy(IF_REQUIRED) // 세션 필요 시 생성
+						.maximumSessions(1);
+				} // 중복 로그인 제한 옵션
 			)
 			.authorizeHttpRequests(authorize ->
 				// 1. 루트와 정적 리소스 파일들을 모두 허용합니다.
@@ -61,7 +65,6 @@ public class OAuth2LoginSecurityConfig {
 					response.setStatus(HttpServletResponse.SC_OK)
 				)
 				.invalidateHttpSession(true) // 세션 무효화
-				.deleteCookies("JSESSIONID") // 세션 쿠키 삭제
 			);
 		return http.build();
 	}
