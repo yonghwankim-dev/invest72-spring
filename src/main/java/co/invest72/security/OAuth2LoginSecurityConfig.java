@@ -46,8 +46,8 @@ public class OAuth2LoginSecurityConfig {
 			.sessionManagement(session -> {
 					session.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession);
 					session.sessionCreationPolicy(IF_REQUIRED) // 세션 필요 시 생성
-						.maximumSessions(1);
-				} // 중복 로그인 제한 옵션
+						.maximumSessions(1); // 중복 로그인 제한 옵션
+				}
 			)
 			.authorizeHttpRequests(authorize ->
 				// 1. 루트와 정적 리소스 파일들을 모두 허용합니다.
