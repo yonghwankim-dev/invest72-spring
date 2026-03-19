@@ -230,6 +230,30 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
 
+	@DisplayName("상품 생성 - 요청시 CSRF 토큰을 헤더로 전달하지 않아서 403 응답을 받아야 한다")
+	@Test
+	void createProduct_whenHeaderNotHaveCsrfToken_thenResponseForbidden() throws Exception {
+		// given
+		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.build();
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isForbidden());
+	}
+
 	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
@@ -371,6 +395,21 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("Invalid request"));
+	}
+
+	@DisplayName("상품 상세 조회 - 조회시 CSRF 토큰을 신규 발급받아야 한다")
+	@Test
+	void getProductDetail_whenHeaderNotHaveCsrfToken_thenResponseHasCsrfCookie() throws Exception {
+		// given
+		String nonExistentProductId = productIdGenerator.generateId();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", nonExistentProductId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isBadRequest())
+			.andExpect(cookie().exists("XSRF-TOKEN"))
+			.andExpect(jsonPath("$.message").value("Invalid request"))
+			.andDo(MockMvcResultHandlers.print());
 	}
 
 	@DisplayName("요약 상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
