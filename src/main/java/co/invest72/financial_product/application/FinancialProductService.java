@@ -18,6 +18,7 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,12 @@ public class FinancialProductService {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
 
+		ProductCurrency productCurrency = ProductCurrency.builder()
+			.symbol("KRW")
+			.unit("₩")
+			.decimalPoint(2)
+			.build();
+
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -86,6 +93,7 @@ public class FinancialProductService {
 			.balance(product.getBalanceByLocalDate(today))
 			.progress(product.getProgressByLocalDate(today))
 			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.productCurrency(productCurrency)
 			.build();
 	}
 

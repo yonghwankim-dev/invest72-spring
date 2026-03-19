@@ -34,6 +34,7 @@ import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -260,7 +261,6 @@ class FinancialProductRestControllerTest {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
-
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -287,6 +287,11 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.builder()
+			.symbol("KRW")
+			.unit("₩")
+			.decimalPoint(2)
+			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -306,7 +311,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("+999999999-12-31"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(1.0))
-			.andExpect(jsonPath("$.remainingDays").value(0));
+			.andExpect(jsonPath("$.remainingDays").value(0))
+			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 예금 상품의 상세 정보를 조회한다")
@@ -316,6 +324,11 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.builder()
+			.symbol("KRW")
+			.unit("₩")
+			.decimalPoint(2)
+			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -335,7 +348,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
-			.andExpect(jsonPath("$.remainingDays").value(308));
+			.andExpect(jsonPath("$.remainingDays").value(308))
+			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 적금 상품의 상세 정보를 조회한다")
@@ -346,6 +362,11 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.builder()
+			.symbol("KRW")
+			.unit("₩")
+			.decimalPoint(2)
+			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -366,7 +387,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.balance").value(2_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
-			.andExpect(jsonPath("$.paymentDay").value(15));
+			.andExpect(jsonPath("$.paymentDay").value(15))
+			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")
