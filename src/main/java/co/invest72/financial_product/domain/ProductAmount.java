@@ -34,12 +34,7 @@ public class ProductAmount {
 
 	public ProductAmount(BigDecimal value, String currency) {
 		this.value = value;
-<<<<<<< Updated upstream
 		this.currency = currency;
-=======
-		// TODO: 다양한 통화 지원을 위해 currency 필드를 추가하고, 생성자에서 통화도 함께 받도록 변경할 수 있습니다.
-		this.currency = "KRW"; // 기본 통화는 원화로 설정
->>>>>>> Stashed changes
 		validate(this.value);
 		validateCurrency(this.currency);
 	}
