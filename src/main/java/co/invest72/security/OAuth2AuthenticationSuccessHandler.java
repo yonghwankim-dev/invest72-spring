@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,6 +28,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
+		// 로그인 성공 시점의 새로운 CSRF 토큰을 강제로 생성 및 로드
+		CsrfToken csrfToken = (CsrfToken)request.getAttribute(CsrfToken.class.getName());
+		if (csrfToken != null) {
+			// 이 호출이 CookieCsrfTokenRepository를 트리거하여 새 Set-Cookie 헤더를 만듭니다.
+			csrfToken.getToken();
+			// csrfToken 값 로그 출력 (디버깅용)
+			log.debug("New CSRF Token generated on authentication success: {}", csrfToken.getToken());
+		}
+
 		// redirectUri는 프론트에서 로그인 성공 후 리다이렉트할 URL입니다. 예를 들어, "http://localhost:3000/login-success"와 같은 URL이 될 수 있습니다.
 		String targetUrl = UriComponentsBuilder.fromUriString(redirectUri).build().toUriString();
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);

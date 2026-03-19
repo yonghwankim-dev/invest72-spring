@@ -1,3 +1,6 @@
 app:
   oauth2:
     authorized-redirect-uri: http://localhost:3000/
+logging:
+  level:
+    co.invest72: DEBUG
