@@ -288,9 +288,8 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(product);
 
 		ProductCurrency productCurrency = ProductCurrency.builder()
-			.symbol("KRW")
+			.code("KRW")
 			.unit("₩")
-			.decimalPoint(2)
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
@@ -312,9 +311,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(1.0))
 			.andExpect(jsonPath("$.remainingDays").value(0))
-			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
-			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 예금 상품의 상세 정보를 조회한다")
@@ -325,9 +323,8 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(product);
 
 		ProductCurrency productCurrency = ProductCurrency.builder()
-			.symbol("KRW")
+			.code("KRW")
 			.unit("₩")
-			.decimalPoint(2)
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
@@ -349,9 +346,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
-			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
-			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 적금 상품의 상세 정보를 조회한다")
@@ -363,9 +359,8 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(product);
 
 		ProductCurrency productCurrency = ProductCurrency.builder()
-			.symbol("KRW")
+			.code("KRW")
 			.unit("₩")
-			.decimalPoint(2)
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
@@ -388,9 +383,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
 			.andExpect(jsonPath("$.paymentDay").value(15))
-			.andExpect(jsonPath("$.productCurrency.symbol").value(productCurrency.getSymbol()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
-			.andExpect(jsonPath("$.productCurrency.decimalPoint").value(productCurrency.getDecimalPoint()));
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")

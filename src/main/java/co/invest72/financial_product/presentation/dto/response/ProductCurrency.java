@@ -10,7 +10,6 @@ import lombok.Getter;
 @Builder
 @EqualsAndHashCode
 public class ProductCurrency {
-	private String symbol;
+	private String code;
 	private String unit;
-	private Integer decimalPoint;
 }

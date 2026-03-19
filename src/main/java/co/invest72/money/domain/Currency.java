@@ -14,14 +14,19 @@ import lombok.NoArgsConstructor;
 @Getter
 public final class Currency {
 	private final String code;
+	private final String unit;
 
-	private Currency(String code) {
+	private Currency(String code, String unit) {
 		if (code == null) {
 			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
+		}
+		if (unit == null) {
+			throw new IllegalArgumentException("통화 단위(unit)는 null일 수 없습니다.");
 		}
 		String normalizedCode = code.trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
+		this.unit = unit;
 	}
 
 	private void validate(String code) {
@@ -39,16 +44,21 @@ public final class Currency {
 		}
 	}
 
-	public static Currency of(String code) {
-		return new Currency(code);
+	public static Currency from(String code) {
+		if ("USD".equalsIgnoreCase(code)) {
+			return dollar();
+		} else if ("KRW".equalsIgnoreCase(code)) {
+			return won();
+		}
+		throw new IllegalArgumentException("잘못된 통화 코드(code) 입니다.");
 	}
 
 	public static Currency dollar() {
-		return new Currency("USD");
+		return new Currency("USD", "$");
 	}
 
 	public static Currency won() {
-		return new Currency("KRW");
+		return new Currency("KRW", "₩");
 	}
 
 	@Override

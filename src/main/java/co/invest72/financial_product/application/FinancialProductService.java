@@ -70,9 +70,8 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 
 		ProductCurrency productCurrency = ProductCurrency.builder()
-			.symbol("KRW")
+			.code("KRW")
 			.unit("₩")
-			.decimalPoint(2)
 			.build();
 
 		return DetailedFinancialProductResponse.builder()
