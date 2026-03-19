@@ -101,6 +101,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
@@ -115,6 +116,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -141,6 +143,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -167,6 +170,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -193,6 +197,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
@@ -218,6 +223,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
@@ -453,6 +459,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -489,6 +496,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -534,6 +542,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -573,6 +582,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -611,6 +621,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", cash.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -639,6 +650,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", savings.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -668,6 +680,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", deposit.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -696,6 +709,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -717,8 +731,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isNoContent());
+			.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+			.with(SecurityMockMvcRequestPostProcessors.csrf())
+		).andExpect(status().isNoContent());
 
 		// 상품이 삭제되었는지 검증
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
@@ -737,7 +752,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 
@@ -754,7 +771,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", nonExistentProductId)
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
