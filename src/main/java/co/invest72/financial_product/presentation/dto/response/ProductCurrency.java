@@ -13,8 +13,9 @@ import lombok.Getter;
 public class ProductCurrency {
 	private String code;
 	private String unit;
+	private String name;
 
 	public static ProductCurrency from(Currency currency) {
-		return new ProductCurrency(currency.getCode(), currency.getUnit());
+		return new ProductCurrency(currency.getCode(), currency.getUnit(), currency.getName());
 	}
 }

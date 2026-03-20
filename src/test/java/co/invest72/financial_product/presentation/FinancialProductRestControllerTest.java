@@ -268,10 +268,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		ProductCurrency productCurrency = ProductCurrency.builder()
-			.code("KRW")
-			.unit("₩")
-			.build();
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -293,7 +290,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.progress").value(1.0))
 			.andExpect(jsonPath("$.remainingDays").value(0))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 예금 상품의 상세 정보를 조회한다")
@@ -303,10 +301,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		ProductCurrency productCurrency = ProductCurrency.builder()
-			.code("KRW")
-			.unit("₩")
-			.build();
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -328,7 +323,9 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
+
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 적금 상품의 상세 정보를 조회한다")
@@ -362,7 +359,8 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.remainingDays").value(308))
 			.andExpect(jsonPath("$.paymentDay").value(15))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()));
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")
