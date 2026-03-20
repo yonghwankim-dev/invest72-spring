@@ -24,10 +24,6 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
-	public ProductAmount(Money money) {
-		this(money.getValue(), money.getCurrency());
-	}
-
 	private ProductAmount(BigDecimal value, Currency currency) {
 		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
 		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
@@ -46,7 +42,12 @@ public class ProductAmount {
 	}
 
 	public static ProductAmount won(BigDecimal amount) {
-		return new ProductAmount(Money.won(amount));
+		Money won = Money.won(amount);
+		return new ProductAmount(won.getValue(), won.getCurrency());
+	}
+
+	public static ProductAmount from(Money money) {
+		return new ProductAmount(money.getValue(), money.getCurrency());
 	}
 
 	@Override
