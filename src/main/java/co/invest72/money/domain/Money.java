@@ -29,7 +29,7 @@ public class Money implements Comparable<Money> {
 	}
 
 	public static Money dollar(BigDecimal value) {
-		return new Money(value, Currency.dollar());
+		return of(value, Currency.dollar());
 	}
 
 	public static Money won(int value) {
@@ -37,11 +37,11 @@ public class Money implements Comparable<Money> {
 	}
 
 	public static Money won(BigDecimal value) {
-		return new Money(value, Currency.won());
+		return of(value, Currency.won());
 	}
 
 	public static Money of(BigDecimal value, String currency) {
-		return new Money(value, Currency.from(currency));
+		return of(value, Currency.from(currency));
 	}
 
 	public static Money of(BigDecimal value, Currency currency) {
@@ -63,10 +63,11 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money times(BigDecimal multiplier) {
-		return new Money(this.value.multiply(multiplier), this.currency);
+		return Money.of(this.value.multiply(multiplier), this.currency);
 	}
 
 	private void validate(Money money) {
+		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
 		if (!this.currency.equals(money.currency)) {
 			throw new IllegalArgumentException("통화가 일치하지 않습니다.");
 		}
@@ -79,9 +80,7 @@ public class Money implements Comparable<Money> {
 	 * @throws IllegalArgumentException divisor가 null인 경우
 	 */
 	public Money divide(BigDecimal divisor) {
-		if (divisor == null) {
-			throw new IllegalArgumentException("분모는 null일 수 없습니다.");
-		}
+		Objects.requireNonNull(divisor, "분모는 null일 수 없습니다.");
 		if (divisor.compareTo(BigDecimal.ZERO) == 0) {
 			return new Money(BigDecimal.ZERO, this.currency);
 		}
@@ -95,7 +94,6 @@ public class Money implements Comparable<Money> {
 
 	@Override
 	public int compareTo(@Nonnull Money other) {
-		Objects.requireNonNull(other, "Money 객체는 null일 수 없습니다.");
 		validate(other);
 		BigDecimal roundedThisValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
 		BigDecimal roundedOtherValue = roundToTwoDecimalPlaces.apply(other.value.stripTrailingZeros());

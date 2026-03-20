@@ -167,7 +167,7 @@ class MoneyTest {
 		BigDecimal divisor = null;
 		// when & then
 		Assertions.assertThatThrownBy(() -> fiveBucks.divide(divisor))
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(NullPointerException.class)
 			.hasMessage("분모는 null일 수 없습니다.");
 	}
 
