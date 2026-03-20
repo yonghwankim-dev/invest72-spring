@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -50,7 +51,8 @@ public class CalculateInvestmentRequest {
 	@NotNull(message = "taxRate must not be null")
 	private Double taxRate;
 
-	@NotNull(message = "currencyCode must not be null")
+	@NotBlank(message = "currencyCode must not be null or empty string")
+	@Pattern(regexp = "^[A-Z]{3}$", message = "The call code must be 3 uppercase alphabetic characters.")
 	private String currencyCode;
 
 	@Builder(toBuilder = true)
