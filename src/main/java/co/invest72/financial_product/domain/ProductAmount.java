@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -23,15 +24,15 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
+	public ProductAmount(Money money) {
+		this(money.getValue(), money.getCurrency());
+	}
+
 	public ProductAmount(BigDecimal value, Currency currency) {
 		validate(value);
 		validateCurrency(currency);
 		this.value = value;
 		this.currency = currency.getCode();
-	}
-
-	public static ProductAmount won(BigDecimal value) {
-		return new ProductAmount(value, Currency.won());
 	}
 
 	private void validate(BigDecimal value) {
@@ -47,6 +48,14 @@ public class ProductAmount {
 		if (currency == null) {
 			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
 		}
+	}
+
+	public static ProductAmount won(BigDecimal value) {
+		return won(Money.won(value));
+	}
+
+	public static ProductAmount won(Money money) {
+		return new ProductAmount(money);
 	}
 
 	@Override
