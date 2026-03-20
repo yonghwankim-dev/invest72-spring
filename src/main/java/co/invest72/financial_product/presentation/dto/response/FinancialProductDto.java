@@ -4,25 +4,24 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 @Getter
 public class FinancialProductDto {
-
-	private String id;
-	private String userId;
-	private String name;
-	private String investmentType;
-	private BigDecimal amount;
-	private Integer months;
-	private BigDecimal interestRate;
-	private String interestType;
-	private String taxType;
-	private BigDecimal taxRate;
-	private LocalDate startDate;
-	private LocalDateTime createdAt;
+	private final String id;
+	private final String userId;
+	private final String name;
+	private final String investmentType;
+	private final BigDecimal amount;
+	private final Integer months;
+	private final BigDecimal interestRate;
+	private final String interestType;
+	private final String taxType;
+	private final BigDecimal taxRate;
+	private final LocalDate startDate;
+	private final LocalDateTime createdAt;
 }

@@ -38,6 +38,7 @@ import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import co.invest72.user.infrastructure.UserIdGenerator;
@@ -358,10 +359,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
-		ProductCurrency productCurrency = ProductCurrency.builder()
-			.code("KRW")
-			.unit("₩")
-			.build();
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -428,6 +426,8 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
 
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
+
 		FinancialProductSummary expectedResponse1 = FinancialProductSummary.builder()
 			.id(savingsProduct.getId())
 			.name("적금 상품")
@@ -440,6 +440,7 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
 		FinancialProductSummary expectedResponse2 = FinancialProductSummary.builder()
 			.id(depositProduct.getId())
@@ -453,6 +454,7 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
 		FinancialProductSummary expectedResponse3 = FinancialProductSummary.builder()
 			.id(product.getId())
@@ -466,6 +468,7 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.ONE)
 			.remainingDays(0L)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
 
 		String expectedJson = objectMapper.writeValueAsString(
