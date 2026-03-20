@@ -54,4 +54,7 @@ public class FinancialProductRequest {
 	@NotNull(message = "시작 날짜는 필수입니다.")
 	private LocalDate startDate;
 
+	@NotNull(message = "통화는 필수입니다.")
+	private String currencyCode;
+
 }

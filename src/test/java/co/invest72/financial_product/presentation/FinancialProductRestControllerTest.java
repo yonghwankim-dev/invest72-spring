@@ -99,6 +99,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -123,7 +124,7 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(9)))
+			.andExpect(jsonPath("$.errors", hasSize(10)))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -140,6 +141,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(-0.01)) // 음수 세율
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -167,6 +169,7 @@ class FinancialProductRestControllerTest {
 			.taxType("INVALID_TAX_TYPE") // 유효하지 않은 세금 유형
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -195,6 +198,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -221,6 +225,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -474,6 +479,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -511,6 +517,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name()) // 현금 상품은 세금 유형이 NONE이어야 하지만, 수정 요청에서는 STANDARD로 변경하려고 함
 			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -557,6 +564,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -597,6 +605,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
@@ -724,6 +733,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
