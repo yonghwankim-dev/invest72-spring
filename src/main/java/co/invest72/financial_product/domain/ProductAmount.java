@@ -42,8 +42,7 @@ public class ProductAmount {
 	}
 
 	public static ProductAmount won(BigDecimal amount) {
-		Money won = Money.won(amount);
-		return new ProductAmount(won.getValue(), won.getCurrency());
+		return from(Money.won(amount));
 	}
 
 	public static ProductAmount from(Money money) {
