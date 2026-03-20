@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import co.invest72.money.domain.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -29,14 +30,14 @@ public class ProductAmount {
 	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
 	 */
 	public ProductAmount(BigDecimal value) {
-		this(value, "KRW");
+		this(value, Currency.won());
 	}
 
-	public ProductAmount(BigDecimal value, String currency) {
+	public ProductAmount(BigDecimal value, Currency currency) {
+		validate(value);
+		validateCurrency(currency);
 		this.value = value;
-		this.currency = currency;
-		validate(this.value);
-		validateCurrency(this.currency);
+		this.currency = currency.getCode();
 	}
 
 	private void validate(BigDecimal value) {
@@ -48,15 +49,12 @@ public class ProductAmount {
 		}
 	}
 
-	private void validateCurrency(String currency) {
-		if (currency == null || currency.trim().isEmpty()) {
+	private void validateCurrency(Currency currency) {
+		if (currency == null) {
 			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
 		}
-		if (currency.length() != 3) {
-			throw new IllegalArgumentException("통화 코드는 3자리여야 합니다.");
-		}
 	}
-
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
