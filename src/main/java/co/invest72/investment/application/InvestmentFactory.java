@@ -43,6 +43,7 @@ import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.domain.tax.resolver.KoreanStringBasedTaxableResolver;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class InvestmentFactory {
@@ -87,9 +88,11 @@ public class InvestmentFactory {
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
+		Currency currency = Currency.from(request.getCurrencyCode());
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
-		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(request.getAmount()));
+		Money amount = Money.of(BigDecimal.valueOf(request.getAmount()), currency);
+		ProductAmount productAmount = ProductAmount.from(amount);
 		// InvestmentType 적금인 경우에 월 투자금액으로 저장되도록 처리
 		if (investmentType == SAVINGS) {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
@@ -106,6 +109,7 @@ public class InvestmentFactory {
 			.interestType(InterestType.from(request.getInterestType()))
 			.taxType(TaxType.from(request.getTaxType()))
 			.taxRate(new FixedTaxRate(request.getTaxRate()))
+			.currency(request.getCurrencyCode())
 			.build();
 		return createBy(dto);
 	}

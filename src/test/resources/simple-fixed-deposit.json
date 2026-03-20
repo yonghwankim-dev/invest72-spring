@@ -7,5 +7,6 @@
   "interestType": "단리",
   "annualInterestRate": 0.05,
   "taxType": "일반과세",
-  "taxRate": 0.154
+  "taxRate": 0.154,
+  "currencyCode": "KRW"
 }
