@@ -18,6 +18,8 @@ import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -73,12 +75,14 @@ public class FinancialProductFactory {
 
 	private FinancialProduct createCashProduct(String productId, String userId, LocalDateTime createdAt,
 		FinancialProductRequest dto) {
+		Currency currency = Currency.from(dto.getCurrencyCode());
+		Money amount = Money.of(dto.getAmount(), currency);
 		return CashProduct.builder()
 			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(ProductAmount.won(dto.getAmount()))
+			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
@@ -91,12 +95,14 @@ public class FinancialProductFactory {
 
 	private FinancialProduct createDepositProduct(String productId, String userId, LocalDateTime createdAt,
 		FinancialProductRequest dto) {
+		Currency currency = Currency.from(dto.getCurrencyCode());
+		Money amount = Money.of(dto.getAmount(), currency);
 		return DepositProduct.builder()
 			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(ProductAmount.won(dto.getAmount()))
+			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
@@ -109,12 +115,14 @@ public class FinancialProductFactory {
 
 	private FinancialProduct createSavingsProduct(String productId, String userId, LocalDateTime createdAt,
 		FinancialProductRequest dto) {
+		Currency currency = Currency.from(dto.getCurrencyCode());
+		Money amount = Money.of(dto.getAmount(), currency);
 		return SavingsProduct.builder()
 			.id(productId)
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
-			.amount(ProductAmount.won(dto.getAmount()))
+			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.paymentDay(new PaymentDay(dto.getPaymentDay()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
