@@ -2,7 +2,9 @@ package co.invest72.investment.presentation.response;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,11 +20,20 @@ public class CalculateInvestmentResponse {
 	private final String taxPercent;
 	private final List<MonthlyInvestmentResult> monthlyDetails;
 	private final List<YearlyInvestmentResult> yearlyDetails;
+	private final ProductCurrency productCurrency;
 
 	@Builder
 	public CalculateInvestmentResponse(BigDecimal totalInvestment, BigDecimal totalInterest, BigDecimal totalTax,
 		BigDecimal totalProfit, String taxType, String taxPercent, List<MonthlyInvestmentResult> monthlyDetails,
-		List<YearlyInvestmentResult> yearlyDetails) {
+		List<YearlyInvestmentResult> yearlyDetails, ProductCurrency productCurrency) {
+		Objects.requireNonNull(totalInvestment, "총 투자 금액은 null이면 안됩니다.");
+		Objects.requireNonNull(totalInterest, "총 이자는 null이면 안됩니다.");
+		Objects.requireNonNull(totalTax, "총 세금은 null이면 안됩니다.");
+		Objects.requireNonNull(taxType, "세금 종류는 null이면 안됩니다.");
+		Objects.requireNonNull(taxPercent, "세율은 null이면 안됩니다.");
+		Objects.requireNonNull(monthlyDetails, "월별 수익 리스트는 null이면 안됩니다.");
+		Objects.requireNonNull(yearlyDetails, "년간 수익 리스트는 null이면 안됩니다.");
+		Objects.requireNonNull(productCurrency, "통화는 null이면 안됩니다.");
 		this.totalInvestment = totalInvestment;
 		this.totalInterest = totalInterest;
 		this.totalTax = totalTax;
@@ -31,6 +42,7 @@ public class CalculateInvestmentResponse {
 		this.taxPercent = taxPercent;
 		this.monthlyDetails = monthlyDetails;
 		this.yearlyDetails = yearlyDetails;
+		this.productCurrency = productCurrency;
 	}
 
 	@Override
@@ -44,6 +56,7 @@ public class CalculateInvestmentResponse {
 			", taxPercent='" + taxPercent + '\'' +
 			", monthlyDetails=" + monthlyDetails +
 			", yearlyDetails=" + yearlyDetails +
+			", productCurrency=" + productCurrency +
 			'}';
 	}
 }

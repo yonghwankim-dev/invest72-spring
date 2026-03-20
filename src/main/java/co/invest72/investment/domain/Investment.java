@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.UnaryOperator;
 
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public interface Investment {
@@ -116,4 +117,8 @@ public interface Investment {
 	Money getProfitForYear(int year);
 
 	BigDecimal getTaxRate();
+
+	default Currency getCurrency() {
+		return Currency.won();
+	}
 }

@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.presentation.response.CalculateInvestmentResponse;
 import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentResponse;
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
+import co.invest72.money.domain.Currency;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ public class CalculateInvestment {
 		BigDecimal totalProfit = investment.getTotalProfit().getValue();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
+		Currency currency = investment.getCurrency();
+		ProductCurrency productCurrency = ProductCurrency.from(currency);
 
 		return CalculateInvestmentResponse.builder()
 			.totalInvestment(totalInvestment)
@@ -35,6 +39,7 @@ public class CalculateInvestment {
 			.taxPercent(taxPercent)
 			.monthlyDetails(monthlyDetails)
 			.yearlyDetails(yearlyDetails)
+			.productCurrency(productCurrency)
 			.build();
 	}
 
