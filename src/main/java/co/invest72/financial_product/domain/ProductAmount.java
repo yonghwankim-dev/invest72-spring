@@ -45,6 +45,10 @@ public class ProductAmount {
 		return from(Money.won(amount));
 	}
 
+	public static ProductAmount dollar(BigDecimal amount) {
+		return from(Money.dollar(amount));
+	}
+
 	public static ProductAmount from(Money money) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
 		return new ProductAmount(money.getValue(), money.getCurrency());
