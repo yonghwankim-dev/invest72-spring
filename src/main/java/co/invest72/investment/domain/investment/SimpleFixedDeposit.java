@@ -10,6 +10,7 @@ import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.investment.factory.SimpleFixedDepositMonthlyDetailFactory;
 import co.invest72.investment.domain.investment.factory.SimpleFixedDepositYearlyDetailFactory;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 
@@ -185,5 +186,10 @@ public class SimpleFixedDeposit implements Investment {
 	@Override
 	public BigDecimal getTaxRate() {
 		return taxable.getTaxRate();
+	}
+
+	@Override
+	public Currency getCurrency() {
+		return investmentAmount.getAmount().getCurrency();
 	}
 }

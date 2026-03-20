@@ -118,7 +118,9 @@ public interface Investment {
 
 	BigDecimal getTaxRate();
 
-	default Currency getCurrency() {
-		return Currency.won();
-	}
+	/**
+	 * 해당 투자 객체의 기준 통화 객체를 반환한다.
+	 * @return 통화 객체
+	 */
+	Currency getCurrency();
 }

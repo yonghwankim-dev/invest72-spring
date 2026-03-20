@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class CashInvestment implements Investment {
@@ -93,5 +94,10 @@ public class CashInvestment implements Investment {
 	@Override
 	public BigDecimal getTaxRate() {
 		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public Currency getCurrency() {
+		return investmentAmount.getAmount().getCurrency();
 	}
 }
