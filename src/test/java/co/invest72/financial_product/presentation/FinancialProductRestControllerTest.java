@@ -33,7 +33,7 @@ import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -428,7 +428,7 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
 
-		FinancialProductSummaryResponse expectedResponse1 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummary expectedResponse1 = FinancialProductSummary.builder()
 			.id(savingsProduct.getId())
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
@@ -441,7 +441,7 @@ class FinancialProductRestControllerTest {
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
-		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummary expectedResponse2 = FinancialProductSummary.builder()
 			.id(depositProduct.getId())
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
@@ -454,7 +454,7 @@ class FinancialProductRestControllerTest {
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
-		FinancialProductSummaryResponse expectedResponse3 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummary expectedResponse3 = FinancialProductSummary.builder()
 			.id(product.getId())
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())

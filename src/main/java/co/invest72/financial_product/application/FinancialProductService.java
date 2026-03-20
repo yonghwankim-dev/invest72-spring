@@ -17,7 +17,7 @@ import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.money.domain.Currency;
@@ -159,13 +159,13 @@ public class FinancialProductService {
 	 */
 	@Transactional(readOnly = true)
 	@Cacheable(value = "productSummary", key = "#user.id")
-	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
-		List<FinancialProductSummaryResponse> result = new ArrayList<>();
+	public List<FinancialProductSummary> getSummaryProductsByUser(User user) {
+		List<FinancialProductSummary> result = new ArrayList<>();
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
-			FinancialProductSummaryResponse data = FinancialProductSummaryResponse.from(
+			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				investmentFactory.createBy(product),
 				today
@@ -178,12 +178,12 @@ public class FinancialProductService {
 			.toList();
 	}
 
-	private Comparator<FinancialProductSummaryResponse> getFinancialProductSummaryResponseComparator() {
-		return Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
+	private Comparator<FinancialProductSummary> getFinancialProductSummaryResponseComparator() {
+		return Comparator.comparing(FinancialProductSummary::getStartDate, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummary::getExpirationDate,
 				Comparator.nullsLast(Comparator.naturalOrder()))
-			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getCreatedAt)
-			.thenComparing(FinancialProductSummaryResponse::getId);
+			.thenComparing(FinancialProductSummary::getBalance, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummary::getCreatedAt)
+			.thenComparing(FinancialProductSummary::getId);
 	}
 }

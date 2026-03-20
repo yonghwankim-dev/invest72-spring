@@ -19,7 +19,7 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.financial_product.presentation.dto.response.CreateFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.security.PrincipalUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class FinancialProductRestController {
 
 	// 상품 요약 목록 조회
 	@GetMapping("/summary")
-	public ResponseEntity<List<FinancialProductSummaryResponse>> getSummaryProducts(
+	public ResponseEntity<List<FinancialProductSummary>> getSummaryProducts(
 		@AuthenticationPrincipal PrincipalUser user) {
 		return ResponseEntity.ok(service.getSummaryProductsByUser(user.getUser()));
 	}

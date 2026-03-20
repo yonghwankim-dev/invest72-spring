@@ -13,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FinancialProductSummaryResponse {
+public class FinancialProductSummary {
 	private String id; // 식별자
 	private String name; // 상품명
 	private String investmentType; // 투자 유형
@@ -26,12 +26,12 @@ public class FinancialProductSummaryResponse {
 	private long remainingDays; // 남은 일수
 	private LocalDateTime createdAt; // 생성시
 
-	public static FinancialProductSummaryResponse from(
+	public static FinancialProductSummary from(
 		FinancialProduct product,
 		Investment investment,
 		LocalDate today
 	) {
-		return FinancialProductSummaryResponse.builder()
+		return FinancialProductSummary.builder()
 			.id(product.getId())
 			.name(product.getName())
 			.investmentType(product.getInvestmentType().name())
