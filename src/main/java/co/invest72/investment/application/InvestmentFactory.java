@@ -77,6 +77,7 @@ public class InvestmentFactory {
 			.interestType(product.getInterestType())
 			.taxType(product.getTaxType())
 			.taxRate(product.getTaxRate())
+			.currency(product.getAmount().getCurrency())
 			.build();
 		return createBy(dto);
 	}
@@ -114,13 +115,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment cashInvestment(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), "KRW");
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency());
 		return new CashInvestment(investmentAmount);
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
 		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
+			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
@@ -129,7 +130,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
 		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
+			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
