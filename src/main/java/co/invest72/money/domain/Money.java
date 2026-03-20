@@ -1,7 +1,6 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -14,8 +13,6 @@ public class Money implements Comparable<Money> {
 
 	private static final UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = money -> money.setScale(2,
 		RoundingMode.HALF_EVEN);
-
-	private static final MathContext MATH_CONTEXT = new MathContext(2, RoundingMode.HALF_EVEN);
 
 	private final BigDecimal value;
 	private final Currency currency;
@@ -87,7 +84,7 @@ public class Money implements Comparable<Money> {
 		if (isZero(divisor)) {
 			return new Money(BigDecimal.ZERO, this.currency);
 		}
-		BigDecimal newValue = this.value.divide(divisor, MATH_CONTEXT);
+		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
 		return of(newValue, this.currency);
 	}
 
