@@ -143,7 +143,7 @@ public class InvestmentFactory {
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.of(
-			dto.getAmount().getValue(), "KRW"));
+			dto.getAmount().getValue(), dto.getCurrency()));
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
@@ -154,7 +154,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			Money.of(dto.getAmount().getValue(), "KRW"));
+			Money.of(dto.getAmount().getValue(), dto.getCurrency()));
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
