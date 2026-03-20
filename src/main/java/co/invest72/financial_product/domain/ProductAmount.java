@@ -27,12 +27,12 @@ public class ProductAmount {
 	private ProductAmount(BigDecimal value, Currency currency) {
 		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
 		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
-		validate(value);
+		validateRange(value);
 		this.value = value;
 		this.currency = currency.getCode();
 	}
 
-	private void validate(BigDecimal value) {
+	private void validateRange(BigDecimal value) {
 		if (value.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("금액은 0원 이상이어야 합니다.");
 		}
