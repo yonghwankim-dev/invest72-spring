@@ -12,7 +12,7 @@ public class ProductAmountMapper {
 		if (money == null) {
 			throw new IllegalArgumentException("Money 객체는 null일 수 없습니다.");
 		}
-		return new ProductAmount(money.getValue(), money.getCurrency());
+		return new ProductAmount(money);
 	}
 
 	public Money toMoney(ProductAmount productAmount) {

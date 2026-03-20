@@ -28,15 +28,16 @@ public class ProductAmount {
 		this(money.getValue(), money.getCurrency());
 	}
 
-	public ProductAmount(BigDecimal value, Currency currency) {
+	private ProductAmount(BigDecimal value, Currency currency) {
+		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
 		validate(value);
-		validateCurrency(currency);
 		this.value = value;
 		this.currency = currency.getCode();
 	}
 
 	private void validate(BigDecimal value) {
-		if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
+		if (value.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("금액은 0원 이상이어야 합니다.");
 		}
 		if (value.compareTo(MAX_AMOUNT) > 0) {
@@ -44,18 +45,8 @@ public class ProductAmount {
 		}
 	}
 
-	private void validateCurrency(Currency currency) {
-		if (currency == null) {
-			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
-		}
-	}
-
-	public static ProductAmount won(BigDecimal value) {
-		return won(Money.won(value));
-	}
-
-	public static ProductAmount won(Money money) {
-		return new ProductAmount(money);
+	public static ProductAmount won(BigDecimal amount) {
+		return new ProductAmount(Money.won(amount));
 	}
 
 	@Override

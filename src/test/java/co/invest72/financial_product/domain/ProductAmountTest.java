@@ -36,11 +36,14 @@ class ProductAmountTest {
 		Assertions.assertThat(amount1.hashCode()).hasSameHashCodeAs(amount2.hashCode());
 	}
 
-	@DisplayName("객체 생성 - 통화가 null이면 예외가 발생한다")
+	@DisplayName("원화 생성 - KRW 통화의 상품 금액이 생성되어야 한다")
 	@Test
-	void newInstance_whenCurrencyIsNull_thenThrowException() {
-		Assertions.assertThatThrownBy(() -> new ProductAmount(new BigDecimal("1000"), null))
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("통화는 null이거나 빈 문자열일 수 없습니다.");
+	void won_whenCurrencyIsKRW_thenInstanceIsNotNull() {
+		// given
+		BigDecimal value = BigDecimal.valueOf(1000);
+		// when
+		ProductAmount productAmount = ProductAmount.won(value);
+		// then
+		Assertions.assertThat(productAmount).isNotNull();
 	}
 }
