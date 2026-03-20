@@ -20,6 +20,7 @@ import co.invest72.financial_product.presentation.dto.response.FinancialProductD
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.money.domain.Currency;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -69,10 +70,8 @@ public class FinancialProductService {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
 
-		ProductCurrency productCurrency = ProductCurrency.builder()
-			.code("KRW")
-			.unit("₩")
-			.build();
+		Currency currency = Currency.from(product.getAmount());
+		ProductCurrency productCurrency = ProductCurrency.from(currency);
 
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
