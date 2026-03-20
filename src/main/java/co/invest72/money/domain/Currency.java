@@ -2,7 +2,6 @@ package co.invest72.money.domain;
 
 import java.util.Objects;
 
-import co.invest72.financial_product.domain.ProductAmount;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,10 +41,6 @@ public final class Currency {
 		if (normalizedCode.length() != 3) {
 			throw new IllegalArgumentException("통화 코드(code)는 3자리여야 합니다.");
 		}
-	}
-
-	public static Currency from(ProductAmount productAmount) {
-		return from(productAmount.getCurrency());
 	}
 
 	public static Currency from(String code) {

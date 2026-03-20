@@ -33,7 +33,7 @@ public class FinancialProductSummary {
 		Investment investment,
 		LocalDate today
 	) {
-		Currency currency = Currency.from(product.getAmount());
+		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return FinancialProductSummary.builder()
 			.id(product.getId())

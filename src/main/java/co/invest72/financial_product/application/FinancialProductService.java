@@ -45,7 +45,7 @@ public class FinancialProductService {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
 
-		Currency currency = Currency.from(product.getAmount());
+		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 
 		return DetailedFinancialProductResponse.builder()
