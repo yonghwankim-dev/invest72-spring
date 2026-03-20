@@ -29,7 +29,7 @@ class ProductAmountMapperTest {
 		ProductAmount productAmount = mapper.toProductAmount(money);
 
 		// then
-		ProductAmount expected = new ProductAmount(BigDecimal.valueOf(10000));
+		ProductAmount expected = ProductAmount.won(BigDecimal.valueOf(10000));
 		Assertions.assertThat(productAmount)
 			.hasSameHashCodeAs(expected)
 			.isEqualTo(expected);
@@ -48,7 +48,7 @@ class ProductAmountMapperTest {
 	@Test
 	void toMoney_whenProductAmountIsValid_thenReturnMoneyWithCorrectCurrency() {
 		// given
-		ProductAmount productAmount = new ProductAmount(BigDecimal.valueOf(10000));
+		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(10000));
 
 		// when
 		Money result = mapper.toMoney(productAmount);

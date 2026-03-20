@@ -88,7 +88,7 @@ public class InvestmentFactory {
 		InvestPeriod investPeriod = periodType.create(periodRange);
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
-		ProductAmount productAmount = new ProductAmount(BigDecimal.valueOf(request.getAmount()));
+		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(request.getAmount()));
 		// InvestmentType 적금인 경우에 월 투자금액으로 저장되도록 처리
 		if (investmentType == SAVINGS) {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();

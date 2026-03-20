@@ -23,21 +23,15 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
-	/**
-	 * 금액을 나타내는 객체를 생성한다. 금액은 0원 이상 99999조원 이하이어야 한다.
-	 *
-	 * @param value 금액
-	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
-	 */
-	public ProductAmount(BigDecimal value) {
-		this(value, Currency.won());
-	}
-
 	public ProductAmount(BigDecimal value, Currency currency) {
 		validate(value);
 		validateCurrency(currency);
 		this.value = value;
 		this.currency = currency.getCode();
+	}
+
+	public static ProductAmount won(BigDecimal value) {
+		return new ProductAmount(value, Currency.won());
 	}
 
 	private void validate(BigDecimal value) {
@@ -54,7 +48,7 @@ public class ProductAmount {
 			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

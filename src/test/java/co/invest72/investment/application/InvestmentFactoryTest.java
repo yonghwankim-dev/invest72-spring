@@ -187,7 +187,7 @@ class InvestmentFactoryTest {
 		BigDecimal amount = new BigDecimal("10000000000000"); // 10조원
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
 			.type(CASH)
-			.amount(new ProductAmount(amount)) // 10조원
+			.amount(ProductAmount.won(amount)) // 10조원
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(0.0))
 			.interestType(NONE)

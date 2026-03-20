@@ -40,7 +40,7 @@ class InvestmentTest {
 			.userId("user-1")
 			.name("정기예금")
 			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(new BigDecimal("10000000000000"))) // 10조
+			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
@@ -71,7 +71,7 @@ class InvestmentTest {
 			.userId("user-1")
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(new BigDecimal("10000000000000"))) // 10조
+			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(9.9999)))

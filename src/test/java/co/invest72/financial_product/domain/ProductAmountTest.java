@@ -14,7 +14,7 @@ class ProductAmountTest {
 	@ParameterizedTest(name = "금액: {0}, 설명: {1}")
 	@MethodSource(value = "source.ProductAmountTestDataProvider#validAmounts")
 	void newInstance_whenAmountIsValid_thenCreateInstance(BigDecimal value, String ignored) {
-		Assertions.assertThatCode(() -> new ProductAmount(value))
+		Assertions.assertThatCode(() -> ProductAmount.won(value))
 			.doesNotThrowAnyException();
 	}
 
@@ -22,15 +22,15 @@ class ProductAmountTest {
 	@ParameterizedTest(name = "금액: {0}")
 	@MethodSource(value = "source.ProductAmountTestDataProvider#invalidAmounts")
 	void newInstance_whenAmountIsInvalid_thenThrowException(BigDecimal value) {
-		Assertions.assertThatThrownBy(() -> new ProductAmount(value))
+		Assertions.assertThatThrownBy(() -> ProductAmount.won(value))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@DisplayName("객체 해시코드 비교 - 두 객체의 해시코드가 동일하다")
 	@Test
 	void hashCode_whenSameValue_thenHashCodesAreEqual() {
-		ProductAmount amount1 = new ProductAmount(new BigDecimal("0.1"));
-		ProductAmount amount2 = new ProductAmount(new BigDecimal("0.10"));
+		ProductAmount amount1 = ProductAmount.won(new BigDecimal("0.1"));
+		ProductAmount amount2 = ProductAmount.won(new BigDecimal("0.10"));
 
 		Assertions.assertThat(amount1).isEqualTo(amount2);
 		Assertions.assertThat(amount1.hashCode()).hasSameHashCodeAs(amount2.hashCode());
