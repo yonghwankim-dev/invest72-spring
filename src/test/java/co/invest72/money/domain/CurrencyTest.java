@@ -23,8 +23,8 @@ class CurrencyTest {
 		Throwable throwable = Assertions.catchThrowable(() -> Currency.from((String)null));
 		// then
 		Assertions.assertThat(throwable)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("잘못된 통화 코드(code) 입니다.");
+			.isInstanceOf(NullPointerException.class)
+			.hasMessage("통화 코드(code)는 null이면 안됩니다.");
 	}
 
 	@DisplayName("통화 생성 - 비어있는 문자열을 전달하면 예외가 발생해야 한다")

@@ -44,9 +44,11 @@ public final class Currency {
 	}
 
 	public static Currency from(String code) {
-		if ("USD".equalsIgnoreCase(code)) {
+		Objects.requireNonNull(code, "통화 코드(code)는 null이면 안됩니다.");
+		String normalizedCode = code.trim().toUpperCase();
+		if ("USD".equalsIgnoreCase(normalizedCode)) {
 			return dollar();
-		} else if ("KRW".equalsIgnoreCase(code)) {
+		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
 			return won();
 		}
 		throw new IllegalArgumentException("잘못된 통화 코드(code) 입니다.");
