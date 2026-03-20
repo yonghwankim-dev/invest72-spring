@@ -19,15 +19,9 @@ public final class Currency {
 	private final String name;
 
 	private Currency(String code, String unit, String name) {
-		if (code == null) {
-			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
-		}
-		if (unit == null) {
-			throw new IllegalArgumentException("통화 단위(unit)는 null일 수 없습니다.");
-		}
-		if (name == null) {
-			throw new IllegalArgumentException("통화 이름(name)는 null일 수 없습니다.");
-		}
+		Objects.requireNonNull(code, "통화 코드(code)는 null일 수 없습니다.");
+		Objects.requireNonNull(unit, "통화 단위(unit)는 null일 수 없습니다.");
+		Objects.requireNonNull(name, "통화 이름(name)는 null일 수 없습니다.");
 		String normalizedCode = code.trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
