@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
@@ -34,7 +34,7 @@ public class FinancialProductService {
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
-	public String createProduct(User user, FinancialProductRequestDto dto) {
+	public String createProduct(User user, FinancialProductRequest dto) {
 		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
 	}
@@ -97,7 +97,7 @@ public class FinancialProductService {
 		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
 		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
 	})
-	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
+	public void updateProduct(User user, String productId, FinancialProductRequest dto) {
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
 		existingProduct.update(updatedProduct);

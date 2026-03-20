@@ -20,7 +20,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FinancialProductRequestDto {
+public class FinancialProductRequest {
 	@FinancialProductName
 	private String name;
 

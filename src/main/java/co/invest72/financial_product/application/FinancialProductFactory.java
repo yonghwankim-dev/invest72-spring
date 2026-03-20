@@ -11,7 +11,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -32,7 +32,7 @@ public class FinancialProductFactory {
 	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
 	 * @return 생성된 금융 상품 객체
 	 */
-	public FinancialProduct create(String userId, FinancialProductRequestDto dto) {
+	public FinancialProduct create(String userId, FinancialProductRequest dto) {
 		String productId = null;
 		return create(productId, userId, dto);
 	}
@@ -44,7 +44,7 @@ public class FinancialProductFactory {
 	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
 	 * @return 생성된 금융 상품 객체
 	 */
-	public FinancialProduct create(String productId, String userId, FinancialProductRequestDto dto) {
+	public FinancialProduct create(String productId, String userId, FinancialProductRequest dto) {
 		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
 		return switch (investmentType) {
@@ -54,7 +54,7 @@ public class FinancialProductFactory {
 		};
 	}
 
-	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequestDto dto) {
+	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequest dto) {
 		InvestmentType investmentType = base.getInvestmentType();
 		validateInvestmentType(base, dto);
 		return switch (investmentType) {
@@ -64,7 +64,7 @@ public class FinancialProductFactory {
 		};
 	}
 
-	private void validateInvestmentType(FinancialProduct base, FinancialProductRequestDto dto) {
+	private void validateInvestmentType(FinancialProduct base, FinancialProductRequest dto) {
 		InvestmentType newInvestmentType = InvestmentType.valueOf(dto.getInvestmentType());
 		if (base.getInvestmentType() != newInvestmentType) {
 			throw new IllegalArgumentException("상품 유형은 변경할 수 없습니다.");
@@ -72,7 +72,7 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct createCashProduct(String productId, String userId, LocalDateTime createdAt,
-		FinancialProductRequestDto dto) {
+		FinancialProductRequest dto) {
 		return CashProduct.builder()
 			.id(productId)
 			.userId(userId)
@@ -90,7 +90,7 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct createDepositProduct(String productId, String userId, LocalDateTime createdAt,
-		FinancialProductRequestDto dto) {
+		FinancialProductRequest dto) {
 		return DepositProduct.builder()
 			.id(productId)
 			.userId(userId)
@@ -108,7 +108,7 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct createSavingsProduct(String productId, String userId, LocalDateTime createdAt,
-		FinancialProductRequestDto dto) {
+		FinancialProductRequest dto) {
 		return SavingsProduct.builder()
 			.id(productId)
 			.userId(userId)
