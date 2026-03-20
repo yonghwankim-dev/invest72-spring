@@ -103,6 +103,46 @@ class FinancialProductCalculationRestControllerTest {
 			.andDo(MockMvcResultHandlers.print());
 	}
 
+	@DisplayName("상품 수익 계산 - 달러-단리-예금")
+	@Test
+	void calculateFinancialProduct_whenCurrencyIsDollarAndProductIsSimpleFixedDeposit_thenReturnCalculationResult() throws
+		Exception {
+		// Given
+		FinancialProduct product = DepositProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("단리-예금")
+			.investmentType(InvestmentType.DEPOSIT)
+			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.interestType(SIMPLE)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
+			.build();
+		financialProductRepository.save(product);
+		String productId = product.getId();
+
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.dollar());
+		// When & Then
+		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.totalInvestment").value(1_000_000))
+			.andExpect(jsonPath("$.totalInterest").value(50_000))
+			.andExpect(jsonPath("$.totalTax").value(0))
+			.andExpect(jsonPath("$.totalProfit").value(1_050_000))
+			.andExpect(jsonPath("$.taxType").value("비과세"))
+			.andExpect(jsonPath("$.taxPercent").value("0%"))
+			.andExpect(jsonPath("$.monthlyDetails").isArray())
+			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
 	@DisplayName("상품 수익 계산 - 복리-예금")
 	@Test
 	void calculateFinancialProduct_whenProductIsCompoundDeposit_thenReturnsCalculationResult() throws Exception {
