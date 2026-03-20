@@ -255,32 +255,7 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isForbidden());
 	}
-
-	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
-	@Test
-	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
-		// given
-		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
-		financialProductRepository.save(product);
-		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$").isArray())
-			.andExpect(jsonPath("$[0].id").value(notNullValue()))
-			.andExpect(jsonPath("$[0].userId").value(principalUser.getUser().getId()))
-			.andExpect(jsonPath("$[0].name").value("현금 상품"))
-			.andExpect(jsonPath("$[0].investmentType").value(InvestmentType.CASH.name()))
-			.andExpect(jsonPath("$[0].amount").value(1_000_000.0))
-			.andExpect(jsonPath("$[0].months").value(0))
-			.andExpect(jsonPath("$[0].interestRate").value(0.0))
-			.andExpect(jsonPath("$[0].interestType").value(InterestType.NONE.name()))
-			.andExpect(jsonPath("$[0].taxType").value(TaxType.NONE.name()))
-			.andExpect(jsonPath("$[0].taxRate").value(0.0))
-			.andExpect(jsonPath("$[0].startDate").value("2026-01-01"))
-			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
-	}
-
+	
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 현금 상품의 상세 정보를 조회한다")
 	@Test
 	void getProductDetail_whenProductIsCash_thenReturnProductDetail() throws Exception {
@@ -413,9 +388,9 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
-	@DisplayName("요약 상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
+	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
 	@Test
-	void getSummaryProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
+	void getProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
@@ -474,7 +449,7 @@ class FinancialProductRestControllerTest {
 		String expectedJson = objectMapper.writeValueAsString(
 			Arrays.asList(expectedResponse1, expectedResponse2, expectedResponse3));
 		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())

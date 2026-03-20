@@ -24,4 +24,5 @@ public class FinancialProductDto {
 	private final BigDecimal taxRate;
 	private final LocalDate startDate;
 	private final LocalDateTime createdAt;
+	private final ProductCurrency productCurrency;
 }
