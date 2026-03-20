@@ -50,12 +50,12 @@ public class Money implements Comparable<Money> {
 
 	public Money add(Money addend) {
 		validate(addend);
-		return new Money(this.value.add(addend.value), this.currency);
+		return of(this.value.add(addend.value), this.currency);
 	}
 
 	public Money subtract(Money subtrahend) {
 		validate(subtrahend);
-		return new Money(this.value.subtract(subtrahend.value), this.currency);
+		return of(this.value.subtract(subtrahend.value), this.currency);
 	}
 
 	public Money times(int multiplier) {
@@ -81,11 +81,15 @@ public class Money implements Comparable<Money> {
 	 */
 	public Money divide(BigDecimal divisor) {
 		Objects.requireNonNull(divisor, "분모는 null일 수 없습니다.");
-		if (divisor.compareTo(BigDecimal.ZERO) == 0) {
+		if (isZero(divisor)) {
 			return new Money(BigDecimal.ZERO, this.currency);
 		}
 		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
-		return new Money(newValue, currency);
+		return of(newValue, this.currency);
+	}
+
+	private boolean isZero(BigDecimal divisor) {
+		return BigDecimal.ZERO.compareTo(divisor) == 0;
 	}
 
 	public boolean isNegative() {
