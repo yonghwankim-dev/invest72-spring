@@ -6,11 +6,8 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import jakarta.annotation.Nonnull;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 public class Money implements Comparable<Money> {
 
@@ -21,22 +18,10 @@ public class Money implements Comparable<Money> {
 	private final Currency currency;
 
 	private Money(BigDecimal value, Currency currency) {
+		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
 		this.value = value;
 		this.currency = currency;
-		validate(this.value);
-		validateCurrency(this.currency);
-	}
-
-	private void validate(BigDecimal value) {
-		if (value == null) {
-			throw new IllegalArgumentException("금액은 null일 수 없습니다.");
-		}
-	}
-
-	private void validateCurrency(Currency currency) {
-		if (currency == null) {
-			throw new IllegalArgumentException("통화는 null일 수 없습니다.");
-		}
 	}
 
 	public static Money dollar(int value) {
@@ -82,9 +67,6 @@ public class Money implements Comparable<Money> {
 	}
 
 	private void validate(Money money) {
-		if (money == null) {
-			throw new IllegalArgumentException("Money 객체는 null일 수 없습니다.");
-		}
 		if (!this.currency.equals(money.currency)) {
 			throw new IllegalArgumentException("통화가 일치하지 않습니다.");
 		}
@@ -113,6 +95,7 @@ public class Money implements Comparable<Money> {
 
 	@Override
 	public int compareTo(@Nonnull Money other) {
+		Objects.requireNonNull(other, "Money 객체는 null일 수 없습니다.");
 		validate(other);
 		BigDecimal roundedThisValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
 		BigDecimal roundedOtherValue = roundToTwoDecimalPlaces.apply(other.value.stripTrailingZeros());

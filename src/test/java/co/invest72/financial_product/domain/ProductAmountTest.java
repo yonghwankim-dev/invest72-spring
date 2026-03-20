@@ -18,6 +18,17 @@ class ProductAmountTest {
 			.doesNotThrowAnyException();
 	}
 
+	@DisplayName("객체 생성 - 금액이 null 값이면 예외가 발생해야 한다")
+	@Test
+	void newInstance_whenAmountIsNull_thenThrowException() {
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> ProductAmount.won(null));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(NullPointerException.class)
+			.hasMessage("금액은 null일 수 없습니다.");
+	}
+
 	@DisplayName("금액이 범위를 벗어난 경우 예외가 발생해야 한다.")
 	@ParameterizedTest(name = "금액: {0}")
 	@MethodSource(value = "source.ProductAmountTestDataProvider#invalidAmounts")

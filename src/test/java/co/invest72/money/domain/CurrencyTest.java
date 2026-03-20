@@ -20,7 +20,7 @@ class CurrencyTest {
 	@Test
 	void newInstance_whenCurrencyIsNull_thenThrowException() {
 		// when
-		Throwable throwable = Assertions.catchThrowable(() -> Currency.from(null));
+		Throwable throwable = Assertions.catchThrowable(() -> Currency.from((String)null));
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)

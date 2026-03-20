@@ -32,7 +32,6 @@ public final class ProductAmountTestDataProvider {
 
 	public static Stream<Arguments> invalidAmounts() {
 		return Stream.of(
-			Arguments.of((java.math.BigDecimal)null),
 			Arguments.of(new java.math.BigDecimal("-0.01")),
 			Arguments.of(new java.math.BigDecimal("-1")),
 			Arguments.of(new java.math.BigDecimal("100000000000000000.01")),
