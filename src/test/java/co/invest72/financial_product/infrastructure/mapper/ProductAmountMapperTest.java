@@ -40,7 +40,7 @@ class ProductAmountMapperTest {
 	void toProductAmount_whenMoneyIsNull_thenThrowException() {
 		// when & then
 		Assertions.assertThatThrownBy(() -> mapper.toProductAmount(null))
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(NullPointerException.class)
 			.hasMessage("Money 객체는 null일 수 없습니다.");
 	}
 
@@ -63,7 +63,7 @@ class ProductAmountMapperTest {
 	void toMoney_whenProductAmountIsNull_thenThrowException() {
 		// when & then
 		Assertions.assertThatThrownBy(() -> mapper.toMoney(null))
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(NullPointerException.class)
 			.hasMessage("ProductAmount 객체는 null일 수 없습니다.");
 	}
 }
