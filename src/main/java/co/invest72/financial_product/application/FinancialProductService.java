@@ -16,7 +16,6 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
@@ -38,30 +37,6 @@ public class FinancialProductService {
 	public String createProduct(User user, FinancialProductRequestDto dto) {
 		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
-	}
-
-	@Transactional(readOnly = true)
-	public List<FinancialProductDto> getProductsByUser(User user) {
-		return repository.findAllByUserId(user.getId()).stream()
-			.map(this::buildProductResponseDto)
-			.toList();
-	}
-
-	private FinancialProductDto buildProductResponseDto(FinancialProduct product) {
-		return FinancialProductDto.builder()
-			.id(product.getId())
-			.userId(product.getUserId())
-			.name(product.getName())
-			.investmentType(product.getInvestmentType().name())
-			.amount(product.getAmount().getValue())
-			.months(product.getMonths().getValue())
-			.interestRate(product.getInterestRate().getValue())
-			.interestType(product.getInterestType().name())
-			.taxType(product.getTaxType().name())
-			.taxRate(product.getTaxRate().getValue())
-			.startDate(product.getStartDate())
-			.createdAt(product.getCreatedAt())
-			.build();
 	}
 
 	@Transactional(readOnly = true)
