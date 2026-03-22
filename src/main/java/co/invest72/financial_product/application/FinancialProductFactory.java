@@ -9,6 +9,7 @@ import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
@@ -86,6 +87,7 @@ public class FinancialProductFactory {
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))
@@ -106,6 +108,7 @@ public class FinancialProductFactory {
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))
@@ -127,6 +130,7 @@ public class FinancialProductFactory {
 			.months(new ProductMonths(dto.getMonths()))
 			.paymentDay(new PaymentDay(dto.getPaymentDay()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.interestType(InterestType.valueOf(dto.getInterestType()))
 			.taxType(TaxType.valueOf(dto.getTaxType()))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))

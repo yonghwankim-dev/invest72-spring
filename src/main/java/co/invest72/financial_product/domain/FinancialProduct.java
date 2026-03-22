@@ -54,6 +54,9 @@ public abstract class FinancialProduct {
 	@AttributeOverride(name = "value", column = @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4))
 	private AnnualInterestRate interestRate; // 연이율
 
+	@Embedded
+	private ProductAnnualInterestRate productAnnualInterestRate;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "interest_type", nullable = false, length = 100)
 	private InterestType interestType; // 이자 유형 (단리, 복리)
@@ -82,6 +85,7 @@ public abstract class FinancialProduct {
 		this.amount = Objects.requireNonNull(b.amount);
 		this.months = Objects.requireNonNull(b.months);
 		this.interestRate = Objects.requireNonNull(b.interestRate);
+		this.productAnnualInterestRate = Objects.requireNonNull(b.productAnnualInterestRate);
 		this.interestType = Objects.requireNonNull(b.interestType);
 		this.taxType = Objects.requireNonNull(b.taxType);
 		this.taxRate = Objects.requireNonNull(b.taxRate);
@@ -107,6 +111,7 @@ public abstract class FinancialProduct {
 		this.amount = updatedProduct.getAmount();
 		this.months = updatedProduct.getMonths();
 		this.interestRate = updatedProduct.getInterestRate();
+		this.productAnnualInterestRate = updatedProduct.getProductAnnualInterestRate();
 		this.interestType = updatedProduct.getInterestType();
 		this.taxType = updatedProduct.getTaxType();
 		this.taxRate = updatedProduct.getTaxRate();

@@ -398,6 +398,7 @@ class FinancialProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.interestType(InterestType.NONE)
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
