@@ -125,7 +125,7 @@ public abstract class FinancialProduct {
 		if (!getUserId().equals(updatedProduct.getUserId())) {
 			throw new IllegalArgumentException("상품 소유자(userId)는 변경할 수 없습니다.");
 		}
-		if (!getInvestmentType().equals(updatedProduct.getInvestmentType())) {
+		if (!getProductInvestmentType().equals(updatedProduct.getProductInvestmentType())) {
 			throw new IllegalArgumentException("투자 유형(InvestmentType)은 변경할 수 없습니다.");
 		}
 		if (!getCreatedAt().equals(updatedProduct.getCreatedAt())) {
