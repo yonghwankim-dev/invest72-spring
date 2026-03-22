@@ -176,7 +176,4 @@ public abstract class FinancialProduct {
 		return null;
 	}
 
-	public InvestmentType getInvestmentType() {
-		return InvestmentType.valueOf(getProductInvestmentType().getName());
-	}
 }

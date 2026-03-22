@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.investment.domain.Investment;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.money.domain.Currency;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +39,7 @@ public class FinancialProductSummary {
 		return FinancialProductSummary.builder()
 			.id(product.getId())
 			.name(product.getName())
-			.investmentType(product.getInvestmentType().name())
+			.investmentType(InvestmentType.valueOf(product.getProductInvestmentType().getName()).name())
 			.interestRate(product.getInterestRate().getValue())
 			.startDate(product.getStartDate())
 			.expirationDate(product.getExpirationDate())

@@ -58,7 +58,7 @@ public class FinancialProductFactory {
 	}
 
 	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequest dto) {
-		InvestmentType investmentType = base.getInvestmentType();
+		InvestmentType investmentType = InvestmentType.valueOf(base.getProductInvestmentType().getName());
 		validateInvestmentType(base, dto);
 		return switch (investmentType) {
 			case CASH -> createCashProduct(base.getId(), base.getUserId(), base.getCreatedAt(), dto);
@@ -69,7 +69,7 @@ public class FinancialProductFactory {
 
 	private void validateInvestmentType(FinancialProduct base, FinancialProductRequest dto) {
 		InvestmentType newInvestmentType = InvestmentType.valueOf(dto.getInvestmentType());
-		if (base.getInvestmentType() != newInvestmentType) {
+		if (InvestmentType.valueOf(base.getProductInvestmentType().getName()) != newInvestmentType) {
 			throw new IllegalArgumentException("상품 유형은 변경할 수 없습니다.");
 		}
 	}

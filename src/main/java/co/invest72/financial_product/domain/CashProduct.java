@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class CashProduct extends FinancialProduct {
 
 	@Override
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return getInvestmentType().calculateBalance(this, today);
+		return InvestmentType.valueOf(getProductInvestmentType().getName()).calculateBalance(this, today);
 	}
 
 	/**

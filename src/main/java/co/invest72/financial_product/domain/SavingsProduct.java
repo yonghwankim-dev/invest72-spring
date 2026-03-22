@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -32,7 +33,7 @@ public class SavingsProduct extends FinancialProduct {
 	}
 
 	private void validatePaymentDay() {
-		this.getInvestmentType().validate(paymentDay);
+		InvestmentType.valueOf(getProductInvestmentType().getName()).validate(paymentDay);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class SavingsProduct extends FinancialProduct {
 
 	@Override
 	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return getInvestmentType().calculateBalance(this, today);
+		return InvestmentType.valueOf(getProductInvestmentType().getName()).calculateBalance(this, today);
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class InvestmentFactory {
 
 	public Investment createBy(FinancialProduct product) {
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
-			.type(product.getInvestmentType())
+			.type(InvestmentType.valueOf(product.getProductInvestmentType().getName()))
 			.amount(product.getAmount())
 			.months(product.getMonths())
 			.interestRate(new AnnualInterestRate(product.getInterestRate().getValue()))
