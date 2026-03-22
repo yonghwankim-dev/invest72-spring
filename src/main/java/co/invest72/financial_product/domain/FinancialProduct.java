@@ -109,18 +109,18 @@ public abstract class FinancialProduct {
 
 	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
 		this.id = b.id != null ? b.id : idGenerator.generateId(); // 빌더에서 ID가 주어지지 않으면 생성
-		this.userId = b.userId;
-		this.name = b.name;
-		this.investmentType = b.investmentType;
-		this.productInvestmentType = b.productInvestmentType;
-		this.amount = b.amount;
-		this.months = b.months;
-		this.interestRate = b.interestRate;
-		this.interestType = b.interestType;
-		this.taxType = b.taxType;
-		this.taxRate = b.taxRate;
-		this.startDate = b.startDate;
-		this.createdAt = b.createdAt;
+		this.userId = Objects.requireNonNull(b.userId);
+		this.name = Objects.requireNonNull(b.name);
+		this.investmentType = Objects.requireNonNull(b.investmentType);
+		this.productInvestmentType = Objects.requireNonNull(b.productInvestmentType);
+		this.amount = Objects.requireNonNull(b.amount);
+		this.months = Objects.requireNonNull(b.months);
+		this.interestRate = Objects.requireNonNull(b.interestRate);
+		this.interestType = Objects.requireNonNull(b.interestType);
+		this.taxType = Objects.requireNonNull(b.taxType);
+		this.taxRate = Objects.requireNonNull(b.taxRate);
+		this.startDate = Objects.requireNonNull(b.startDate);
+		this.createdAt = Objects.requireNonNull(b.createdAt);
 	}
 
 	/**
