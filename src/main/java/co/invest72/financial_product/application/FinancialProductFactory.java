@@ -20,7 +20,6 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
@@ -91,7 +90,6 @@ public class FinancialProductFactory {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
-			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
@@ -112,7 +110,6 @@ public class FinancialProductFactory {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
-			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
@@ -134,7 +131,6 @@ public class FinancialProductFactory {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
-			.taxRate(new FixedTaxRate(dto.getTaxRate()))
 			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -26,7 +25,6 @@ class CashProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
@@ -48,7 +46,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -73,7 +71,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -102,7 +100,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -131,7 +129,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -160,7 +158,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay()) // createdAt 변경
 			.build();
@@ -187,7 +185,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(new ProductMonths(24)) // months 변경
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -214,7 +212,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -243,7 +241,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -272,7 +270,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(originalProduct.getTaxRate())
+			.productTaxRate(originalProduct.getProductTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -301,7 +299,7 @@ class CashProductTest {
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.productInterestType(originalProduct.getProductInterestType())
 			.productTaxType(originalProduct.getProductTaxType())
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.1))) // taxRate 변경
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.1)))
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();
@@ -330,7 +328,6 @@ class CashProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO)) // taxRate 변경
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지

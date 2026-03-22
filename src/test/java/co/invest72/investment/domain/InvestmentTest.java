@@ -23,7 +23,6 @@ import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 
 class InvestmentTest {
@@ -49,7 +48,6 @@ class InvestmentTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
@@ -82,7 +80,6 @@ class InvestmentTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())

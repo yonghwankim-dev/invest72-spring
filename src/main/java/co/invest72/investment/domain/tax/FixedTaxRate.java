@@ -5,17 +5,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import co.invest72.investment.domain.TaxRate;
-import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class FixedTaxRate implements TaxRate {
 
-	private BigDecimal value;
+	private final BigDecimal value;
 
 	public FixedTaxRate(double value) {
 		this(BigDecimal.valueOf(value));

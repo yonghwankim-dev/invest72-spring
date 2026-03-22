@@ -33,7 +33,6 @@ import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.response.InvestmentCurrency;
 import co.invest72.money.domain.Currency;
@@ -82,7 +81,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(SIMPLE))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
@@ -123,7 +121,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(SIMPLE))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
@@ -163,7 +160,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())

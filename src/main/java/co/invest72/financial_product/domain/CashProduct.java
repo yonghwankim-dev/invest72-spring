@@ -55,7 +55,7 @@ public class CashProduct extends FinancialProduct {
 		if (!getProductTaxType().equals(updatedProduct.getProductTaxType())) {
 			throw new IllegalArgumentException("세금 유형(taxType)은 변경할 수 없습니다.");
 		}
-		if (!getTaxRate().equals(updatedProduct.getTaxRate())) {
+		if (!getProductTaxRate().equals(updatedProduct.getProductTaxRate())) {
 			throw new IllegalArgumentException("세율(taxRate)은 변경할 수 없습니다.");
 		}
 	}

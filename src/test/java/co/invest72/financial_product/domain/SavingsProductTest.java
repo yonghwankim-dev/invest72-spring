@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -27,7 +26,6 @@ class SavingsProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
@@ -145,7 +143,6 @@ class SavingsProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지

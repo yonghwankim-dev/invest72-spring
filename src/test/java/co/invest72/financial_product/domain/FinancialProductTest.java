@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -399,7 +398,6 @@ class FinancialProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.productInterestType(ProductInterestType.from(InterestType.NONE))
 			.productTaxType(ProductTaxType.from(TaxType.NONE))
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
