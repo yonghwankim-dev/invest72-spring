@@ -8,6 +8,7 @@ import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
@@ -27,6 +28,7 @@ public class FinancialProductDataProvider {
 			.months(new ProductMonths(0))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
 			.interestType(InterestType.NONE)
+			.productInterestType(ProductInterestType.from(InterestType.NONE))
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2026, 1, 1))
@@ -58,6 +60,7 @@ public class FinancialProductDataProvider {
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(interestType)
+			.productInterestType(ProductInterestType.from(interestType))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
@@ -92,6 +95,7 @@ public class FinancialProductDataProvider {
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(interestType)
+			.productInterestType(ProductInterestType.from(interestType))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))

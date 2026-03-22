@@ -12,6 +12,7 @@ import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
@@ -45,6 +46,7 @@ class InvestmentTest {
 			.months(new ProductMonths(999 * 12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
+			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
@@ -77,6 +79,7 @@ class InvestmentTest {
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.interestType(InterestType.SIMPLE)
+			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))

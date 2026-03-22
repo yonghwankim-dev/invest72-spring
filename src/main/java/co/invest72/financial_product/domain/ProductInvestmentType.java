@@ -10,7 +10,7 @@ import lombok.Getter;
 @Embeddable
 @Getter
 public class ProductInvestmentType {
-	@Column(name = "product_investment_type", nullable = false, length = 100)
+	@Column(name = "investment_type", nullable = false, length = 100)
 	private String name;
 
 	protected ProductInvestmentType() {

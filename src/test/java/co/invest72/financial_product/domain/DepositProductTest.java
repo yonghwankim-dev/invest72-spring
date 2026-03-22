@@ -29,6 +29,7 @@ class DepositProductTest {
 			.months(new ProductMonths(24))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.taxType(TaxType.NON_TAX)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))

@@ -25,6 +25,7 @@ class CashProductTest {
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(InterestType.COMPOUND)
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.taxType(TaxType.NON_TAX)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
@@ -330,6 +331,7 @@ class CashProductTest {
 			.months(new ProductMonths(12)) // months 변경
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(InterestType.COMPOUND) // interestType 변경
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.taxType(TaxType.NON_TAX) // taxType 변경
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO)) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
