@@ -82,7 +82,7 @@ public class Money implements Comparable<Money> {
 	public Money divide(BigDecimal divisor) {
 		Objects.requireNonNull(divisor, "분모는 null일 수 없습니다.");
 		if (isZero(divisor)) {
-			return new Money(BigDecimal.ZERO, this.currency);
+			return Money.of(BigDecimal.ZERO, this.currency);
 		}
 		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
 		return of(newValue, this.currency);
