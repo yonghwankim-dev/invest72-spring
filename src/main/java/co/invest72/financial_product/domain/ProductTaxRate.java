@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public class ProductTaxRate {
 
-	@Column(name = "product_tax_rate", nullable = false, precision = 5, scale = 4)
+	@Column(name = "tax_rate", nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
 
 	protected ProductTaxRate() {
