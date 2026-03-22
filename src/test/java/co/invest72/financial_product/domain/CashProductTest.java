@@ -47,6 +47,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -72,6 +73,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -101,6 +103,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -130,6 +133,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -159,6 +163,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -246,6 +251,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(InterestType.COMPOUND) // interestType 변경
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
@@ -275,6 +281,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(TaxType.NON_TAX) // taxType 변경
 			.taxRate(originalProduct.getTaxRate())
@@ -304,6 +311,7 @@ class CashProductTest {
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
+			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
 			.taxType(originalProduct.getTaxType())
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.1))) // taxRate 변경

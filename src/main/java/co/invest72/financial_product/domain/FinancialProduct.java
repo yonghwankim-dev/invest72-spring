@@ -182,6 +182,6 @@ public abstract class FinancialProduct {
 	}
 
 	public AnnualInterestRate getInterestRate() {
-		return interestRate;
+		return new AnnualInterestRate(getProductAnnualInterestRate().getValue());
 	}
 }
