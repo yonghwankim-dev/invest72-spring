@@ -22,7 +22,6 @@ class SavingsProductTest {
 			.id("new-id") // id 변경
 			.userId("user2")
 			.name("Updated Savings")
-			.investmentType(InvestmentType.DEPOSIT)
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
@@ -43,7 +42,6 @@ class SavingsProductTest {
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
@@ -77,7 +75,6 @@ class SavingsProductTest {
 		FinancialProduct originalProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
@@ -120,7 +117,6 @@ class SavingsProductTest {
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.paymentDay(new PaymentDay(15))
 			.build();
@@ -143,7 +139,6 @@ class SavingsProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.name("Updated Deposit")
-			.investmentType(InvestmentType.DEPOSIT) // 투자 유형 변경
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))

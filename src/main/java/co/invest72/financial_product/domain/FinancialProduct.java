@@ -40,10 +40,6 @@ public abstract class FinancialProduct {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "investment_type", nullable = false, length = 100)
-	private InvestmentType investmentType;
-
 	@Embedded
 	private ProductInvestmentType productInvestmentType;
 
@@ -82,7 +78,6 @@ public abstract class FinancialProduct {
 		this.id = b.id != null ? b.id : Objects.requireNonNull(idGenerator.generateId()); // 빌더에서 ID가 주어지지 않으면 생성
 		this.userId = Objects.requireNonNull(b.userId);
 		this.name = Objects.requireNonNull(b.name);
-		this.investmentType = Objects.requireNonNull(b.investmentType);
 		this.productInvestmentType = Objects.requireNonNull(b.productInvestmentType);
 		this.amount = Objects.requireNonNull(b.amount);
 		this.months = Objects.requireNonNull(b.months);

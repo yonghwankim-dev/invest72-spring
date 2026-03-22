@@ -40,7 +40,6 @@ class InvestmentTest {
 		FinancialProduct financialProduct = DepositProduct.builder()
 			.userId("user-1")
 			.name("정기예금")
-			.investmentType(InvestmentType.DEPOSIT)
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
@@ -72,7 +71,6 @@ class InvestmentTest {
 		FinancialProduct financialProduct = SavingsProduct.builder()
 			.userId("user-1")
 			.name("적금 상품")
-			.investmentType(InvestmentType.SAVINGS)
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
