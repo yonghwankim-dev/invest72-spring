@@ -10,8 +10,7 @@ import lombok.Getter;
 @Embeddable
 @Getter
 public class ProductInterestType {
-	// TODO: columnNmae will do "product_interst_type to interest_type"
-	@Column(name = "product_interest_type", nullable = false, length = 100)
+	@Column(name = "interest_type", nullable = false, length = 100)
 	private String name;
 
 	protected ProductInterestType() {
