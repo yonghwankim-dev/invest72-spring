@@ -28,5 +28,6 @@ public class DetailedFinancialProductResponse {
 	private LocalDate expirationDate; // 만기일
 	private BigDecimal balance; // 현재 잔액
 	private BigDecimal progress; // 진행률
-	private long remainingDays; // 남은 일수
+	private Long remainingDays; // 남은 일수
+	private ProductCurrency productCurrency;
 }

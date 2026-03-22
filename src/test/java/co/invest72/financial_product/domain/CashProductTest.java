@@ -22,7 +22,7 @@ class CashProductTest {
 			.userId("user2") // userId 변경
 			.name("Updated Cash Product")
 			.investmentType(InvestmentType.SAVINGS)
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(InterestType.COMPOUND)
@@ -43,7 +43,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId())
 			.name("Updated Cash Product") // 이름 변경
 			.investmentType(originalProduct.getInvestmentType())
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -68,7 +68,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -97,7 +97,7 @@ class CashProductTest {
 			.userId("user-2") // userId 변경
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -126,7 +126,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.SAVINGS) // investmentType 변경
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -155,7 +155,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -184,7 +184,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(new ProductMonths(24)) // months 변경
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -213,7 +213,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06))) // interestRate 변경
 			.interestType(originalProduct.getInterestType())
@@ -242,7 +242,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(InterestType.COMPOUND) // interestType 변경
@@ -271,7 +271,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -300,7 +300,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
 			.name("Updated Cash Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
 			.interestRate(originalProduct.getInterestRate())
 			.interestType(originalProduct.getInterestType())
@@ -329,7 +329,7 @@ class CashProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.DEPOSIT) // investmentType 변경
 			.name("Updated Deposit Product") // 이름 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(new ProductMonths(12)) // months 변경
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05))) // interestRate 변경
 			.interestType(InterestType.COMPOUND) // interestType 변경

@@ -26,7 +26,7 @@ class DepositProductTest {
 			.userId("user2") // userId 변경
 			.name("Updated Deposit")
 			.investmentType(InvestmentType.SAVINGS) // investmentType 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)

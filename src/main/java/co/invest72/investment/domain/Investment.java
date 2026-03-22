@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.UnaryOperator;
 
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public interface Investment {
@@ -116,4 +117,10 @@ public interface Investment {
 	Money getProfitForYear(int year);
 
 	BigDecimal getTaxRate();
+
+	/**
+	 * 해당 투자 객체의 기준 통화 객체를 반환한다.
+	 * @return 통화 객체
+	 */
+	Currency getCurrency();
 }

@@ -43,6 +43,7 @@ import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.domain.tax.resolver.KoreanStringBasedTaxableResolver;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class InvestmentFactory {
@@ -77,6 +78,7 @@ public class InvestmentFactory {
 			.interestType(product.getInterestType())
 			.taxType(product.getTaxType())
 			.taxRate(product.getTaxRate())
+			.currency(product.getAmount().getCurrency())
 			.build();
 		return createBy(dto);
 	}
@@ -86,9 +88,11 @@ public class InvestmentFactory {
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
+		Currency currency = Currency.from(request.getCurrencyCode());
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
-		ProductAmount productAmount = new ProductAmount(BigDecimal.valueOf(request.getAmount()));
+		Money amount = Money.of(BigDecimal.valueOf(request.getAmount()), currency);
+		ProductAmount productAmount = ProductAmount.from(amount);
 		// InvestmentType 적금인 경우에 월 투자금액으로 저장되도록 처리
 		if (investmentType == SAVINGS) {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();
@@ -105,6 +109,7 @@ public class InvestmentFactory {
 			.interestType(InterestType.from(request.getInterestType()))
 			.taxType(TaxType.from(request.getTaxType()))
 			.taxRate(new FixedTaxRate(request.getTaxRate()))
+			.currency(request.getCurrencyCode())
 			.build();
 		return createBy(dto);
 	}
@@ -114,13 +119,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment cashInvestment(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), "KRW");
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency());
 		return new CashInvestment(investmentAmount);
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
 		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
+			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
@@ -129,7 +134,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
 		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), "KRW"),
+			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
 			dto.getInterestRate(),
 			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
@@ -138,7 +143,7 @@ public class InvestmentFactory {
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.of(
-			dto.getAmount().getValue(), "KRW"));
+			dto.getAmount().getValue(), dto.getCurrency()));
 		return new SimpleFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),
@@ -149,7 +154,7 @@ public class InvestmentFactory {
 
 	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
 		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			Money.of(dto.getAmount().getValue(), "KRW"));
+			Money.of(dto.getAmount().getValue(), dto.getCurrency()));
 		return new CompoundFixedInstallmentSaving(
 			investmentAmount,
 			new MonthlyInvestPeriod(dto.getMonths().getValue()),

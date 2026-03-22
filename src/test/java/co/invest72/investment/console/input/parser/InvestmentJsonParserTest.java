@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Currency;
 
 class InvestmentJsonParserTest {
 
@@ -32,6 +33,7 @@ class InvestmentJsonParserTest {
 			.annualInterestRate(0.05)
 			.taxType("일반과세")
 			.taxRate(0.154)
+			.currencyCode(Currency.won().getCode())
 			.build();
 		File file = new File("src/test/resources/simple-fixed-deposit.json");
 

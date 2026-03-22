@@ -14,14 +14,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public final class Currency {
 	private final String code;
+	private final String unit;
+	private final String name;
 
-	private Currency(String code) {
-		if (code == null) {
-			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
-		}
+	private Currency(String code, String unit, String name) {
+		Objects.requireNonNull(code, "통화 코드(code)는 null일 수 없습니다.");
+		Objects.requireNonNull(unit, "통화 단위(unit)는 null일 수 없습니다.");
+		Objects.requireNonNull(name, "통화 이름(name)는 null일 수 없습니다.");
 		String normalizedCode = code.trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
+		this.unit = unit;
+		this.name = name;
 	}
 
 	private void validate(String code) {
@@ -39,16 +43,23 @@ public final class Currency {
 		}
 	}
 
-	public static Currency of(String code) {
-		return new Currency(code);
+	public static Currency from(String code) {
+		Objects.requireNonNull(code, "통화 코드(code)는 null이면 안됩니다.");
+		String normalizedCode = code.trim().toUpperCase();
+		if ("USD".equalsIgnoreCase(normalizedCode)) {
+			return dollar();
+		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
+			return won();
+		}
+		throw new IllegalArgumentException("잘못된 통화 코드(code) 입니다.");
 	}
 
 	public static Currency dollar() {
-		return new Currency("USD");
+		return new Currency("USD", "$", "달러");
 	}
 
 	public static Currency won() {
-		return new Currency("KRW");
+		return new Currency("KRW", "₩", "원화");
 	}
 
 	@Override

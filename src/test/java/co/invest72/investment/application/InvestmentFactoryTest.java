@@ -27,6 +27,7 @@ import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Currency;
 import source.FinancialProductDataProvider;
 
 class InvestmentFactoryTest {
@@ -58,6 +59,7 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -79,6 +81,7 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -100,6 +103,7 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -121,6 +125,7 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -143,6 +148,7 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.getDescription())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -187,12 +193,13 @@ class InvestmentFactoryTest {
 		BigDecimal amount = new BigDecimal("10000000000000"); // 10조원
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
 			.type(CASH)
-			.amount(new ProductAmount(amount)) // 10조원
+			.amount(ProductAmount.won(amount)) // 10조원
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(0.0))
 			.interestType(NONE)
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(0.0))
+			.currency(Currency.won().getCode())
 			.build();
 		// when
 		investment = investmentFactory.createBy(dto);

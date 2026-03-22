@@ -21,6 +21,7 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
+import co.invest72.money.domain.Currency;
 
 class CalculateInvestmentTest {
 
@@ -44,6 +45,7 @@ class CalculateInvestmentTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.STANDARD.getDescription())
 			.taxRate(0.154)
+			.currencyCode(Currency.won().getCode())
 			.build();
 	}
 

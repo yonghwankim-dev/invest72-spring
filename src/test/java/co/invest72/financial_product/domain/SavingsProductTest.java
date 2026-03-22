@@ -23,7 +23,7 @@ class SavingsProductTest {
 			.userId("user2")
 			.name("Updated Savings")
 			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)
@@ -140,7 +140,7 @@ class SavingsProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.name("Updated Deposit")
 			.investmentType(InvestmentType.DEPOSIT) // 투자 유형 변경
-			.amount(new ProductAmount(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.interestType(InterestType.COMPOUND)

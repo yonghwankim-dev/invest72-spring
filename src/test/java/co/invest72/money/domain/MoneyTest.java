@@ -96,7 +96,7 @@ class MoneyTest {
 		Money money2 = null;
 		// when & then
 		Assertions.assertThatThrownBy(() -> money1.compareTo(money2))
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(NullPointerException.class)
 			.hasMessage("Money 객체는 null일 수 없습니다.");
 	}
 
@@ -167,7 +167,7 @@ class MoneyTest {
 		BigDecimal divisor = null;
 		// when & then
 		Assertions.assertThatThrownBy(() -> fiveBucks.divide(divisor))
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(NullPointerException.class)
 			.hasMessage("분모는 null일 수 없습니다.");
 	}
 

@@ -30,6 +30,8 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.investment.presentation.response.InvestmentCurrency;
+import co.invest72.money.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import source.FinancialProductDataProvider;
@@ -70,7 +72,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(SIMPLE)
@@ -82,6 +84,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
+		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -94,6 +97,49 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
+			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
+			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
+	@DisplayName("상품 수익 계산 - 달러-단리-예금")
+	@Test
+	void calculateFinancialProduct_whenCurrencyIsDollarAndProductIsSimpleFixedDeposit_thenReturnCalculationResult() throws
+		Exception {
+		// Given
+		FinancialProduct product = DepositProduct.builder()
+			.userId(principalUser.getUser().getId())
+			.name("단리-예금")
+			.investmentType(InvestmentType.DEPOSIT)
+			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
+			.months(new ProductMonths(12))
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.interestType(SIMPLE)
+			.taxType(TaxType.NON_TAX)
+			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.startDate(LocalDate.now())
+			.createdAt(LocalDateTime.now())
+			.build();
+		financialProductRepository.save(product);
+		String productId = product.getId();
+
+		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.dollar());
+		// When & Then
+		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.totalInvestment").value(1_000_000))
+			.andExpect(jsonPath("$.totalInterest").value(50_000))
+			.andExpect(jsonPath("$.totalTax").value(0))
+			.andExpect(jsonPath("$.totalProfit").value(1_050_000))
+			.andExpect(jsonPath("$.taxType").value("비과세"))
+			.andExpect(jsonPath("$.taxPercent").value("0%"))
+			.andExpect(jsonPath("$.monthlyDetails").isArray())
+			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
+			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
+			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -105,7 +151,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("복리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
-			.amount(new ProductAmount(BigDecimal.valueOf(1_000_000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(COMPOUND)
@@ -117,6 +163,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
+		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -129,6 +176,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
+			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
+			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -141,6 +191,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
+		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -153,6 +204,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
+			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
+			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -165,6 +219,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
+		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -177,6 +232,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
+			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
+			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
+			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 }

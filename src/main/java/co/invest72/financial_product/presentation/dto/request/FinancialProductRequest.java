@@ -20,7 +20,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FinancialProductRequestDto {
+public class FinancialProductRequest {
 	@FinancialProductName
 	private String name;
 
@@ -53,5 +53,8 @@ public class FinancialProductRequestDto {
 
 	@NotNull(message = "시작 날짜는 필수입니다.")
 	private LocalDate startDate;
+
+	@NotNull(message = "통화는 필수입니다.")
+	private String currencyCode;
 
 }

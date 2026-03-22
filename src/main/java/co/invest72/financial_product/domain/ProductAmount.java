@@ -3,6 +3,8 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -22,25 +24,16 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
-	/**
-	 * 금액을 나타내는 객체를 생성한다. 금액은 0원 이상 99999조원 이하이어야 한다.
-	 *
-	 * @param value 금액
-	 * @throws IllegalArgumentException 유효하지 않은 금액인 경우
-	 */
-	public ProductAmount(BigDecimal value) {
-		this(value, "KRW");
-	}
-
-	public ProductAmount(BigDecimal value, String currency) {
+	private ProductAmount(BigDecimal value, Currency currency) {
+		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
+		validateRange(value);
 		this.value = value;
-		this.currency = currency;
-		validate(this.value);
-		validateCurrency(this.currency);
+		this.currency = currency.getCode();
 	}
 
-	private void validate(BigDecimal value) {
-		if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
+	private void validateRange(BigDecimal value) {
+		if (value.compareTo(BigDecimal.ZERO) < 0) {
 			throw new IllegalArgumentException("금액은 0원 이상이어야 합니다.");
 		}
 		if (value.compareTo(MAX_AMOUNT) > 0) {
@@ -48,13 +41,17 @@ public class ProductAmount {
 		}
 	}
 
-	private void validateCurrency(String currency) {
-		if (currency == null || currency.trim().isEmpty()) {
-			throw new IllegalArgumentException("통화는 null이거나 빈 문자열일 수 없습니다.");
-		}
-		if (currency.length() != 3) {
-			throw new IllegalArgumentException("통화 코드는 3자리여야 합니다.");
-		}
+	public static ProductAmount won(BigDecimal amount) {
+		return from(Money.won(amount));
+	}
+
+	public static ProductAmount dollar(BigDecimal amount) {
+		return from(Money.dollar(amount));
+	}
+
+	public static ProductAmount from(Money money) {
+		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
+		return new ProductAmount(money.getValue(), money.getCurrency());
 	}
 
 	@Override
