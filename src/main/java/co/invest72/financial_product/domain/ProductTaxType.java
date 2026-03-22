@@ -17,7 +17,7 @@ public class ProductTaxType {
 	}
 
 	private ProductTaxType(String name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name);
 	}
 
 	public static ProductTaxType from(TaxType taxType) {
