@@ -58,6 +58,9 @@ public abstract class FinancialProduct {
 	private TaxType taxType; // 세금 유형 (과세, 비과세)
 
 	@Embedded
+	private ProductTaxType productTaxType;
+
+	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "tax_rate", nullable = false, precision = 5, scale = 4))
 	private FixedTaxRate taxRate; // 세율 (예: 0.15 for 15%)
 
@@ -79,6 +82,7 @@ public abstract class FinancialProduct {
 		this.productAnnualInterestRate = Objects.requireNonNull(b.productAnnualInterestRate);
 		this.productInterestType = Objects.requireNonNull(b.productInterestType);
 		this.taxType = Objects.requireNonNull(b.taxType);
+		this.productTaxType = Objects.requireNonNull(b.productTaxType);
 		this.taxRate = Objects.requireNonNull(b.taxRate);
 		this.startDate = Objects.requireNonNull(b.startDate);
 		this.createdAt = Objects.requireNonNull(b.createdAt);
@@ -104,6 +108,7 @@ public abstract class FinancialProduct {
 		this.productAnnualInterestRate = Objects.requireNonNull(updatedProduct.getProductAnnualInterestRate());
 		this.productInterestType = Objects.requireNonNull(updatedProduct.getProductInterestType());
 		this.taxType = Objects.requireNonNull(updatedProduct.getTaxType());
+		this.productTaxType = Objects.requireNonNull(updatedProduct.getProductTaxType());
 		this.taxRate = Objects.requireNonNull(updatedProduct.getTaxRate());
 		this.startDate = Objects.requireNonNull(updatedProduct.getStartDate());
 	}

@@ -30,6 +30,7 @@ class DepositProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.taxType(TaxType.NON_TAX)
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay()) // createdAt 변경

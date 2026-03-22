@@ -399,6 +399,7 @@ class FinancialProductTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.productInterestType(ProductInterestType.from(InterestType.NONE))
 			.taxType(TaxType.NONE)
+			.productTaxType(ProductTaxType.from(TaxType.NONE))
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())

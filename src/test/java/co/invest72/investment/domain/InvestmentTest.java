@@ -15,6 +15,7 @@ import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.InvestmentFactory;
@@ -47,6 +48,7 @@ class InvestmentTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
@@ -79,6 +81,7 @@ class InvestmentTest {
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
