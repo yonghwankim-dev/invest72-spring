@@ -36,7 +36,7 @@ class CalculateInvestmentTest {
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(AmountType.ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType(PeriodType.MONTH.getDisplayName())

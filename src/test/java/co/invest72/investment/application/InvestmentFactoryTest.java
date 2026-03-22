@@ -50,7 +50,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -72,7 +72,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -94,7 +94,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
@@ -116,7 +116,7 @@ class InvestmentFactoryTest {
 	@Test
 	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(YEARLY.getDescription())
 			.amount(12_000_000)
 			.periodType("년")
@@ -139,7 +139,7 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
