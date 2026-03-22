@@ -28,7 +28,6 @@ import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
@@ -76,7 +75,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(SIMPLE)
 			.taxType(TaxType.NON_TAX)
@@ -117,7 +115,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(SIMPLE)
 			.taxType(TaxType.NON_TAX)
@@ -157,7 +154,6 @@ class FinancialProductCalculationRestControllerTest {
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.interestType(COMPOUND)
 			.taxType(TaxType.NON_TAX)

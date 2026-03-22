@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
@@ -397,7 +396,6 @@ class FinancialProductTest {
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.0)))
 			.interestType(InterestType.NONE)
 			.taxType(TaxType.NONE)
