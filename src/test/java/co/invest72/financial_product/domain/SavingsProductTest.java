@@ -44,6 +44,7 @@ class SavingsProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
 			.build();
@@ -77,6 +78,7 @@ class SavingsProductTest {
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
 			.build();
@@ -119,6 +121,7 @@ class SavingsProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.paymentDay(new PaymentDay(15))
 			.build();
 
