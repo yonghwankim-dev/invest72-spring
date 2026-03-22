@@ -22,7 +22,7 @@ class CashProductTest {
 			.userId("user2") // userId 변경
 			.name("Updated Cash Product")
 			.investmentType(InvestmentType.SAVINGS)
-			.productInvestmentType(new ProductInvestmentType(InvestmentType.SAVINGS.name()))
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
@@ -129,7 +129,7 @@ class CashProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.SAVINGS) // investmentType 변경
-			.productInvestmentType(new ProductInvestmentType(InvestmentType.SAVINGS.name()))
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS.name()))
 			.name("Updated Cash Product") // 이름 변경
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(originalProduct.getMonths())
@@ -339,7 +339,7 @@ class CashProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.investmentType(InvestmentType.DEPOSIT) // investmentType 변경
-			.productInvestmentType(new ProductInvestmentType(InvestmentType.DEPOSIT.name()))
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT.name()))
 			.name("Updated Deposit Product") // 이름 변경
 			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
 			.months(new ProductMonths(12)) // months 변경
