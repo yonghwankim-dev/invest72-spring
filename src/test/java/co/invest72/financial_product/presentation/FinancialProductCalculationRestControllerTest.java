@@ -25,6 +25,7 @@ import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -72,6 +73,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.DEPOSIT.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
@@ -112,6 +114,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.DEPOSIT.name()))
 			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
@@ -151,6 +154,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("복리-예금")
 			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.DEPOSIT.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))

@@ -7,6 +7,7 @@ import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
@@ -22,6 +23,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.CASH.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
@@ -53,6 +55,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.DEPOSIT.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
@@ -86,6 +89,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS)
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.SAVINGS.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입

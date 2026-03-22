@@ -26,6 +26,7 @@ class DepositProductTest {
 			.userId("user2") // userId 변경
 			.name("Updated Deposit")
 			.investmentType(InvestmentType.SAVINGS) // investmentType 변경
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.SAVINGS.name()))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
@@ -44,7 +45,8 @@ class DepositProductTest {
 		FinancialProduct originalProduct = FinancialProductDataProvider.createDepositProduct("user-1");
 		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
+			.productInvestmentType(originalProduct.getProductInvestmentType())
 			.build();
 
 		// When
@@ -64,7 +66,8 @@ class DepositProductTest {
 		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId("user-2") // userId 변경
-			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
+			.productInvestmentType(originalProduct.getProductInvestmentType())
 			.build();
 
 		// When
@@ -104,7 +107,8 @@ class DepositProductTest {
 		DepositProduct updatedProduct = createInvalidUpdatedDeposit().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.DEPOSIT) // investmentType은 원래 값으로 유지
+			.investmentType(originalProduct.getInvestmentType()) // investmentType은 원래 값으로 유지
+			.productInvestmentType(originalProduct.getProductInvestmentType())
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay()) // createdAt 변경
 			.build();
 

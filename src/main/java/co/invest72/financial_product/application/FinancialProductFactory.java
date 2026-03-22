@@ -9,6 +9,7 @@ import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
@@ -82,6 +83,7 @@ public class FinancialProductFactory {
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.valueOf(dto.getInvestmentType()).name()))
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
@@ -102,6 +104,7 @@ public class FinancialProductFactory {
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.valueOf(dto.getInvestmentType()).name()))
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.interestRate(new AnnualInterestRate(dto.getInterestRate()))
@@ -122,6 +125,7 @@ public class FinancialProductFactory {
 			.userId(userId)
 			.name(dto.getName())
 			.investmentType(InvestmentType.valueOf(dto.getInvestmentType()))
+			.productInvestmentType(new ProductInvestmentType(InvestmentType.valueOf(dto.getInvestmentType()).name()))
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
 			.paymentDay(new PaymentDay(dto.getPaymentDay()))
