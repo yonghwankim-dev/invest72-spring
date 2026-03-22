@@ -10,7 +10,7 @@ import lombok.Getter;
 @Embeddable
 @Getter
 public class ProductTaxType {
-	@Column(name = "product_tax_type", nullable = false, length = 100)
+	@Column(name = "tax_type", nullable = false, length = 100)
 	private String name;
 
 	protected ProductTaxType() {
