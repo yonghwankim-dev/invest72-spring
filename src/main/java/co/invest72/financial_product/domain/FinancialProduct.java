@@ -108,7 +108,7 @@ public abstract class FinancialProduct {
 	}
 
 	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
-		this.id = b.id != null ? b.id : idGenerator.generateId(); // 빌더에서 ID가 주어지지 않으면 생성
+		this.id = b.id != null ? b.id : Objects.requireNonNull(idGenerator.generateId()); // 빌더에서 ID가 주어지지 않으면 생성
 		this.userId = Objects.requireNonNull(b.userId);
 		this.name = Objects.requireNonNull(b.name);
 		this.investmentType = Objects.requireNonNull(b.investmentType);
