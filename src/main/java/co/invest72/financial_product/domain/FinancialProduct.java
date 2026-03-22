@@ -55,7 +55,7 @@ public abstract class FinancialProduct {
 	private AnnualInterestRate interestRate; // 연이율
 
 	@Embedded
-	private ProductAnnualInterestRate productAnnualInterestRate;
+	private ProductAnnualInterestRate productAnnualInterestRate; // 연이율
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "interest_type", nullable = false, length = 100)
@@ -181,4 +181,7 @@ public abstract class FinancialProduct {
 		return null;
 	}
 
+	public AnnualInterestRate getInterestRate() {
+		return interestRate;
+	}
 }
