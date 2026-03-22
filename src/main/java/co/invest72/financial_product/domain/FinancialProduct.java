@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
@@ -44,6 +45,9 @@ public abstract class FinancialProduct {
 	private InvestmentType investmentType;
 
 	@Embedded
+	private ProductInvestmentType productInvestmentType;
+
+	@Embedded
 	private ProductAmount amount; // 원금 또는 월 적립액
 
 	@Embedded
@@ -78,6 +82,7 @@ public abstract class FinancialProduct {
 		String userId,
 		String name,
 		InvestmentType investmentType,
+		ProductInvestmentType productInvestmentType,
 		ProductAmount amount,
 		ProductMonths months,
 		AnnualInterestRate interestRate,
@@ -87,18 +92,19 @@ public abstract class FinancialProduct {
 		LocalDate startDate,
 		LocalDateTime createdAt) {
 		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
-		this.id = idGenerator.generateId();
-		this.userId = userId;
-		this.name = name;
-		this.investmentType = investmentType;
-		this.amount = amount;
-		this.months = months;
-		this.interestRate = interestRate;
-		this.interestType = interestType;
-		this.taxType = taxType;
-		this.taxRate = taxRate;
-		this.startDate = startDate;
-		this.createdAt = createdAt;
+		this.id = Objects.requireNonNull(idGenerator.generateId());
+		this.userId = Objects.requireNonNull(userId);
+		this.name = Objects.requireNonNull(name);
+		this.investmentType = Objects.requireNonNull(investmentType);
+		this.productInvestmentType = Objects.requireNonNull(productInvestmentType);
+		this.amount = Objects.requireNonNull(amount);
+		this.months = Objects.requireNonNull(months);
+		this.interestRate = Objects.requireNonNull(interestRate);
+		this.interestType = Objects.requireNonNull(interestType);
+		this.taxType = Objects.requireNonNull(taxType);
+		this.taxRate = Objects.requireNonNull(taxRate);
+		this.startDate = Objects.requireNonNull(startDate);
+		this.createdAt = Objects.requireNonNull(createdAt);
 	}
 
 	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
@@ -106,6 +112,7 @@ public abstract class FinancialProduct {
 		this.userId = b.userId;
 		this.name = b.name;
 		this.investmentType = b.investmentType;
+		this.productInvestmentType = b.productInvestmentType;
 		this.amount = b.amount;
 		this.months = b.months;
 		this.interestRate = b.interestRate;
