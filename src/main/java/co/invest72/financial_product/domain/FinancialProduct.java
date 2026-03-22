@@ -46,7 +46,6 @@ public abstract class FinancialProduct {
 	private ProductAmount amount; // 원금 또는 월 적립액
 
 	@Embedded
-	@AttributeOverride(name = "value", column = @Column(name = "months", nullable = false))
 	private ProductMonths months; // 기간 (개월)
 
 	@Embedded

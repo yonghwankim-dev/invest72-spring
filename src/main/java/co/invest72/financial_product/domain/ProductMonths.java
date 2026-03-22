@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ProductMonths {
 	private static final int MAX_MAX = 999 * 12; // 999년
+
 	@Column(name = "months", nullable = false)
 	private Integer value;
 
