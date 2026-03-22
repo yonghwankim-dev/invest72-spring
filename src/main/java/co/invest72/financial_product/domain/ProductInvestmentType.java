@@ -3,8 +3,10 @@ package co.invest72.financial_product.domain;
 import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
+@Getter
 public class ProductInvestmentType {
 	@Column(name = "product_investment_type", nullable = false, length = 100)
 	private String name;
