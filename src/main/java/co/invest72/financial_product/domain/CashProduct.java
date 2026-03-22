@@ -52,7 +52,7 @@ public class CashProduct extends FinancialProduct {
 		if (!getProductInterestType().equals(updatedProduct.getProductInterestType())) {
 			throw new IllegalArgumentException("이자 유형(interestType)은 변경할 수 없습니다.");
 		}
-		if (!getTaxType().equals(updatedProduct.getTaxType())) {
+		if (!getProductTaxType().equals(updatedProduct.getProductTaxType())) {
 			throw new IllegalArgumentException("세금 유형(taxType)은 변경할 수 없습니다.");
 		}
 		if (!getTaxRate().equals(updatedProduct.getTaxRate())) {

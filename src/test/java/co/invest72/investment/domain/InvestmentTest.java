@@ -47,7 +47,6 @@ class InvestmentTest {
 			.months(new ProductMonths(999 * 12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
-			.taxType(TaxType.STANDARD)
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
@@ -80,7 +79,6 @@ class InvestmentTest {
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
-			.taxType(TaxType.STANDARD)
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))

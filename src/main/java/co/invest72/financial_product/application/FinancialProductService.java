@@ -60,7 +60,7 @@ public class FinancialProductService {
 			.paymentDay(product.getPaymentDayValue())
 			.interestRate(new AnnualInterestRate(product.getProductAnnualInterestRate().getValue()).getValue())
 			.interestType(product.getProductInterestType().getName())
-			.taxType(product.getTaxType().name())
+			.taxType(product.getProductTaxType().getName())
 			.taxRate(product.getTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())

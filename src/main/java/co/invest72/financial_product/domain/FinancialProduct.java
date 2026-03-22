@@ -8,14 +8,11 @@ import java.util.Objects;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
-import co.invest72.investment.domain.tax.TaxType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import lombok.Getter;
@@ -53,10 +50,6 @@ public abstract class FinancialProduct {
 	@Embedded
 	private ProductInterestType productInterestType;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "tax_type", nullable = false, length = 100)
-	private TaxType taxType; // 세금 유형 (과세, 비과세)
-
 	@Embedded
 	private ProductTaxType productTaxType;
 
@@ -81,7 +74,6 @@ public abstract class FinancialProduct {
 		this.months = Objects.requireNonNull(b.months);
 		this.productAnnualInterestRate = Objects.requireNonNull(b.productAnnualInterestRate);
 		this.productInterestType = Objects.requireNonNull(b.productInterestType);
-		this.taxType = Objects.requireNonNull(b.taxType);
 		this.productTaxType = Objects.requireNonNull(b.productTaxType);
 		this.taxRate = Objects.requireNonNull(b.taxRate);
 		this.startDate = Objects.requireNonNull(b.startDate);
@@ -107,7 +99,6 @@ public abstract class FinancialProduct {
 		this.months = Objects.requireNonNull(updatedProduct.getMonths());
 		this.productAnnualInterestRate = Objects.requireNonNull(updatedProduct.getProductAnnualInterestRate());
 		this.productInterestType = Objects.requireNonNull(updatedProduct.getProductInterestType());
-		this.taxType = Objects.requireNonNull(updatedProduct.getTaxType());
 		this.productTaxType = Objects.requireNonNull(updatedProduct.getProductTaxType());
 		this.taxRate = Objects.requireNonNull(updatedProduct.getTaxRate());
 		this.startDate = Objects.requireNonNull(updatedProduct.getStartDate());
