@@ -77,7 +77,7 @@ public abstract class FinancialProduct {
 	private LocalDateTime createdAt; // 생성 일시
 
 	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
-	
+
 	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
 		this.id = b.id != null ? b.id : Objects.requireNonNull(idGenerator.generateId()); // 빌더에서 ID가 주어지지 않으면 생성
 		this.userId = Objects.requireNonNull(b.userId);
@@ -138,6 +138,7 @@ public abstract class FinancialProduct {
 	 * @return 만기일 (현금 상품의 경우 LocalDate.MAX 반환)
 	 */
 	public LocalDate getExpirationDate() {
+		InvestmentType investmentType = InvestmentType.valueOf(productInvestmentType.getName());
 		return investmentType.calculateExpirationDate(startDate, months.getValue());
 	}
 
@@ -147,6 +148,7 @@ public abstract class FinancialProduct {
 	 * @return 진행률 (0.0 ~ 1.0 사이의 값, 현금 상품은 항상 1.0 반환)
 	 */
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
+		InvestmentType investmentType = InvestmentType.valueOf(productInvestmentType.getName());
 		return investmentType.calculateProgress(startDate, getExpirationDate(), today);
 	}
 
@@ -156,6 +158,7 @@ public abstract class FinancialProduct {
 	 * @return 남은 일수 (만기일이 지났거나 일시금 상품인 경우 0 반환)
 	 */
 	public long getRemainingDaysByLocalDate(LocalDate today) {
+		InvestmentType investmentType = InvestmentType.valueOf(productInvestmentType.getName());
 		return investmentType.calculateRemainingDays(today, getExpirationDate());
 	}
 
