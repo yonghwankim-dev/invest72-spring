@@ -9,20 +9,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("SAVINGS")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @SuperBuilder(toBuilder = true)
 public class SavingsProduct extends FinancialProduct {
 	@Embedded
 	@AttributeOverride(name = "value", column = @Column(name = "payment_day"))
 	private PaymentDay paymentDay;
+
+	protected SavingsProduct() {
+	}
 
 	// 빌더 패턴을 사용할 때 부모 클래스의 필드와 자식 클래스의 필드를 모두 초기화할 수 있도록 생성자 정의
 	protected SavingsProduct(SavingsProductBuilder<?, ?> b) {
