@@ -75,7 +75,7 @@ public class InvestmentFactory {
 			.amount(product.getAmount())
 			.months(product.getMonths())
 			.interestRate(new AnnualInterestRate(product.getProductAnnualInterestRate().getValue()))
-			.interestType(product.getInterestType())
+			.interestType(InterestType.valueOf(product.getProductInterestType().getName()))
 			.taxType(product.getTaxType())
 			.taxRate(product.getTaxRate())
 			.currency(product.getAmount().getCurrency())

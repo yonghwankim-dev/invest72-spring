@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
@@ -50,7 +49,7 @@ public abstract class FinancialProduct {
 
 	@Embedded
 	private ProductAnnualInterestRate productAnnualInterestRate; // 연이율
-	
+
 	@Embedded
 	private ProductInterestType productInterestType;
 
@@ -172,7 +171,4 @@ public abstract class FinancialProduct {
 		return null;
 	}
 
-	public InterestType getInterestType() {
-		return InterestType.valueOf(getProductInterestType().getName());
-	}
 }
