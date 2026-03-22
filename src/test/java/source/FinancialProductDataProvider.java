@@ -27,7 +27,6 @@ public class FinancialProductDataProvider {
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
-			.interestType(InterestType.NONE)
 			.productInterestType(ProductInterestType.from(InterestType.NONE))
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
@@ -59,7 +58,6 @@ public class FinancialProductDataProvider {
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(interestType)
 			.productInterestType(ProductInterestType.from(interestType))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
@@ -94,7 +92,6 @@ public class FinancialProductDataProvider {
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(interestType)
 			.productInterestType(ProductInterestType.from(interestType))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))

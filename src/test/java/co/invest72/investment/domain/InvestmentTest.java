@@ -45,7 +45,6 @@ class InvestmentTest {
 			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
-			.interestType(InterestType.SIMPLE)
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
@@ -78,7 +77,6 @@ class InvestmentTest {
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
-			.interestType(InterestType.SIMPLE)
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
 			.taxType(TaxType.STANDARD)
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
