@@ -16,8 +16,6 @@ public class ProductInvestmentType {
 		this.name = name;
 	}
 
-	/** @deprecated Use {@link #from(InvestmentType)} instead */
-	@Deprecated(forRemoval = true)
 	public static ProductInvestmentType from(String name) {
 		return from(InvestmentType.valueOf(name));
 	}

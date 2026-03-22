@@ -395,7 +395,7 @@ class FinancialProductTest {
 			.userId("user-1234")
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH)
-			.productInvestmentType(ProductInvestmentType.from("CASH"))
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
