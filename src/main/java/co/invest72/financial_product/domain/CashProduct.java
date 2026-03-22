@@ -3,6 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -44,7 +45,8 @@ public class CashProduct extends FinancialProduct {
 		if (!getMonths().equals(updatedProduct.getMonths())) {
 			throw new IllegalArgumentException("투자 기간(months)은 변경할 수 없습니다.");
 		}
-		if (!getInterestRate().equals(updatedProduct.getInterestRate())) {
+		if (!new AnnualInterestRate(getProductAnnualInterestRate().getValue()).equals(
+			new AnnualInterestRate(updatedProduct.getProductAnnualInterestRate().getValue()))) {
 			throw new IllegalArgumentException("이자율(interestRate)은 변경할 수 없습니다.");
 		}
 		if (!getInterestType().equals(updatedProduct.getInterestType())) {
