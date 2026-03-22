@@ -77,36 +77,7 @@ public abstract class FinancialProduct {
 	private LocalDateTime createdAt; // 생성 일시
 
 	private static final IdGenerator idGenerator = new ProductIdGenerator("product");
-
-	protected FinancialProduct(
-		String userId,
-		String name,
-		InvestmentType investmentType,
-		ProductInvestmentType productInvestmentType,
-		ProductAmount amount,
-		ProductMonths months,
-		AnnualInterestRate interestRate,
-		InterestType interestType,
-		TaxType taxType,
-		FixedTaxRate taxRate,
-		LocalDate startDate,
-		LocalDateTime createdAt) {
-		// ID가 외부에서 주입되지 않았다면 스스로 생성 (In-memory, JPA 공통 적용)
-		this.id = Objects.requireNonNull(idGenerator.generateId());
-		this.userId = Objects.requireNonNull(userId);
-		this.name = Objects.requireNonNull(name);
-		this.investmentType = Objects.requireNonNull(investmentType);
-		this.productInvestmentType = Objects.requireNonNull(productInvestmentType);
-		this.amount = Objects.requireNonNull(amount);
-		this.months = Objects.requireNonNull(months);
-		this.interestRate = Objects.requireNonNull(interestRate);
-		this.interestType = Objects.requireNonNull(interestType);
-		this.taxType = Objects.requireNonNull(taxType);
-		this.taxRate = Objects.requireNonNull(taxRate);
-		this.startDate = Objects.requireNonNull(startDate);
-		this.createdAt = Objects.requireNonNull(createdAt);
-	}
-
+	
 	protected FinancialProduct(FinancialProductBuilder<?, ?> b) {
 		this.id = b.id != null ? b.id : Objects.requireNonNull(idGenerator.generateId()); // 빌더에서 ID가 주어지지 않으면 생성
 		this.userId = Objects.requireNonNull(b.userId);
