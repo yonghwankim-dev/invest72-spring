@@ -27,6 +27,7 @@ class CashProductTest {
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
 			.build();
@@ -330,6 +331,7 @@ class CashProductTest {
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO)) // taxRate 변경
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();

@@ -13,6 +13,7 @@ import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
@@ -91,6 +92,7 @@ public class FinancialProductFactory {
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))
+			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();
@@ -111,6 +113,7 @@ public class FinancialProductFactory {
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))
+			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();
@@ -132,6 +135,7 @@ public class FinancialProductFactory {
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))
 			.taxRate(new FixedTaxRate(dto.getTaxRate()))
+			.productTaxRate(new ProductTaxRate(dto.getTaxRate()))
 			.startDate(dto.getStartDate())
 			.createdAt(createdAt)
 			.build();

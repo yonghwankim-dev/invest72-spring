@@ -11,6 +11,7 @@ import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.investment.domain.interest.InterestType;
@@ -31,6 +32,7 @@ public class FinancialProductDataProvider {
 			.productInterestType(ProductInterestType.from(InterestType.NONE))
 			.productTaxType(ProductTaxType.from(TaxType.NONE))
 			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -62,6 +64,7 @@ public class FinancialProductDataProvider {
 			.productInterestType(ProductInterestType.from(interestType))
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -96,6 +99,7 @@ public class FinancialProductDataProvider {
 			.productInterestType(ProductInterestType.from(interestType))
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
