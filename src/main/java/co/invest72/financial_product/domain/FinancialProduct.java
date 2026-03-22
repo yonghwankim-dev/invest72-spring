@@ -98,14 +98,14 @@ public abstract class FinancialProduct {
 	 */
 	public void update(FinancialProduct updatedProduct) {
 		validateUpdate(updatedProduct);
-		this.name = updatedProduct.getName();
-		this.amount = updatedProduct.getAmount();
-		this.months = updatedProduct.getMonths();
-		this.productAnnualInterestRate = updatedProduct.getProductAnnualInterestRate();
-		this.productInterestType = updatedProduct.getProductInterestType();
-		this.taxType = updatedProduct.getTaxType();
-		this.taxRate = updatedProduct.getTaxRate();
-		this.startDate = updatedProduct.getStartDate();
+		this.name = Objects.requireNonNull(updatedProduct.getName());
+		this.amount = Objects.requireNonNull(updatedProduct.getAmount());
+		this.months = Objects.requireNonNull(updatedProduct.getMonths());
+		this.productAnnualInterestRate = Objects.requireNonNull(updatedProduct.getProductAnnualInterestRate());
+		this.productInterestType = Objects.requireNonNull(updatedProduct.getProductInterestType());
+		this.taxType = Objects.requireNonNull(updatedProduct.getTaxType());
+		this.taxRate = Objects.requireNonNull(updatedProduct.getTaxRate());
+		this.startDate = Objects.requireNonNull(updatedProduct.getStartDate());
 	}
 
 	private void validateUpdate(FinancialProduct updatedProduct) {

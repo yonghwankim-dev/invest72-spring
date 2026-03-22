@@ -23,10 +23,10 @@ public class FixedTaxRate implements TaxRate {
 
 	public FixedTaxRate(BigDecimal value) {
 		this.value = value;
-		validate();
+		validate(this.value);
 	}
 
-	private void validate() {
+	private void validate(BigDecimal value) {
 		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(BigDecimal.ONE) >= 0) {
 			throw new IllegalArgumentException("Tax rate must be between 0 and 1 (exclusive).");
 		}
