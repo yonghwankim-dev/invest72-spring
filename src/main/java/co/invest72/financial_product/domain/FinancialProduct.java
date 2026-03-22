@@ -178,4 +178,7 @@ public abstract class FinancialProduct {
 		return null;
 	}
 
+	public InterestType getInterestType() {
+		return InterestType.valueOf(getProductInterestType().getName());
+	}
 }

@@ -47,6 +47,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -72,6 +73,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -101,6 +103,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -130,6 +133,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -159,6 +163,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -273,6 +278,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(TaxType.NON_TAX) // taxType 변경
 			.taxRate(originalProduct.getTaxRate())
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
@@ -302,6 +308,7 @@ class CashProductTest {
 			.months(originalProduct.getMonths())
 			.productAnnualInterestRate(originalProduct.getProductAnnualInterestRate())
 			.interestType(originalProduct.getInterestType())
+			.productInterestType(ProductInterestType.from(originalProduct.getInterestType()))
 			.taxType(originalProduct.getTaxType())
 			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.1))) // taxRate 변경
 			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경

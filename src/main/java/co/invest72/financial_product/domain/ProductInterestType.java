@@ -3,8 +3,10 @@ package co.invest72.financial_product.domain;
 import co.invest72.investment.domain.interest.InterestType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
+@Getter
 public class ProductInterestType {
 	// TODO: columnNmae will do "product_interst_type to interest_type"
 	@Column(name = "product_interest_type", nullable = false, length = 100)
