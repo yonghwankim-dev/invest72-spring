@@ -106,8 +106,8 @@ public class InvestmentFactory {
 			.amount(productAmount)
 			.months(new ProductMonths(investPeriod.getMonths()))
 			.interestRate(new AnnualInterestRate(request.getAnnualInterestRate()))
-			.interestType(InterestType.from(request.getInterestType()))
-			.taxType(TaxType.from(request.getTaxType()))
+			.interestType(InterestType.valueOf(request.getInterestType()))
+			.taxType(TaxType.valueOf(request.getTaxType()))
 			.taxRate(new FixedTaxRate(request.getTaxRate()))
 			.currency(request.getCurrencyCode())
 			.build();

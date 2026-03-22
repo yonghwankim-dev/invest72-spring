@@ -2,8 +2,8 @@ DEPOSIT
 일시불 1000000
 년
 1
-복리
+COMPOUND
 5
-비과세
+NON_TAX
 0
 KRW
