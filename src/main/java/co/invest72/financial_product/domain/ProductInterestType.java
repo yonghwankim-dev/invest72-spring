@@ -17,7 +17,7 @@ public class ProductInterestType {
 	}
 
 	private ProductInterestType(String name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name);
 	}
 
 	public static ProductInterestType from(InterestType interestType) {

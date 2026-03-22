@@ -17,7 +17,7 @@ public class ProductInvestmentType {
 	}
 
 	private ProductInvestmentType(String name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name);
 	}
 
 	public static ProductInvestmentType from(String name) {
