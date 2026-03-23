@@ -1,5 +1,6 @@
 package co.invest72.financial_product.application;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,6 +52,9 @@ public class FinancialProductService {
 
 		FinancialProductCalculator calculator = new FinancialProductCalculator();
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
+		BigDecimal balance = calculator.calculateBalance(product, today);
+		BigDecimal progress = calculator.calculateProgress(product, today);
+		Long remainingDays = calculator.calculateRemainingDays(product, today);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -66,9 +70,9 @@ public class FinancialProductService {
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(expirationDate)
-			.balance(product.getBalanceByLocalDate(today))
-			.progress(product.getProgressByLocalDate(today))
-			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.balance(balance)
+			.progress(progress)
+			.remainingDays(remainingDays)
 			.productCurrency(productCurrency)
 			.build();
 	}

@@ -1,5 +1,6 @@
 package co.invest72.financial_product.domain.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
@@ -42,5 +43,18 @@ class FinancialProductCalculatorTest {
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 		// then
 		Assertions.assertThat(expirationDate).isEqualTo(LocalDate.of(2027, 1, 1));
+	}
+
+	@DisplayName("예금 상품의 잔고 계산")
+	@Test
+	void calculateBalance_whenDeposit() {
+		// given
+		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1234");
+		FinancialProductCalculator calculator = new FinancialProductCalculator();
+		LocalDate today = LocalDate.of(2026, 2, 1);
+		// when
+		BigDecimal balance = calculator.calculateBalance(product, today);
+		// then
+		Assertions.assertThat(balance).isEqualTo(BigDecimal.valueOf(1_000_000L));
 	}
 }
