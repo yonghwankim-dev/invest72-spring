@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class ProductTaxRateTest {
 
@@ -45,11 +47,13 @@ class ProductTaxRateTest {
 	}
 
 	@DisplayName("객체 비교 - 스케일 4를 초과하는 정밀도(precision)의 값이 달라도 비교시 논리적으로 같은 객체라고 판단한다")
-	@Test
-	void equals_when_comparing_values_with_different_precision_beyond_scale_4_then_return_equal() {
+	@ParameterizedTest
+	@MethodSource(value = "source.ProductTaxRateDataProvider#provideTaxRateValues")
+	void equals_when_comparing_values_with_different_precision_beyond_scale_4_then_return_equal(BigDecimal pivot,
+		BigDecimal target) {
 		// given
-		ProductTaxRate productTaxRate1 = new ProductTaxRate(BigDecimal.valueOf(0.1540));
-		ProductTaxRate productTaxRate2 = new ProductTaxRate(BigDecimal.valueOf(0.15401));
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(pivot);
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(target);
 		// when
 		boolean actual = productTaxRate1.equals(productTaxRate2);
 		// then
