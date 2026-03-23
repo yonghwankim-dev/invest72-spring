@@ -35,7 +35,7 @@ class ProductAnnualInterestRateTest {
 
 	@DisplayName("객체 비교 - 스케일 4를 초과하고 6이상이면 값을 비교시 동일하지 않다고 판단한다")
 	@ParameterizedTest
-	@MethodSource(value = "source.ProductAnnualInterestRateTestDataProvider#provideScaledValues")
+	@MethodSource(value = "source.ProductAnnualInterestRateTestDataProvider#provideNotSameScaledValues")
 	void equals_whenScale4IsOverAndValueIs6EqualMoreThan_thenReturnFalse(BigDecimal pivot, BigDecimal target) {
 		// given
 		ProductAnnualInterestRate rate1 = new ProductAnnualInterestRate(pivot);
@@ -44,5 +44,6 @@ class ProductAnnualInterestRateTest {
 		boolean actual = rate1.equals(rate2);
 		// then
 		Assertions.assertThat(actual).isFalse();
+		Assertions.assertThat(rate1).doesNotHaveSameHashCodeAs(rate2);
 	}
 }
