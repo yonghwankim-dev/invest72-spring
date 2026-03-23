@@ -121,8 +121,12 @@ public abstract class FinancialProduct {
 	 * @return 만기일 (현금 상품의 경우 LocalDate.MAX 반환)
 	 */
 	public LocalDate getExpirationDate() {
-		return InvestmentType.valueOf(productInvestmentType.getName())
+		return getInvestmentTypeAsEnum()
 			.calculateExpirationDate(startDate, months.getValue());
+	}
+
+	private InvestmentType getInvestmentTypeAsEnum() {
+		return InvestmentType.valueOf(productInvestmentType.getName());
 	}
 
 	/**
@@ -131,7 +135,7 @@ public abstract class FinancialProduct {
 	 * @return 진행률 (0.0 ~ 1.0 사이의 값, 현금 상품은 항상 1.0 반환)
 	 */
 	public BigDecimal getProgressByLocalDate(LocalDate today) {
-		return InvestmentType.valueOf(productInvestmentType.getName())
+		return getInvestmentTypeAsEnum()
 			.calculateProgress(startDate, getExpirationDate(), today);
 	}
 
@@ -141,7 +145,7 @@ public abstract class FinancialProduct {
 	 * @return 남은 일수 (만기일이 지났거나 일시금 상품인 경우 0 반환)
 	 */
 	public long getRemainingDaysByLocalDate(LocalDate today) {
-		return InvestmentType.valueOf(productInvestmentType.getName())
+		return getInvestmentTypeAsEnum()
 			.calculateRemainingDays(today, getExpirationDate());
 	}
 
