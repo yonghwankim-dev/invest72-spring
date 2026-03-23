@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.money.domain.Currency;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,8 @@ public class FinancialProductService {
 		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 
-		LocalDate expirationDate = InvestmentType.valueOf(product.getInvestmentTypeName())
-			.calculateExpirationDate(product.getStartDate(), product.getMonthsValue());
+		FinancialProductCalculator calculator = new FinancialProductCalculator();
+		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
