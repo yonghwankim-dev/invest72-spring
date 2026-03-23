@@ -36,14 +36,14 @@ class CalculateInvestmentTest {
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(AmountType.ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType(PeriodType.MONTH.getDisplayName())
 			.periodValue(36)
-			.interestType(SIMPLE.getTypeName())
+			.interestType(SIMPLE.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.STANDARD.getDescription())
+			.taxType(TaxType.STANDARD.name())
 			.taxRate(0.154)
 			.currencyCode(Currency.won().getCode())
 			.build();
@@ -82,7 +82,7 @@ class CalculateInvestmentTest {
 	void calMonthlyInvestmentAmount_shouldSimpleFixedDeposit() {
 		request = request.toBuilder()
 			.periodValue(12)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -121,8 +121,8 @@ class CalculateInvestmentTest {
 	void calMonthlyInvestmentAmount_whenCompoundFixedDeposit() {
 		request = request.toBuilder()
 			.periodValue(12)
-			.interestType(COMPOUND.getTypeName())
-			.taxType(TaxType.NON_TAX.getDescription())
+			.interestType(COMPOUND.name())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -213,7 +213,7 @@ class CalculateInvestmentTest {
 	void calYearlyInvestmentAmount_whenPeriodIs24Months() {
 		request = request.toBuilder()
 			.periodValue(24)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -241,7 +241,7 @@ class CalculateInvestmentTest {
 	void calYearlyInvestmentAmount_whenPeriodIs13MonthsAndNonTax() {
 		request = request.toBuilder()
 			.periodValue(13)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);

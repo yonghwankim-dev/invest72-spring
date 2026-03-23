@@ -7,11 +7,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import source.FinancialProductDataProvider;
 
@@ -22,13 +20,13 @@ class SavingsProductTest {
 			.id("new-id") // id 변경
 			.userId("user2")
 			.name("Updated Savings")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
-			.interestType(InterestType.COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(LocalDate.of(2024, 2, 1).atStartOfDay())
 			.build();
@@ -42,7 +40,7 @@ class SavingsProductTest {
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
 			.build();
@@ -75,7 +73,7 @@ class SavingsProductTest {
 		FinancialProduct originalProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.paymentDay(new PaymentDay(15)) // 납입일 변경
 			.build();
@@ -117,7 +115,7 @@ class SavingsProductTest {
 		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.investmentType(InvestmentType.SAVINGS) // investmentType은 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.paymentDay(new PaymentDay(15))
 			.build();
 
@@ -139,13 +137,13 @@ class SavingsProductTest {
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.name("Updated Deposit")
-			.investmentType(InvestmentType.DEPOSIT) // 투자 유형 변경
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.06)))
-			.interestType(InterestType.COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2024, 2, 1))
 			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
 			.build();

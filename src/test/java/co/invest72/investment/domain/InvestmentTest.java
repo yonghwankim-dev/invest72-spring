@@ -11,15 +11,18 @@ import org.junit.jupiter.api.Test;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxRate;
+import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 
 class InvestmentTest {
@@ -39,13 +42,13 @@ class InvestmentTest {
 		FinancialProduct financialProduct = DepositProduct.builder()
 			.userId("user-1")
 			.name("정기예금")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(9.9999)))
-			.interestType(InterestType.SIMPLE)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
+			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -70,14 +73,14 @@ class InvestmentTest {
 		FinancialProduct financialProduct = SavingsProduct.builder()
 			.userId("user-1")
 			.name("적금 상품")
-			.investmentType(InvestmentType.SAVINGS)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(9.9999)))
-			.interestType(InterestType.SIMPLE)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
+			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();

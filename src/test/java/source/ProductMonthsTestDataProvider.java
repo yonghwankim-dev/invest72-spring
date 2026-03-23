@@ -16,7 +16,6 @@ public class ProductMonthsTestDataProvider {
 
 	public static Stream<Arguments> invalidValues() {
 		return java.util.stream.Stream.of(
-			Arguments.of((Integer)null),
 			Arguments.of(-1),
 			Arguments.of(-100),
 			Arguments.of(999 * 12 + 1) // 999년 1개월 초과

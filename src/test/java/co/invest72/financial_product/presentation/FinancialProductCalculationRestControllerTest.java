@@ -25,10 +25,14 @@ import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.financial_product.domain.ProductTaxRate;
+import co.invest72.financial_product.domain.ProductTaxType;
+import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.response.InvestmentCurrency;
 import co.invest72.money.domain.Currency;
@@ -71,13 +75,13 @@ class FinancialProductCalculationRestControllerTest {
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(SIMPLE)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.productInterestType(ProductInterestType.from(SIMPLE))
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
 			.build();
@@ -111,13 +115,13 @@ class FinancialProductCalculationRestControllerTest {
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(SIMPLE)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.productInterestType(ProductInterestType.from(SIMPLE))
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
 			.build();
@@ -150,13 +154,13 @@ class FinancialProductCalculationRestControllerTest {
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("복리-예금")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(COMPOUND)
-			.taxType(TaxType.NON_TAX)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
+			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.now())
 			.createdAt(LocalDateTime.now())
 			.build();

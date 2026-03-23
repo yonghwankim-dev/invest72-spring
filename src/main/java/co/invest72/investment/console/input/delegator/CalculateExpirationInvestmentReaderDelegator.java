@@ -46,7 +46,7 @@ public class CalculateExpirationInvestmentReaderDelegator {
 	}
 
 	private String readInvestmentAmount(String investmentType) throws IOException {
-		InvestmentType type = InvestmentType.from(investmentType);
+		InvestmentType type = InvestmentType.valueOf(investmentType);
 		return registry.getStrategy(type).readAmount(reader);
 	}
 }

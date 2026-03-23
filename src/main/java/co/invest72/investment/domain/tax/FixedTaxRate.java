@@ -5,17 +5,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import co.invest72.investment.domain.TaxRate;
-import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class FixedTaxRate implements TaxRate {
 
-	private BigDecimal value;
+	private final BigDecimal value;
 
 	public FixedTaxRate(double value) {
 		this(BigDecimal.valueOf(value));
@@ -23,10 +18,10 @@ public class FixedTaxRate implements TaxRate {
 
 	public FixedTaxRate(BigDecimal value) {
 		this.value = value;
-		validate();
+		validate(this.value);
 	}
 
-	private void validate() {
+	private void validate(BigDecimal value) {
 		if (value == null || value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(BigDecimal.ONE) >= 0) {
 			throw new IllegalArgumentException("Tax rate must be between 0 and 1 (exclusive).");
 		}

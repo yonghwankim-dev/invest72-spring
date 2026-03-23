@@ -7,13 +7,16 @@ import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxRate;
+import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 
 public class FinancialProductDataProvider {
@@ -21,13 +24,13 @@ public class FinancialProductDataProvider {
 		return CashProduct.builder()
 			.userId(userId)
 			.name("현금 상품")
-			.investmentType(InvestmentType.CASH)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(0))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.0)))
-			.interestType(InterestType.NONE)
-			.taxType(TaxType.NONE)
-			.taxRate(new FixedTaxRate(BigDecimal.ZERO))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
+			.productInterestType(ProductInterestType.from(InterestType.NONE))
+			.productTaxType(ProductTaxType.from(TaxType.NONE))
+			.productTaxRate(new ProductTaxRate(BigDecimal.ZERO))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -52,13 +55,13 @@ public class FinancialProductDataProvider {
 		return DepositProduct.builder()
 			.userId(userId)
 			.name("예금 상품")
-			.investmentType(InvestmentType.DEPOSIT)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(interestType)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.productInterestType(ProductInterestType.from(interestType))
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
@@ -85,14 +88,14 @@ public class FinancialProductDataProvider {
 		return SavingsProduct.builder()
 			.userId(userId)
 			.name("적금 상품")
-			.investmentType(InvestmentType.SAVINGS)
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 5일 납입
-			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.05)))
-			.interestType(interestType)
-			.taxType(TaxType.STANDARD)
-			.taxRate(new FixedTaxRate(BigDecimal.valueOf(0.154)))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
+			.productInterestType(ProductInterestType.from(interestType))
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();

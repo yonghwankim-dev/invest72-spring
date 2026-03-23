@@ -21,7 +21,7 @@ public class AnnualInterestRate implements InterestRate {
 
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
 
-	@Column(nullable = false, precision = 5, scale = 4)
+	@Column(name = "interest_rate", nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
 
 	public AnnualInterestRate(double value) {

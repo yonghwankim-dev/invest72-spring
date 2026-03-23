@@ -1,9 +1,9 @@
-적금
+SAVINGS
 월 1000000
 년
 1
-복리
+COMPOUND
 5
-세금우대
+TAX_BENEFIT
 1.4
 KRW

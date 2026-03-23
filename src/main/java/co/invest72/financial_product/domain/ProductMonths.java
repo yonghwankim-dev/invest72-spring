@@ -12,20 +12,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ProductMonths {
+	private static final int MAX_MONTHS = 999 * 12; // 999년
+
 	@Column(name = "months", nullable = false)
 	private Integer value;
 
 	public ProductMonths(Integer value) {
-		this.value = value;
+		this.value = Objects.requireNonNull(value, "기간은 null일 수 없습니다.");
 		validate(this.value);
 	}
 
 	private void validate(Integer value) {
-		if (value == null || value < 0) {
+		if (value < 0) {
 			throw new IllegalArgumentException("기간은 0개월 이상이어야 합니다.");
 		}
-		if (value > 11988) {
-			throw new IllegalArgumentException("기간은 11988개월(999년)을 초과할 수 없습니다.");
+		if (value > MAX_MONTHS) {
+			throw new IllegalArgumentException("기간은 " + MAX_MONTHS + "개월을 초과할 수 없습니다.");
 		}
 	}
 

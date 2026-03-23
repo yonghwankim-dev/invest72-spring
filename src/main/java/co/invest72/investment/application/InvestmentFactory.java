@@ -71,20 +71,20 @@ public class InvestmentFactory {
 
 	public Investment createBy(FinancialProduct product) {
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
-			.type(product.getInvestmentType())
+			.type(InvestmentType.valueOf(product.getProductInvestmentType().getName()))
 			.amount(product.getAmount())
 			.months(product.getMonths())
-			.interestRate(new AnnualInterestRate(product.getInterestRate().getValue()))
-			.interestType(product.getInterestType())
-			.taxType(product.getTaxType())
-			.taxRate(product.getTaxRate())
+			.interestRate(new AnnualInterestRate(product.getProductAnnualInterestRate().getValue()))
+			.interestType(InterestType.valueOf(product.getProductInterestType().getName()))
+			.taxType(TaxType.valueOf(product.getProductTaxType().getName()))
+			.taxRate(new FixedTaxRate(product.getProductTaxRate().getValue()))
 			.currency(product.getAmount().getCurrency())
 			.build();
 		return createBy(dto);
 	}
 
 	public Investment createBy(CalculateInvestmentRequest request) {
-		InvestmentType investmentType = InvestmentType.from(request.getType());
+		InvestmentType investmentType = InvestmentType.valueOf(request.getType());
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
@@ -106,8 +106,8 @@ public class InvestmentFactory {
 			.amount(productAmount)
 			.months(new ProductMonths(investPeriod.getMonths()))
 			.interestRate(new AnnualInterestRate(request.getAnnualInterestRate()))
-			.interestType(InterestType.from(request.getInterestType()))
-			.taxType(TaxType.from(request.getTaxType()))
+			.interestType(InterestType.valueOf(request.getInterestType()))
+			.taxType(TaxType.valueOf(request.getTaxType()))
 			.taxRate(new FixedTaxRate(request.getTaxRate()))
 			.currency(request.getCurrencyCode())
 			.build();
