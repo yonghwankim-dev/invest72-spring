@@ -24,7 +24,7 @@ public class ProductTaxRate {
 	}
 
 	public BigDecimal getValue() {
-		return this.value.setScale(SCALE, RoundingMode.HALF_EVEN);
+		return this.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN);
 	}
 
 	private void validate(BigDecimal value) {
