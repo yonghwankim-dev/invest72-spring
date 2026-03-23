@@ -20,6 +20,10 @@ public class ProductInterestType {
 		this.name = Objects.requireNonNull(name);
 	}
 
+	public static ProductInterestType from(String name) {
+		return from(InterestType.valueOf(name));
+	}
+
 	public static ProductInterestType from(InterestType interestType) {
 		return new ProductInterestType(interestType.name());
 	}

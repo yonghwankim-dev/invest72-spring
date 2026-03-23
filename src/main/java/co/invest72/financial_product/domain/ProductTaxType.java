@@ -20,6 +20,10 @@ public class ProductTaxType {
 		this.name = Objects.requireNonNull(name);
 	}
 
+	public static ProductTaxType from(String name) {
+		return from(TaxType.valueOf(name));
+	}
+
 	public static ProductTaxType from(TaxType taxType) {
 		return new ProductTaxType(taxType.name());
 	}
