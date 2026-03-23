@@ -6,12 +6,11 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
 
 @Embeddable
-@Getter
 public class ProductAnnualInterestRate {
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
+	private static final int SCALE = 4;
 
 	@Column(name = "interest_rate", nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
@@ -31,6 +30,10 @@ public class ProductAnnualInterestRate {
 		}
 	}
 
+	public BigDecimal getValue() {
+		return value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -38,7 +41,11 @@ public class ProductAnnualInterestRate {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProductAnnualInterestRate that = (ProductAnnualInterestRate)o;
-		return this.value.stripTrailingZeros().compareTo(that.value.stripTrailingZeros()) == 0;
+		BigDecimal value1 = this.value.stripTrailingZeros()
+			.setScale(SCALE, RoundingMode.HALF_EVEN);
+		BigDecimal value2 = that.value.stripTrailingZeros()
+			.setScale(SCALE, RoundingMode.HALF_EVEN);
+		return value1.compareTo(value2) == 0;
 	}
 
 	@Override
