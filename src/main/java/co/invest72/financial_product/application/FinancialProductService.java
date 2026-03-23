@@ -46,15 +46,15 @@ public class FinancialProductService {
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
-
-		Currency currency = Currency.from(product.getAmount().getCurrency());
-		ProductCurrency productCurrency = ProductCurrency.from(currency);
-
+		
 		FinancialProductCalculator calculator = new FinancialProductCalculator();
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		BigDecimal progress = calculator.calculateProgress(product, today);
 		Long remainingDays = calculator.calculateRemainingDays(product, today);
+
+		Currency currency = Currency.from(product.getAmount().getCurrency());
+		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
