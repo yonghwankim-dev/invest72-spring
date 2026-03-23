@@ -2,6 +2,7 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -28,5 +29,20 @@ public class ProductAnnualInterestRate {
 			BigDecimal maxRatePercent = MAX_RATE.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_EVEN);
 			throw new IllegalArgumentException("금리는 0% 이상 " + maxRatePercent + "% 이하이어야 합니다.");
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ProductAnnualInterestRate that = (ProductAnnualInterestRate)o;
+		return this.value.stripTrailingZeros().compareTo(that.value.stripTrailingZeros()) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value.stripTrailingZeros().hashCode());
 	}
 }

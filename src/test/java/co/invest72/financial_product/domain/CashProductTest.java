@@ -226,6 +226,31 @@ class CashProductTest {
 			.hasMessage("이자율(interestRate)은 변경할 수 없습니다.");
 	}
 
+	@DisplayName("상품 수정 - 현금 상품은 이자율(interestRate)이 변경되지 않으면 상품 수정시 예외가 발생하면 안된다")
+	@Test
+	void update_whenInterestRateNotChanged_thenNotThrowException() {
+		// Given
+		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
+		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
+			.id(originalProduct.getId()) // id는 원래 값으로 유지
+			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
+			.name("Updated Cash Product") // 이름 변경
+			.amount(ProductAmount.won(BigDecimal.valueOf(2_000_000L))) // 금액 변경
+			.months(originalProduct.getMonths())
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
+			.productInterestType(ProductInterestType.from(InterestType.NONE))
+			.productTaxType(originalProduct.getProductTaxType())
+			.productTaxRate(originalProduct.getProductTaxRate())
+			.startDate(originalProduct.getStartDate().plusDays(10)) // 시작 날짜 변경
+			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
+			.build();
+
+		// When & then
+		Assertions.assertThatCode(() -> originalProduct.update(updatedProduct))
+			.doesNotThrowAnyException();
+	}
+
 	@DisplayName("상품 수정 - 현금 상품은 이자 유형(interestType)을 변경할 수 없다")
 	@Test
 	void update_whenInterestTypeChanged_thenThrowException() {
