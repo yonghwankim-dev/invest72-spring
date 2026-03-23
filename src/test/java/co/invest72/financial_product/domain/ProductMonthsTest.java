@@ -18,7 +18,7 @@ class ProductMonthsTest {
 
 	@DisplayName("객체 생성 - null 체크")
 	@Test
-	void newInstance_whenMonthsIsValue_thenThrowException() {
+	void newInstance_whenMonthsIsNull_thenThrowException() {
 		Assertions.assertThatThrownBy(() -> new ProductMonths(null))
 			.isInstanceOf(NullPointerException.class);
 	}
