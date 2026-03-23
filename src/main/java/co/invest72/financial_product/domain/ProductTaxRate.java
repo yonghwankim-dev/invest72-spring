@@ -40,13 +40,13 @@ public class ProductTaxRate {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProductTaxRate that = (ProductTaxRate)o;
-		BigDecimal value1 = this.value.setScale(SCALE, RoundingMode.HALF_EVEN);
-		BigDecimal value2 = that.value.setScale(SCALE, RoundingMode.HALF_EVEN);
+		BigDecimal value1 = this.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN);
+		BigDecimal value2 = that.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN);
 		return value1.compareTo(value2) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.value.setScale(SCALE, RoundingMode.HALF_EVEN));
+		return Objects.hash(this.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN));
 	}
 }

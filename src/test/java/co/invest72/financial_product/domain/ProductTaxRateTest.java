@@ -74,4 +74,15 @@ class ProductTaxRateTest {
 		Assertions.assertThat(actual).isFalse();
 		Assertions.assertThat(productTaxRate1).doesNotHaveSameHashCodeAs(productTaxRate2);
 	}
+
+	@DisplayName("해시코드 - 스케일이 4를 초과해도 해시코드의 값은 스케일 4를 유지해야 한다")
+	@ParameterizedTest
+	@MethodSource(value = "source.ProductTaxRateDataProvider#provideTaxRateValues")
+	void hashCode_whenOverScale4_thenReturnSameHashCode(BigDecimal pivot, BigDecimal target) {
+		// given
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(pivot);
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(target);
+		// when & then
+		Assertions.assertThat(productTaxRate1).hasSameHashCodeAs(productTaxRate2);
+	}
 }

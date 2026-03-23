@@ -10,10 +10,11 @@ public class ProductTaxRateDataProvider {
 	public static Stream<Arguments> provideTaxRateValues() {
 		BigDecimal pivot = BigDecimal.valueOf(0.154);
 		return Stream.of(
-			Arguments.of(pivot, BigDecimal.valueOf(0.154)),
-			Arguments.of(pivot, BigDecimal.valueOf(0.1540)),
-			Arguments.of(pivot, BigDecimal.valueOf(0.15401)),
-			Arguments.of(pivot, BigDecimal.valueOf(0.15405))
+			Arguments.of(pivot, new BigDecimal("0.154")),
+			Arguments.of(pivot, new BigDecimal("0.1540")),
+			Arguments.of(pivot, new BigDecimal("0.154000000000")),
+			Arguments.of(pivot, new BigDecimal("0.15401")),
+			Arguments.of(pivot, new BigDecimal("0.15405"))
 		);
 	}
 
