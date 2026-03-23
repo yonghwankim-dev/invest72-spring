@@ -29,12 +29,10 @@ public class ProductAnnualInterestRateTestDataProvider {
 	public static Stream<Arguments> provideScaledValues() {
 		BigDecimal pivot = BigDecimal.valueOf(0.1234);
 		return Stream.of(
-			Arguments.of(pivot, new BigDecimal("0.12340")),
-			Arguments.of(pivot, new BigDecimal("0.12341")),
-			Arguments.of(pivot, new BigDecimal("0.12342")),
-			Arguments.of(pivot, new BigDecimal("0.12343")),
-			Arguments.of(pivot, new BigDecimal("0.12344")),
-			Arguments.of(pivot, new BigDecimal("0.12345"))
+			Arguments.of(pivot, new BigDecimal("0.12346")),
+			Arguments.of(pivot, new BigDecimal("0.12347")),
+			Arguments.of(pivot, new BigDecimal("0.12348")),
+			Arguments.of(pivot, new BigDecimal("0.12349"))
 		);
 	}
 }
