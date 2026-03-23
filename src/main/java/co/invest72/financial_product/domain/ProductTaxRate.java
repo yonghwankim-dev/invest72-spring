@@ -6,13 +6,9 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
 
 @Embeddable
-@Getter
 public class ProductTaxRate {
-
-	private static final int PRECISION = 5;
 	private static final int SCALE = 4;
 
 	@Column(name = "tax_rate", nullable = false, precision = 5, scale = 4)
@@ -25,6 +21,10 @@ public class ProductTaxRate {
 	public ProductTaxRate(BigDecimal value) {
 		this.value = value;
 		validate(this.value);
+	}
+
+	public BigDecimal getValue() {
+		return this.value.setScale(SCALE, RoundingMode.HALF_EVEN);
 	}
 
 	private void validate(BigDecimal value) {

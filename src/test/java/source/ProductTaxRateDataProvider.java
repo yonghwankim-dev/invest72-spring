@@ -16,4 +16,14 @@ public class ProductTaxRateDataProvider {
 			Arguments.of(pivot, BigDecimal.valueOf(0.15405))
 		);
 	}
+
+	public static Stream<Arguments> provideDiffTaxRateValue() {
+		BigDecimal pivot = BigDecimal.valueOf(0.154);
+		return Stream.of(
+			Arguments.of(pivot, BigDecimal.valueOf(0.15406)),
+			Arguments.of(pivot, BigDecimal.valueOf(0.15407)),
+			Arguments.of(pivot, BigDecimal.valueOf(0.15408)),
+			Arguments.of(pivot, BigDecimal.valueOf(0.15409))
+		);
+	}
 }

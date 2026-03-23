@@ -60,4 +60,18 @@ class ProductTaxRateTest {
 		Assertions.assertThat(actual).isTrue();
 		Assertions.assertThat(productTaxRate1).hasSameHashCodeAs(productTaxRate2);
 	}
+
+	@DisplayName("객체 비교 - 스케일 4를 초과한 값이 6이상이면 반올림해서 값이 다르다고 판단한다")
+	@ParameterizedTest
+	@MethodSource(value = "source.ProductTaxRateDataProvider#provideDiffTaxRateValue")
+	void equals_whenScale5NumberIs6EqualMoreThan_ReturnFalse(BigDecimal pivot, BigDecimal target) {
+		// given
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(pivot);
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(target);
+		// when
+		boolean actual = productTaxRate1.equals(productTaxRate2);
+		// then
+		Assertions.assertThat(actual).isFalse();
+		Assertions.assertThat(productTaxRate1).doesNotHaveSameHashCodeAs(productTaxRate2);
+	}
 }
