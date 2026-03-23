@@ -19,6 +19,7 @@ import co.invest72.financial_product.presentation.dto.response.DetailedFinancial
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.money.domain.Currency;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,8 @@ public class FinancialProductService {
 		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 
+		LocalDate expirationDate = InvestmentType.valueOf(product.getInvestmentTypeName())
+			.calculateExpirationDate(product.getStartDate(), product.getMonthsValue());
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -62,7 +65,7 @@ public class FinancialProductService {
 			.taxRate(product.getProductTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
-			.expirationDate(product.getExpirationDate())
+			.expirationDate(expirationDate)
 			.balance(product.getBalanceByLocalDate(today))
 			.progress(product.getProgressByLocalDate(today))
 			.remainingDays(product.getRemainingDaysByLocalDate(today))

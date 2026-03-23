@@ -168,4 +168,11 @@ public abstract class FinancialProduct {
 		return null;
 	}
 
+	public String getInvestmentTypeName() {
+		return getProductInvestmentType().getName();
+	}
+
+	public Integer getMonthsValue() {
+		return getMonths().getValue();
+	}
 }
