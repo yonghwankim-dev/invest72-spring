@@ -19,7 +19,6 @@ import co.invest72.financial_product.presentation.dto.response.DetailedFinancial
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.money.domain.Currency;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +56,7 @@ public class FinancialProductService {
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
 			.paymentDay(product.getPaymentDayValue())
-			.interestRate(new AnnualInterestRate(product.getProductAnnualInterestRate().getValue()).getValue())
+			.interestRate(product.getProductAnnualInterestRate().getValue())
 			.interestType(product.getProductInterestType().getName())
 			.taxType(product.getProductTaxType().getName())
 			.taxRate(product.getProductTaxRate().getValue())
