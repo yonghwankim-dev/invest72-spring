@@ -2,6 +2,7 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -46,6 +47,7 @@ public class ProductTaxRate {
 
 	@Override
 	public int hashCode() {
-		return this.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN).hashCode();
+		return Objects.hash(this.value == null ? null :
+			this.value.stripTrailingZeros().setScale(SCALE, RoundingMode.HALF_EVEN));
 	}
 }
