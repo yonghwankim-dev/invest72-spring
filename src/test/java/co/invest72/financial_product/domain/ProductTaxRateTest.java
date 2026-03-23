@@ -18,4 +18,42 @@ class ProductTaxRateTest {
 		// then
 		Assertions.assertThat(productTaxRate).isNotNull();
 	}
+
+	@DisplayName("객체 비교 - 동일한 값을 가진 두 상품 비교시 True를 반환해야 한다.")
+	@Test
+	void equals_whenSameValue_thenReturnTrue() {
+		// given
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(BigDecimal.valueOf(0.154));
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(BigDecimal.valueOf(0.154));
+		// when
+		boolean actual = productTaxRate1.equals(productTaxRate2);
+		// then
+		Assertions.assertThat(actual).isTrue();
+	}
+
+	@DisplayName("객체 비교 - 소수점 자릿수(정밀도)가 달라도 값이 같으면 동일한 세율로 판단한다")
+	@Test
+	void equals_whenSameValueAndDiffPrecision_thenReturnTrue() {
+		// given
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(BigDecimal.valueOf(0.154));
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(BigDecimal.valueOf(0.154000));
+		// when
+		boolean actual = productTaxRate1.equals(productTaxRate2);
+		// then
+		Assertions.assertThat(actual).isTrue();
+		Assertions.assertThat(productTaxRate1).hasSameHashCodeAs(productTaxRate2);
+	}
+
+	@DisplayName("객체 비교 - 스케일 4를 초과하는 정밀도(precision)의 값이 달라도 비교시 논리적으로 같은 객체라고 판단한다")
+	@Test
+	void equals_when_comparing_values_with_different_precision_beyond_scale_4_then_return_equal() {
+		// given
+		ProductTaxRate productTaxRate1 = new ProductTaxRate(BigDecimal.valueOf(0.1540));
+		ProductTaxRate productTaxRate2 = new ProductTaxRate(BigDecimal.valueOf(0.15401));
+		// when
+		boolean actual = productTaxRate1.equals(productTaxRate2);
+		// then
+		Assertions.assertThat(actual).isTrue();
+		Assertions.assertThat(productTaxRate1).hasSameHashCodeAs(productTaxRate2);
+	}
 }

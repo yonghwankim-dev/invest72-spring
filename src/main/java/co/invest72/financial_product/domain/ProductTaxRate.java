@@ -1,6 +1,7 @@
 package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -10,6 +11,9 @@ import lombok.Getter;
 @Embeddable
 @Getter
 public class ProductTaxRate {
+
+	private static final int PRECISION = 5;
+	private static final int SCALE = 4;
 
 	@Column(name = "tax_rate", nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
@@ -36,11 +40,13 @@ public class ProductTaxRate {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProductTaxRate that = (ProductTaxRate)o;
-		return this.value.compareTo(that.value) == 0;
+		BigDecimal value1 = this.value.setScale(SCALE, RoundingMode.HALF_EVEN);
+		BigDecimal value2 = that.value.setScale(SCALE, RoundingMode.HALF_EVEN);
+		return value1.compareTo(value2) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(this.value.setScale(SCALE, RoundingMode.HALF_EVEN));
 	}
 }
