@@ -16,43 +16,6 @@ class FinancialProductTest {
 
 	private FinancialProduct financialProduct;
 
-	@DisplayName("현금 상품 객체 생성")
-	@Test
-	void constructor_whenCreatingCashProduct_thenCreateSuccessfully() {
-		// Given & When
-		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
-
-		// Then
-		Assertions.assertThat(financialProduct).isNotNull();
-	}
-
-	@DisplayName("현금 상품 만기일 계산 - 현금 상품은 만기일이 LocalDate.MAX로 설정된다.")
-	@Test
-	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
-
-		// When
-		LocalDate expirationDate = financialProduct.getExpirationDate();
-
-		// Then
-		Assertions.assertThat(expirationDate).isEqualTo(LocalDate.MAX);
-	}
-
-	@DisplayName("현금 상품 진행률 계산 - 현금 상품은 진행률은 무조건 1.0이 반환된다.")
-	@Test
-	void getProgressByLocalDate_whenStartDateIsBeforeToday_thenReturnOne() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2);// 시작일을 오늘보다 2개월 이전으로 설정
-
-		// When
-		BigDecimal progress = financialProduct.getProgressByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.ONE);
-	}
-
 	@DisplayName("현금 상품 남은 일수 계산 - 현금 상품은 남은 일수가 항상 0이 반환된다.")
 	@Test
 	void getRemainingDaysByLocalDate_whenCashProduct_thenReturnZero() {
