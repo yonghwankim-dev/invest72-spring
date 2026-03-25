@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 
-public class FinancialProductBalanceSourceProvider {
+public class FinancialProductSourceProvider {
 
 	public static Stream<Arguments> provideExpirationSource() {
 		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user-1");
@@ -55,6 +55,21 @@ public class FinancialProductBalanceSourceProvider {
 				"적금 상품: 기준일자의 days가 납입일과 동일하면 잔액이 2개월분 적립되어야 한다."),
 			Arguments.of(product, LocalDate.of(2026, 2, 16), BigDecimal.valueOf(2_000_000),
 				"적금 상품: 기준일자의 days가 납입일 이후라면 잔액이 2개월분 적립되어야 한다")
+		);
+	}
+
+	public static Stream<Arguments> provideRemainingDaysSource() {
+		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user-1");
+		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct("user-1");
+		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct("user-1");
+		return Stream.of(
+			Arguments.of(cash, LocalDate.of(2026, 1, 1), 0L, "현금 상품: 현금 상품은 0을 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2027, 1, 2), 0L, "에금 상품: 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2027, 1, 1), 0L, "에금 상품: 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2026, 2, 27), 308L, "에금 상품: 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환해야 한다."),
+			Arguments.of(savings, LocalDate.of(2027, 1, 2), 0L, "적금 상품: 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(savings, LocalDate.of(2027, 1, 1), 0L, "적금 상품: 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(savings, LocalDate.of(2026, 2, 27), 308L, "적금 상품: 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환해야 한다.")
 		);
 	}
 }

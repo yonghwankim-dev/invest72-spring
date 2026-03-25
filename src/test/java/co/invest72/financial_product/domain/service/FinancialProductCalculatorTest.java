@@ -22,18 +22,9 @@ class FinancialProductCalculatorTest {
 		calculator = new FinancialProductCalculator();
 	}
 
-	@DisplayName("객체 생성")
-	@Test
-	void canCreated() {
-		// when
-		calculator = new FinancialProductCalculator();
-		// then
-		Assertions.assertThat(calculator).isNotNull();
-	}
-
 	@DisplayName("금융 상품 만기일 계산")
-	@ParameterizedTest(name = "만기일 계산: desc={2}")
-	@MethodSource(value = {"source.FinancialProductBalanceSourceProvider#provideExpirationSource"})
+	@ParameterizedTest(name = "desc={2}")
+	@MethodSource(value = {"source.FinancialProductSourceProvider#provideExpirationSource"})
 	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax(FinancialProduct product, LocalDate expected,
 		String ignored) {
 		// When
@@ -41,12 +32,12 @@ class FinancialProductCalculatorTest {
 		// Then
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
-	
+
 	@DisplayName("금융 상품의 잔고 계산")
-	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
-	@MethodSource(value = {"source.FinancialProductBalanceSourceProvider#provideCashBalanceSource",
-		"source.FinancialProductBalanceSourceProvider#provideDepositBalanceSource",
-		"source.FinancialProductBalanceSourceProvider#provideSavingsBalanceSource"
+	@ParameterizedTest(name = "today={1}, desc={3}")
+	@MethodSource(value = {"source.FinancialProductSourceProvider#provideCashBalanceSource",
+		"source.FinancialProductSourceProvider#provideDepositBalanceSource",
+		"source.FinancialProductSourceProvider#provideSavingsBalanceSource"
 	})
 	void givenProductAndLocalDate_whenCalculateBalance_thenReturnBalance(FinancialProduct product, LocalDate today,
 		BigDecimal expected, String ignored) {
@@ -54,6 +45,18 @@ class FinancialProductCalculatorTest {
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		// Then
 		Assertions.assertThat(balance).isEqualTo(expected);
+	}
+
+	@DisplayName("금융 상품의 진행률 남은 일수 계산")
+	@ParameterizedTest(name = "today={1}, desc={3}")
+	@MethodSource(value = "source.FinancialProductSourceProvider#provideRemainingDaysSource")
+	void givenProductAndToday_whenCalculateRemainingDays_thenReturnLong(FinancialProduct product, LocalDate today,
+		Long expected, String ignored) {
+		// When
+		long remainingDays = product.getRemainingDaysByLocalDate(today);
+
+		// Then
+		Assertions.assertThat(remainingDays).isEqualTo(expected);
 	}
 
 	@DisplayName("현금 상품 진행률 계산 - 현금 상품은 진행률은 무조건 1.0이 반환된다.")

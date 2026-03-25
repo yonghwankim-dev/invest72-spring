@@ -16,34 +16,6 @@ class FinancialProductTest {
 
 	private FinancialProduct financialProduct;
 
-	@DisplayName("예금 상품 만기일 계산 - 시작일자로부터 설정된 개월 수만큼 더한 날짜가 만기일로 계산된다.")
-	@Test
-	void calculateExpirationDate_whenDepositProduct_thenReturnCorrectExpirationDate() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
-		LocalDate expectedExpirationDate = LocalDate.of(2027, 1, 1);
-
-		// When
-		LocalDate expirationDate = financialProduct.getExpirationDate();
-
-		// Then
-		Assertions.assertThat(expirationDate).isEqualTo(expectedExpirationDate);
-	}
-
-	@DisplayName("현금 상품 남은 일수 계산 - 현금 상품은 남은 일수가 항상 0이 반환된다.")
-	@Test
-	void getRemainingDaysByLocalDate_whenCashProduct_thenReturnZero() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 1, 1);
-
-		// When
-		long remainingDays = financialProduct.getRemainingDaysByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(remainingDays).isZero();
-	}
-
 	@DisplayName("예금 상품 진행률 계산 - 기준일자가 시작일자보다 이전인 경우 진행률은 0.0이 반환된다.")
 	@Test
 	void getProgressByLocalDate_whenStartDateIsAfterToday_thenReturnZero() {
@@ -100,63 +72,7 @@ class FinancialProductTest {
 		// Then
 		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.16));
 	}
-
-	@DisplayName("예금 상품 남은 일수 계산 - 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환된다.")
-	@Test
-	void getRemainingDaysByLocalDate_whenExpirationDateIsBeforeToday_thenReturnZero() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
-		LocalDate today = LocalDate.of(2027, 1, 2);
-
-		// When
-		long remainingDays = financialProduct.getRemainingDaysByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(remainingDays).isZero();
-	}
-
-	@DisplayName("예금 상품 남은 일수 계산 - 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환된다.")
-	@Test
-	void getRemainingDaysByLocalDate_whenExpirationDateIsEqualToToday_thenReturnZero() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
-		LocalDate today = LocalDate.of(2027, 1, 1);
-
-		// When
-		long remainingDays = financialProduct.getRemainingDaysByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(remainingDays).isZero();
-	}
-
-	@DisplayName("예금 상품 남은 일수 계산 - 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환된다.")
-	@Test
-	void getRemainingDaysByLocalDate_whenExpirationDateIsAfterToday_thenReturnPositiveValue() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 27);
-
-		// When
-		long remainingDays = financialProduct.getRemainingDaysByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(remainingDays).isGreaterThan(0);
-	}
-
-	@DisplayName("적금 상품 만기일 계산 - 시작일자로부터 설정된 개월 수만큼 더한 날짜가 만기일로 계산된다.")
-	@Test
-	void calculateExpirationDate_whenSavingsProduct_thenReturnCorrectExpirationDate() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate expectedExpirationDate = LocalDate.of(2027, 1, 1);
-
-		// When
-		LocalDate expirationDate = financialProduct.getExpirationDate();
-
-		// Then
-		Assertions.assertThat(expirationDate).isEqualTo(expectedExpirationDate);
-	}
-
+	
 	@DisplayName("적금 상품 진행률 계산 - 기준일자가 시작일자보다 이전인 경우 진행률은 0.0이 반환된다.")
 	@Test
 	void getProgressByLocalDate_whenStartDateIsAfterToday_thenReturnZeroForSavings() {
