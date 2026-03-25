@@ -61,7 +61,7 @@ class BalancePolicyTest {
 		// Given
 		BalancePolicy policy = BalancePolicy.ACCUMULATIVE;
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2027, 1, 1);
+		LocalDate today = LocalDate.of(2027, 1, 2);
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 
 		// When
