@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import co.invest72.financial_product.domain.FinancialProduct;
 
 public interface BalanceStrategy {
-	BigDecimal calculate(FinancialProduct product, LocalDate today);
+	BigDecimal calculate(FinancialProduct product, LocalDate today, LocalDate expirationDate);
 }

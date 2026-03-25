@@ -1,5 +1,6 @@
 package co.invest72.financial_product.application;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
@@ -31,6 +33,7 @@ public class FinancialProductService {
 	private final LocalDateProvider localDateProvider;
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductFactory financialProductFactory;
+	private final FinancialProductCalculator calculator;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -45,9 +48,13 @@ public class FinancialProductService {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
 
+		LocalDate expirationDate = calculator.calculateExpirationDate(product);
+		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
+		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
+
 		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
-
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
@@ -62,10 +69,10 @@ public class FinancialProductService {
 			.taxRate(product.getProductTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
-			.expirationDate(product.getExpirationDate())
-			.balance(product.getBalanceByLocalDate(today))
-			.progress(product.getProgressByLocalDate(today))
-			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.expirationDate(expirationDate)
+			.balance(balance)
+			.progress(progress)
+			.remainingDays(remainingDays)
 			.productCurrency(productCurrency)
 			.build();
 	}
@@ -143,7 +150,8 @@ public class FinancialProductService {
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				investmentFactory.createBy(product),
-				today
+				today,
+				calculator
 			);
 			result.add(data);
 		}

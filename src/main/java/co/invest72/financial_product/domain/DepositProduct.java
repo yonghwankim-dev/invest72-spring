@@ -1,9 +1,5 @@
 package co.invest72.financial_product.domain;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -16,11 +12,6 @@ import lombok.experimental.SuperBuilder;
 public class DepositProduct extends FinancialProduct {
 
 	protected DepositProduct() {
-	}
-
-	@Override
-	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return InvestmentType.valueOf(getProductInvestmentType().getName()).calculateBalance(this, today);
 	}
 
 	@Override

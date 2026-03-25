@@ -38,8 +38,8 @@ public enum InvestmentType {
 		return periodStrategy.remainingDays(today, expirationDate);
 	}
 
-	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
-		return balanceStrategy.calculate(product, today);
+	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+		return balanceStrategy.calculate(product, today, expirationDate);
 	}
 
 	/**

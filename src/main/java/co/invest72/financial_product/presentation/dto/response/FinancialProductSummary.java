@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.investment.domain.Investment;
 import co.invest72.money.domain.Currency;
 import lombok.Builder;
@@ -31,21 +32,27 @@ public class FinancialProductSummary {
 	public static FinancialProductSummary from(
 		FinancialProduct product,
 		Investment investment,
-		LocalDate today
+		LocalDate today,
+		FinancialProductCalculator calculator
 	) {
+		LocalDate expirationDate = calculator.calculateExpirationDate(product);
+		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
+		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
+
 		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return FinancialProductSummary.builder()
 			.id(product.getId())
 			.name(product.getName())
-			.investmentType(product.getProductInvestmentType().getName())
+			.investmentType(product.getInvestmentTypeName())
 			.interestRate(product.getProductAnnualInterestRate().getValue())
 			.startDate(product.getStartDate())
-			.expirationDate(product.getExpirationDate())
-			.balance(product.getBalanceByLocalDate(today))
+			.expirationDate(expirationDate)
+			.balance(balance)
 			.expectedInterest(investment.getTotalInterest().getValue())
-			.progress(product.getProgressByLocalDate(today))
-			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.progress(progress)
+			.remainingDays(remainingDays)
 			.createdAt(product.getCreatedAt())
 			.productCurrency(productCurrency)
 			.build();
