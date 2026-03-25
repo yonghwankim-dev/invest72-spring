@@ -53,42 +53,20 @@ class FinancialProductCalculatorTest {
 		Assertions.assertThat(expirationDate).isEqualTo(LocalDate.of(2027, 1, 1));
 	}
 
-	@DisplayName("현금 상품 현재 잔액 계산 - 현금 상품은 언제든지 잔액이 원금이 반환된다.")
-	@Test
-	void givenProductAndToday_whenProductIsCash_thenReturnBalance() {
-		// Given
-		FinancialProduct product = FinancialProductDataProvider.createCashProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2); // 시작일을 오늘보다 2개월 이전으로 설정
-
+	@DisplayName("금융 상품의 잔고 계산")
+	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
+	@MethodSource(value = {"source.FinancialProductBalanceSourceProvider#provideCashBalanceSource",
+		"source.FinancialProductBalanceSourceProvider#provideDepositBalanceSource",
+		"source.FinancialProductBalanceSourceProvider#provideSavingsBalanceSource"
+	})
+	void givenProductAndLocalDate_whenCalculateBalance_thenReturnBalance(FinancialProduct product, LocalDate today,
+		BigDecimal expected, String ignored) {
 		// When
 		BigDecimal balance = calculator.calculateBalance(product, today);
-
 		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(BigDecimal.valueOf(1_000_000L));
-	}
-
-	@DisplayName("예금 상품의 잔고 계산 - 예금 상품은 시작일자 관계없이 원금을 무조건 반환한다")
-	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
-	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideDepositBalanceSource")
-	void givenProductAndLocalDate_whenProductIsDeposit_thenReturnBalance(FinancialProduct product, LocalDate today,
-		BigDecimal expected, String ignored) {
-		// when
-		BigDecimal balance = calculator.calculateBalance(product, today);
-		// then
 		Assertions.assertThat(balance).isEqualTo(expected);
 	}
-
-	@DisplayName("적금 상품 현재 잔액 계산")
-	@ParameterizedTest(name = "잔액 계산: {3}")
-	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideSavingsBalanceSource")
-	void givenProductAndLocalDate_whenProductIsSavings_thenReturnBalance(FinancialProduct product, LocalDate today,
-		BigDecimal expected, String ignored) {
-		// When
-		BigDecimal balance = calculator.calculateBalance(product, today);
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expected);
-	}
-
+	
 	@DisplayName("현금 상품 진행률 계산 - 현금 상품은 진행률은 무조건 1.0이 반환된다.")
 	@Test
 	void getProgressByLocalDate_whenStartDateIsBeforeToday_thenReturnOne() {
