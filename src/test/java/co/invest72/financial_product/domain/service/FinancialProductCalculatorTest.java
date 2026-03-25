@@ -31,28 +31,17 @@ class FinancialProductCalculatorTest {
 		Assertions.assertThat(calculator).isNotNull();
 	}
 
-	@DisplayName("현금 상품 만기일 계산 - 현금 상품은 만기일이 LocalDate.MAX로 설정된다.")
-	@Test
-	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax() {
-		// Given
-		FinancialProduct financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
+	@DisplayName("금융 상품 만기일 계산")
+	@ParameterizedTest(name = "만기일 계산: desc={2}")
+	@MethodSource(value = {"source.FinancialProductBalanceSourceProvider#provideExpirationSource"})
+	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax(FinancialProduct product, LocalDate expected,
+		String ignored) {
 		// When
-		LocalDate expirationDate = calculator.calculateExpirationDate(financialProduct);
-		// Then
-		Assertions.assertThat(expirationDate).isEqualTo(LocalDate.MAX);
-	}
-
-	@DisplayName("예금 상품의 만기일 계산")
-	@Test
-	void calculateExpirationDate_whenDeposit() {
-		// given
-		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1234");
-		// when
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		// then
-		Assertions.assertThat(expirationDate).isEqualTo(LocalDate.of(2027, 1, 1));
+		// Then
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
-
+	
 	@DisplayName("금융 상품의 잔고 계산")
 	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
 	@MethodSource(value = {"source.FinancialProductBalanceSourceProvider#provideCashBalanceSource",
@@ -66,7 +55,7 @@ class FinancialProductCalculatorTest {
 		// Then
 		Assertions.assertThat(balance).isEqualTo(expected);
 	}
-	
+
 	@DisplayName("현금 상품 진행률 계산 - 현금 상품은 진행률은 무조건 1.0이 반환된다.")
 	@Test
 	void getProgressByLocalDate_whenStartDateIsBeforeToday_thenReturnOne() {

@@ -10,6 +10,17 @@ import co.invest72.financial_product.domain.FinancialProduct;
 
 public class FinancialProductBalanceSourceProvider {
 
+	public static Stream<Arguments> provideExpirationSource() {
+		FinancialProduct cash = FinancialProductDataProvider.createCashProduct("user-1");
+		FinancialProduct deposit = FinancialProductDataProvider.createDepositProduct("user-1");
+		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct("user-1");
+		return Stream.of(
+			Arguments.of(cash, LocalDate.MAX, "현금 상품: 만기일이 LocalDate.MAX여야 한다"),
+			Arguments.of(deposit, LocalDate.of(2027, 1, 1), "예금 상품"),
+			Arguments.of(savings, LocalDate.of(2027, 1, 1), "적금 상품")
+		);
+	}
+
 	public static Stream<Arguments> provideCashBalanceSource() {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct("user-1");
 		BigDecimal expected = product.getAmount().getValue();
