@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.investment.domain.investment.InvestmentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
@@ -106,19 +105,6 @@ public abstract class FinancialProduct {
 		if (!getCreatedAt().equals(updatedProduct.getCreatedAt())) {
 			throw new IllegalArgumentException("생성 날짜(createdAt)는 변경할 수 없습니다.");
 		}
-	}
-
-	/**
-	 * 만기일 계산<br>
-	 * @return 만기일 (현금 상품의 경우 LocalDate.MAX 반환)
-	 */
-	public LocalDate getExpirationDate() {
-		return getInvestmentTypeAsEnum()
-			.calculateExpirationDate(startDate, months.getValue());
-	}
-
-	private InvestmentType getInvestmentTypeAsEnum() {
-		return InvestmentType.valueOf(productInvestmentType.getName());
 	}
 
 	/**
