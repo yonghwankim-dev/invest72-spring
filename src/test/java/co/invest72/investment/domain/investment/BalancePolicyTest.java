@@ -19,9 +19,10 @@ class BalancePolicyTest {
 		BalancePolicy policy = BalancePolicy.FIXED;
 		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1");
 		LocalDate today = LocalDate.of(2026, 1, 1);
+		LocalDate expirationDate = product.getExpirationDate();
 
 		// When
-		BigDecimal balance = policy.calculate(product, today);
+		BigDecimal balance = policy.calculate(product, today, expirationDate);
 
 		// Then
 		Assertions.assertThat(balance)
@@ -35,9 +36,10 @@ class BalancePolicyTest {
 		BalancePolicy policy = BalancePolicy.ACCUMULATIVE;
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		LocalDate today = LocalDate.of(2025, 12, 31);
+		LocalDate expirationDate = product.getExpirationDate();
 
 		// When
-		BigDecimal balance = policy.calculate(product, today);
+		BigDecimal balance = policy.calculate(product, today, expirationDate);
 
 		// Then
 		Assertions.assertThat(balance)
@@ -51,9 +53,10 @@ class BalancePolicyTest {
 		BalancePolicy policy = BalancePolicy.ACCUMULATIVE;
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		LocalDate today = LocalDate.of(2027, 1, 1);
+		LocalDate expirationDate = product.getExpirationDate();
 
 		// When
-		BigDecimal balance = policy.calculate(product, today);
+		BigDecimal balance = policy.calculate(product, today, expirationDate);
 
 		// Then
 		BigDecimal expectedBalance = product.getAmount().getValue()

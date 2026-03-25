@@ -18,8 +18,9 @@ public class FinancialProductCalculator {
 
 	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
 		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
+		LocalDate expirationDate = calculateExpirationDate(product);
 
-		return investmentType.calculateBalance(product, today);
+		return investmentType.calculateBalance(product, today, expirationDate);
 	}
 
 	public BigDecimal calculateProgress(FinancialProduct product, LocalDate today) {

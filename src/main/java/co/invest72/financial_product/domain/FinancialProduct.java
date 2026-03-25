@@ -1,6 +1,5 @@
 package co.invest72.financial_product.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -78,13 +77,6 @@ public abstract class FinancialProduct {
 	}
 
 	/**
-	 * 잔액 계산<br>
-	 * @param today 현재 날짜
-	 * @return 잔액 (현금 상품은 투자 금액 그대로 반환, 적금은 경과한 개월 수에 따라 누적된 금액 반환)
-	 */
-	public abstract BigDecimal getBalanceByLocalDate(LocalDate today);
-
-	/**
 	 * 상품 정보 업데이트<br>
 	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)
 	 * @param updatedProduct 업데이트된 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)
@@ -127,26 +119,6 @@ public abstract class FinancialProduct {
 
 	private InvestmentType getInvestmentTypeAsEnum() {
 		return InvestmentType.valueOf(productInvestmentType.getName());
-	}
-
-	/**
-	 * 진행률 계산<br>
-	 * @param today 현재 날짜
-	 * @return 진행률 (0.0 ~ 1.0 사이의 값, 현금 상품은 항상 1.0 반환)
-	 */
-	public BigDecimal getProgressByLocalDate(LocalDate today) {
-		return getInvestmentTypeAsEnum()
-			.calculateProgress(startDate, getExpirationDate(), today);
-	}
-
-	/**
-	 * 남은 일수 계산<br>
-	 * @param today 현재 날짜
-	 * @return 남은 일수 (만기일이 지났거나 일시금 상품인 경우 0 반환)
-	 */
-	public long getRemainingDaysByLocalDate(LocalDate today) {
-		return getInvestmentTypeAsEnum()
-			.calculateRemainingDays(today, getExpirationDate());
 	}
 
 	/**

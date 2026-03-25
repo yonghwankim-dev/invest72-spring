@@ -1,6 +1,5 @@
 package co.invest72.financial_product.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -49,11 +48,6 @@ public class SavingsProduct extends FinancialProduct {
 			throw new IllegalArgumentException("업데이트된 상품은 SavingsProduct여야 합니다.");
 		}
 		return updatedSavings;
-	}
-
-	@Override
-	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return InvestmentType.valueOf(getProductInvestmentType().getName()).calculateBalance(this, today);
 	}
 
 	@Override

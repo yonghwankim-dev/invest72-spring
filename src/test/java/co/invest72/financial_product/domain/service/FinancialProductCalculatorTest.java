@@ -51,7 +51,7 @@ class FinancialProductCalculatorTest {
 	void givenProductAndToday_whenCalculateRemainingDays_thenReturnLong(FinancialProduct product, LocalDate today,
 		Long expected, String ignored) {
 		// When
-		long remainingDays = product.getRemainingDaysByLocalDate(today);
+		long remainingDays = calculator.calculateRemainingDays(product, today);
 		// Then
 		Assertions.assertThat(remainingDays).isEqualTo(expected);
 	}
