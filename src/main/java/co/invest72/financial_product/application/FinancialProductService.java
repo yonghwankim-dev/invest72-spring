@@ -49,9 +49,9 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		BigDecimal balance = calculator.calculateBalance(product, today);
-		BigDecimal progress = calculator.calculateProgress(product, today);
-		Long remainingDays = calculator.calculateRemainingDays(product, today);
+		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
+		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
 		Currency currency = Currency.from(product.getAmount().getCurrency());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);

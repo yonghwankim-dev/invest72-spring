@@ -17,24 +17,34 @@ public class FinancialProductCalculator {
 	}
 
 	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
-		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		LocalDate expirationDate = calculateExpirationDate(product);
+		return calculateBalance(product, today, expirationDate);
+	}
 
+	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		return investmentType.calculateBalance(product, today, expirationDate);
 	}
 
 	public BigDecimal calculateProgress(FinancialProduct product, LocalDate today) {
+		LocalDate expirationDate = calculateExpirationDate(product);
+		return calculateProgress(product, today, expirationDate);
+	}
+
+	public BigDecimal calculateProgress(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		LocalDate startDate = product.getStartDate();
-		LocalDate expirationDate = calculateExpirationDate(product);
 
 		return investmentType.calculateProgress(startDate, expirationDate, today);
 	}
 
 	public Long calculateRemainingDays(FinancialProduct product, LocalDate today) {
-		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		LocalDate expirationDate = calculateExpirationDate(product);
+		return calculateRemainingDays(product, today, expirationDate);
+	}
 
+	public Long calculateRemainingDays(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		return investmentType.calculateRemainingDays(today, expirationDate);
 	}
 }
