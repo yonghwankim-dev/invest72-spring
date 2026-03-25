@@ -55,7 +55,7 @@ class FinancialProductCalculatorTest {
 
 	@DisplayName("현금 상품 현재 잔액 계산 - 현금 상품은 언제든지 잔액이 원금이 반환된다.")
 	@Test
-	void calculateBalance_whenCashProduct_thenReturnPrincipal() {
+	void givenProductAndToday_whenProductIsCash_thenReturnBalance() {
 		// Given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct("user-1");
 		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2); // 시작일을 오늘보다 2개월 이전으로 설정
@@ -70,7 +70,8 @@ class FinancialProductCalculatorTest {
 	@DisplayName("예금 상품의 잔고 계산 - 예금 상품은 시작일자 관계없이 원금을 무조건 반환한다")
 	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
 	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideDepositBalanceSource")
-	void calculateBalance_whenDeposit(FinancialProduct product, LocalDate today, BigDecimal expected, String ignored) {
+	void givenProductAndLocalDate_whenProductIsDeposit_thenReturnBalance(FinancialProduct product, LocalDate today,
+		BigDecimal expected, String ignored) {
 		// when
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		// then
@@ -80,7 +81,7 @@ class FinancialProductCalculatorTest {
 	@DisplayName("적금 상품 현재 잔액 계산")
 	@ParameterizedTest(name = "잔액 계산: {3}")
 	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideSavingsBalanceSource")
-	void calculateBalance_whenStartDateIsAfterToday_thenReturnZeroForSavings(FinancialProduct product, LocalDate today,
+	void givenProductAndLocalDate_whenProductIsSavings_thenReturnBalance(FinancialProduct product, LocalDate today,
 		BigDecimal expected, String ignored) {
 		// When
 		BigDecimal balance = calculator.calculateBalance(product, today);
