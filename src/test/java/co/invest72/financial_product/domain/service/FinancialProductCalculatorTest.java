@@ -68,20 +68,18 @@ class FinancialProductCalculatorTest {
 	}
 
 	@DisplayName("예금 상품의 잔고 계산 - 예금 상품은 시작일자 관계없이 원금을 무조건 반환한다")
-	@Test
-	void calculateBalance_whenDeposit() {
-		// given
-		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1234");
-		LocalDate today = LocalDate.of(2026, 2, 1);
+	@ParameterizedTest(name = "잔액 계산: today={1}, desc={3}")
+	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideDepositBalanceSource")
+	void calculateBalance_whenDeposit(FinancialProduct product, LocalDate today, BigDecimal expected, String ignored) {
 		// when
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		// then
-		Assertions.assertThat(balance).isEqualTo(BigDecimal.valueOf(1_000_000L));
+		Assertions.assertThat(balance).isEqualTo(expected);
 	}
 
 	@DisplayName("적금 상품 현재 잔액 계산")
 	@ParameterizedTest(name = "잔액 계산: {3}")
-	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideBalanceSource")
+	@MethodSource(value = "source.SavingsProductBalanceSourceProvider#provideSavingsBalanceSource")
 	void calculateBalance_whenStartDateIsAfterToday_thenReturnZeroForSavings(FinancialProduct product, LocalDate today,
 		BigDecimal expected, String ignored) {
 		// When

@@ -10,7 +10,17 @@ import co.invest72.financial_product.domain.FinancialProduct;
 
 public class SavingsProductBalanceSourceProvider {
 
-	public static Stream<Arguments> provideBalanceSource() {
+	public static Stream<Arguments> provideDepositBalanceSource() {
+		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1");
+		BigDecimal expected = product.getAmount().getValue();
+		return Stream.of(
+			Arguments.of(product, LocalDate.of(2026, 1, 1), expected, "기준일자가 시작일자와 동일한 경우"),
+			Arguments.of(product, LocalDate.of(2026, 1, 1).minusDays(1), expected, "기준일자가 시작일자보다 이전인 경우"),
+			Arguments.of(product, LocalDate.of(2026, 1, 1).plusMonths(12), expected, "기준일자가 시작일자보다 이후인 경우")
+		);
+	}
+
+	public static Stream<Arguments> provideSavingsBalanceSource() {
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		return Stream.of(
 			Arguments.of(product, LocalDate.of(2026, 1, 1).minusMonths(2), BigDecimal.ZERO,
