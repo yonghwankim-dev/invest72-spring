@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
+import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -20,7 +21,7 @@ public class AnnualInterestRate implements InterestRate {
 
 	private static final BigDecimal MAX_RATE = new BigDecimal("9.9999");
 
-	@Column(nullable = false, precision = 5, scale = 4)
+	@Column(name = "interest_rate", nullable = false, precision = 5, scale = 4)
 	private BigDecimal value;
 
 	public AnnualInterestRate(double value) {
@@ -50,8 +51,8 @@ public class AnnualInterestRate implements InterestRate {
 	}
 
 	@Override
-	public BigDecimal getAnnualInterest(BigDecimal amount) {
-		return amount.multiply(getAnnualRate());
+	public Money getAnnualInterest(Money amount) {
+		return amount.times(getAnnualRate());
 	}
 
 	@Override
@@ -74,13 +75,8 @@ public class AnnualInterestRate implements InterestRate {
 	}
 
 	@Override
-	public BigDecimal calMonthlyInterest(int amount) {
-		return calMonthlyInterest(BigDecimal.valueOf(amount));
-	}
-
-	@Override
-	public BigDecimal calMonthlyInterest(BigDecimal amount) {
-		return amount.multiply(getMonthlyRate());
+	public Money calMonthlyInterest(Money amount) {
+		return amount.times(getMonthlyRate());
 	}
 
 	@Override

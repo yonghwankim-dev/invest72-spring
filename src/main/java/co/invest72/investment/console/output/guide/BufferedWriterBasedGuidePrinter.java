@@ -63,7 +63,7 @@ public class BufferedWriterBasedGuidePrinter implements GuidePrinter {
 
 	@Override
 	public void printInvestmentTypeInputGuide() {
-		String text = "투자 유형을 입력하세요 (예금 or 적금): ";
+		String text = "투자 유형을 입력하세요 (DEPOSIT or SAVINTS): ";
 		write(text);
 	}
 

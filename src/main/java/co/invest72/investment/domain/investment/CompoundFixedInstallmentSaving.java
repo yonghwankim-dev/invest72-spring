@@ -10,6 +10,8 @@ import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingMonthlyDetailFactory;
 import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingYearlyDetailFactory;
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import lombok.Builder;
 
 public class CompoundFixedInstallmentSaving implements Investment {
@@ -37,81 +39,88 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	}
 
 	@Override
-	public BigDecimal getPrincipal() {
+	public Money getPrincipal() {
 		return getPrincipal(getFinalMonth());
 	}
 
 	@Override
-	public BigDecimal getPrincipal(int month) {
+	public Money getPrincipal(int month) {
 		if (month > getFinalMonth()) {
-			return getPrincipal();
+			return getPrincipal(getFinalMonth());
 		}
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		return roundToWholeAmount.apply(details.get(month).getPrincipal());
+		BigDecimal principal = details.get(month).getPrincipal();
+		return roundToWholeMoney.apply(Money.of(principal, investmentAmount.getAmount().getCurrency()));
 	}
 
 	@Override
-	public BigDecimal getInterest() {
+	public Money getInterest() {
 		return getInterest(getFinalMonth());
 	}
 
 	@Override
-	public BigDecimal getInterest(int month) {
+	public Money getInterest(int month) {
 		if (month > getFinalMonth()) {
-			return getInterest();
+			return getInterest(getFinalMonth());
 		}
 		if (month < 0) {
 			return getInterest(0);
 		}
-		return roundToWholeAmount.apply(details.get(month).getInterest());
+		BigDecimal value = details.get(month).getInterest();
+		return roundToWholeMoney.apply(Money.of(value, investmentAmount.getAmount().getCurrency()));
 	}
 
 	@Override
-	public BigDecimal getProfit() {
+	public Money getProfit() {
 		return getProfit(getFinalMonth());
 	}
 
 	@Override
-	public BigDecimal getProfit(int month) {
+	public Money getProfit(int month) {
 		if (month > getFinalMonth()) {
-			return getProfit();
+			return getProfit(getFinalMonth());
 		}
 		if (month < 0) {
 			return getProfit(0);
 		}
-		return roundToWholeAmount.apply(details.get(month).getProfit());
+		BigDecimal value = details.get(month).getProfit();
+		Money profit = Money.of(value, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(profit);
 	}
 
 	@Override
-	public BigDecimal getTotalInvestment() {
-		BigDecimal totalInvestment = investmentAmount.getAmount()
-			.multiply(BigDecimal.valueOf(investPeriod.getMonths()));
-		return roundToWholeAmount.apply(totalInvestment);
+	public Money getTotalInvestment() {
+		Money totalInvestment = investmentAmount.getAmount().times(BigDecimal.valueOf(investPeriod.getMonths()));
+		return roundToWholeMoney.apply(totalInvestment);
 	}
 
 	@Override
-	public BigDecimal getTotalInterest() {
+	public Money getTotalInterest() {
 		BigDecimal totalInterest = details.stream()
 			.skip(1)
 			.map(MonthlyInvestmentDetail::getInterest)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return roundToWholeAmount.apply(totalInterest);
+		Money money = Money.of(totalInterest, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(money);
 	}
 
 	@Override
-	public BigDecimal getTotalTax() {
-		return roundToWholeAmount.apply(taxable.applyTax(getTotalInterest()));
+	public Money getTotalTax() {
+		BigDecimal tax = taxable.applyTax(getTotalInterest().getValue());
+		Money taxMoney = Money.of(tax, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(taxMoney);
 	}
 
 	@Override
-	public BigDecimal getTotalProfit() {
+	public Money getTotalProfit() {
 		BigDecimal principal = details.get(getFinalMonth()).getPrincipal();
 		BigDecimal interest = details.get(getFinalMonth()).getInterest();
-		BigDecimal totalTax = getTotalTax();
+		BigDecimal totalTax = getTotalTax().getValue();
 		BigDecimal totalProfit = principal.add(interest).subtract(totalTax);
-		return roundToWholeAmount.apply(totalProfit);
+		Money profitMoney = Money.of(totalProfit, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(profitMoney);
 	}
 
 	@Override
@@ -124,8 +133,12 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		return taxable.getTaxType();
 	}
 
+	private int getFinalYear() {
+		return (getFinalMonth() - 1) / 12 + 1;
+	}
+
 	@Override
-	public BigDecimal getPrincipalForYear(int year) {
+	public Money getPrincipalForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getPrincipalForYear(finalYear);
@@ -133,15 +146,13 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getPrincipal());
-	}
-
-	private int getFinalYear() {
-		return (getFinalMonth() - 1) / 12 + 1;
+		BigDecimal principal = yearlyDetails.get(year).getPrincipal();
+		Money principalMoney = Money.of(principal, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(principalMoney);
 	}
 
 	@Override
-	public BigDecimal getInterestForYear(int year) {
+	public Money getInterestForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getInterestForYear(finalYear);
@@ -149,11 +160,13 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getInterest());
+		BigDecimal interest = yearlyDetails.get(year).getInterest();
+		Money interestMoney = Money.of(interest, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(interestMoney);
 	}
 
 	@Override
-	public BigDecimal getProfitForYear(int year) {
+	public Money getProfitForYear(int year) {
 		int finalYear = getFinalYear();
 		if (year > finalYear) {
 			return getProfitForYear(finalYear);
@@ -161,11 +174,18 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return roundToWholeAmount.apply(yearlyDetails.get(year).getProfit());
+		BigDecimal profit = yearlyDetails.get(year).getProfit();
+		Money profitMoney = Money.of(profit, investmentAmount.getAmount().getCurrency());
+		return roundToWholeMoney.apply(profitMoney);
 	}
 
 	@Override
 	public BigDecimal getTaxRate() {
 		return taxable.getTaxRate();
+	}
+
+	@Override
+	public Currency getCurrency() {
+		return investmentAmount.getAmount().getCurrency();
 	}
 }

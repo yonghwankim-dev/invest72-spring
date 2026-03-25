@@ -8,6 +8,7 @@ import co.invest72.investment.console.output.guide.GuidePrinter;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.amount.YearlyInstallmentInvestmentAmount;
+import co.invest72.money.domain.Money;
 
 public class InstallmentInvestmentAmountReader implements InvestmentAmountReader {
 
@@ -35,10 +36,10 @@ public class InstallmentInvestmentAmountReader implements InvestmentAmountReader
 			throw new IllegalArgumentException("투자 기간 단위는 '월' 또는 '년'이어야 합니다.");
 		} else if (periodType.equals("월")) {
 			int amount = Integer.parseInt(parts[1]);
-			return new MonthlyInstallmentInvestmentAmount(BigDecimal.valueOf(amount));
+			return new MonthlyInstallmentInvestmentAmount(Money.of(BigDecimal.valueOf(amount), "KRW"));
 		} else {
 			int amount = Integer.parseInt(parts[1]);
-			return new YearlyInstallmentInvestmentAmount(amount);
+			return new YearlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(amount)));
 		}
 	}
 }

@@ -32,11 +32,13 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import co.invest72.user.infrastructure.UserIdGenerator;
@@ -87,7 +89,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 현금 상품을 성공적으로 생성한다")
 	void createProduct_whenInvestmentTypeIsCash_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -97,10 +99,12 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
@@ -110,23 +114,24 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder().build();
+		FinancialProductRequest dto = FinancialProductRequest.builder().build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(9)))
+			.andExpect(jsonPath("$.errors", hasSize(10)))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
 	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
@@ -136,11 +141,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(-0.01)) // 음수 세율
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -152,7 +159,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -162,11 +169,13 @@ class FinancialProductRestControllerTest {
 			.taxType("INVALID_TAX_TYPE") // 유효하지 않은 세금 유형
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -179,7 +188,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsDeposit_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -189,10 +198,12 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
@@ -203,7 +214,34 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsSavings_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000L))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.COMPOUND.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode("KRW")
+			.build();
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
+
+	@DisplayName("상품 생성 - 요청시 CSRF 토큰을 헤더로 전달하지 않아서 403 응답을 받아야 한다")
+	@Test
+	void createProduct_whenHeaderNotHaveCsrfToken_thenResponseForbidden() throws Exception {
+		// given
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -220,34 +258,7 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.id").value(notNullValue()));
-	}
-
-	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품 목록을 조회한다")
-	@Test
-	void getProducts_whenUserHasProducts_thenReturnProductList() throws Exception {
-		// given
-		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
-		financialProductRepository.save(product);
-
-		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$").isArray())
-			.andExpect(jsonPath("$[0].id").value(notNullValue()))
-			.andExpect(jsonPath("$[0].userId").value(principalUser.getUser().getId()))
-			.andExpect(jsonPath("$[0].name").value("현금 상품"))
-			.andExpect(jsonPath("$[0].investmentType").value(InvestmentType.CASH.name()))
-			.andExpect(jsonPath("$[0].amount").value(1_000_000.0))
-			.andExpect(jsonPath("$[0].months").value(0))
-			.andExpect(jsonPath("$[0].interestRate").value(0.0))
-			.andExpect(jsonPath("$[0].interestType").value(InterestType.NONE.name()))
-			.andExpect(jsonPath("$[0].taxType").value(TaxType.NONE.name()))
-			.andExpect(jsonPath("$[0].taxRate").value(0.0))
-			.andExpect(jsonPath("$[0].startDate").value("2026-01-01"))
-			.andExpect(jsonPath("$[0].createdAt").value(notNullValue()));
+			.andExpect(status().isForbidden());
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 현금 상품의 상세 정보를 조회한다")
@@ -257,6 +268,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -276,7 +288,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("+999999999-12-31"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(1.0))
-			.andExpect(jsonPath("$.remainingDays").value(0));
+			.andExpect(jsonPath("$.remainingDays").value(0))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 예금 상품의 상세 정보를 조회한다")
@@ -286,6 +301,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createDepositProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -305,7 +321,11 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.expirationDate").value("2027-01-01"))
 			.andExpect(jsonPath("$.balance").value(1_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
-			.andExpect(jsonPath("$.remainingDays").value(308));
+			.andExpect(jsonPath("$.remainingDays").value(308))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
+
 	}
 
 	@DisplayName("상품 상세 조회 - 사용자가 생성한 적금 상품의 상세 정보를 조회한다")
@@ -316,6 +336,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -336,7 +357,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.balance").value(2_000_000.0))
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
-			.andExpect(jsonPath("$.paymentDay").value(15));
+			.andExpect(jsonPath("$.paymentDay").value(15))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
 	@DisplayName("상품 상세 조회 - 다른 사용자가 생성한 상품의 상세 정보를 조회하려고 하면 400 Bad Request를 반환한다")
@@ -367,9 +391,9 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}
 
-	@DisplayName("요약 상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
+	@DisplayName("상품 목록 조회 - 사용자가 생성한 상품의 요약 정보를 조회한다")
 	@Test
-	void getSummaryProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
+	void getProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
@@ -380,7 +404,9 @@ class FinancialProductRestControllerTest {
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
 
-		FinancialProductSummaryResponse expectedResponse1 = FinancialProductSummaryResponse.builder()
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
+
+		FinancialProductSummary expectedResponse1 = FinancialProductSummary.builder()
 			.id(savingsProduct.getId())
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
@@ -392,8 +418,9 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
-		FinancialProductSummaryResponse expectedResponse2 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummary expectedResponse2 = FinancialProductSummary.builder()
 			.id(depositProduct.getId())
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
@@ -405,8 +432,9 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.valueOf(0.16))
 			.remainingDays(308)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
-		FinancialProductSummaryResponse expectedResponse3 = FinancialProductSummaryResponse.builder()
+		FinancialProductSummary expectedResponse3 = FinancialProductSummary.builder()
 			.id(product.getId())
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
@@ -418,12 +446,13 @@ class FinancialProductRestControllerTest {
 			.progress(BigDecimal.ONE)
 			.remainingDays(0L)
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.productCurrency(productCurrency)
 			.build();
 
 		String expectedJson = objectMapper.writeValueAsString(
 			Arrays.asList(expectedResponse1, expectedResponse2, expectedResponse3));
 		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/summary")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())
@@ -438,7 +467,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -448,11 +477,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -474,7 +505,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -484,11 +515,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name()) // 현금 상품은 세금 유형이 NONE이어야 하지만, 수정 요청에서는 STANDARD로 변경하려고 함
 			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -519,7 +552,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(product);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -529,11 +562,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -557,7 +592,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -568,11 +603,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isNoContent());
@@ -595,7 +632,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct cash = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(cash);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -611,6 +648,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", cash.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -624,7 +662,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(savings);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -639,6 +677,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", savings.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -652,7 +691,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(deposit);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -668,6 +707,7 @@ class FinancialProductRestControllerTest {
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", deposit.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
@@ -681,7 +721,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
-		FinancialProductRequestDto dto = FinancialProductRequestDto.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -691,11 +731,13 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
+			.currencyCode("KRW")
 			.build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId())
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
@@ -717,8 +759,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(status().isNoContent());
+			.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+			.with(SecurityMockMvcRequestPostProcessors.csrf())
+		).andExpect(status().isNoContent());
 
 		// 상품이 삭제되었는지 검증
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/{id}", product.getId())
@@ -737,7 +780,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId())
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 
@@ -754,7 +799,9 @@ class FinancialProductRestControllerTest {
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", nonExistentProductId)
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("Invalid request"));
 	}

@@ -1,7 +1,5 @@
 package co.invest72.investment.domain.period;
 
-import java.math.BigDecimal;
-
 import co.invest72.investment.domain.InstallmentInvestmentAmount;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.PeriodRange;
@@ -24,6 +22,9 @@ public class MonthlyInvestPeriod implements InvestPeriod {
 
 	@Override
 	public int getTotalPrincipal(InstallmentInvestmentAmount investmentAmount) {
-		return investmentAmount.getMonthlyAmount().multiply(BigDecimal.valueOf(periodRange.toMonths())).intValue();
+		return investmentAmount.getMonthlyAmount()
+			.times(periodRange.toMonths())
+			.getValue()
+			.intValue();
 	}
 }

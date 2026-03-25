@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.domain.period.PeriodType;
@@ -20,6 +21,7 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
+import co.invest72.money.domain.Currency;
 
 class CalculateInvestmentTest {
 
@@ -29,19 +31,21 @@ class CalculateInvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
 
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(AmountType.ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType(PeriodType.MONTH.getDisplayName())
 			.periodValue(36)
-			.interestType(SIMPLE.getTypeName())
+			.interestType(SIMPLE.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.STANDARD.getDescription())
+			.taxType(TaxType.STANDARD.name())
 			.taxRate(0.154)
+			.currencyCode(Currency.won().getCode())
 			.build();
 	}
 
@@ -78,7 +82,7 @@ class CalculateInvestmentTest {
 	void calMonthlyInvestmentAmount_shouldSimpleFixedDeposit() {
 		request = request.toBuilder()
 			.periodValue(12)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -117,8 +121,8 @@ class CalculateInvestmentTest {
 	void calMonthlyInvestmentAmount_whenCompoundFixedDeposit() {
 		request = request.toBuilder()
 			.periodValue(12)
-			.interestType(COMPOUND.getTypeName())
-			.taxType(TaxType.NON_TAX.getDescription())
+			.interestType(COMPOUND.name())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -209,7 +213,7 @@ class CalculateInvestmentTest {
 	void calYearlyInvestmentAmount_whenPeriodIs24Months() {
 		request = request.toBuilder()
 			.periodValue(24)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);
@@ -237,7 +241,7 @@ class CalculateInvestmentTest {
 	void calYearlyInvestmentAmount_whenPeriodIs13MonthsAndNonTax() {
 		request = request.toBuilder()
 			.periodValue(13)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
 			.build();
 		Investment investment = investmentFactory.createBy(request);

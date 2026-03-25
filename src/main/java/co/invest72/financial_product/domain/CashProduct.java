@@ -1,25 +1,17 @@
 package co.invest72.financial_product.domain;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("CASH")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @SuperBuilder(toBuilder = true)
 public class CashProduct extends FinancialProduct {
 
-	@Override
-	public BigDecimal getBalanceByLocalDate(LocalDate today) {
-		return getInvestmentType().calculateBalance(this, today);
+	protected CashProduct() {
 	}
 
 	/**
@@ -43,16 +35,16 @@ public class CashProduct extends FinancialProduct {
 		if (!getMonths().equals(updatedProduct.getMonths())) {
 			throw new IllegalArgumentException("투자 기간(months)은 변경할 수 없습니다.");
 		}
-		if (!getInterestRate().equals(updatedProduct.getInterestRate())) {
+		if (!getProductAnnualInterestRate().equals(updatedProduct.getProductAnnualInterestRate())) {
 			throw new IllegalArgumentException("이자율(interestRate)은 변경할 수 없습니다.");
 		}
-		if (!getInterestType().equals(updatedProduct.getInterestType())) {
+		if (!getProductInterestType().equals(updatedProduct.getProductInterestType())) {
 			throw new IllegalArgumentException("이자 유형(interestType)은 변경할 수 없습니다.");
 		}
-		if (!getTaxType().equals(updatedProduct.getTaxType())) {
+		if (!getProductTaxType().equals(updatedProduct.getProductTaxType())) {
 			throw new IllegalArgumentException("세금 유형(taxType)은 변경할 수 없습니다.");
 		}
-		if (!getTaxRate().equals(updatedProduct.getTaxRate())) {
+		if (!getProductTaxRate().equals(updatedProduct.getProductTaxRate())) {
 			throw new IllegalArgumentException("세율(taxRate)은 변경할 수 없습니다.");
 		}
 	}

@@ -3,6 +3,7 @@ package co.invest72.investment.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxFormatter;
@@ -17,8 +18,8 @@ public class SpringConfig {
 	}
 
 	@Bean
-	public InvestmentFactory investmentFactory() {
-		return new InvestmentFactory();
+	public InvestmentFactory investmentFactory(ProductAmountMapper productAmountMapper) {
+		return new InvestmentFactory(productAmountMapper);
 	}
 
 	@Bean

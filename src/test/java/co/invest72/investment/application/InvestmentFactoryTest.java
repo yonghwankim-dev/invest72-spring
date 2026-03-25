@@ -15,10 +15,11 @@ import org.junit.jupiter.api.Test;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.dto.CalculateInvestmentDto;
-import co.invest72.investment.domain.CashInvestment;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.investment.domain.investment.CashInvestment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
 import co.invest72.investment.domain.investment.SimpleFixedDeposit;
@@ -26,6 +27,7 @@ import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
+import co.invest72.money.domain.Currency;
 import source.FinancialProductDataProvider;
 
 class InvestmentFactoryTest {
@@ -40,22 +42,24 @@ class InvestmentFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentFactory = new InvestmentFactory();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
+		investmentFactory = new InvestmentFactory(productAmountMapper);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
 			.periodValue(1)
-			.interestType(SIMPLE.getTypeName())
+			.interestType(SIMPLE.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -68,15 +72,16 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
 		request = CalculateInvestmentRequest.builder()
-			.type(DEPOSIT.getTypeName())
+			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
 			.periodValue(1)
-			.interestType(COMPOUND.getTypeName())
+			.interestType(COMPOUND.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -89,15 +94,16 @@ class InvestmentFactoryTest {
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
 			.periodValue(1)
-			.interestType(SIMPLE.getTypeName())
+			.interestType(SIMPLE.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -110,37 +116,39 @@ class InvestmentFactoryTest {
 	@Test
 	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(YEARLY.getDescription())
 			.amount(12_000_000)
 			.periodType("년")
 			.periodValue(1)
-			.interestType(SIMPLE.getTypeName())
+			.interestType(SIMPLE.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment());
+		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment().getValue());
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
 		request = CalculateInvestmentRequest.builder()
-			.type(SAVINGS.getTypeName())
+			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
 			.amount(1_000_000)
 			.periodType("년")
 			.periodValue(1)
-			.interestType(COMPOUND.getTypeName())
+			.interestType(COMPOUND.name())
 			.annualInterestRate(0.05)
-			.taxType(TaxType.NON_TAX.getDescription())
+			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -185,17 +193,18 @@ class InvestmentFactoryTest {
 		BigDecimal amount = new BigDecimal("10000000000000"); // 10조원
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
 			.type(CASH)
-			.amount(new ProductAmount(amount)) // 10조원
+			.amount(ProductAmount.won(amount)) // 10조원
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(0.0))
 			.interestType(NONE)
 			.taxType(TaxType.NONE)
 			.taxRate(new FixedTaxRate(0.0))
+			.currency(Currency.won().getCode())
 			.build();
 		// when
 		investment = investmentFactory.createBy(dto);
 		// then
 		assertInstanceOfInvestment(CashInvestment.class, investment);
-		Assertions.assertThat(investment.getTotalInvestment()).isEqualByComparingTo(amount);
+		Assertions.assertThat(investment.getTotalInvestment().getValue()).isEqualByComparingTo(amount);
 	}
 }

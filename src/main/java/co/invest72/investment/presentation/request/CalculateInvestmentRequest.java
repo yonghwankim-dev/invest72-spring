@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -50,9 +51,14 @@ public class CalculateInvestmentRequest {
 	@NotNull(message = "taxRate must not be null")
 	private Double taxRate;
 
+	@NotBlank(message = "currencyCode must not be null or empty string")
+	@Pattern(regexp = "^[A-Z]{3}$", message = "The call code must be 3 uppercase alphabetic characters.")
+	private String currencyCode;
+
 	@Builder(toBuilder = true)
 	private CalculateInvestmentRequest(String type, String amountType, Integer amount, String periodType,
-		Integer periodValue, String interestType, Double annualInterestRate, String taxType, Double taxRate) {
+		Integer periodValue, String interestType, Double annualInterestRate, String taxType, Double taxRate,
+		String currencyCode) {
 		this.type = Objects.requireNonNull(type, "type must not be null");
 		this.amountType = Objects.requireNonNull(amountType, "amountType must not be null");
 		this.amount = Objects.requireNonNull(amount, "amount must not be null");
@@ -62,6 +68,7 @@ public class CalculateInvestmentRequest {
 		this.annualInterestRate = Objects.requireNonNull(annualInterestRate, "annualInterestRate must not be null");
 		this.taxType = Objects.requireNonNull(taxType, "taxType must not be null");
 		this.taxRate = Objects.requireNonNull(taxRate, "taxRate must not be null");
+		this.currencyCode = Objects.requireNonNull(currencyCode, "currencyCode must not be null");
 	}
 
 	@Override

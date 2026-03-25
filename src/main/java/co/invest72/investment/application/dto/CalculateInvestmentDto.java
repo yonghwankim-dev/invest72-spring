@@ -22,4 +22,5 @@ public class CalculateInvestmentDto {
 	private final InterestType interestType;
 	private final TaxType taxType;
 	private final TaxRate taxRate;
+	private final String currency;
 }

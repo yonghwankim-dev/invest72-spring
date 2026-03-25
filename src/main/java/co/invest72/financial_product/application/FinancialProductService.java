@@ -1,21 +1,27 @@
 package co.invest72.financial_product.application;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequestDto;
+import co.invest72.financial_product.domain.service.FinancialProductCalculator;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductDto;
-import co.invest72.financial_product.presentation.dto.response.FinancialProductSummaryResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.money.domain.Currency;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -27,60 +33,47 @@ public class FinancialProductService {
 	private final LocalDateProvider localDateProvider;
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductFactory financialProductFactory;
+	private final FinancialProductCalculator calculator;
 
 	@Transactional
-	public String createProduct(User user, FinancialProductRequestDto dto) {
+	@CacheEvict(value = {"productSummary"}, key = "#user.id")
+	public String createProduct(User user, FinancialProductRequest dto) {
 		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
 		return repository.save(product);
 	}
 
 	@Transactional(readOnly = true)
-	public List<FinancialProductDto> getProductsByUser(User user) {
-		return repository.findAllByUserId(user.getId()).stream()
-			.map(this::buildProductResponseDto)
-			.toList();
-	}
-
-	private FinancialProductDto buildProductResponseDto(FinancialProduct product) {
-		return FinancialProductDto.builder()
-			.id(product.getId())
-			.userId(product.getUserId())
-			.name(product.getName())
-			.investmentType(product.getInvestmentType().name())
-			.amount(product.getAmount().getValue())
-			.months(product.getMonths().getValue())
-			.interestRate(product.getInterestRate().getValue())
-			.interestType(product.getInterestType().name())
-			.taxType(product.getTaxType().name())
-			.taxRate(product.getTaxRate().getValue())
-			.startDate(product.getStartDate())
-			.createdAt(product.getCreatedAt())
-			.build();
-	}
-
-	@Transactional(readOnly = true)
+	@Cacheable(value = "productDetail", key = "#user.id + '-' + #productId")
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
 
+		LocalDate expirationDate = calculator.calculateExpirationDate(product);
+		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
+		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
+
+		Currency currency = Currency.from(product.getAmount().getCurrency());
+		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
 			.userId(product.getUserId())
 			.name(product.getName())
-			.investmentType(product.getInvestmentType().name())
+			.investmentType(product.getProductInvestmentType().getName())
 			.amount(product.getAmount().getValue())
 			.months(product.getMonths().getValue())
 			.paymentDay(product.getPaymentDayValue())
-			.interestRate(product.getInterestRate().getValue())
-			.interestType(product.getInterestType().name())
-			.taxType(product.getTaxType().name())
-			.taxRate(product.getTaxRate().getValue())
+			.interestRate(product.getProductAnnualInterestRate().getValue())
+			.interestType(product.getProductInterestType().getName())
+			.taxType(product.getProductTaxType().getName())
+			.taxRate(product.getProductTaxRate().getValue())
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
-			.expirationDate(product.getExpirationDate())
-			.balance(product.getBalanceByLocalDate(today))
-			.progress(product.getProgressByLocalDate(today))
-			.remainingDays(product.getRemainingDaysByLocalDate(today))
+			.expirationDate(expirationDate)
+			.balance(balance)
+			.progress(progress)
+			.remainingDays(remainingDays)
+			.productCurrency(productCurrency)
 			.build();
 	}
 
@@ -105,13 +98,25 @@ public class FinancialProductService {
 	 * @param dto 업데이트할 상품 정보
 	 */
 	@Transactional
-	public void updateProduct(User user, String productId, FinancialProductRequestDto dto) {
+	@Caching(evict = {
+		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
+		@CacheEvict(value = "productSummary", key = "#user.id"),
+		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
+	})
+	public void updateProduct(User user, String productId, FinancialProductRequest dto) {
 		FinancialProduct existingProduct = findFinancialProduct(user, productId);
 		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
 		existingProduct.update(updatedProduct);
 	}
 
 	@Transactional
+	@Caching(evict = {
+		// 1. 해당 유저의 상품 요약 목록 캐시 삭제
+		@CacheEvict(value = "productSummary", key = "#user.id"),
+		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
+		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
+	})
 	public void deleteProduct(User user, String productId) {
 		findFinancialProduct(user, productId);
 		repository.deleteByProductId(productId);
@@ -135,16 +140,18 @@ public class FinancialProductService {
 	 * @return 상품 요약 정보 리스트
 	 */
 	@Transactional(readOnly = true)
-	public List<FinancialProductSummaryResponse> getSummaryProductsByUser(User user) {
-		List<FinancialProductSummaryResponse> result = new ArrayList<>();
+	@Cacheable(value = "productSummary", key = "#user.id")
+	public List<FinancialProductSummary> getSummaryProductsByUser(User user) {
+		List<FinancialProductSummary> result = new ArrayList<>();
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
-			FinancialProductSummaryResponse data = FinancialProductSummaryResponse.from(
+			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				investmentFactory.createBy(product),
-				today
+				today,
+				calculator
 			);
 			result.add(data);
 		}
@@ -154,12 +161,12 @@ public class FinancialProductService {
 			.toList();
 	}
 
-	private Comparator<FinancialProductSummaryResponse> getFinancialProductSummaryResponseComparator() {
-		return Comparator.comparing(FinancialProductSummaryResponse::getStartDate, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getExpirationDate,
+	private Comparator<FinancialProductSummary> getFinancialProductSummaryResponseComparator() {
+		return Comparator.comparing(FinancialProductSummary::getStartDate, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummary::getExpirationDate,
 				Comparator.nullsLast(Comparator.naturalOrder()))
-			.thenComparing(FinancialProductSummaryResponse::getBalance, Comparator.reverseOrder())
-			.thenComparing(FinancialProductSummaryResponse::getCreatedAt)
-			.thenComparing(FinancialProductSummaryResponse::getId);
+			.thenComparing(FinancialProductSummary::getBalance, Comparator.reverseOrder())
+			.thenComparing(FinancialProductSummary::getCreatedAt)
+			.thenComparing(FinancialProductSummary::getId);
 	}
 }

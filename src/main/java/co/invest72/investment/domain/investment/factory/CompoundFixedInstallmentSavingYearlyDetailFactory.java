@@ -6,8 +6,11 @@ import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
+import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 
 public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
@@ -25,21 +28,28 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		BigDecimal principal = BigDecimal.ZERO;
-		BigDecimal interest = BigDecimal.ZERO;
-		BigDecimal profit = BigDecimal.ZERO;
+		Currency currency = investmentAmount.getAmount().getCurrency();
+		Money principal = Money.of(BigDecimal.ZERO, currency);
+		Money interest = Money.of(BigDecimal.ZERO, currency);
+		Money profit = Money.of(BigDecimal.ZERO, currency);
 
-		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
+		result.add(new YearlyInvestmentDetail(0,
+			Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
+			Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
+			Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
 		int years = getFinalYear();
 		for (int i = 1; i <= years; i++) {
 			BigDecimal months = BigDecimal.valueOf(Math.min(12, investPeriod.getMonths() - (i - 1) * 12));
-			BigDecimal value = investmentAmount.getAmount().multiply(months);
+			Money value = investmentAmount.getAmount().times(months);
 			principal = profit.add(value);
 
 			interest = calculateYearlyInterest(profit, months.intValue());
 
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(i, principal, interest, profit));
+			result.add(new YearlyInvestmentDetail(i,
+				Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
+				Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
+				Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
 		}
 		return result;
 	}
@@ -48,14 +58,14 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 
-	private BigDecimal calculateYearlyInterest(BigDecimal baseProfit, int month) {
-		BigDecimal principal;
-		BigDecimal result = BigDecimal.ZERO;
-		BigDecimal interest;
-		BigDecimal profit = baseProfit;
+	private Money calculateYearlyInterest(Money baseProfit, int month) {
+		Money principal;
+		Money result = baseProfit.times(BigDecimal.ZERO);
+		Money interest;
+		Money profit = baseProfit;
 		for (int i = 1; i <= month; i++) {
 			principal = profit.add(investmentAmount.getAmount());
-			interest = interestRate.getMonthlyRate().multiply(principal);
+			interest = interestRate.calMonthlyInterest(principal);
 			profit = principal.add(interest);
 			result = result.add(interest);
 		}

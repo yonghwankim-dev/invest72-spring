@@ -4,44 +4,41 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.UnaryOperator;
 
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
+
 public interface Investment {
 
 	UnaryOperator<BigDecimal> roundToWholeAmount = amount -> amount
 		.setScale(0, RoundingMode.HALF_EVEN);
 
-	/**
-	 * 만기 시점의 원금 금액을 반환합니다.
-	 *
-	 * @return 원금 금액
-	 */
-	BigDecimal getPrincipal();
+	UnaryOperator<Money> roundToWholeMoney = money ->
+		Money.of(roundToWholeAmount.apply(money.getValue()), money.getCurrency());
+
+	UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = amount -> amount
+		.setScale(2, RoundingMode.HALF_EVEN);
+
+	Money getPrincipal();
 
 	/**
-	 * 지정된 월 회차(month)의 원금 금액을 반환합니다.
-	 *
+	 * 지정된 월 회차(month)의 원금 금액을 Money 객체로 반환합니다.
 	 * @param month 회차 (기본 1부터 시작)
-	 * @return 원금 금액
+	 * @return 원금 금액을 Money 객체로 반환
 	 */
-	BigDecimal getPrincipal(int month);
+	Money getPrincipal(int month);
 
 	/**
 	 * 만기 시점의 이자 금액을 반환합니다.
-	 * <p>
-	 * 해당 금액은 세전 이자 금액입니다.
-	 * </p>
 	 * @return 이자 금액
 	 */
-	BigDecimal getInterest();
+	Money getInterest();
 
 	/**
 	 * 지정된 월 회차(month)의 이자 금액을 반환합니다.
-	 * <p>
-	 * 해당 금액은 세전 이자 금액입니다.
-	 * </p>
-	 * @param month 회차 (기본 1부터 시작)
+	 * @param month 회차 (1부터 시작)
 	 * @return 이자 금액
 	 */
-	BigDecimal getInterest(int month);
+	Money getInterest(int month);
 
 	/**
 	 * 만기 시점의 수익 금액을 반환합니다.
@@ -50,7 +47,7 @@ public interface Investment {
 	 * </p>
 	 * @return 총 투자 금액
 	 */
-	BigDecimal getProfit();
+	Money getProfit();
 
 	/**
 	 * 지정된 월 회차(month)의 수익 금액을 반환합니다.
@@ -61,31 +58,31 @@ public interface Investment {
 	 * @param month 회차 (1부터 시작)
 	 * @return 총 투자 금액
 	 */
-	BigDecimal getProfit(int month);
+	Money getProfit(int month);
 
 	/**
 	 * 만기까지의 총 투자 금액을 반환합니다.
 	 * @return 총 투자 금액
 	 */
-	BigDecimal getTotalInvestment();
+	Money getTotalInvestment();
 
 	/**
 	 * 만기까지의 총 이자 금액을 반환합니다.
 	 * @return 총 이자 금액
 	 */
-	BigDecimal getTotalInterest();
+	Money getTotalInterest();
 
 	/**
 	 * 만기까지의 총 세금 금액을 반환합니다.
 	 * @return 총 세금 금액
 	 */
-	BigDecimal getTotalTax();
+	Money getTotalTax();
 
 	/**
 	 * 만기까지의 총 수익 금액을 반환합니다.
 	 * @return 총 수익 금액
 	 */
-	BigDecimal getTotalProfit();
+	Money getTotalProfit();
 
 	/**
 	 * 투자 기간의 마지막 월을 반환합니다
@@ -98,11 +95,32 @@ public interface Investment {
 
 	String getTaxType();
 
-	BigDecimal getPrincipalForYear(int year);
+	/**
+	 * 지정된 연도(year)의 원금 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 원금 금액을 Money 객체로 반환
+	 */
+	Money getPrincipalForYear(int year);
 
-	BigDecimal getInterestForYear(int year);
+	/**
+	 * 지정된 연도(year)의 이자 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 이자 금액을 Money 객체로 반환
+	 */
+	Money getInterestForYear(int year);
 
-	BigDecimal getProfitForYear(int year);
+	/**
+	 * 지정된 연도(year)의 수익 금액을 Money 객체로 반환합니다.
+	 * @param year 연도 (1부터 시작)
+	 * @return 수익 금액을 Money 객체로 반환
+	 */
+	Money getProfitForYear(int year);
 
 	BigDecimal getTaxRate();
+
+	/**
+	 * 해당 투자 객체의 기준 통화 객체를 반환한다.
+	 * @return 통화 객체
+	 */
+	Currency getCurrency();
 }

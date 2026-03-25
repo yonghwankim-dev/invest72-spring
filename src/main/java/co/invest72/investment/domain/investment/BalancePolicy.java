@@ -13,17 +13,15 @@ public enum BalancePolicy implements BalanceStrategy {
 	// 투자 금액이 고정된 경우(예: 현금, 예금)
 	FIXED {
 		@Override
-		public BigDecimal calculate(FinancialProduct product,
-			LocalDate today) {
+		public BigDecimal calculate(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 			return product.getAmount().getValue();
 		}
 	},
 	// 투자 금액이 시간이 지남에 따라 누적되는 경우(예: 적금)
 	ACCUMULATIVE {
 		@Override
-		public BigDecimal calculate(FinancialProduct product, LocalDate today) {
+		public BigDecimal calculate(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 			LocalDate startDate = product.getStartDate();
-			LocalDate expirationDate = product.getExpirationDate();
 			ProductAmount amount = product.getAmount();
 			ProductMonths months = product.getMonths();
 

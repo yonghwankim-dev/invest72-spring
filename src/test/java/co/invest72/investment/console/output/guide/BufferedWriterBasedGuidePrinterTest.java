@@ -65,7 +65,8 @@ class BufferedWriterBasedGuidePrinterTest {
 		guidePrinter.printInvestmentTypeInputGuide();
 
 		String output = outputStream.toString();
-		assertTrue(output.contains("투자 유형을 입력하세요 (예금 or 적금): "));
+
+		assertEquals("투자 유형을 입력하세요 (DEPOSIT or SAVINTS): ", output);
 	}
 
 	@Test

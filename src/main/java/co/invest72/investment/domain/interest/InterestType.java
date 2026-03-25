@@ -12,15 +12,6 @@ public enum InterestType {
 		this.typeName = typeName;
 	}
 
-	public static InterestType from(String interestType) {
-		for (InterestType type : values()) {
-			if (type.typeName.equalsIgnoreCase(interestType)) {
-				return type;
-			}
-		}
-		throw new IllegalArgumentException("Unknown totalInterest type: " + interestType);
-	}
-
 	public String getTypeName() {
 		return typeName;
 	}

@@ -26,15 +26,6 @@ public enum InvestmentType {
 		this.requiresPaymentDay = requiresPaymentDay;
 	}
 
-	public static InvestmentType from(String type) {
-		for (InvestmentType investmentType : values()) {
-			if (investmentType.typeName.equalsIgnoreCase(type)) {
-				return investmentType;
-			}
-		}
-		throw new IllegalArgumentException("Unknown investment type: " + type);
-	}
-
 	public LocalDate calculateExpirationDate(LocalDate startDate, int months) {
 		return periodStrategy.calculateExpiration(startDate, months);
 	}
@@ -47,8 +38,8 @@ public enum InvestmentType {
 		return periodStrategy.remainingDays(today, expirationDate);
 	}
 
-	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
-		return balanceStrategy.calculate(product, today);
+	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+		return balanceStrategy.calculate(product, today, expirationDate);
 	}
 
 	/**
