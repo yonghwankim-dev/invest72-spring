@@ -45,10 +45,10 @@ public class FinancialProductSourceProvider {
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		return Stream.of(
 			Arguments.of(product, LocalDate.of(2026, 1, 1).minusMonths(2), BigDecimal.ZERO,
-				"적금 상품: 기준일자가 시작일자보다 이전인 경우 잔액은 0이 반환해야 한다."),
+				"적금 상품: 기준일자가 시작일자보다 이전인 경우 잔액은 0을 반환해야 한다."),
 			Arguments.of(product, LocalDate.of(2027, 1, 2),
 				BigDecimal.valueOf(1_000_000L).multiply(BigDecimal.valueOf(12)),
-				"적금 상품: 기준일자가 만기일 이후인 경우 잔액은 월 적립액 * 총 개월 수가 반환해야 한다."),
+				"적금 상품: 기준일자가 만기일 이후인 경우 잔액은 월 적립액 * 총 개월 수를 반환해야 한다."),
 			Arguments.of(product, LocalDate.of(2026, 2, 14), BigDecimal.valueOf(1_000_000),
 				"적금 상품: 기준일자의 days가 납입일 이전이라면 잔액이 1개월분 적립되어야 한다."),
 			Arguments.of(product, LocalDate.of(2026, 2, 15), BigDecimal.valueOf(2_000_000),
