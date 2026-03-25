@@ -31,10 +31,10 @@ import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.investment.presentation.response.InvestmentCurrency;
 import co.invest72.money.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
@@ -88,7 +88,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
-		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -101,9 +101,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
-			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
-			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
-			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -128,7 +128,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
-		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.dollar());
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.dollar());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -141,9 +141,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
-			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
-			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
-			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -167,7 +167,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
-		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -180,9 +180,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("0%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
-			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
-			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
-			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -195,7 +195,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
-		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -208,9 +208,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
-			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
-			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
-			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 
@@ -223,7 +223,7 @@ class FinancialProductCalculationRestControllerTest {
 		financialProductRepository.save(product);
 		String productId = product.getId();
 
-		InvestmentCurrency investmentCurrency = InvestmentCurrency.from(Currency.won());
+		ProductCurrency productCurrency = ProductCurrency.from(Currency.won());
 		// When & Then
 		mockMvc.perform(get("/api/v1/products/{id}/calculate", productId)
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
@@ -236,9 +236,9 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.taxPercent").value("15.4%"))
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
-			.andExpect(jsonPath("$.investmentCurrency.code").value(investmentCurrency.getCode()))
-			.andExpect(jsonPath("$.investmentCurrency.unit").value(investmentCurrency.getUnit()))
-			.andExpect(jsonPath("$.investmentCurrency.name").value(investmentCurrency.getName()))
+			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
+			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
 }

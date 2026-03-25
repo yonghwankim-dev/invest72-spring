@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,12 +20,12 @@ public class CalculateInvestmentResponse {
 	private final String taxPercent;
 	private final List<MonthlyInvestmentResult> monthlyDetails;
 	private final List<YearlyInvestmentResult> yearlyDetails;
-	private final InvestmentCurrency investmentCurrency;
+	private final ProductCurrency productCurrency;
 
 	@Builder
 	public CalculateInvestmentResponse(BigDecimal totalInvestment, BigDecimal totalInterest, BigDecimal totalTax,
 		BigDecimal totalProfit, String taxType, String taxPercent, List<MonthlyInvestmentResult> monthlyDetails,
-		List<YearlyInvestmentResult> yearlyDetails, InvestmentCurrency investmentCurrency) {
+		List<YearlyInvestmentResult> yearlyDetails, ProductCurrency productCurrency) {
 		this.totalInvestment = Objects.requireNonNull(totalInvestment, "총 투자 금액은 null이면 안됩니다.");
 		this.totalInterest = Objects.requireNonNull(totalInterest, "총 이자는 null이면 안됩니다.");
 		this.totalTax = Objects.requireNonNull(totalTax, "총 세금은 null이면 안됩니다.");
@@ -33,7 +34,7 @@ public class CalculateInvestmentResponse {
 		this.taxPercent = Objects.requireNonNull(taxPercent, "세율은 null이면 안됩니다.");
 		this.monthlyDetails = Objects.requireNonNull(monthlyDetails, "월별 수익 리스트는 null이면 안됩니다.");
 		this.yearlyDetails = Objects.requireNonNull(yearlyDetails, "년간 수익 리스트는 null이면 안됩니다.");
-		this.investmentCurrency = Objects.requireNonNull(investmentCurrency, "통화는 null이면 안됩니다.");
+		this.productCurrency = Objects.requireNonNull(productCurrency, "통화는 null이면 안됩니다.");
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class CalculateInvestmentResponse {
 			", taxPercent='" + taxPercent + '\'' +
 			", monthlyDetails=" + monthlyDetails +
 			", yearlyDetails=" + yearlyDetails +
-			", investmentCurrency=" + investmentCurrency +
+			", productCurrency=" + productCurrency +
 			'}';
 	}
 }
