@@ -64,9 +64,9 @@ public class FinancialProductSourceProvider {
 		FinancialProduct savings = FinancialProductDataProvider.createSavingsProduct("user-1");
 		return Stream.of(
 			Arguments.of(cash, LocalDate.of(2026, 1, 1), 0L, "현금 상품: 현금 상품은 0을 반환해야 한다."),
-			Arguments.of(deposit, LocalDate.of(2027, 1, 2), 0L, "에금 상품: 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환해야 한다."),
-			Arguments.of(deposit, LocalDate.of(2027, 1, 1), 0L, "에금 상품: 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환해야 한다."),
-			Arguments.of(deposit, LocalDate.of(2026, 2, 27), 308L, "에금 상품: 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2027, 1, 2), 0L, "예금 상품: 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2027, 1, 1), 0L, "예금 상품: 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환해야 한다."),
+			Arguments.of(deposit, LocalDate.of(2026, 2, 27), 308L, "예금 상품: 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환해야 한다."),
 			Arguments.of(savings, LocalDate.of(2027, 1, 2), 0L, "적금 상품: 기준일자가 만기일 이후인 경우 남은 일수는 0이 반환해야 한다."),
 			Arguments.of(savings, LocalDate.of(2027, 1, 1), 0L, "적금 상품: 기준일자가 만기일과 동일한 경우 남은 일수는 0이 반환해야 한다."),
 			Arguments.of(savings, LocalDate.of(2026, 2, 27), 308L, "적금 상품: 기준일자가 만기일 이전인 경우 남은 일수는 0보다 큰 값이 반환해야 한다.")
