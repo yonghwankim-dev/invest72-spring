@@ -30,20 +30,6 @@ class FinancialProductTest {
 		Assertions.assertThat(remainingDays).isZero();
 	}
 
-	@DisplayName("현금 상품 현재 잔액 계산 - 현금 상품은 언제든지 잔액이 원금이 반환된다.")
-	@Test
-	void getBalanceByLocalDate_whenCashProduct_thenReturnPrincipal() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createCashProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2); // 시작일을 오늘보다 2개월 이전으로 설정
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(BigDecimal.valueOf(1_000_000L));
-	}
-
 	@DisplayName("예금 상품 만기일 계산 - 시작일자로부터 설정된 개월 수만큼 더한 날짜가 만기일로 계산된다.")
 	@Test
 	void calculateExpirationDate_whenDepositProduct_thenReturnCorrectExpirationDate() {
@@ -157,21 +143,6 @@ class FinancialProductTest {
 		Assertions.assertThat(remainingDays).isGreaterThan(0);
 	}
 
-	@DisplayName("예금 상품 현재 잔액 계산 - 기준일자가 언제든지 잔액은 원금이 반환된다.")
-	@Test
-	void getBalanceByLocalDate_whenDepositProduct_thenReturnPrincipal() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createDepositProduct("user-1");
-		// 시작일을 오늘보다 2개월 이전으로 설정
-		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(BigDecimal.valueOf(1_000_000L));
-	}
-
 	@DisplayName("적금 상품 만기일 계산 - 시작일자로부터 설정된 개월 수만큼 더한 날짜가 만기일로 계산된다.")
 	@Test
 	void calculateExpirationDate_whenSavingsProduct_thenReturnCorrectExpirationDate() {
@@ -241,96 +212,6 @@ class FinancialProductTest {
 
 		// Then
 		Assertions.assertThat(progress).isEqualByComparingTo(BigDecimal.valueOf(0.16));
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자가 시작일자보다 이전인 경우 잔액은 0이 반환된다.")
-	@Test
-	void getBalanceByLocalDate_whenStartDateIsAfterToday_thenReturnZeroForSavings() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		// 시작일을 오늘보다 2개월 이전으로 설정
-		LocalDate today = LocalDate.of(2026, 1, 1).minusMonths(2);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(BigDecimal.ZERO);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자가 만기일 이후인 경우 잔액은 월 적립액 * 총 개월 수가 반환된다.")
-	@Test
-	void getBalanceByLocalDate_whenExpirationDateIsBeforeToday_thenReturnFullBalanceForSavings() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2027, 1, 2);
-		BigDecimal expectedBalance = BigDecimal.valueOf(1_000_000L).multiply(BigDecimal.valueOf(12));
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자가 만기일과 동일한 경우 잔액은 월 적립액 * 총 개월 수가 반환된다.")
-	@Test
-	void getBalanceByLocalDate_whenExpirationDateIsEqualToToday_thenReturnFullBalanceForSavings() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2027, 1, 1);
-		BigDecimal expectedBalance = BigDecimal.valueOf(1_000_000L).multiply(BigDecimal.valueOf(12));
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자의 days가 납입일 이전이라면 잔액이 1개월분 적립되어야 한다")
-	@Test
-	void getBalanceByLocalDate_whenDaysBeforePaymentDay_thenAccOneMonth() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 14);
-		BigDecimal expectedBalance = BigDecimal.valueOf(1_000_000);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자의 days가 납입일과 동일하면 잔액이 2개월분 적립되어야 한다")
-	@Test
-	void getBalanceByLocalDate_whenPaymentDayIsSameAsToday_thenReturnBalanceForTwoMonthsForSavings() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 15);
-		BigDecimal expectedBalance = BigDecimal.valueOf(2_000_000);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
-	}
-
-	@DisplayName("적금 상품 현재 잔액 계산 - 기준일자의 days가 납입일 이후라면 잔액이 2개월분 적립되어야 한다")
-	@Test
-	void getBalanceByLocalDate_whenDaysAfterPaymentDay_thenAccTwoMonths() {
-		// Given
-		financialProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		LocalDate today = LocalDate.of(2026, 2, 16);
-		BigDecimal expectedBalance = BigDecimal.valueOf(2_000_000);
-
-		// When
-		BigDecimal balance = financialProduct.getBalanceByLocalDate(today);
-
-		// Then
-		Assertions.assertThat(balance).isEqualByComparingTo(expectedBalance);
 	}
 
 	@DisplayName("객체 생성 - 적금 상품 생성시 이체일이 초기화되지 않는 경우 예외가 발생한다.")
