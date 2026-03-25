@@ -32,9 +32,9 @@ public class FinancialProductSummary {
 	public static FinancialProductSummary from(
 		FinancialProduct product,
 		Investment investment,
-		LocalDate today
+		LocalDate today,
+		FinancialProductCalculator calculator
 	) {
-		FinancialProductCalculator calculator = new FinancialProductCalculator();
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		BigDecimal progress = calculator.calculateProgress(product, today);

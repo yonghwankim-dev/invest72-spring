@@ -150,7 +150,8 @@ public class FinancialProductService {
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				investmentFactory.createBy(product),
-				today
+				today,
+				calculator
 			);
 			result.add(data);
 		}
