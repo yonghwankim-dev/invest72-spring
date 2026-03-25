@@ -33,6 +33,7 @@ public class FinancialProductService {
 	private final LocalDateProvider localDateProvider;
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductFactory financialProductFactory;
+	private final FinancialProductCalculator calculator;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -46,8 +47,7 @@ public class FinancialProductService {
 	public DetailedFinancialProductResponse getProductDetail(User user, String productId) {
 		FinancialProduct product = findFinancialProduct(user, productId);
 		LocalDate today = localDateProvider.now();
-		
-		FinancialProductCalculator calculator = new FinancialProductCalculator();
+
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 		BigDecimal balance = calculator.calculateBalance(product, today);
 		BigDecimal progress = calculator.calculateProgress(product, today);
