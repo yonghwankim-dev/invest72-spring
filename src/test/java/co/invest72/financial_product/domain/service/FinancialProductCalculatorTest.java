@@ -23,7 +23,7 @@ class FinancialProductCalculatorTest {
 	@DisplayName("금융 상품 만기일 계산")
 	@ParameterizedTest(name = "desc={2}")
 	@MethodSource(value = {"source.FinancialProductSourceProvider#provideExpirationSource"})
-	void calculateExpirationDate_whenCashProduct_thenReturnLocalDateMax(FinancialProduct product, LocalDate expected,
+	void givenProduct_whenCalculateExpirationDate_thenReturnLocalDate(FinancialProduct product, LocalDate expected,
 		String ignored) {
 		// When
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
