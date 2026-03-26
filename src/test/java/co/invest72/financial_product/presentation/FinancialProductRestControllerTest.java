@@ -396,12 +396,12 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
-		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		FinancialProduct cashProduct = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
 			principalUser.getUser().getId(), InterestType.SIMPLE);
 		FinancialProduct savingsProduct = FinancialProductDataProvider.createSavingsProduct(
 			principalUser.getUser().getId(), InterestType.COMPOUND);
-		financialProductRepository.save(product);
+		financialProductRepository.save(cashProduct);
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
 
@@ -436,7 +436,7 @@ class FinancialProductRestControllerTest {
 			.productCurrency(productCurrency)
 			.build();
 		FinancialProductSummary expectedResponse3 = FinancialProductSummary.builder()
-			.id(product.getId())
+			.id(cashProduct.getId())
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.interestRate(BigDecimal.ZERO)

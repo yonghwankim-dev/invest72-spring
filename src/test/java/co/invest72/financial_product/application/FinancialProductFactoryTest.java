@@ -24,13 +24,14 @@ import source.FinancialProductDataProvider;
 class FinancialProductFactoryTest {
 
 	private FinancialProductFactory factory;
+	private ProductIdGenerator idGenerator;
 
 	@BeforeEach
 	void setUp() {
 		LocalDateProvider localDateProvider = Mockito.mock(LocalDateProvider.class);
 		BDDMockito.given(localDateProvider.nowDateTime())
 			.willReturn(LocalDate.of(2026, 1, 1).atStartOfDay());
-		ProductIdGenerator idGenerator = Mockito.mock(ProductIdGenerator.class);
+		idGenerator = Mockito.mock(ProductIdGenerator.class);
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
 		factory = new FinancialProductFactory(localDateProvider, idGenerator);
@@ -60,6 +61,35 @@ class FinancialProductFactoryTest {
 		FinancialProduct product = factory.create(dto);
 		// then
 		FinancialProduct expected = FinancialProductDataProvider.createCashProduct(userId);
+		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("예금 상품 생성")
+	@Test
+	void givenDto_whenInvestmentTypeIsDeposit_thenReturnProduct() {
+		// given
+		BDDMockito.given(idGenerator.generateId())
+			.willReturn("product-4567");
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(1_000_000))
+			.months(12)
+			.paymentDay(null)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.build();
+		String userId = "user-1234";
+		dto = dto
+			.withUserId(userId);
+		// when
+		FinancialProduct product = factory.create(dto);
+		// then
+		FinancialProduct expected = FinancialProductDataProvider.createDepositProduct(userId);
 		Assertions.assertThat(product).isEqualTo(expected);
 	}
 }

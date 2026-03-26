@@ -35,22 +35,18 @@ public class FinancialProductFactory {
 	private final ProductIdGenerator idGenerator;
 
 	public FinancialProduct create(FinancialProductData data) {
-		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
 		String productId = idGenerator.generateId();
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
 		FinancialProductData withedData = data
 			.withProductId(productId)
 			.withCreatedAt(createdAt);
+		InvestmentType investmentType = InvestmentType.valueOf(withedData.getInvestmentType());
 
 		return switch (investmentType) {
-			case CASH -> createCashProduct(withedData);
-			case DEPOSIT -> null;
+			case CASH -> new CashProduct(withedData);
+			case DEPOSIT -> new DepositProduct(withedData);
 			case SAVINGS -> null;
 		};
-	}
-
-	private FinancialProduct createCashProduct(FinancialProductData data) {
-		return new CashProduct(data);
 	}
 
 	/**

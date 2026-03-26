@@ -54,6 +54,7 @@ public class FinancialProductDataProvider {
 	 */
 	public static FinancialProduct createDepositProduct(String userId, InterestType interestType) {
 		return DepositProduct.builder()
+			.id("product-4567")
 			.userId(userId)
 			.name("예금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
@@ -87,6 +88,7 @@ public class FinancialProductDataProvider {
 	 */
 	public static FinancialProduct createSavingsProduct(String userId, InterestType interestType) {
 		return SavingsProduct.builder()
+			.id("product-1356")
 			.userId(userId)
 			.name("적금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
