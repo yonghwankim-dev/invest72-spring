@@ -18,10 +18,8 @@ public class Money implements Comparable<Money> {
 	private final Currency currency;
 
 	private Money(BigDecimal value, Currency currency) {
-		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
-		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
-		this.value = value;
-		this.currency = currency;
+		this.value = Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		this.currency = Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
 	}
 
 	public static Money dollar(int value) {
