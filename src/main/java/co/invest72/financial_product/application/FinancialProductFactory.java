@@ -49,34 +49,6 @@ public class FinancialProductFactory {
 		};
 	}
 
-	/**
-	 * 상품 ID 없이 금융 상품 생성 (신규 생성 시 사용)
-	 * @param userId 사용자 ID
-	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
-	 * @return 생성된 금융 상품 객체
-	 */
-	public FinancialProduct create(String userId, FinancialProductRequest dto) {
-		String productId = null;
-		return create(productId, userId, dto);
-	}
-
-	/**
-	 * 상품 ID를 포함하여 금융 상품 생성 (업데이트 시 사용)
-	 * @param productId 상품 ID (업데이트 시 기존 상품의 ID를 유지하기 위해 사용)
-	 * @param userId 사용자 ID
-	 * @param dto 금융 상품 생성에 필요한 정보가 담긴 DTO
-	 * @return 생성된 금융 상품 객체
-	 */
-	public FinancialProduct create(String productId, String userId, FinancialProductRequest dto) {
-		InvestmentType investmentType = InvestmentType.valueOf(dto.getInvestmentType());
-		LocalDateTime createdAt = localDateProvider.nowDateTime();
-		return switch (investmentType) {
-			case CASH -> createCashProduct(productId, userId, createdAt, dto);
-			case DEPOSIT -> createDepositProduct(productId, userId, createdAt, dto);
-			case SAVINGS -> createSavingsProduct(productId, userId, createdAt, dto);
-		};
-	}
-
 	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequest dto) {
 		InvestmentType investmentType = InvestmentType.valueOf(base.getProductInvestmentType().getName());
 		validateInvestmentType(base, dto);
