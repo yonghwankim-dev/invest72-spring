@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
@@ -38,7 +39,8 @@ public class FinancialProductService {
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
 	public String createProduct(User user, FinancialProductRequest dto) {
-		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
+		FinancialProductData withedDto = dto.withUserId(user.getId());
+		FinancialProduct product = financialProductFactory.create(withedDto);
 		return repository.save(product);
 	}
 
