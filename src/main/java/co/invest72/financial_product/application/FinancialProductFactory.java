@@ -45,7 +45,7 @@ public class FinancialProductFactory {
 		return switch (investmentType) {
 			case CASH -> new CashProduct(withedData);
 			case DEPOSIT -> new DepositProduct(withedData);
-			case SAVINGS -> null;
+			case SAVINGS -> new SavingsProduct(withedData);
 		};
 	}
 

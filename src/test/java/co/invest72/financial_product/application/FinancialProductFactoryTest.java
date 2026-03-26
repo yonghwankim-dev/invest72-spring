@@ -25,6 +25,7 @@ class FinancialProductFactoryTest {
 
 	private FinancialProductFactory factory;
 	private ProductIdGenerator idGenerator;
+	private String userId;
 
 	@BeforeEach
 	void setUp() {
@@ -35,6 +36,7 @@ class FinancialProductFactoryTest {
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
 		factory = new FinancialProductFactory(localDateProvider, idGenerator);
+		userId = "user-1234";
 	}
 
 	@DisplayName("현금 상품 생성")
@@ -53,10 +55,8 @@ class FinancialProductFactoryTest {
 			.taxRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
 			.currencyCode(Currency.won().getCode())
+			.userId(userId)
 			.build();
-		String userId = "user-1234";
-		dto = dto
-			.withUserId(userId);
 		// when
 		FinancialProduct product = factory.create(dto);
 		// then
@@ -82,14 +82,39 @@ class FinancialProductFactoryTest {
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.currencyCode(Currency.won().getCode())
+			.userId(userId)
 			.build();
-		String userId = "user-1234";
-		dto = dto
-			.withUserId(userId);
 		// when
 		FinancialProduct product = factory.create(dto);
 		// then
 		FinancialProduct expected = FinancialProductDataProvider.createDepositProduct(userId);
+		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("적금 상품 생성")
+	@Test
+	void givenDto_whenInvestmentTypeIsSavings_thenReturnProduct() {
+		// given
+		BDDMockito.given(idGenerator.generateId())
+			.willReturn("product-1356");
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(1_000_000))
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.userId(userId)
+			.build();
+		// when
+		FinancialProduct product = factory.create(dto);
+		// then
+		FinancialProduct expected = FinancialProductDataProvider.createSavingsProduct(userId);
 		Assertions.assertThat(product).isEqualTo(expected);
 	}
 }
