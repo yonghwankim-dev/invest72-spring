@@ -38,7 +38,7 @@ public class FinancialProductService {
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
-	public String createProduct(User user, FinancialProductRequest dto) {
+	public String createProduct(User user, FinancialProductData dto) {
 		FinancialProductData withedDto = dto.withUserId(user.getId());
 		FinancialProduct product = financialProductFactory.create(withedDto);
 		return repository.save(product);
