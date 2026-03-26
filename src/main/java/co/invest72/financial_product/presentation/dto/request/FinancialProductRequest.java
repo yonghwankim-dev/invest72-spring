@@ -2,6 +2,7 @@ package co.invest72.financial_product.presentation.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import co.invest72.common.validation.EnumValid;
 import co.invest72.common.validation.FinancialAmount;
@@ -9,18 +10,17 @@ import co.invest72.common.validation.FinancialMonths;
 import co.invest72.common.validation.FinancialProductName;
 import co.invest72.common.validation.FinancialRate;
 import co.invest72.common.validation.PaymentDay;
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 @AllArgsConstructor
 @Builder
-@Getter
-public class FinancialProductRequest {
+public class FinancialProductRequest implements FinancialProductData {
 	@FinancialProductName
 	private String name;
 
@@ -57,4 +57,68 @@ public class FinancialProductRequest {
 	@NotNull(message = "통화는 필수입니다.")
 	private String currencyCode;
 
+	@Override
+	public Optional<String> getId() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<String> getUserId() {
+		return Optional.empty();
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public String getInvestmentType() {
+		return this.investmentType;
+	}
+
+	@Override
+	public BigDecimal getAmount() {
+		return this.amount;
+	}
+
+	@Override
+	public Integer getMonths() {
+		return this.months;
+	}
+
+	@Override
+	public Integer getPaymentDay() {
+		return this.paymentDay;
+	}
+
+	@Override
+	public BigDecimal getInterestRate() {
+		return this.interestRate;
+	}
+
+	@Override
+	public String getInterestType() {
+		return interestType;
+	}
+
+	@Override
+	public String getTaxType() {
+		return this.taxType;
+	}
+
+	@Override
+	public BigDecimal getTaxRate() {
+		return this.taxRate;
+	}
+
+	@Override
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+
+	@Override
+	public String getCurrencyCode() {
+		return this.currencyCode;
+	}
 }

@@ -16,6 +16,7 @@ import co.invest72.financial_product.domain.ProductMonths;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -30,6 +31,41 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
+
+	public FinancialProduct create(String userId, FinancialProductData data) {
+		String productId = null;
+		return create(productId, userId, data);
+	}
+
+	public FinancialProduct create(String productId, String userId, FinancialProductData data) {
+		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
+		LocalDateTime createdAt = localDateProvider.nowDateTime();
+		return switch (investmentType) {
+			case CASH -> createCashProduct(productId, userId, createdAt, data);
+			case DEPOSIT -> null;
+			case SAVINGS -> null;
+		};
+	}
+
+	private FinancialProduct createCashProduct(String productId, String userId, LocalDateTime createdAt,
+		FinancialProductData data) {
+		Currency currency = Currency.from(data.getCurrencyCode());
+		Money amount = Money.of(data.getAmount(), currency);
+		return CashProduct.builder()
+			.id(productId)
+			.userId(userId)
+			.name(data.getName())
+			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
+			.amount(ProductAmount.from(amount))
+			.months(new ProductMonths(data.getMonths()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
+			.productInterestType(ProductInterestType.from(data.getInterestType()))
+			.productTaxType(ProductTaxType.from(data.getTaxType()))
+			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
+			.startDate(data.getStartDate())
+			.createdAt(createdAt)
+			.build();
+	}
 
 	/**
 	 * 상품 ID 없이 금융 상품 생성 (신규 생성 시 사용)

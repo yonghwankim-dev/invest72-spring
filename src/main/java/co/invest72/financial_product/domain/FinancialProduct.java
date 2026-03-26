@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -73,6 +74,12 @@ public abstract class FinancialProduct {
 		this.productTaxRate = Objects.requireNonNull(b.productTaxRate);
 		this.startDate = Objects.requireNonNull(b.startDate);
 		this.createdAt = Objects.requireNonNull(b.createdAt);
+	}
+
+	protected FinancialProduct(FinancialProductData data) {
+		this.id = Objects.requireNonNull(data.getId().orElseGet(idGenerator::generateId));
+		this.userId = Objects.requireNonNull(data.getUserId().orElse(null));
+		this.name = Objects.requireNonNull(data.getName());
 	}
 
 	/**
