@@ -83,8 +83,7 @@ public abstract class FinancialProduct {
 		this.userId = Objects.requireNonNull(data.getUserId().orElse(null));
 		this.name = Objects.requireNonNull(data.getName());
 		this.productInvestmentType = ProductInvestmentType.from(data.getInvestmentType());
-		Currency currency = Currency.from(data.getCurrencyCode());
-		this.amount = ProductAmount.from(Money.of(data.getAmount(), currency));
+		this.amount = ProductAmount.from(Money.of(data.getAmount(), Currency.from(data.getCurrencyCode())));
 		this.months = new ProductMonths(data.getMonths());
 		this.productAnnualInterestRate = new ProductAnnualInterestRate(data.getInterestRate());
 		this.productInterestType = ProductInterestType.from(data.getInterestType());
@@ -175,7 +174,19 @@ public abstract class FinancialProduct {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userId, name, productInvestmentType, amount, months, productAnnualInterestRate,
-			productInterestType, productTaxType, productTaxRate, startDate, createdAt);
+		return Objects.hash(
+			id,
+			userId,
+			name,
+			productInvestmentType,
+			amount,
+			months,
+			productAnnualInterestRate,
+			productInterestType,
+			productTaxType,
+			productTaxRate,
+			startDate,
+			createdAt
+		);
 	}
 }

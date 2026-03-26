@@ -17,6 +17,7 @@ import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
+import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -31,11 +32,15 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
+	private final ProductIdGenerator idGenerator;
 
 	public FinancialProduct create(FinancialProductData data) {
 		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
+		String productId = idGenerator.generateId();
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
-		FinancialProductData withedData = data.withCreatedAt(createdAt);
+		FinancialProductData withedData = data
+			.withProductId(productId)
+			.withCreatedAt(createdAt);
 
 		return switch (investmentType) {
 			case CASH -> createCashProduct(withedData);
@@ -144,7 +149,7 @@ public class FinancialProductFactory {
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.valueOf(dto.getInvestmentType()).name()))
 			.amount(ProductAmount.from(amount))
 			.months(new ProductMonths(dto.getMonths()))
-			.paymentDay(new PaymentDay(dto.getPaymentDay()))
+			.paymentDay(new PaymentDay(dto.getPaymentDay().orElseThrow()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(dto.getInterestRate()))
 			.productInterestType(ProductInterestType.from(InterestType.valueOf(dto.getInterestType())))
 			.productTaxType(ProductTaxType.from(TaxType.valueOf(dto.getTaxType())))

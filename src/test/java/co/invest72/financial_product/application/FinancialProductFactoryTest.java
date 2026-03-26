@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
+import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -29,7 +30,10 @@ class FinancialProductFactoryTest {
 		LocalDateProvider localDateProvider = Mockito.mock(LocalDateProvider.class);
 		BDDMockito.given(localDateProvider.nowDateTime())
 			.willReturn(LocalDate.of(2026, 1, 1).atStartOfDay());
-		factory = new FinancialProductFactory(localDateProvider);
+		ProductIdGenerator idGenerator = Mockito.mock(ProductIdGenerator.class);
+		BDDMockito.given(idGenerator.generateId())
+			.willReturn("product-1234");
+		factory = new FinancialProductFactory(localDateProvider, idGenerator);
 	}
 
 	@DisplayName("현금 상품 생성")
@@ -49,10 +53,8 @@ class FinancialProductFactoryTest {
 			.startDate(LocalDate.of(2026, 1, 1))
 			.currencyCode(Currency.won().getCode())
 			.build();
-		String productId = "product-1234";
 		String userId = "user-1234";
 		dto = dto
-			.withProductId(productId)
 			.withUserId(userId);
 		// when
 		FinancialProduct product = factory.create(dto);

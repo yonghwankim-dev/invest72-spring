@@ -19,7 +19,7 @@ public interface FinancialProductData {
 
 	Integer getMonths();
 
-	Integer getPaymentDay();
+	Optional<Integer> getPaymentDay();
 
 	BigDecimal getInterestRate();
 

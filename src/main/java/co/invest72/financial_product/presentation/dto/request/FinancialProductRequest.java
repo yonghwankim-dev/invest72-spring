@@ -95,8 +95,8 @@ public class FinancialProductRequest implements FinancialProductData {
 	}
 
 	@Override
-	public Integer getPaymentDay() {
-		return this.paymentDay;
+	public Optional<Integer> getPaymentDay() {
+		return Optional.ofNullable(this.paymentDay);
 	}
 
 	@Override
