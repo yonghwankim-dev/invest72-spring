@@ -2,6 +2,7 @@ package co.invest72.financial_product.presentation.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import co.invest72.common.validation.EnumValid;
@@ -19,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class FinancialProductRequest implements FinancialProductData {
 	@FinancialProductName
 	private String name;
@@ -57,14 +58,20 @@ public class FinancialProductRequest implements FinancialProductData {
 	@NotNull(message = "통화는 필수입니다.")
 	private String currencyCode;
 
+	private String productId;
+
+	private String userId;
+
+	private LocalDateTime createdAt;
+
 	@Override
 	public Optional<String> getId() {
-		return Optional.empty();
+		return Optional.ofNullable(this.productId);
 	}
 
 	@Override
 	public Optional<String> getUserId() {
-		return Optional.empty();
+		return Optional.ofNullable(this.userId);
 	}
 
 	@Override
@@ -120,5 +127,31 @@ public class FinancialProductRequest implements FinancialProductData {
 	@Override
 	public String getCurrencyCode() {
 		return this.currencyCode;
+	}
+
+	@Override
+	public LocalDateTime getCreatedAt() {
+		return this.createdAt;
+	}
+
+	@Override
+	public FinancialProductData withProductId(String productId) {
+		return this.toBuilder()
+			.productId(productId)
+			.build();
+	}
+
+	@Override
+	public FinancialProductData withUserId(String userId) {
+		return this.toBuilder()
+			.userId(userId)
+			.build();
+	}
+
+	@Override
+	public FinancialProductData withCreatedAt(LocalDateTime createdAt) {
+		return this.toBuilder()
+			.createdAt(createdAt)
+			.build();
 	}
 }

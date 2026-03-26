@@ -1,5 +1,6 @@
 package co.invest72.financial_product.domain;
 
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -12,6 +13,10 @@ import lombok.experimental.SuperBuilder;
 public class CashProduct extends FinancialProduct {
 
 	protected CashProduct() {
+	}
+
+	public CashProduct(FinancialProductData data) {
+		super(data);
 	}
 
 	/**

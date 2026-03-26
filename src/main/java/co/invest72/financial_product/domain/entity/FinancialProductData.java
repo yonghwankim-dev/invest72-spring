@@ -2,6 +2,7 @@ package co.invest72.financial_product.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface FinancialProductData {
@@ -31,4 +32,12 @@ public interface FinancialProductData {
 	LocalDate getStartDate();
 
 	String getCurrencyCode();
+
+	LocalDateTime getCreatedAt();
+
+	FinancialProductData withProductId(String productId);
+
+	FinancialProductData withUserId(String userId);
+
+	FinancialProductData withCreatedAt(LocalDateTime createdAt);
 }

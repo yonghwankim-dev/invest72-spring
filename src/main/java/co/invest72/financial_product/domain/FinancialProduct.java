@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
@@ -80,6 +82,16 @@ public abstract class FinancialProduct {
 		this.id = Objects.requireNonNull(data.getId().orElseGet(idGenerator::generateId));
 		this.userId = Objects.requireNonNull(data.getUserId().orElse(null));
 		this.name = Objects.requireNonNull(data.getName());
+		this.productInvestmentType = ProductInvestmentType.from(data.getInvestmentType());
+		Currency currency = Currency.from(data.getCurrencyCode());
+		this.amount = ProductAmount.from(Money.of(data.getAmount(), currency));
+		this.months = new ProductMonths(data.getMonths());
+		this.productAnnualInterestRate = new ProductAnnualInterestRate(data.getInterestRate());
+		this.productInterestType = ProductInterestType.from(data.getInterestType());
+		this.productTaxType = ProductTaxType.from(data.getTaxType());
+		this.productTaxRate = new ProductTaxRate(data.getTaxRate());
+		this.startDate = data.getStartDate();
+		this.createdAt = data.getCreatedAt();
 	}
 
 	/**
@@ -139,5 +151,31 @@ public abstract class FinancialProduct {
 
 	public Integer getMonthsValue() {
 		return getMonths().getValue();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof FinancialProduct product))
+			return false;
+		return Objects.equals(id, product.id)
+			&& Objects.equals(userId, product.userId)
+			&& Objects.equals(name, product.name)
+			&& Objects.equals(productInvestmentType, product.productInvestmentType)
+			&& Objects.equals(amount, product.amount)
+			&& Objects.equals(months, product.months)
+			&& Objects.equals(productAnnualInterestRate, product.productAnnualInterestRate)
+			&& Objects.equals(productInterestType, product.productInterestType)
+			&& Objects.equals(productTaxType, product.productTaxType)
+			&& Objects.equals(productTaxRate, product.productTaxRate)
+			&& Objects.equals(startDate, product.startDate)
+			&& Objects.equals(createdAt, product.createdAt);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, userId, name, productInvestmentType, amount, months, productAnnualInterestRate,
+			productInterestType, productTaxType, productTaxRate, startDate, createdAt);
 	}
 }

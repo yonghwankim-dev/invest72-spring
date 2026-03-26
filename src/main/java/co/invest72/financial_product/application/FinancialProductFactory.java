@@ -32,39 +32,20 @@ public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
 
-	public FinancialProduct create(String userId, FinancialProductData data) {
-		String productId = null;
-		return create(productId, userId, data);
-	}
-
-	public FinancialProduct create(String productId, String userId, FinancialProductData data) {
+	public FinancialProduct create(FinancialProductData data) {
 		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
+		FinancialProductData withedData = data.withCreatedAt(createdAt);
+
 		return switch (investmentType) {
-			case CASH -> createCashProduct(productId, userId, createdAt, data);
+			case CASH -> createCashProduct(withedData);
 			case DEPOSIT -> null;
 			case SAVINGS -> null;
 		};
 	}
 
-	private FinancialProduct createCashProduct(String productId, String userId, LocalDateTime createdAt,
-		FinancialProductData data) {
-		Currency currency = Currency.from(data.getCurrencyCode());
-		Money amount = Money.of(data.getAmount(), currency);
-		return CashProduct.builder()
-			.id(productId)
-			.userId(userId)
-			.name(data.getName())
-			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.from(amount))
-			.months(new ProductMonths(data.getMonths()))
-			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
-			.productInterestType(ProductInterestType.from(data.getInterestType()))
-			.productTaxType(ProductTaxType.from(data.getTaxType()))
-			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
-			.startDate(data.getStartDate())
-			.createdAt(createdAt)
-			.build();
+	private FinancialProduct createCashProduct(FinancialProductData data) {
+		return new CashProduct(data);
 	}
 
 	/**

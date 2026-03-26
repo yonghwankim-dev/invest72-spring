@@ -22,6 +22,7 @@ import co.invest72.investment.domain.tax.TaxType;
 public class FinancialProductDataProvider {
 	public static FinancialProduct createCashProduct(String userId) {
 		return CashProduct.builder()
+			.id("product-1234")
 			.userId(userId)
 			.name("현금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
