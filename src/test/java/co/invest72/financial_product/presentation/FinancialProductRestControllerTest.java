@@ -108,7 +108,8 @@ class FinancialProductRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.id").value(notNullValue()));
+			.andExpect(jsonPath("$.id").value(notNullValue()))
+			.andDo(MockMvcResultHandlers.print());
 	}
 
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")

@@ -65,7 +65,7 @@ public class FinancialProductRequest implements FinancialProductData {
 	private LocalDateTime createdAt;
 
 	@Override
-	public Optional<String> getId() {
+	public Optional<String> getProductId() {
 		return Optional.ofNullable(this.productId);
 	}
 

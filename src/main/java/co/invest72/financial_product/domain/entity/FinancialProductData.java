@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface FinancialProductData {
 
-	Optional<String> getId();
+	Optional<String> getProductId();
 
 	Optional<String> getUserId();
 

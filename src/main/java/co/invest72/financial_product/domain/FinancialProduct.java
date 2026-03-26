@@ -79,7 +79,7 @@ public abstract class FinancialProduct {
 	}
 
 	protected FinancialProduct(FinancialProductData data) {
-		this.id = Objects.requireNonNull(data.getId().orElseGet(idGenerator::generateId));
+		this.id = Objects.requireNonNull(data.getProductId().orElseGet(idGenerator::generateId));
 		this.userId = Objects.requireNonNull(data.getUserId().orElse(null));
 		this.name = Objects.requireNonNull(data.getName());
 		this.productInvestmentType = ProductInvestmentType.from(data.getInvestmentType());
