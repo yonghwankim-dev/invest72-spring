@@ -44,7 +44,9 @@ public class SavingsProduct extends FinancialProduct {
 
 	@Override
 	public FinancialProduct update(FinancialProductData data) {
-		throw new UnsupportedOperationException("todo implement");
+		FinancialProduct savingsProduct = new SavingsProduct(data);
+		this.update(savingsProduct);
+		return this.toBuilder().build();
 	}
 
 	@Override

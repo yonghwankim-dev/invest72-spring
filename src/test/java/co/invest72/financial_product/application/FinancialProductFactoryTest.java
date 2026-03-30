@@ -15,6 +15,7 @@ import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
@@ -177,6 +178,37 @@ class FinancialProductFactoryTest {
 		FinancialProduct product = factory.createUpdatedProduct(originCash, dto);
 		// then
 		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
+			userId)).toBuilder()
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.build();
+		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("적금 상품 수정")
+	@Test
+	void givenDto_whenInvestmentTypeIsSavings_thenReturnUpdatedProduct() {
+		// given
+		FinancialProduct originCash = FinancialProductDataProvider.createSavingsProduct(userId);
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("적금 상품")
+			.investmentType(InvestmentType.SAVINGS.name())
+			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
+			.months(12)
+			.paymentDay(15)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId(originCash.getId())
+			.userId(userId)
+			.createdAt(originCash.getCreatedAt())
+			.build();
+		// when
+		FinancialProduct product = factory.createUpdatedProduct(originCash, dto);
+		// then
+		FinancialProduct expected = ((SavingsProduct)FinancialProductDataProvider.createSavingsProduct(
 			userId)).toBuilder()
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
