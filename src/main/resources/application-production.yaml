@@ -7,5 +7,15 @@ spring:
       hibernate:
         show_sql: false
 app:
+  domain: invest72.site
   oauth2:
     authorized-redirect-uri: https://www.invest72.site # Firebase Hosting 주소
+server:
+  servlet:
+    session:
+      cookie:
+        name: INVEST72_SESSION
+        http-only: true
+        secure: true
+        same-site: lax
+        domain: invest72.site

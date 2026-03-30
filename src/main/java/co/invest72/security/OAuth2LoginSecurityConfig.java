@@ -2,6 +2,7 @@ package co.invest72.security;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,8 @@ public class OAuth2LoginSecurityConfig {
 	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
+	@Value("${app.domain}")
+	private String csrfCookieDomain;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +42,7 @@ public class OAuth2LoginSecurityConfig {
 			.csrf(configurer ->
 				// 쿠키 기반의 CSRF 토큰 저장소 설정 (프론트엔드가 토큰을 읽을 수 있게 함)
 				// withHttpOnlyFalse()로 설정하여 JavaScript에서 CSRF 토큰에 접근할 수 있도록 허용
-				configurer.csrfTokenRepository(cookieCsrfTokenRepository())
+				configurer.csrfTokenRepository(cookieCsrfTokenRepository(csrfCookieDomain))
 					// 요청 헤더명 지정 (기본값은 X-XSRF-TOKEN)
 					.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 			)
@@ -83,13 +86,13 @@ public class OAuth2LoginSecurityConfig {
 		return source;
 	}
 
-	private CookieCsrfTokenRepository cookieCsrfTokenRepository() {
+	private CookieCsrfTokenRepository cookieCsrfTokenRepository(String domain) {
 		CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
 		repository.setCookieCustomizer(cookie -> {
-			cookie.domain("invest72.site");
+			cookie.domain(domain);
 			cookie.path("/"); // 쿠키 경로 설정
 			cookie.secure(true); // HTTPS에서만 전송
-			cookie.httpOnly(true); // XSRF-TOKEN 쿠키값을 읽기 위함
+			cookie.httpOnly(false); // XSRF-TOKEN 쿠키값을 읽기 위함
 			cookie.sameSite("Lax");
 		});
 		return repository;
