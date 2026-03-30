@@ -5,6 +5,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import co.invest72.investment.domain.TaxRate;
+import co.invest72.money.domain.Money;
 import lombok.Getter;
 
 @Getter
@@ -38,6 +39,11 @@ public class FixedTaxRate implements TaxRate {
 	@Override
 	public BigDecimal applyTo(BigDecimal amount) {
 		return value.multiply(amount);
+	}
+
+	@Override
+	public Money applyTo(Money amount) {
+		return amount.times(value);
 	}
 
 	@Override

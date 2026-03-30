@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.Taxable;
+import co.invest72.money.domain.Money;
 
 public class TaxBenefit implements Taxable {
 
@@ -20,6 +21,11 @@ public class TaxBenefit implements Taxable {
 
 	@Override
 	public BigDecimal applyTax(BigDecimal interest) {
+		return taxRate.applyTo(interest);
+	}
+
+	@Override
+	public Money applyTax(Money interest) {
 		return taxRate.applyTo(interest);
 	}
 
