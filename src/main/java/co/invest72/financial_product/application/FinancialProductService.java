@@ -22,6 +22,7 @@ import co.invest72.financial_product.presentation.dto.response.FinancialProductS
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,7 @@ public class FinancialProductService {
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductFactory financialProductFactory;
 	private final FinancialProductCalculator calculator;
+	private final MoneyMapper moneyMapper;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -150,7 +152,7 @@ public class FinancialProductService {
 		for (FinancialProduct product : products) {
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
-				investmentFactory.createBy(product),
+				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),
 				today,
 				calculator
 			);

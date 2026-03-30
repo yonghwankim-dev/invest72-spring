@@ -22,9 +22,9 @@ public class CalculateInvestment {
 	public CalculateInvestmentResponse calculate(Investment investment) {
 		return CalculateInvestmentResponse.builder()
 			.totalInvestment(moneyMapper.toBigDecimal(investment.getTotalInvestment()))
-			.totalInterest(investment.getTotalInterest().getValue())
-			.totalTax(investment.getTotalTax().getValue())
-			.totalProfit(investment.getTotalProfit().getValue())
+			.totalInterest(moneyMapper.toBigDecimal(investment.getTotalInterest()))
+			.totalTax(moneyMapper.toBigDecimal(investment.getTotalTax()))
+			.totalProfit(moneyMapper.toBigDecimal(investment.getTotalProfit()))
 			.taxType(investment.getTaxType())
 			.taxPercent(taxFormatter.format(investment.getTaxRate()))
 			.monthlyDetails(getMonthlyInvestmentResults(investment))
