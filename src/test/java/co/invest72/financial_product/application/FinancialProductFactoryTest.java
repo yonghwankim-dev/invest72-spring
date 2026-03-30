@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.CashProduct;
+import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
@@ -146,6 +147,37 @@ class FinancialProductFactoryTest {
 		FinancialProduct product = factory.createUpdatedProduct(originCash, dto);
 		// then
 		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.build();
+		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("예금 상품 수정")
+	@Test
+	void givenDto_whenInvestmentTypeIsDeposit_thenReturnUpdatedProduct() {
+		// given
+		FinancialProduct originCash = FinancialProductDataProvider.createDepositProduct(userId);
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("예금 상품")
+			.investmentType(InvestmentType.DEPOSIT.name())
+			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
+			.months(12)
+			.paymentDay(null)
+			.interestRate(BigDecimal.valueOf(0.05))
+			.interestType(InterestType.SIMPLE.name())
+			.taxType(TaxType.STANDARD.name())
+			.taxRate(BigDecimal.valueOf(0.154))
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId(originCash.getId())
+			.userId(userId)
+			.createdAt(originCash.getCreatedAt())
+			.build();
+		// when
+		FinancialProduct product = factory.createUpdatedProduct(originCash, dto);
+		// then
+		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
+			userId)).toBuilder()
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
 		Assertions.assertThat(product).isEqualTo(expected);
