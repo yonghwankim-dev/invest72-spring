@@ -8,13 +8,14 @@ import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.application.TaxFormatter;
 import co.invest72.investment.application.TaxPercentFormatter;
+import co.invest72.money.infrastructure.MoneyMapper;
 
 @Configuration
 public class SpringConfig {
 
 	@Bean
-	public CalculateInvestment calculateMonthlyInvestment(TaxFormatter taxFormatter) {
-		return new CalculateInvestment(taxFormatter);
+	public CalculateInvestment calculateMonthlyInvestment(TaxFormatter taxFormatter, MoneyMapper moneyMapper) {
+		return new CalculateInvestment(taxFormatter, moneyMapper);
 	}
 
 	@Bean

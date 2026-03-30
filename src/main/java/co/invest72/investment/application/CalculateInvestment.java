@@ -11,15 +11,17 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
+import co.invest72.money.infrastructure.MoneyMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CalculateInvestment {
 	private final TaxFormatter taxFormatter;
+	private final MoneyMapper moneyMapper;
 
 	public CalculateInvestmentResponse calculate(Investment investment) {
 		return CalculateInvestmentResponse.builder()
-			.totalInvestment(investment.getTotalInvestment().getValue())
+			.totalInvestment(moneyMapper.toBigDecimal(investment.getTotalInvestment()))
 			.totalInterest(investment.getTotalInterest().getValue())
 			.totalTax(investment.getTotalTax().getValue())
 			.totalProfit(investment.getTotalProfit().getValue())
