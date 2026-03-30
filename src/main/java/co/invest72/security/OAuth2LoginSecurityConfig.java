@@ -86,10 +86,11 @@ public class OAuth2LoginSecurityConfig {
 	private CookieCsrfTokenRepository cookieCsrfTokenRepository() {
 		CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
 		repository.setCookieCustomizer(cookie -> {
+			cookie.domain("invest72.site");
 			cookie.path("/"); // 쿠키 경로 설정
 			cookie.secure(true); // HTTPS에서만 전송
-			cookie.httpOnly(false); // JavaScript에서 접근 가능하도록 설정
-			cookie.sameSite("None"); // SameSite=None으로 설정하여 크로스사이트 요청에서도 쿠키가 전송되도록 함
+			cookie.httpOnly(true); // XSRF-TOKEN 쿠키값을 읽기 위함
+			cookie.sameSite("Lax");
 		});
 		return repository;
 	}
