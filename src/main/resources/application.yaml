@@ -26,5 +26,5 @@ server:
         name: INVEST72_SESSION
         http-only: true
         secure: true
-        same-site: none
+        same-site: lax
 
