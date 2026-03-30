@@ -35,8 +35,4 @@ public class FinancialProductFactory {
 			case SAVINGS -> new SavingsProduct(withedData);
 		};
 	}
-
-	public FinancialProduct createUpdatedProduct(FinancialProduct origin, FinancialProductData data) {
-		return origin.update(data);
-	}
 }

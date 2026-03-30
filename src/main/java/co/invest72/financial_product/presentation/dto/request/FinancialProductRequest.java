@@ -15,6 +15,7 @@ import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,10 +59,13 @@ public class FinancialProductRequest implements FinancialProductData {
 	@NotNull(message = "통화는 필수입니다.")
 	private String currencyCode;
 
+	@Nullable
 	private String productId;
 
+	@Nullable
 	private String userId;
 
+	@Nullable
 	private LocalDateTime createdAt;
 
 	@Override
