@@ -93,6 +93,8 @@ public abstract class FinancialProduct {
 		this.createdAt = data.getCreatedAt();
 	}
 
+	public abstract FinancialProduct update(FinancialProductData data);
+
 	/**
 	 * 상품 정보 업데이트<br>
 	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)

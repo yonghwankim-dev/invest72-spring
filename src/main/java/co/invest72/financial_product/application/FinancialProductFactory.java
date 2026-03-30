@@ -49,6 +49,10 @@ public class FinancialProductFactory {
 		};
 	}
 
+	public FinancialProduct createUpdatedProduct(FinancialProduct origin, FinancialProductData data) {
+		return origin.update(data);
+	}
+	
 	public FinancialProduct createUpdatedProduct(FinancialProduct base, FinancialProductRequest dto) {
 		InvestmentType investmentType = InvestmentType.valueOf(base.getProductInvestmentType().getName());
 		validateInvestmentType(base, dto);

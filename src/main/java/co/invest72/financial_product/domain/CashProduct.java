@@ -19,6 +19,13 @@ public class CashProduct extends FinancialProduct {
 		super(data);
 	}
 
+	@Override
+	public FinancialProduct update(FinancialProductData data) {
+		FinancialProduct cashProduct = new CashProduct(data);
+		this.update(cashProduct);
+		return this.toBuilder().build();
+	}
+
 	/**
 	 * 현금 상품 수정
 	 * - 현금 상품은 납입일이 없으므로, update 시 납입일은 무시되고 기존 값이 유지됩니다.

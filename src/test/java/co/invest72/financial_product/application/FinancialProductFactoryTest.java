@@ -11,7 +11,9 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
@@ -19,6 +21,7 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 
 class FinancialProductFactoryTest {
@@ -115,6 +118,36 @@ class FinancialProductFactoryTest {
 		FinancialProduct product = factory.create(dto);
 		// then
 		FinancialProduct expected = FinancialProductDataProvider.createSavingsProduct(userId);
+		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("현금 상품 수정")
+	@Test
+	void givenDto_whenInvestmentTypeIsCash_thenReturnUpdatedProduct() {
+		// given
+		FinancialProduct originCash = FinancialProductDataProvider.createCashProduct(userId);
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
+			.months(0)
+			.paymentDay(null)
+			.interestRate(BigDecimal.ZERO)
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId(originCash.getId())
+			.userId(userId)
+			.createdAt(originCash.getCreatedAt())
+			.build();
+		// when
+		FinancialProduct product = factory.createUpdatedProduct(originCash, dto);
+		// then
+		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.build();
 		Assertions.assertThat(product).isEqualTo(expected);
 	}
 }

@@ -20,6 +20,11 @@ public class DepositProduct extends FinancialProduct {
 	}
 
 	@Override
+	public FinancialProduct update(FinancialProductData data) {
+		throw new UnsupportedOperationException("todo implement");
+	}
+
+	@Override
 	public void update(FinancialProduct updatedProduct) {
 		validateOnUpdate(updatedProduct);
 		super.update(updatedProduct);
