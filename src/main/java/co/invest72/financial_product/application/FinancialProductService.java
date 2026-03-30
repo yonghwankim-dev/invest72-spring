@@ -17,7 +17,6 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
@@ -106,10 +105,10 @@ public class FinancialProductService {
 		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
 		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
 	})
-	public void updateProduct(User user, String productId, FinancialProductRequest dto) {
-		FinancialProduct existingProduct = findFinancialProduct(user, productId);
-		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
-		existingProduct.update(updatedProduct);
+	public void updateProduct(User user, String productId, FinancialProductData dto) {
+		FinancialProduct originProduct = findFinancialProduct(user, productId);
+		FinancialProduct updatedProduct = originProduct.update(dto);
+		originProduct.update(updatedProduct);
 	}
 
 	@Transactional
