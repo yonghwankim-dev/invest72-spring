@@ -121,8 +121,9 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public Money getTotalProfit() {
-		BigDecimal totalTax = getTotalTax().getValue();
-		BigDecimal totalProfit = details.get(getFinalMonth()).getProfit().subtract(totalTax);
+		Money totalTax = getTotalTax();
+		BigDecimal profit = details.get(getFinalMonth()).getProfit();
+		BigDecimal totalProfit = profit.subtract(totalTax.getValue());
 		Money profitMoney = Money.of(totalProfit, investmentAmount.getAmount().getCurrency());
 		return roundToWholeMoney.apply(profitMoney);
 	}
