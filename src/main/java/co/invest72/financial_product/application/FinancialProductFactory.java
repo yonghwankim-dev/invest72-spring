@@ -51,8 +51,8 @@ public class FinancialProductFactory {
 
 	private FinancialProduct cash(FinancialProductData data) {
 		return CashProduct.builder()
-			.id(data.getProductId().orElse(null))
-			.userId(data.getUserId().orElse(null))
+			.id(data.getProductId().orElseThrow())
+			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
 			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
@@ -68,8 +68,8 @@ public class FinancialProductFactory {
 
 	private FinancialProduct deposit(FinancialProductData data) {
 		return DepositProduct.builder()
-			.id(data.getProductId().orElse(null))
-			.userId(data.getUserId().orElse(null))
+			.id(data.getProductId().orElseThrow())
+			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
 			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
@@ -85,8 +85,8 @@ public class FinancialProductFactory {
 
 	private FinancialProduct savings(FinancialProductData data) {
 		return SavingsProduct.builder()
-			.id(data.getProductId().orElse(null))
-			.userId(data.getUserId().orElse(null))
+			.id(data.getProductId().orElseThrow())
+			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
 			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
