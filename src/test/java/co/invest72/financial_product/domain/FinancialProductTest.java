@@ -14,7 +14,7 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.application.FinancialProductFactory;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductCreateRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -67,7 +67,7 @@ class FinancialProductTest {
 	void givenDto_whenInvestmentTypeIsCash_thenReturnUpdatedProduct() {
 		// given
 		FinancialProduct originProduct = FinancialProductDataProvider.createCashProduct(userId);
-		FinancialProductData dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductCreateRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
@@ -97,7 +97,7 @@ class FinancialProductTest {
 	@Test
 	void update_whenDtoNotHaveProductId_thenThrowException() {
 		FinancialProduct originProduct = FinancialProductDataProvider.createCashProduct(userId);
-		FinancialProductData dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductCreateRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
@@ -126,7 +126,7 @@ class FinancialProductTest {
 	void givenDto_whenInvestmentTypeIsDeposit_thenReturnUpdatedProduct() {
 		// given
 		FinancialProduct originProduct = FinancialProductDataProvider.createDepositProduct(userId);
-		FinancialProductData dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductCreateRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
@@ -158,7 +158,7 @@ class FinancialProductTest {
 	void givenDto_whenInvestmentTypeIsSavings_thenReturnUpdatedProduct() {
 		// given
 		FinancialProduct originProduct = FinancialProductDataProvider.createSavingsProduct(userId);
-		FinancialProductData dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductCreateRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경

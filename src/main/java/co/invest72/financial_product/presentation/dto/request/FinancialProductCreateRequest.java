@@ -22,7 +22,7 @@ import lombok.Builder;
 
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class FinancialProductRequest implements FinancialProductData {
+public class FinancialProductCreateRequest implements FinancialProductData {
 	@FinancialProductName
 	private String name;
 
