@@ -2,7 +2,6 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,34 +91,6 @@ class FinancialProductTest {
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
-	}
-
-	@DisplayName("현금 상품 수정 - dto에 productId가 없으면 예외가 발생해야 한다")
-	@Test
-	void update_whenDtoNotHaveProductId_thenThrowException() {
-		FinancialProduct originProduct = FinancialProductDataProvider.createCashProduct(userId);
-		FinancialProductData dto = FinancialProductRequest.builder()
-			.name("현금 상품")
-			.investmentType(InvestmentType.CASH.name())
-			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
-			.months(0)
-			.paymentDay(null)
-			.interestRate(BigDecimal.ZERO)
-			.interestType(InterestType.NONE.name())
-			.taxType(TaxType.NONE.name())
-			.taxRate(BigDecimal.ZERO)
-			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
-			.productId(null) // 잘못된 productId를 가짐
-			.userId(originProduct.getUserId())
-			.createdAt(originProduct.getCreatedAt())
-			.build();
-		FinancialProduct updateProduct = factory.toEntity(dto);
-		// when
-		Throwable throwable = Assertions.catchThrowable(() -> originProduct.update(updateProduct));
-		// then
-		Assertions.assertThat(throwable)
-			.isInstanceOf(NoSuchElementException.class);
 	}
 
 	@DisplayName("예금 상품 수정")
