@@ -109,7 +109,8 @@ public class FinancialProductService {
 	})
 	public void updateProduct(User user, String productId, FinancialProductData dto) {
 		FinancialProduct originProduct = findFinancialProduct(user, productId);
-		originProduct.update(dto);
+		FinancialProduct updateProduct = financialProductFactory.toEntity(dto);
+		originProduct.update(updateProduct);
 	}
 
 	@Transactional

@@ -7,8 +7,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 
+import co.invest72.common.time.LocalDateProvider;
+import co.invest72.financial_product.application.FinancialProductFactory;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
+import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -20,10 +25,18 @@ import source.FinancialProductDataProvider;
 class FinancialProductTest {
 
 	private String userId;
+	private FinancialProductFactory factory;
 
 	@BeforeEach
 	void setUp() {
 		userId = "user-1234";
+		LocalDateProvider localDateProvider = Mockito.mock(LocalDateProvider.class);
+		BDDMockito.given(localDateProvider.nowDateTime())
+			.willReturn(LocalDate.of(2026, 1, 1).atStartOfDay());
+		ProductIdGenerator idGenerator = Mockito.mock(ProductIdGenerator.class);
+		BDDMockito.given(idGenerator.generateId())
+			.willReturn("product-1234");
+		factory = new FinancialProductFactory(localDateProvider, idGenerator);
 	}
 
 	@DisplayName("객체 생성 - 적금 상품 생성시 이체일이 초기화되지 않는 경우 예외가 발생한다.")
@@ -71,13 +84,14 @@ class FinancialProductTest {
 			.userId(originProduct.getUserId())
 			.createdAt(originProduct.getCreatedAt())
 			.build();
+		FinancialProduct updateProduct = factory.toEntity(dto);
 		// when
-		FinancialProduct product = originProduct.update(dto);
+		originProduct.update(updateProduct);
 		// then
 		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
-		Assertions.assertThat(product).isEqualTo(expected);
+		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
 
 	@DisplayName("현금 상품 수정 - dto에 productId가 없으면 예외가 발생해야 한다")
@@ -100,8 +114,9 @@ class FinancialProductTest {
 			.userId(originProduct.getUserId())
 			.createdAt(originProduct.getCreatedAt())
 			.build();
+		FinancialProduct updateProduct = factory.toEntity(dto);
 		// when
-		Throwable throwable = Assertions.catchThrowable(() -> originProduct.update(dto));
+		Throwable throwable = Assertions.catchThrowable(() -> originProduct.update(updateProduct));
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class);

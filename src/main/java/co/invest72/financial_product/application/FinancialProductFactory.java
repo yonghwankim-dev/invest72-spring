@@ -35,13 +35,7 @@ public class FinancialProductFactory {
 		FinancialProductData withedData = data
 			.withProductId(productId)
 			.withCreatedAt(createdAt);
-		InvestmentType investmentType = InvestmentType.valueOf(withedData.getInvestmentType());
-
-		return switch (investmentType) {
-			case CASH -> cash(withedData);
-			case DEPOSIT -> new DepositProduct(withedData);
-			case SAVINGS -> new SavingsProduct(withedData);
-		};
+		return toEntity(withedData);
 	}
 
 	private FinancialProduct cash(FinancialProductData data) {
@@ -59,5 +53,15 @@ public class FinancialProductFactory {
 			.startDate(data.getStartDate())
 			.createdAt(data.getCreatedAt())
 			.build();
+	}
+
+	public FinancialProduct toEntity(FinancialProductData data) {
+		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
+
+		return switch (investmentType) {
+			case CASH -> cash(data);
+			case DEPOSIT -> new DepositProduct(data);
+			case SAVINGS -> new SavingsProduct(data);
+		};
 	}
 }
