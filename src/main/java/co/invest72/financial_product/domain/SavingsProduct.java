@@ -41,7 +41,7 @@ public class SavingsProduct extends FinancialProduct {
 	public void update(FinancialProduct updatedProduct) {
 		SavingsProduct updatedSavings = validateOnUpdate(updatedProduct);
 		super.update(updatedProduct);
-		this.paymentDay = Objects.requireNonNull(updatedSavings.getPaymentDay());
+		this.paymentDay = updatedSavings.getPaymentDay();
 		validatePaymentDay();
 	}
 
