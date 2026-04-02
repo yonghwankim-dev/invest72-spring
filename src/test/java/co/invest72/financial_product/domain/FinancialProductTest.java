@@ -80,6 +80,33 @@ class FinancialProductTest {
 		Assertions.assertThat(product).isEqualTo(expected);
 	}
 
+	@DisplayName("현금 상품 수정 - dto에 productId가 없으면 예외가 발생해야 한다")
+	@Test
+	void update_whenDtoNotHaveProductId_thenThrowException() {
+		FinancialProduct originProduct = FinancialProductDataProvider.createCashProduct(userId);
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(2_000_000)) // 값 변경
+			.months(0)
+			.paymentDay(null)
+			.interestRate(BigDecimal.ZERO)
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId(null) // 잘못된 productId를 가짐
+			.userId(originProduct.getUserId())
+			.createdAt(originProduct.getCreatedAt())
+			.build();
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> originProduct.update(dto));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
 	@DisplayName("예금 상품 수정")
 	@Test
 	void givenDto_whenInvestmentTypeIsDeposit_thenReturnUpdatedProduct() {

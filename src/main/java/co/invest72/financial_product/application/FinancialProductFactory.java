@@ -8,10 +8,18 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
+import co.invest72.financial_product.domain.ProductMonths;
+import co.invest72.financial_product.domain.ProductTaxRate;
+import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.money.domain.Money;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -30,9 +38,26 @@ public class FinancialProductFactory {
 		InvestmentType investmentType = InvestmentType.valueOf(withedData.getInvestmentType());
 
 		return switch (investmentType) {
-			case CASH -> new CashProduct(withedData);
+			case CASH -> cash(withedData);
 			case DEPOSIT -> new DepositProduct(withedData);
 			case SAVINGS -> new SavingsProduct(withedData);
 		};
+	}
+
+	private FinancialProduct cash(FinancialProductData data) {
+		return CashProduct.builder()
+			.id(data.getProductId().orElse(null))
+			.userId(data.getUserId().orElse(null))
+			.name(data.getName())
+			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
+			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.months(new ProductMonths(data.getMonths()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
+			.productInterestType(ProductInterestType.from(data.getInterestType()))
+			.productTaxType(ProductTaxType.from(data.getTaxType()))
+			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
+			.startDate(data.getStartDate())
+			.createdAt(data.getCreatedAt())
+			.build();
 	}
 }
