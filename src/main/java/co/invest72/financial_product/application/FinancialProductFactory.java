@@ -8,6 +8,7 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
@@ -17,7 +18,6 @@ import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
-import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.money.domain.Money;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
-	private final ProductIdGenerator idGenerator;
+	private final IdGenerator idGenerator;
 
 	/**
 	 * FinancialProductData를 기반으로 FinancialProduct 객체 생성하여 반환
