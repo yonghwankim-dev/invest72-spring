@@ -28,6 +28,7 @@ import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 
 class InvestmentFactoryTest {
@@ -132,7 +133,7 @@ class InvestmentFactoryTest {
 
 		assertNotNull(investment);
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
-		assertEquals(BigDecimal.valueOf(12_000_000), investment.getTotalInvestment().getValue());
+		assertEquals(Money.won(12_000_000), investment.getTotalInvestment());
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
@@ -205,6 +206,6 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(dto);
 		// then
 		assertInstanceOfInvestment(CashInvestment.class, investment);
-		Assertions.assertThat(investment.getTotalInvestment().getValue()).isEqualByComparingTo(amount);
+		Assertions.assertThat(investment.getTotalInvestment()).isEqualTo(Money.won(amount));
 	}
 }

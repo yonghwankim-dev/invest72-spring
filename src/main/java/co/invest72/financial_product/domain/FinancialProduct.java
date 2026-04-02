@@ -133,4 +133,42 @@ public abstract class FinancialProduct {
 	public Integer getMonthsValue() {
 		return getMonths().getValue();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof FinancialProduct product))
+			return false;
+		return Objects.equals(id, product.id)
+			&& Objects.equals(userId, product.userId)
+			&& Objects.equals(name, product.name)
+			&& Objects.equals(productInvestmentType, product.productInvestmentType)
+			&& Objects.equals(amount, product.amount)
+			&& Objects.equals(months, product.months)
+			&& Objects.equals(productAnnualInterestRate, product.productAnnualInterestRate)
+			&& Objects.equals(productInterestType, product.productInterestType)
+			&& Objects.equals(productTaxType, product.productTaxType)
+			&& Objects.equals(productTaxRate, product.productTaxRate)
+			&& Objects.equals(startDate, product.startDate)
+			&& Objects.equals(createdAt, product.createdAt);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(
+			id,
+			userId,
+			name,
+			productInvestmentType,
+			amount,
+			months,
+			productAnnualInterestRate,
+			productInterestType,
+			productTaxType,
+			productTaxRate,
+			startDate,
+			createdAt
+		);
+	}
 }

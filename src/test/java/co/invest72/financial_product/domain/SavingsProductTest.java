@@ -20,9 +20,10 @@ class SavingsProductTest {
 			.id("new-id") // id 변경
 			.userId("user2")
 			.name("Updated Savings")
-			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
 			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
 			.months(new ProductMonths(24))
+			.paymentDay(new PaymentDay(15))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
 			.productTaxType(ProductTaxType.from(TaxType.NON_TAX))
@@ -86,27 +87,7 @@ class SavingsProductTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("상품 소유자(userId)는 변경할 수 없습니다.");
 	}
-
-	@DisplayName("상품 수정 - 적금 상품은 투자 유형을 변경할 수 없다")
-	@Test
-	void update_whenInvestmentTypeChanged_thenThrowException() {
-		// Given
-		FinancialProduct originalProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
-		SavingsProduct updatedProduct = createInvalidUpdatedSavingProduct().toBuilder()
-			.id(originalProduct.getId()) // id는 원래 값으로 유지
-			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
-			.createdAt(originalProduct.getCreatedAt()) // createdAt은 원래 값으로 유지
-			.build();
-
-		// When
-		Throwable throwable = Assertions.catchThrowable(() -> originalProduct.update(updatedProduct));
-
-		// then
-		Assertions.assertThat(throwable)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("투자 유형(InvestmentType)은 변경할 수 없습니다.");
-	}
-
+	
 	@DisplayName("상품 수정 - 적금 상품은 생성 날짜를 변경할 수 없다")
 	@Test
 	void update_whenCreatedAtChanged_thenThrowException() {

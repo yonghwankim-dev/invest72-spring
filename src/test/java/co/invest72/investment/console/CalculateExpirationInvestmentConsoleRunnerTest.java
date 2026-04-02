@@ -40,6 +40,7 @@ import co.invest72.investment.console.output.PrintStreamBasedInvestmentResultPri
 import co.invest72.investment.console.output.guide.BufferedWriterBasedGuidePrinter;
 import co.invest72.investment.console.output.guide.GuidePrinter;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.money.infrastructure.MoneyMapper;
 
 class CalculateExpirationInvestmentConsoleRunnerTest {
 
@@ -105,7 +106,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
-		investment = new CalculateInvestment(new TaxPercentFormatter());
+		investment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
 		InvestmentFactory factory = new InvestmentFactory(productAmountMapper);
 		runner = new CalculateExpirationInvestmentConsoleRunner(

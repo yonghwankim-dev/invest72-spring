@@ -1,6 +1,7 @@
 package co.invest72.financial_product.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
@@ -25,6 +26,7 @@ public class SavingsProduct extends FinancialProduct {
 	}
 
 	// 빌더 패턴을 사용할 때 부모 클래스의 필드와 자식 클래스의 필드를 모두 초기화할 수 있도록 생성자 정의
+	@SuppressWarnings("unused")
 	protected SavingsProduct(SavingsProductBuilder<?, ?> b) {
 		super(b); // 부모 필드 초기화
 		this.paymentDay = b.paymentDay; // 자식 필드 초기화
@@ -32,7 +34,7 @@ public class SavingsProduct extends FinancialProduct {
 	}
 
 	private void validatePaymentDay() {
-		InvestmentType.valueOf(getProductInvestmentType().getName()).validate(paymentDay);
+		InvestmentType.valueOf(getInvestmentTypeName()).validate(paymentDay);
 	}
 
 	@Override
@@ -58,5 +60,21 @@ public class SavingsProduct extends FinancialProduct {
 	@Override
 	public Integer getPaymentDayValue() {
 		return paymentDay.getValue();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof SavingsProduct that))
+			return false;
+		if (!super.equals(o))
+			return false;
+		return this.paymentDay.equals(that.paymentDay);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), paymentDay);
 	}
 }

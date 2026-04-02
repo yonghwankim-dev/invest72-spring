@@ -24,6 +24,7 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Money;
 
 class InvestmentTest {
 
@@ -54,16 +55,16 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfit().getValue();
+		Money totalInvestment = investment.getTotalInvestment();
+		Money totalInterest = investment.getTotalInterest();
+		Money totalTax = investment.getTotalTax();
+		Money totalProfit = investment.getTotalProfit();
 
 		// Then
-		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("10000000000000"));
-		Assertions.assertThat(totalInterest).isEqualByComparingTo(new BigDecimal("99899001000000000"));
-		Assertions.assertThat(totalTax).isEqualByComparingTo(new BigDecimal("15384446154000000"));
-		Assertions.assertThat(totalProfit).isEqualByComparingTo(new BigDecimal("84524554846000000"));
+		Assertions.assertThat(totalInvestment).isEqualTo(Money.won(new BigDecimal("10000000000000")));
+		Assertions.assertThat(totalInterest).isEqualTo(Money.won(new BigDecimal("99899001000000000")));
+		Assertions.assertThat(totalTax).isEqualTo(Money.won(new BigDecimal("15384446154000000")));
+		Assertions.assertThat(totalProfit).isEqualTo(Money.won(new BigDecimal("84524554846000000")));
 	}
 
 	@DisplayName("적금 상품 수익 계산 - 최대값 검증")
@@ -86,15 +87,15 @@ class InvestmentTest {
 			.build();
 		Investment investment = investmentFactory.createBy(financialProduct);
 		// When
-		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfit().getValue();
+		Money totalInvestment = investment.getTotalInvestment();
+		Money totalInterest = investment.getTotalInterest();
+		Money totalTax = investment.getTotalTax();
+		Money totalProfit = investment.getTotalProfit();
 
 		// Then
-		Assertions.assertThat(totalInvestment).isEqualByComparingTo(new BigDecimal("119880000000000000"));
-		Assertions.assertThat(totalInterest).isEqualByComparingTo(new BigDecimal("598844561494500000000"));
-		Assertions.assertThat(totalTax).isEqualByComparingTo(new BigDecimal("92222062470153000000"));
-		Assertions.assertThat(totalProfit).isEqualByComparingTo(new BigDecimal("506742379024347000000"));
+		Assertions.assertThat(totalInvestment).isEqualTo(Money.won(new BigDecimal("119880000000000000")));
+		Assertions.assertThat(totalInterest).isEqualTo(Money.won(new BigDecimal("598844561494500000000")));
+		Assertions.assertThat(totalTax).isEqualTo(Money.won(new BigDecimal("92222062470153000000")));
+		Assertions.assertThat(totalProfit).isEqualTo(Money.won(new BigDecimal("506742379024347000000")));
 	}
 }

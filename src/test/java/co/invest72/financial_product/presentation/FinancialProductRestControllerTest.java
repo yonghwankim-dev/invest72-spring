@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +30,7 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
@@ -89,7 +89,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 현금 상품을 성공적으로 생성한다")
 	void createProduct_whenInvestmentTypeIsCash_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -99,7 +99,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -114,7 +114,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
-		FinancialProductRequest dto = FinancialProductRequest.builder().build();
+		FinancialProductData dto = FinancialProductRequest.builder().build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -124,14 +124,13 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(10)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(10)));
 	}
 
 	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
@@ -141,7 +140,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(-0.01)) // 음수 세율
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -152,14 +151,13 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(4)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(4)));
 	}
 
 	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -169,7 +167,7 @@ class FinancialProductRestControllerTest {
 			.taxType("INVALID_TAX_TYPE") // 유효하지 않은 세금 유형
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -180,15 +178,14 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(3)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(3)));
 	}
 
 	@DisplayName("상품 생성 - 단리-예금 상품")
 	@Test
 	void createProduct_whenInvestmentTypeIsDeposit_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -198,7 +195,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -214,7 +211,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsSavings_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -225,7 +222,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -241,7 +238,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenHeaderNotHaveCsrfToken_thenResponseForbidden() throws Exception {
 		// given
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -395,12 +392,12 @@ class FinancialProductRestControllerTest {
 	@Test
 	void getProducts_whenUserHasProducts_thenReturnSummaryProductList() throws Exception {
 		// given
-		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
+		FinancialProduct cashProduct = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		FinancialProduct depositProduct = FinancialProductDataProvider.createDepositProduct(
 			principalUser.getUser().getId(), InterestType.SIMPLE);
 		FinancialProduct savingsProduct = FinancialProductDataProvider.createSavingsProduct(
 			principalUser.getUser().getId(), InterestType.COMPOUND);
-		financialProductRepository.save(product);
+		financialProductRepository.save(cashProduct);
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
 
@@ -435,7 +432,7 @@ class FinancialProductRestControllerTest {
 			.productCurrency(productCurrency)
 			.build();
 		FinancialProductSummary expectedResponse3 = FinancialProductSummary.builder()
-			.id(product.getId())
+			.id(cashProduct.getId())
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.interestRate(BigDecimal.ZERO)
@@ -456,8 +453,7 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())
-			.andExpect(content().json(expectedJson))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(content().json(expectedJson));
 	}
 
 	@DisplayName("상품 수정 - 사용자가 생성한 현금 상품을 수정한다")
@@ -467,7 +463,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -477,7 +473,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -505,7 +501,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -515,7 +511,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name()) // 현금 상품은 세금 유형이 NONE이어야 하지만, 수정 요청에서는 STANDARD로 변경하려고 함
 			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
 			.startDate(LocalDate.of(2026, 2, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -552,7 +548,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(product);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("수정된 예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -562,7 +558,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -592,7 +588,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("수정된 적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -603,7 +599,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then
@@ -632,7 +628,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct cash = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(cash);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -662,7 +658,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(savings);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -691,7 +687,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(deposit);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -721,7 +717,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
-		FinancialProductRequest dto = FinancialProductRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -731,7 +727,7 @@ class FinancialProductRestControllerTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
-			.currencyCode("KRW")
+			.currencyCode(Currency.won().getCode())
 			.build();
 
 		// when & then

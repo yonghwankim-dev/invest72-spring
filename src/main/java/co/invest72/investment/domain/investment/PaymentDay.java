@@ -1,6 +1,7 @@
 package co.invest72.investment.domain.investment;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -32,5 +33,19 @@ public class PaymentDay {
 	 */
 	public boolean isPaidOn(LocalDate date) {
 		return date.getDayOfMonth() >= this.value;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof PaymentDay that))
+			return false;
+		return this.value.compareTo(that.value) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value);
 	}
 }
