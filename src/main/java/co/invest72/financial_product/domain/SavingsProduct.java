@@ -43,13 +43,6 @@ public class SavingsProduct extends FinancialProduct {
 	}
 
 	@Override
-	public FinancialProduct update(FinancialProductData data) {
-		FinancialProduct savingsProduct = new SavingsProduct(data);
-		this.update(savingsProduct);
-		return this.toBuilder().build();
-	}
-
-	@Override
 	public void update(FinancialProduct updatedProduct) {
 		SavingsProduct updatedSavings = validateOnUpdate(updatedProduct);
 		super.update(updatedProduct);

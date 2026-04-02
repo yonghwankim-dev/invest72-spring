@@ -94,14 +94,6 @@ public abstract class FinancialProduct {
 	}
 
 	/**
-	 * 상품 정보 업데이트
-	 * 매개변수로 받은 FinancialProductData data의 정보로 변경하고 새로운 객체로 생성하여 반환한다
-	 * @param data 업데이트 정보
-	 * @return 새로운 FinancialProduct 객체
-	 */
-	public abstract FinancialProduct update(FinancialProductData data);
-
-	/**
 	 * 상품 정보 업데이트<br>
 	 * 업데이트된 상품 정보로 현재 객체의 필드 값을 변경 (ID, userId, investmentType, createdAt는 유지)
 	 * @param updatedProduct 업데이트된 상품 정보 (ID, userId, investmentType, createdAt는 무시되고 유지됨)

@@ -143,14 +143,15 @@ class FinancialProductTest {
 			.userId(originProduct.getUserId())
 			.createdAt(originProduct.getCreatedAt())
 			.build();
+		FinancialProduct updateProduct = factory.toEntity(dto);
 		// when
-		FinancialProduct product = originProduct.update(dto);
+		originProduct.update(updateProduct);
 		// then
 		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
 			userId)).toBuilder()
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
-		Assertions.assertThat(product).isEqualTo(expected);
+		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
 
 	@DisplayName("적금 상품 수정")
@@ -174,13 +175,14 @@ class FinancialProductTest {
 			.userId(originProduct.getUserId())
 			.createdAt(originProduct.getCreatedAt())
 			.build();
+		FinancialProduct updateProduct = factory.toEntity(dto);
 		// when
-		FinancialProduct product = originProduct.update(dto);
+		originProduct.update(updateProduct);
 		// then
 		FinancialProduct expected = ((SavingsProduct)FinancialProductDataProvider.createSavingsProduct(
 			userId)).toBuilder()
 			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
 			.build();
-		Assertions.assertThat(product).isEqualTo(expected);
+		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
 }
