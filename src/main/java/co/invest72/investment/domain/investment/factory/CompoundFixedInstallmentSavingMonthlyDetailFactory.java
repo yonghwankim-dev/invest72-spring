@@ -30,12 +30,12 @@ public class CompoundFixedInstallmentSavingMonthlyDetailFactory {
 		Money interest = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 		Money profit = Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency());
 
-		result.add(new MonthlyInvestmentDetail(0, principal.getValue(), interest.getValue(), profit.getValue()));
+		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit.add(investmentAmount.getAmount());
 			interest = interestRate.calMonthlyInterest(principal);
 			profit = principal.add(interest);
-			result.add(new MonthlyInvestmentDetail(i, principal.getValue(), interest.getValue(), profit.getValue()));
+			result.add(new MonthlyInvestmentDetail(i, principal, interest, profit));
 		}
 		return result;
 	}

@@ -52,8 +52,8 @@ public class CompoundFixedDeposit implements Investment {
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		BigDecimal principal = details.get(month).getPrincipal();
-		return roundToWholeMoney.apply(Money.of(principal, investmentAmount.getAmount().getCurrency()));
+		Money principal = details.get(month).getPrincipal();
+		return roundToWholeMoney.apply(principal);
 	}
 
 	@Override
@@ -75,9 +75,7 @@ public class CompoundFixedDeposit implements Investment {
 		if (month < 0) {
 			return getInterest(0);
 		}
-		BigDecimal value = details.get(month).getInterest();
-		Money interest = Money.of(value, investmentAmount.getAmount().getCurrency());
-		return roundToWholeMoney.apply(interest);
+		return roundToWholeMoney.apply(details.get(month).getInterest());
 	}
 
 	@Override
@@ -93,9 +91,7 @@ public class CompoundFixedDeposit implements Investment {
 		if (month < 0) {
 			return getProfit(0);
 		}
-		BigDecimal value = details.get(month).getProfit();
-		Money profit = Money.of(value, investmentAmount.getAmount().getCurrency());
-		return roundToWholeMoney.apply(profit);
+		return roundToWholeMoney.apply(details.get(month).getProfit());
 	}
 
 	@Override
@@ -105,12 +101,12 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public Money getTotalInterest() {
-		BigDecimal totalInterest = details.stream()
+		Money totalInterest = details.stream()
 			.skip(1)
 			.map(MonthlyInvestmentDetail::getInterest)
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
-		Money money = Money.of(totalInterest, investmentAmount.getAmount().getCurrency());
-		return roundToWholeMoney.apply(money);
+			.reduce(Money::add)
+			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
+		return roundToWholeMoney.apply(totalInterest);
 	}
 
 	@Override
@@ -122,10 +118,9 @@ public class CompoundFixedDeposit implements Investment {
 	@Override
 	public Money getTotalProfit() {
 		Money totalTax = getTotalTax();
-		BigDecimal profit = details.get(getFinalMonth()).getProfit();
-		BigDecimal totalProfit = profit.subtract(totalTax.getValue());
-		Money profitMoney = Money.of(totalProfit, investmentAmount.getAmount().getCurrency());
-		return roundToWholeMoney.apply(profitMoney);
+		Money profit = details.get(getFinalMonth()).getProfit();
+		Money totalProfit = profit.subtract(totalTax);
+		return roundToWholeMoney.apply(totalProfit);
 	}
 
 	@Override
