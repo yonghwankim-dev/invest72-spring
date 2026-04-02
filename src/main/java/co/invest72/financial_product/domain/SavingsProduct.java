@@ -60,4 +60,21 @@ public class SavingsProduct extends FinancialProduct {
 	public Integer getPaymentDayValue() {
 		return paymentDay.getValue();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof SavingsProduct that))
+			return false;
+		if (!super.equals(o))
+			return false;
+		return this.paymentDay.equals(that.paymentDay)
+			&& super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), paymentDay);
+	}
 }
