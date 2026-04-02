@@ -32,7 +32,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductCreateRequest;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
@@ -89,7 +89,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 현금 상품을 성공적으로 생성한다")
 	void createProduct_whenInvestmentTypeIsCash_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -115,7 +115,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsNull_thenReturnBadRequest() throws Exception {
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder().build();
+		FinancialProductRequest dto = FinancialProductRequest.builder().build();
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
@@ -132,7 +132,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenDataIsOutOfRange_thenReturnBadRequest() throws Exception {
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(-1)) // 음수 금액
@@ -160,7 +160,7 @@ class FinancialProductRestControllerTest {
 	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
 	@Test
 	void createProduct_whenEnumValueIsInvalid_thenReturnBadRequest() throws Exception {
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType("INVALID_TYPE") // 유효하지 않은 상품 유형
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -189,7 +189,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsDeposit_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -215,7 +215,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsSavings_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -242,7 +242,7 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenHeaderNotHaveCsrfToken_thenResponseForbidden() throws Exception {
 		// given
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -468,7 +468,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -509,7 +509,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(product);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -559,7 +559,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(product);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -602,7 +602,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(product);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(2_000_000L))
@@ -645,7 +645,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct cash = FinancialProductDataProvider.createCashProduct(principalUser.getUser().getId());
 		financialProductRepository.save(cash);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -675,7 +675,7 @@ class FinancialProductRestControllerTest {
 			InterestType.COMPOUND);
 		financialProductRepository.save(savings);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -704,7 +704,7 @@ class FinancialProductRestControllerTest {
 			InterestType.SIMPLE);
 		financialProductRepository.save(deposit);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
@@ -734,7 +734,7 @@ class FinancialProductRestControllerTest {
 		FinancialProduct product = FinancialProductDataProvider.createCashProduct(otherUserId);
 		financialProductRepository.save(product);
 
-		FinancialProductCreateRequest dto = FinancialProductCreateRequest.builder()
+		FinancialProductRequest dto = FinancialProductRequest.builder()
 			.name("수정된 현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(2_000_000L))

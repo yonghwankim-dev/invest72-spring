@@ -14,7 +14,7 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductCreateRequest;
+import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -43,7 +43,7 @@ class FinancialProductFactoryTest {
 	@Test
 	void givenDto_whenInvestmentTypeIsCash_thenReturnCashProduct() {
 		// given
-		FinancialProductData dto = FinancialProductCreateRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
 			.amount(BigDecimal.valueOf(1_000_000))
@@ -70,7 +70,7 @@ class FinancialProductFactoryTest {
 		// given
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-4567");
-		FinancialProductData dto = FinancialProductCreateRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
 			.amount(BigDecimal.valueOf(1_000_000))
@@ -97,7 +97,7 @@ class FinancialProductFactoryTest {
 		// given
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1356");
-		FinancialProductData dto = FinancialProductCreateRequest.builder()
+		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
 			.amount(BigDecimal.valueOf(1_000_000))

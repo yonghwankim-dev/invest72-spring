@@ -22,7 +22,7 @@ import lombok.Builder;
 
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class FinancialProductCreateRequest implements FinancialProductData {
+public class FinancialProductRequest implements FinancialProductData {
 	@FinancialProductName
 	private String name;
 
@@ -67,16 +67,6 @@ public class FinancialProductCreateRequest implements FinancialProductData {
 
 	@Nullable
 	private LocalDateTime createdAt;
-
-	@Override
-	public Optional<String> getProductId() {
-		return Optional.ofNullable(this.productId);
-	}
-
-	@Override
-	public Optional<String> getUserId() {
-		return Optional.ofNullable(this.userId);
-	}
 
 	@Override
 	public String getName() {
@@ -134,8 +124,18 @@ public class FinancialProductCreateRequest implements FinancialProductData {
 	}
 
 	@Override
-	public LocalDateTime getCreatedAt() {
-		return this.createdAt;
+	public Optional<String> getProductId() {
+		return Optional.ofNullable(this.productId);
+	}
+
+	@Override
+	public Optional<String> getUserId() {
+		return Optional.ofNullable(this.userId);
+	}
+
+	@Override
+	public Optional<LocalDateTime> getCreatedAt() {
+		return Optional.ofNullable(this.createdAt);
 	}
 
 	@Override

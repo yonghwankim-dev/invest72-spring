@@ -7,10 +7,6 @@ import java.util.Optional;
 
 public interface FinancialProductData {
 
-	Optional<String> getProductId();
-
-	Optional<String> getUserId();
-
 	String getName();
 
 	String getInvestmentType();
@@ -33,7 +29,11 @@ public interface FinancialProductData {
 
 	String getCurrencyCode();
 
-	LocalDateTime getCreatedAt();
+	Optional<String> getProductId();
+
+	Optional<String> getUserId();
+
+	Optional<LocalDateTime> getCreatedAt();
 
 	FinancialProductData withProductId(String productId);
 

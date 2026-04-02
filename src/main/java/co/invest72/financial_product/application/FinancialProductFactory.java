@@ -62,7 +62,7 @@ public class FinancialProductFactory {
 			.productTaxType(ProductTaxType.from(data.getTaxType()))
 			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
 			.startDate(data.getStartDate())
-			.createdAt(data.getCreatedAt())
+			.createdAt(data.getCreatedAt().orElseThrow())
 			.build();
 	}
 
@@ -79,7 +79,7 @@ public class FinancialProductFactory {
 			.productTaxType(ProductTaxType.from(data.getTaxType()))
 			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
 			.startDate(data.getStartDate())
-			.createdAt(data.getCreatedAt())
+			.createdAt(data.getCreatedAt().orElseThrow())
 			.build();
 	}
 
@@ -97,7 +97,7 @@ public class FinancialProductFactory {
 			.productTaxType(ProductTaxType.from(data.getTaxType()))
 			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
 			.startDate(data.getStartDate())
-			.createdAt(data.getCreatedAt())
+			.createdAt(data.getCreatedAt().orElseThrow())
 			.build();
 	}
 }
