@@ -41,10 +41,10 @@ public class FinancialProductFactory {
 	public FinancialProduct create(FinancialProductData data) {
 		String productId = idGenerator.generateId();
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
-		FinancialProductData withedData = data
+		FinancialProductData enrichedData = data
 			.withProductId(productId)
 			.withCreatedAt(createdAt);
-		return toEntity(withedData);
+		return toEntity(enrichedData);
 	}
 
 	/**
