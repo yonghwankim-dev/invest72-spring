@@ -2,6 +2,7 @@ package co.invest72.financial_product.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +52,7 @@ class FinancialProductTest {
 			.build());
 		// then
 		Assertions.assertThat(throwable)
-			.isInstanceOf(NullPointerException.class);
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@DisplayName("객체 생성 - 빌더를 이용하여 현금 생성")
@@ -118,7 +119,7 @@ class FinancialProductTest {
 		Throwable throwable = Assertions.catchThrowable(() -> originProduct.update(updateProduct));
 		// then
 		Assertions.assertThat(throwable)
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(NoSuchElementException.class);
 	}
 
 	@DisplayName("예금 상품 수정")
