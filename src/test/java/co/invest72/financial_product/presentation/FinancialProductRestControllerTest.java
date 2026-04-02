@@ -479,9 +479,6 @@ class FinancialProductRestControllerTest {
 			.taxRate(BigDecimal.valueOf(0.0))
 			.startDate(LocalDate.of(2026, 2, 1))
 			.currencyCode(Currency.won().getCode())
-			.productId(product.getId())
-			.userId(product.getUserId())
-			.createdAt(product.getCreatedAt())
 			.build();
 
 		// when & then
@@ -520,9 +517,6 @@ class FinancialProductRestControllerTest {
 			.taxRate(BigDecimal.valueOf(0.154)) // 현금 상품은 세율이 0이어야 하지만, 수정 요청에서는 0.154로 변경하려고 함
 			.startDate(LocalDate.of(2026, 2, 1))
 			.currencyCode(Currency.won().getCode())
-			.productId(product.getId())
-			.userId(product.getUserId())
-			.createdAt(product.getCreatedAt())
 			.build();
 
 		// when & then
@@ -570,9 +564,6 @@ class FinancialProductRestControllerTest {
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
 			.currencyCode(Currency.won().getCode())
-			.productId(product.getId())
-			.userId(product.getUserId())
-			.createdAt(product.getCreatedAt())
 			.build();
 
 		// when & then
@@ -614,9 +605,6 @@ class FinancialProductRestControllerTest {
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 2, 1))
 			.currencyCode(Currency.won().getCode())
-			.productId(product.getId())
-			.userId(product.getUserId())
-			.createdAt(product.getCreatedAt())
 			.build();
 
 		// when & then
