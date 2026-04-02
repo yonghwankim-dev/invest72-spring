@@ -109,7 +109,10 @@ public class FinancialProductService {
 	})
 	public void updateProduct(User user, String productId, FinancialProductData dto) {
 		FinancialProduct originProduct = findFinancialProduct(user, productId);
-		FinancialProduct updateProduct = financialProductFactory.toEntity(dto);
+		FinancialProductData withedData = dto.withProductId(originProduct.getId())
+			.withUserId(originProduct.getUserId())
+			.withCreatedAt(originProduct.getCreatedAt());
+		FinancialProduct updateProduct = financialProductFactory.toEntity(withedData);
 		originProduct.update(updateProduct);
 	}
 
