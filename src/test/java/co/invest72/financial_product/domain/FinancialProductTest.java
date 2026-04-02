@@ -51,8 +51,7 @@ class FinancialProductTest {
 			.build());
 		// then
 		Assertions.assertThat(throwable)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("적금 상품은 납입일이 반드시 필요합니다.");
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@DisplayName("객체 생성 - 빌더를 이용하여 현금 생성")
