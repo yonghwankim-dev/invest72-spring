@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -109,8 +108,7 @@ class FinancialProductRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.id").value(notNullValue()))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
 
 	@DisplayName("상품 생성 - null 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
@@ -126,8 +124,7 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(10)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(10)));
 	}
 
 	@DisplayName("상품 생성 - 범위 값을 벗어난 데이터를 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
@@ -154,8 +151,7 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(4)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(4)));
 	}
 
 	@DisplayName("상품 생성 - 유효하지 않은 enum 값을 가진 현금 상품 생성 요청은 400 Bad Request를 반환한다")
@@ -182,8 +178,7 @@ class FinancialProductRestControllerTest {
 				.content(objectMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
-			.andExpect(jsonPath("$.errors", hasSize(3)))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(jsonPath("$.errors", hasSize(3)));
 	}
 
 	@DisplayName("상품 생성 - 단리-예금 상품")
@@ -458,8 +453,7 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").isArray())
-			.andExpect(content().json(expectedJson))
-			.andDo(MockMvcResultHandlers.print());
+			.andExpect(content().json(expectedJson));
 	}
 
 	@DisplayName("상품 수정 - 사용자가 생성한 현금 상품을 수정한다")
