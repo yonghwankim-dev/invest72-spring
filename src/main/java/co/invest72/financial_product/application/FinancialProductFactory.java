@@ -38,6 +38,16 @@ public class FinancialProductFactory {
 		return toEntity(withedData);
 	}
 
+	public FinancialProduct toEntity(FinancialProductData data) {
+		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
+
+		return switch (investmentType) {
+			case CASH -> cash(data);
+			case DEPOSIT -> deposit(data);
+			case SAVINGS -> new SavingsProduct(data);
+		};
+	}
+
 	private FinancialProduct cash(FinancialProductData data) {
 		return CashProduct.builder()
 			.id(data.getProductId().orElse(null))
@@ -55,13 +65,20 @@ public class FinancialProductFactory {
 			.build();
 	}
 
-	public FinancialProduct toEntity(FinancialProductData data) {
-		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
-
-		return switch (investmentType) {
-			case CASH -> cash(data);
-			case DEPOSIT -> new DepositProduct(data);
-			case SAVINGS -> new SavingsProduct(data);
-		};
+	private FinancialProduct deposit(FinancialProductData data) {
+		return DepositProduct.builder()
+			.id(data.getProductId().orElse(null))
+			.userId(data.getUserId().orElse(null))
+			.name(data.getName())
+			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
+			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.months(new ProductMonths(data.getMonths()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
+			.productInterestType(ProductInterestType.from(data.getInterestType()))
+			.productTaxType(ProductTaxType.from(data.getTaxType()))
+			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
+			.startDate(data.getStartDate())
+			.createdAt(data.getCreatedAt())
+			.build();
 	}
 }
