@@ -30,6 +30,14 @@ public class FinancialProductFactory {
 	private final LocalDateProvider localDateProvider;
 	private final ProductIdGenerator idGenerator;
 
+	/**
+	 * FinancialProductData를 기반으로 FinancialProduct 객체 생성하여 반환
+	 * <p>
+	 * productId, createdAt 데이터를 새로 생성하여 FinancialProductData 주입합니다.
+	 * </p>
+	 * @param data 금융 상품 객체
+	 * @return FinancialProduct 객체
+	 */
 	public FinancialProduct create(FinancialProductData data) {
 		String productId = idGenerator.generateId();
 		LocalDateTime createdAt = localDateProvider.nowDateTime();
@@ -39,6 +47,13 @@ public class FinancialProductFactory {
 		return toEntity(withedData);
 	}
 
+	/**
+	 * FinancialProductData 객체를 FinancialProduct 객체로 변환하여 반환
+	 *
+	 * @param data 금융 상품 객체
+	 * @return 새로운 FinancialProduct 객체
+	 * @throws java.util.NoSuchElementException productId, userId, createdAt이 null인 경우 예외가 발생
+	 */
 	public FinancialProduct toEntity(FinancialProductData data) {
 		InvestmentType investmentType = InvestmentType.valueOf(data.getInvestmentType());
 

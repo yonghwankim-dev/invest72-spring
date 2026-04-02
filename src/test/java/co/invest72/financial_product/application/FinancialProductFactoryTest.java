@@ -2,6 +2,7 @@ package co.invest72.financial_product.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,5 +117,84 @@ class FinancialProductFactoryTest {
 		// then
 		FinancialProduct expected = FinancialProductDataProvider.createSavingsProduct(userId);
 		Assertions.assertThat(product).isEqualTo(expected);
+	}
+
+	@DisplayName("엔티티 생성 - productId가 null이면 예외가 발생해야 한다")
+	@Test
+	void toEntity_whenInvestmentTypeIsCashAndProductIdIsNull_thenThrowException() {
+		// given
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(1_000_000))
+			.months(0)
+			.paymentDay(null)
+			.interestRate(BigDecimal.ZERO)
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId(null)
+			.userId(userId)
+			.build();
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(NoSuchElementException.class);
+	}
+
+	@DisplayName("엔티티 생성 - userId가 null이면 예외가 발생해야 한다")
+	@Test
+	void toEntity_whenInvestmentTypeIsCashAndUserIdIsNull_thenThrowException() {
+		// given
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(1_000_000))
+			.months(0)
+			.paymentDay(null)
+			.interestRate(BigDecimal.ZERO)
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId("product-1234")
+			.userId(null)
+			.build();
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(NoSuchElementException.class);
+	}
+
+	@DisplayName("엔티티 생성 - createdAt가 null이면 예외가 발생해야 한다")
+	@Test
+	void toEntity_whenInvestmentTypeIsCashAndCreatedAtIsNull_thenThrowException() {
+		// given
+		FinancialProductData dto = FinancialProductRequest.builder()
+			.name("현금 상품")
+			.investmentType(InvestmentType.CASH.name())
+			.amount(BigDecimal.valueOf(1_000_000))
+			.months(0)
+			.paymentDay(null)
+			.interestRate(BigDecimal.ZERO)
+			.interestType(InterestType.NONE.name())
+			.taxType(TaxType.NONE.name())
+			.taxRate(BigDecimal.ZERO)
+			.startDate(LocalDate.of(2026, 1, 1))
+			.currencyCode(Currency.won().getCode())
+			.productId("product-1234")
+			.userId(userId)
+			.createdAt(null)
+			.build();
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(NoSuchElementException.class);
 	}
 }
