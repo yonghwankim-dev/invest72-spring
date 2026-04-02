@@ -4,10 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
-import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
@@ -76,21 +73,6 @@ public abstract class FinancialProduct {
 		this.productTaxRate = Objects.requireNonNull(b.productTaxRate);
 		this.startDate = Objects.requireNonNull(b.startDate);
 		this.createdAt = Objects.requireNonNull(b.createdAt);
-	}
-
-	protected FinancialProduct(FinancialProductData data) {
-		this.id = Objects.requireNonNull(data.getProductId().orElseGet(idGenerator::generateId));
-		this.userId = Objects.requireNonNull(data.getUserId().orElse(null));
-		this.name = Objects.requireNonNull(data.getName());
-		this.productInvestmentType = ProductInvestmentType.from(data.getInvestmentType());
-		this.amount = ProductAmount.from(Money.of(data.getAmount(), Currency.from(data.getCurrencyCode())));
-		this.months = new ProductMonths(data.getMonths());
-		this.productAnnualInterestRate = new ProductAnnualInterestRate(data.getInterestRate());
-		this.productInterestType = ProductInterestType.from(data.getInterestType());
-		this.productTaxType = ProductTaxType.from(data.getTaxType());
-		this.productTaxRate = new ProductTaxRate(data.getTaxRate());
-		this.startDate = data.getStartDate();
-		this.createdAt = data.getCreatedAt();
 	}
 
 	/**

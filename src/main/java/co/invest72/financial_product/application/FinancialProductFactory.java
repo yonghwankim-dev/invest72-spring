@@ -19,6 +19,7 @@ import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.money.domain.Money;
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +45,7 @@ public class FinancialProductFactory {
 		return switch (investmentType) {
 			case CASH -> cash(data);
 			case DEPOSIT -> deposit(data);
-			case SAVINGS -> new SavingsProduct(data);
+			case SAVINGS -> savings(data);
 		};
 	}
 
@@ -73,6 +74,24 @@ public class FinancialProductFactory {
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
 			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
 			.months(new ProductMonths(data.getMonths()))
+			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
+			.productInterestType(ProductInterestType.from(data.getInterestType()))
+			.productTaxType(ProductTaxType.from(data.getTaxType()))
+			.productTaxRate(new ProductTaxRate(data.getTaxRate()))
+			.startDate(data.getStartDate())
+			.createdAt(data.getCreatedAt())
+			.build();
+	}
+
+	private FinancialProduct savings(FinancialProductData data) {
+		return SavingsProduct.builder()
+			.id(data.getProductId().orElse(null))
+			.userId(data.getUserId().orElse(null))
+			.name(data.getName())
+			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
+			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.months(new ProductMonths(data.getMonths()))
+			.paymentDay(new PaymentDay(data.getPaymentDay().orElse(null)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))
 			.productTaxType(ProductTaxType.from(data.getTaxType()))
