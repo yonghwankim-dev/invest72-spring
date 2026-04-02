@@ -15,10 +15,6 @@ public class CashProduct extends FinancialProduct {
 	protected CashProduct() {
 	}
 
-	public CashProduct(FinancialProductBuilder<?, ?> b) {
-		super(b);
-	}
-
 	public CashProduct(FinancialProductData data) {
 		super(data);
 	}
