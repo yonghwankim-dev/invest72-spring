@@ -11,35 +11,25 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
-import co.invest72.money.domain.Currency;
+import co.invest72.money.infrastructure.MoneyMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CalculateInvestment {
 	private final TaxFormatter taxFormatter;
+	private final MoneyMapper moneyMapper;
 
 	public CalculateInvestmentResponse calculate(Investment investment) {
-		List<MonthlyInvestmentResult> monthlyDetails = getMonthlyInvestmentResults(investment);
-		List<YearlyInvestmentResult> yearlyDetails = getYearlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfit().getValue();
-		String taxType = investment.getTaxType();
-		String taxPercent = taxFormatter.format(investment.getTaxRate());
-		Currency currency = investment.getCurrency();
-		ProductCurrency productCurrency = ProductCurrency.from(currency);
-
 		return CalculateInvestmentResponse.builder()
-			.totalInvestment(totalInvestment)
-			.totalInterest(totalInterest)
-			.totalTax(totalTax)
-			.totalProfit(totalProfit)
-			.taxType(taxType)
-			.taxPercent(taxPercent)
-			.monthlyDetails(monthlyDetails)
-			.yearlyDetails(yearlyDetails)
-			.productCurrency(productCurrency)
+			.totalInvestment(moneyMapper.toBigDecimal(investment.getTotalInvestment()))
+			.totalInterest(moneyMapper.toBigDecimal(investment.getTotalInterest()))
+			.totalTax(moneyMapper.toBigDecimal(investment.getTotalTax()))
+			.totalProfit(moneyMapper.toBigDecimal(investment.getTotalProfit()))
+			.taxType(investment.getTaxType())
+			.taxPercent(taxFormatter.format(investment.getTaxRate()))
+			.monthlyDetails(getMonthlyInvestmentResults(investment))
+			.yearlyDetails(getYearlyInvestmentResults(investment))
+			.productCurrency(ProductCurrency.from(investment.getCurrency()))
 			.build();
 	}
 

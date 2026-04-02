@@ -15,13 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
+import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
-import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -34,11 +35,13 @@ public class FinancialProductService {
 	private final InvestmentFactory investmentFactory;
 	private final FinancialProductFactory financialProductFactory;
 	private final FinancialProductCalculator calculator;
+	private final MoneyMapper moneyMapper;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
-	public String createProduct(User user, FinancialProductRequest dto) {
-		FinancialProduct product = financialProductFactory.create(user.getId(), dto);
+	public String createProduct(User user, FinancialProductData dto) {
+		FinancialProductData dtoWithUserId = dto.withUserId(user.getId());
+		FinancialProduct product = financialProductFactory.create(dtoWithUserId);
 		return repository.save(product);
 	}
 
@@ -104,10 +107,13 @@ public class FinancialProductService {
 		// 2. 수정된 특정 상품의 상세 정보 캐시 삭제
 		@CacheEvict(value = "productDetail", key = "#user.id + '-' + #productId")
 	})
-	public void updateProduct(User user, String productId, FinancialProductRequest dto) {
-		FinancialProduct existingProduct = findFinancialProduct(user, productId);
-		FinancialProduct updatedProduct = financialProductFactory.createUpdatedProduct(existingProduct, dto);
-		existingProduct.update(updatedProduct);
+	public void updateProduct(User user, String productId, FinancialProductData dto) {
+		FinancialProduct originProduct = findFinancialProduct(user, productId);
+		FinancialProductData withedData = dto.withProductId(originProduct.getId())
+			.withUserId(originProduct.getUserId())
+			.withCreatedAt(originProduct.getCreatedAt());
+		FinancialProduct updateProduct = financialProductFactory.toEntity(withedData);
+		originProduct.update(updateProduct);
 	}
 
 	@Transactional
@@ -149,7 +155,7 @@ public class FinancialProductService {
 		for (FinancialProduct product : products) {
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
-				investmentFactory.createBy(product),
+				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),
 				today,
 				calculator
 			);

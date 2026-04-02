@@ -22,6 +22,7 @@ import co.invest72.investment.presentation.response.CalculateYearlyInvestmentRes
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.infrastructure.MoneyMapper;
 
 class CalculateInvestmentTest {
 
@@ -33,7 +34,7 @@ class CalculateInvestmentTest {
 	void setUp() {
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
 		investmentFactory = new InvestmentFactory(productAmountMapper);
-		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter());
+		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
-import co.invest72.investment.domain.Investment;
 import co.invest72.money.domain.Currency;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class FinancialProductSummary {
 
 	public static FinancialProductSummary from(
 		FinancialProduct product,
-		Investment investment,
+		BigDecimal expectedInterest,
 		LocalDate today,
 		FinancialProductCalculator calculator
 	) {
@@ -50,7 +49,7 @@ public class FinancialProductSummary {
 			.startDate(product.getStartDate())
 			.expirationDate(expirationDate)
 			.balance(balance)
-			.expectedInterest(investment.getTotalInterest().getValue())
+			.expectedInterest(expectedInterest)
 			.progress(progress)
 			.remainingDays(remainingDays)
 			.createdAt(product.getCreatedAt())
