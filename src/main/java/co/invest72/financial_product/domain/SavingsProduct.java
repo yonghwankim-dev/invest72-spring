@@ -70,8 +70,7 @@ public class SavingsProduct extends FinancialProduct {
 			return false;
 		if (!super.equals(o))
 			return false;
-		return this.paymentDay.equals(that.paymentDay)
-			&& super.equals(o);
+		return this.paymentDay.equals(that.paymentDay);
 	}
 
 	@Override
