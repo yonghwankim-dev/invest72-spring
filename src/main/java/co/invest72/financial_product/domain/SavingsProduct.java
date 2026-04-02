@@ -29,7 +29,7 @@ public class SavingsProduct extends FinancialProduct {
 	@SuppressWarnings("unused")
 	protected SavingsProduct(SavingsProductBuilder<?, ?> b) {
 		super(b); // 부모 필드 초기화
-		this.paymentDay = Objects.requireNonNull(b.paymentDay); // 자식 필드 초기화
+		this.paymentDay = b.paymentDay; // 자식 필드 초기화
 		validatePaymentDay();
 	}
 
