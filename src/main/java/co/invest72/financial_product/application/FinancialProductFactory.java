@@ -20,7 +20,6 @@ import co.invest72.financial_product.domain.SavingsProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
-import co.invest72.money.domain.Money;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -87,7 +86,7 @@ public class FinancialProductFactory {
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
 			.months(new ProductMonths(data.getMonths()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))
@@ -104,7 +103,7 @@ public class FinancialProductFactory {
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
 			.months(new ProductMonths(data.getMonths()))
 			.paymentDay(new PaymentDay(data.getPaymentDay().orElse(null)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
