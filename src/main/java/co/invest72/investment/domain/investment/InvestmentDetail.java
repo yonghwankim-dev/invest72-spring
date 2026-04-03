@@ -12,14 +12,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class InvestmentDetail {
-	private final int month;
+	private final int sequence;
 	private final Money principal;
 	private final Money interest;
 	private final Money profit;
 
 	@Builder
-	public InvestmentDetail(int month, Money principal, Money interest, Money profit) {
-		this.month = month;
+	public InvestmentDetail(int sequence, Money principal, Money interest, Money profit) {
+		this.sequence = sequence;
 		this.principal = Objects.requireNonNull(principal);
 		this.interest = Objects.requireNonNull(interest);
 		this.profit = Objects.requireNonNull(profit);
