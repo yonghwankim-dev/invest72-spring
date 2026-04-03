@@ -50,7 +50,7 @@ class SavingDetailFactoryTest {
 		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(2_012_500.00)));
 	}
 
-	@DisplayName("월별 투자 상세 정보 생성 - 통화가 USD인 경우")
+	@DisplayName("단리-적금-월별 데이터 생성 - 통화가 USD인 경우")
 	@Test
 	void createDetails_whenCurrentIsUSD_thenReturnUSDDetails() {
 		// Given
