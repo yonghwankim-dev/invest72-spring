@@ -25,7 +25,7 @@ public class SimpleFixedDeposit implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<InvestmentDetail> details;
-	private final List<YearlyInvestmentDetail> yearlyDetails;
+	private final List<InvestmentDetail> yearlyDetails;
 
 	@Builder(toBuilder = true)
 	public SimpleFixedDeposit(LumpSumInvestmentAmount investmentAmount, InvestPeriod investPeriod,

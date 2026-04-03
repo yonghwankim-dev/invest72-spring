@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.amount.YearlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
@@ -26,7 +26,7 @@ class SimpleFixedInstallmentSavingYearlyDetailFactoryTest {
 		);
 
 		// When
-		List<YearlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 
 		// then
 		Assertions.assertThat(details).hasSize(2);
@@ -49,7 +49,7 @@ class SimpleFixedInstallmentSavingYearlyDetailFactoryTest {
 		);
 
 		// When
-		List<YearlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 
 		// then
 		Assertions.assertThat(details).hasSize(2);

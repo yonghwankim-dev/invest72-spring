@@ -21,7 +21,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	private final InterestRate interestRate;
 	private final Taxable taxable;
 	private final List<InvestmentDetail> details;
-	private final List<YearlyInvestmentDetail> yearlyDetails;
+	private final List<InvestmentDetail> yearlyDetails;
 
 	@Builder(toBuilder = true)
 	public CompoundFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,

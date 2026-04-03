@@ -12,7 +12,7 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.YearlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
+import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
@@ -29,7 +29,7 @@ class SimpleFixedDepositYearlyDetailFactoryTest {
 		InvestPeriod investPeriod = new YearlyInvestPeriod(1);
 		factory = new SimpleFixedDepositYearlyDetailFactory(investmentAmount, interestRate, investPeriod);
 		// when
-		List<YearlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 		// then
 		Assertions.assertThat(details).hasSize(2);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(12_000_000));
@@ -49,7 +49,7 @@ class SimpleFixedDepositYearlyDetailFactoryTest {
 		InvestPeriod investPeriod = new YearlyInvestPeriod(1);
 		factory = new SimpleFixedDepositYearlyDetailFactory(investmentAmount, interestRate, investPeriod);
 		// when
-		List<YearlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 		// then
 		Assertions.assertThat(details).hasSize(2);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.dollar(12_000_000));
