@@ -6,10 +6,8 @@ import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
-import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
-import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class SimpleFixedInstallmentSavingYearlyDetailFactory {
@@ -28,16 +26,12 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		Currency currency = investmentAmount.getAmount().getCurrency();
-		Money principal = Money.of(BigDecimal.ZERO, currency);
-		Money interest = Money.of(BigDecimal.ZERO, currency);
-		Money profit = Money.of(BigDecimal.ZERO, currency);
+		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
 
 		// 0년차 초기값
-		result.add(new YearlyInvestmentDetail(0,
-			Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
-			Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
-			Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int year = 1; year <= getFinalYear(); year++) {
 			int monthsInYear = calculateMonthsInYear(year);
@@ -66,10 +60,7 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 			interest = a.add(b);
 
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(year,
-				Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
-				Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
-				Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
+			result.add(new YearlyInvestmentDetail(year, principal, interest, profit));
 		}
 
 		return result;

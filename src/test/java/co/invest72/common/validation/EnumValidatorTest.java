@@ -79,6 +79,7 @@ class EnumValidatorTest {
 			}
 
 			@Override
+			@SuppressWarnings("unchecked") // 제네릭 배열 할당 경고 억제
 			public Class<? extends Payload>[] payload() {
 				return new Class[0];
 			}

@@ -15,9 +15,6 @@ public interface Investment {
 	UnaryOperator<Money> roundToWholeMoney = money ->
 		Money.of(roundToWholeAmount.apply(money.getValue()), money.getCurrency());
 
-	UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = amount -> amount
-		.setScale(2, RoundingMode.HALF_EVEN);
-
 	Money getPrincipal();
 
 	/**

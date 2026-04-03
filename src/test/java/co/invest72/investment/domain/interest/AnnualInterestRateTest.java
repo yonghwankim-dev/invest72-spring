@@ -1,6 +1,6 @@
 package co.invest72.investment.domain.interest;
 
-import static testutil.BigDecimalAssertion.*;
+import static testutil.BigDecimalAssertions.*;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -43,7 +43,7 @@ class AnnualInterestRateTest {
 		BigDecimal annualRate = interestRate.getAnnualRate();
 
 		BigDecimal expectedAnnualRate = BigDecimal.valueOf(0.05);
-		assertBigDecimalEquals(expectedAnnualRate, annualRate);
+		assertEquals(expectedAnnualRate, annualRate);
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class AnnualInterestRateTest {
 		BigDecimal actualMonthlyRate = interestRate.getMonthlyRate();
 
 		BigDecimal expectedMonthlyRate = BigDecimal.valueOf(0.004167);
-		assertBigDecimalEquals(expectedMonthlyRate, actualMonthlyRate);
+		assertEquals(expectedMonthlyRate, actualMonthlyRate);
 	}
 
 	@Test
@@ -66,7 +66,7 @@ class AnnualInterestRateTest {
 		BigDecimal maxAnnualRate = BigDecimal.valueOf(9.9999);
 		AnnualInterestRate annualInterestRate = new AnnualInterestRate(maxAnnualRate);
 
-		assertBigDecimalEquals(maxAnnualRate, annualInterestRate.getAnnualRate());
+		assertEquals(maxAnnualRate, annualInterestRate.getAnnualRate());
 	}
 
 	@DisplayName("객체 최대값 검증 - 연이율은 최대 9.9999%까지 허용, 초과 시 예외 발생")
@@ -79,11 +79,11 @@ class AnnualInterestRateTest {
 
 	@Test
 	void shouldReturnGrowthFactor() {
-		assertBigDecimalEquals(BigDecimal.valueOf(1.00416666667), interestRate.calTotalGrowthFactor(1));
-		assertBigDecimalEquals(BigDecimal.valueOf(1.00835069444), interestRate.calTotalGrowthFactor(2));
-		assertBigDecimalEquals(BigDecimal.valueOf(1.01255215567), interestRate.calTotalGrowthFactor(3));
-		assertBigDecimalEquals(BigDecimal.valueOf(1.05116189788), interestRate.calTotalGrowthFactor(12));
-		assertBigDecimalEquals(BigDecimal.valueOf(1.05554173912), interestRate.calTotalGrowthFactor(13));
+		assertEquals(BigDecimal.valueOf(1.00416666667), interestRate.calTotalGrowthFactor(1));
+		assertEquals(BigDecimal.valueOf(1.00835069444), interestRate.calTotalGrowthFactor(2));
+		assertEquals(BigDecimal.valueOf(1.01255215567), interestRate.calTotalGrowthFactor(3));
+		assertEquals(BigDecimal.valueOf(1.05116189788), interestRate.calTotalGrowthFactor(12));
+		assertEquals(BigDecimal.valueOf(1.05554173912), interestRate.calTotalGrowthFactor(13));
 	}
 
 	@Test
@@ -123,6 +123,6 @@ class AnnualInterestRateTest {
 	void shouldReturnTotalGrowthFactor(int month, BigDecimal expectedTotalGrowthFactor) {
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(month);
 
-		assertBigDecimalEquals(expectedTotalGrowthFactor, interestRate.calTotalGrowthFactor(investPeriod));
+		assertEquals(expectedTotalGrowthFactor, interestRate.calTotalGrowthFactor(investPeriod));
 	}
 }
