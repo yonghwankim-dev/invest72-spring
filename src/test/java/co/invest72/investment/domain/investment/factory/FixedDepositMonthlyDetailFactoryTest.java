@@ -13,11 +13,8 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.investment.CompoundInterestCalculator;
-import co.invest72.investment.domain.investment.InterestCalculator;
+import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentDetail;
-import co.invest72.investment.domain.investment.NoneInterestCalculator;
-import co.invest72.investment.domain.investment.SimpleInterestCalculator;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
@@ -30,9 +27,8 @@ class FixedDepositMonthlyDetailFactoryTest {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
 		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
-		InterestCalculator interestCalculator = new SimpleInterestCalculator();
 		factory = new FixedDepositMonthlyDetailFactory(investmentAmount, interestRate, investPeriod,
-			interestCalculator);
+			InterestType.SIMPLE);
 	}
 
 	@DisplayName("단리-예금-월별 데이터 생성")
@@ -58,7 +54,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 	void givenFactory_whenInterestTypeCompoundAndDepositAndMonthly_thenReturnDetails() {
 		// given
 		factory = factory.toBuilder()
-			.interestCalculator(new CompoundInterestCalculator())
+			.interestType(InterestType.COMPOUND)
 			.build();
 		// when
 		List<InvestmentDetail> details = factory.createDetails();
@@ -80,7 +76,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 	void givenFactory_whenInterestTypeNoneAndDepositAndMonthly_thenReturnDetails() {
 		// given
 		factory = factory.toBuilder()
-			.interestCalculator(new NoneInterestCalculator())
+			.interestType(InterestType.NONE)
 			.build();
 		// when
 		List<InvestmentDetail> details = factory.createDetails();
