@@ -1,7 +1,8 @@
 package co.invest72.investment.domain.investment;
 
-import java.math.BigDecimal;
+import java.util.Objects;
 
+import co.invest72.money.domain.Money;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,15 +13,15 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class YearlyInvestmentDetail {
 	private final int year;
-	private final BigDecimal principal;
-	private final BigDecimal interest;
-	private final BigDecimal profit;
+	private final Money principal;
+	private final Money interest;
+	private final Money profit;
 
 	@Builder
-	public YearlyInvestmentDetail(int year, BigDecimal principal, BigDecimal interest, BigDecimal profit) {
+	public YearlyInvestmentDetail(int year, Money principal, Money interest, Money profit) {
 		this.year = year;
-		this.principal = principal;
-		this.interest = interest;
-		this.profit = profit;
+		this.principal = Objects.requireNonNull(principal);
+		this.interest = Objects.requireNonNull(interest);
+		this.profit = Objects.requireNonNull(profit);
 	}
 }

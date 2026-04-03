@@ -54,6 +54,12 @@ public class ProductAmount {
 		return new ProductAmount(money.getValue(), money.getCurrency());
 	}
 
+	public static ProductAmount of(BigDecimal amount, String currencyCode) {
+		Objects.requireNonNull(amount, "상품 금액은 null이면 안된다.");
+		Objects.requireNonNull(currencyCode, "통화 코드는 null이면 안된다.");
+		return new ProductAmount(amount, Currency.from(currencyCode));
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

@@ -1,6 +1,5 @@
 package co.invest72.investment.application;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
+import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -35,32 +35,32 @@ public class CalculateInvestment {
 
 	public CalculateMonthlyInvestmentResponse calMonthlyInvestment(Investment investment) {
 		List<MonthlyInvestmentResult> result = getMonthlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfit().getValue();
+		Money totalInvestment = investment.getTotalInvestment();
+		Money totalInterest = investment.getTotalInterest();
+		Money totalTax = investment.getTotalTax();
+		Money totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateMonthlyInvestmentResponse.builder()
-			.totalInvestment(totalInvestment)
-			.totalInterest(totalInterest)
-			.totalTax(totalTax)
-			.totalProfit(totalProfit)
+			.totalInvestment(moneyMapper.toBigDecimal(totalInvestment))
+			.totalInterest(moneyMapper.toBigDecimal(totalInterest))
+			.totalTax(moneyMapper.toBigDecimal(totalTax))
+			.totalProfit(moneyMapper.toBigDecimal(totalProfit))
 			.taxType(taxType)
 			.taxPercent(taxPercent)
 			.details(result)
 			.build();
 	}
 
-	private static List<MonthlyInvestmentResult> getMonthlyInvestmentResults(Investment investment) {
+	private List<MonthlyInvestmentResult> getMonthlyInvestmentResults(Investment investment) {
 		List<MonthlyInvestmentResult> result = new ArrayList<>();
 
 		for (int month = 1; month <= investment.getFinalMonth(); month++) {
 			result.add(new MonthlyInvestmentResult(
 				month,
-				investment.getPrincipal(month).getValue(),
-				investment.getInterest(month).getValue(),
-				investment.getProfit(month).getValue()
+				moneyMapper.toBigDecimal(investment.getPrincipal(month)),
+				moneyMapper.toBigDecimal(investment.getInterest(month)),
+				moneyMapper.toBigDecimal(investment.getProfit(month))
 			));
 		}
 		return result;
@@ -68,32 +68,37 @@ public class CalculateInvestment {
 
 	public CalculateYearlyInvestmentResponse calYearlyInvestment(Investment investment) {
 		List<YearlyInvestmentResult> details = getYearlyInvestmentResults(investment);
-		BigDecimal totalInvestment = investment.getTotalInvestment().getValue();
-		BigDecimal totalInterest = investment.getTotalInterest().getValue();
-		BigDecimal totalTax = investment.getTotalTax().getValue();
-		BigDecimal totalProfit = investment.getTotalProfit().getValue();
+		Money totalInvestment = investment.getTotalInvestment();
+		Money totalInterest = investment.getTotalInterest();
+		Money totalTax = investment.getTotalTax();
+		Money totalProfit = investment.getTotalProfit();
 		String taxType = investment.getTaxType();
 		String taxPercent = taxFormatter.format(investment.getTaxRate());
 		return CalculateYearlyInvestmentResponse.builder()
-			.totalInvestment(totalInvestment)
-			.totalInterest(totalInterest)
-			.totalTax(totalTax)
-			.totalProfit(totalProfit)
+			.totalInvestment(moneyMapper.toBigDecimal(totalInvestment))
+			.totalInterest(moneyMapper.toBigDecimal(totalInterest))
+			.totalTax(moneyMapper.toBigDecimal(totalTax))
+			.totalProfit(moneyMapper.toBigDecimal(totalProfit))
 			.taxType(taxType)
 			.taxPercent(taxPercent)
 			.details(details)
 			.build();
 	}
 
-	private static List<YearlyInvestmentResult> getYearlyInvestmentResults(Investment investment) {
+	private List<YearlyInvestmentResult> getYearlyInvestmentResults(Investment investment) {
 		List<YearlyInvestmentResult> details = new ArrayList<>();
 
 		int years = (investment.getFinalMonth() - 1) / 12 + 1;
 		for (int year = 1; year <= years; year++) {
-			BigDecimal principal = investment.getPrincipalForYear(year).getValue();
-			BigDecimal interest = investment.getInterestForYear(year).getValue();
-			BigDecimal profit = investment.getProfitForYear(year).getValue();
-			details.add(new YearlyInvestmentResult(year, principal, interest, profit));
+			Money principal = investment.getPrincipalForYear(year);
+			Money interest = investment.getInterestForYear(year);
+			Money profit = investment.getProfitForYear(year);
+			details.add(new YearlyInvestmentResult(
+				year,
+				moneyMapper.toBigDecimal(principal),
+				moneyMapper.toBigDecimal(interest),
+				moneyMapper.toBigDecimal(profit)
+			));
 		}
 		return details;
 	}

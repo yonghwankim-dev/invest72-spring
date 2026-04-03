@@ -15,7 +15,6 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
-import testutil.BigDecimalAssertion;
 
 class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 
@@ -35,15 +34,15 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getProfit());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(1_000_000), details.get(1).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(4_166.67), details.get(1).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(1_004_166.67), details.get(1).getProfit());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(2_004_166.67), details.get(2).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(8_333.33), details.get(2).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(2_012_500.00), details.get(2).getProfit());
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
+		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(2_004_166.67)));
+		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(8_333.33)));
+		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(2_012_500.00)));
 	}
 
 	@DisplayName("월별 투자 상세 정보 생성 - 통화가 USD인 경우")
@@ -62,14 +61,14 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.ZERO, details.get(0).getProfit());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(1_000_000), details.get(1).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(4_166.67), details.get(1).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(1_004_166.67), details.get(1).getProfit());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(2_004_166.67), details.get(2).getPrincipal());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(8_333.33), details.get(2).getInterest());
-		BigDecimalAssertion.assertBigDecimalEquals(BigDecimal.valueOf(2_012_500.00), details.get(2).getProfit());
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.dollar(0));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.dollar(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.dollar(0));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.dollar(BigDecimal.valueOf(1_000_000)));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.dollar(BigDecimal.valueOf(4_166.67)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.dollar(BigDecimal.valueOf(1_004_166.67)));
+		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.dollar(BigDecimal.valueOf(2_004_166.67)));
+		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.dollar(BigDecimal.valueOf(8_333.33)));
+		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.dollar(BigDecimal.valueOf(2_012_500.00)));
 	}
 }
