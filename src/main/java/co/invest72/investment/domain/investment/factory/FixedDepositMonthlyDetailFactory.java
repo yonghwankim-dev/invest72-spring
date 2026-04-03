@@ -38,7 +38,7 @@ public class FixedDepositMonthlyDetailFactory {
 
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
-			interest = interestType.getInterestCalculator().calculate(originalAmount, principal, interestRate);
+			interest = interestType.calculateInterest(originalAmount, principal, interestRate);
 			profit = principal.add(interest);
 			result.add(new InvestmentDetail(i, principal, interest, profit));
 		}
