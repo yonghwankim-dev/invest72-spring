@@ -21,7 +21,7 @@ import co.invest72.money.domain.Money;
 
 class FixedDepositDetailFactoryTest {
 
-	private FixedDepositDetailFactory factory;
+	private InvestmentDetailFactory factory;
 
 	@BeforeEach
 	void setUp() {
@@ -54,7 +54,7 @@ class FixedDepositDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeCompoundAndDepositAndMonthly_thenReturnDetails() {
 		// given
-		factory = factory.toBuilder()
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
 			.interestType(InterestType.COMPOUND)
 			.build();
 		// when
@@ -76,7 +76,7 @@ class FixedDepositDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeNoneAndDepositAndMonthly_thenReturnDetails() {
 		// given
-		factory = factory.toBuilder()
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
 			.interestType(InterestType.NONE)
 			.build();
 		// when
@@ -98,7 +98,7 @@ class FixedDepositDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeSimpleAndDepositAndYearly_thenReturnDetails() {
 		// given
-		factory = factory.toBuilder()
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
 			.investPeriod(new YearlyInvestPeriod(1))
 			.build();
 
@@ -118,7 +118,7 @@ class FixedDepositDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeSimpleAndDepositAndYearlyAndPeriodIs13_thenReturnDetails() {
 		// given
-		factory = factory.toBuilder()
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
 			.investPeriod(new MonthlyInvestPeriod(13))
 			.build();
 
@@ -141,7 +141,7 @@ class FixedDepositDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeSimpleAndDepositAndMonthlyAndPeriodIsZero_thenReturnDetails() {
 		// given
-		factory = factory.toBuilder()
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
 			.investPeriod(new MonthlyInvestPeriod(0))
 			.build();
 

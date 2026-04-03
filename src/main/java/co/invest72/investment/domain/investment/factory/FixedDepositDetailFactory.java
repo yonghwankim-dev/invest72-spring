@@ -13,7 +13,7 @@ import co.invest72.money.domain.Money;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public class FixedDepositDetailFactory {
+public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
 	private final InvestPeriod investPeriod;
@@ -27,10 +27,12 @@ public class FixedDepositDetailFactory {
 		this.interestType = interestType;
 	}
 
+	@Override
 	public List<InvestmentDetail> createMonthlyDetails() {
 		return createDetailsByPeriod(1, investPeriod.getMonths());
 	}
 
+	@Override
 	public List<InvestmentDetail> createYearlyDetails() {
 		return createDetailsByPeriod(12, getFinalYear());
 	}
