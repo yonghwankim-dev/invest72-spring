@@ -29,19 +29,56 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 
 	@Override
 	public List<InvestmentDetail> createMonthlyDetails() {
-		return createDetailsByPeriod(1, investPeriod.getMonths());
+		return generateMonthlyBaseDetails();
 	}
 
 	@Override
 	public List<InvestmentDetail> createYearlyDetails() {
-		return createDetailsByPeriod(12, getFinalYear());
+		List<InvestmentDetail> monthlyDetails = generateMonthlyBaseDetails();
+		List<InvestmentDetail> yearlyDetails = new ArrayList<>();
+
+		yearlyDetails.add(monthlyDetails.get(0));
+
+		// 12개월 단위로 해당 시점의 월 복리 결과물들 추출
+		for (int year = 1; year <= getFinalYear(); year++) {
+			int startMonth = (year - 1) * 12 + 1;
+			int endMonth = Math.min(year * 12, investPeriod.getMonths());
+
+			if (endMonth < startMonth) {
+				yearlyDetails.add(new InvestmentDetail(
+					year,
+					monthlyDetails.get(endMonth).getPrincipal(),
+					monthlyDetails.get(endMonth).getInterest(),
+					monthlyDetails.get(endMonth).getProfit()
+				));
+				break;
+			}
+
+			// 해당 연도의 시작 시 원금(그 해 1월의 기초 원금)
+			Money yearlyPrincipal = monthlyDetails.get(startMonth).getPrincipal();
+			// 해당 얀도의 발생한 이자 합산
+			Money yearlyInterest = investmentAmount.getAmount().times(BigDecimal.ZERO);
+
+			for (int m = startMonth; m <= endMonth; m++) {
+				yearlyInterest = yearlyInterest.add(monthlyDetails.get(m).getInterest());
+			}
+			// 해당 연도 말의 최종 원리금
+			Money yearlyProfit = monthlyDetails.get(endMonth).getProfit();
+			yearlyDetails.add(new InvestmentDetail(
+				year,
+				yearlyPrincipal,
+				yearlyInterest, // 12개월치 이자의 총합
+				yearlyProfit
+			));
+		}
+		return yearlyDetails;
 	}
 
 	private int getFinalYear() {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 
-	private List<InvestmentDetail> createDetailsByPeriod(int monthsInPeriod, int totalIterations) {
+	private List<InvestmentDetail> generateMonthlyBaseDetails() {
 		List<InvestmentDetail> result = new ArrayList<>();
 
 		Money originalAmount = investmentAmount.getAmount();
@@ -51,32 +88,14 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 
 		result.add(new InvestmentDetail(0, principal, interest, profit));
 
-		for (int i = 1; i <= totalIterations; i++) {
+		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
 
-			// 해당 주기에 포함될 개월 수 계산 (마지막 주기의 자투리 개월 처리)
-			int months = calculateActualMonths(i, monthsInPeriod, totalIterations);
-
-			// 한 달치 이자에 해당 주기의 개월 수를 곱함
-			interest = interestType.calculateInterest(originalAmount, principal, interestRate)
-				.times(BigDecimal.valueOf(months));
+			interest = interestType.calculateInterest(originalAmount, principal, interestRate);
 
 			profit = principal.add(interest);
 			result.add(new InvestmentDetail(i, principal, interest, profit));
 		}
 		return result;
-	}
-
-	private int calculateActualMonths(int currentIteration, int monthsInPeriod, int totalIterations) {
-		// 월별(1)인 경우는 계산할 필요 없이 항상 1
-		if (monthsInPeriod == 1) {
-			return 1;
-		}
-		// 마지막 루프인 경우, 남은 자투리 개월수 계산
-		if (currentIteration == totalIterations) {
-			return investPeriod.getMonths() - (currentIteration - 1) * monthsInPeriod;
-		}
-		// 그 외 일반적인 주기(예: 1~(n-1)년차)는 설정된 주기(12) 반환
-		return monthsInPeriod;
 	}
 }

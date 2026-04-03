@@ -8,8 +8,9 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.investment.factory.CompoundFixedDepositMonthlyDetailFactory;
-import co.invest72.investment.domain.investment.factory.CompoundFixedDepositYearlyDetailFactory;
+import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
+import co.invest72.investment.domain.investment.factory.InvestmentDetailFactory;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
@@ -31,12 +32,10 @@ public class CompoundFixedDeposit implements Investment {
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
 		this.taxable = taxable;
-		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.details = factory.createDetails();
-		CompoundFixedDepositYearlyDetailFactory yearlyFactory = new CompoundFixedDepositYearlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.yearlyDetails = yearlyFactory.createDetails();
+		InvestmentDetailFactory factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod,
+			InterestType.COMPOUND);
+		this.details = factory.createMonthlyDetails();
+		this.yearlyDetails = factory.createYearlyDetails();
 	}
 
 	@Override
