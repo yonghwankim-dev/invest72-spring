@@ -27,10 +27,10 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
-		);
+			investmentAmount, interestRate, investPeriod);
 
 		// When
-		List<MonthlyInvestmentDetail> details = factory.createDetails(investmentAmount, interestRate, investPeriod);
+		List<MonthlyInvestmentDetail> details = factory.createDetails();
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);
@@ -54,10 +54,10 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
-		);
+			investmentAmount, interestRate, investPeriod);
 
 		// When
-		List<MonthlyInvestmentDetail> details = factory.createDetails(investmentAmount, interestRate, investPeriod);
+		List<MonthlyInvestmentDetail> details = factory.createDetails();
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);

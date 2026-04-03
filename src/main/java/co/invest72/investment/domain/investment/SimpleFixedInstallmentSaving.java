@@ -35,8 +35,8 @@ public class SimpleFixedInstallmentSaving implements Investment {
 		this.interestRate = interestRate;
 		this.taxable = taxable;
 		SimpleFixedInstallmentSavingMonthlyDetailFactory factory = new SimpleFixedInstallmentSavingMonthlyDetailFactory(
-		);
-		this.details = factory.createDetails(investmentAmount, interestRate, investPeriod);
+			investmentAmount, interestRate, investPeriod);
+		this.details = factory.createDetails();
 		SimpleFixedInstallmentSavingYearlyDetailFactory yearlyFactory = new SimpleFixedInstallmentSavingYearlyDetailFactory(
 			investmentAmount, interestRate, investPeriod);
 		this.yearlyDetails = yearlyFactory.createDetails();

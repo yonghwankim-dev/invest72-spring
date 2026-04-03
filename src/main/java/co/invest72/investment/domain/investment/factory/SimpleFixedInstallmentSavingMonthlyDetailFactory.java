@@ -12,8 +12,19 @@ import co.invest72.money.domain.Money;
 
 public class SimpleFixedInstallmentSavingMonthlyDetailFactory {
 
-	public List<MonthlyInvestmentDetail> createDetails(InvestmentAmount investmentAmount, InterestRate interestRate,
+	private final InvestmentAmount investmentAmount;
+	private final InterestRate interestRate;
+	private final InvestPeriod investPeriod;
+
+	public SimpleFixedInstallmentSavingMonthlyDetailFactory(InvestmentAmount investmentAmount,
+		InterestRate interestRate,
 		InvestPeriod investPeriod) {
+		this.investmentAmount = investmentAmount;
+		this.interestRate = interestRate;
+		this.investPeriod = investPeriod;
+	}
+
+	public List<MonthlyInvestmentDetail> createDetails() {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 		Money accInvestmentAmount = investmentAmount.getAmount().times(BigDecimal.ZERO);
 		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
