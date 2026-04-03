@@ -3,6 +3,7 @@ package co.invest72.investment.domain.investment.factory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -21,10 +22,10 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 
 	public FixedDepositDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
 		InvestPeriod investPeriod, InterestType interestType) {
-		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
-		this.investPeriod = investPeriod;
-		this.interestType = interestType;
+		this.investmentAmount = Objects.requireNonNull(investmentAmount);
+		this.interestRate = Objects.requireNonNull(interestRate);
+		this.investPeriod = Objects.requireNonNull(investPeriod);
+		this.interestType = Objects.requireNonNull(interestType);
 	}
 
 	@Override
