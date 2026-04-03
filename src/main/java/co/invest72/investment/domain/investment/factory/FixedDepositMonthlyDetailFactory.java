@@ -7,7 +7,7 @@ import java.util.List;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
-import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.InterestCalculator;
 import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
@@ -17,31 +17,28 @@ public class FixedDepositMonthlyDetailFactory {
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
 	private final InvestPeriod investPeriod;
-	private final InterestType interestType;
+	private final InterestCalculator interestCalculator;
 
 	public FixedDepositMonthlyDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
-		InvestPeriod investPeriod, InterestType interestType) {
+		InvestPeriod investPeriod, InterestCalculator interestCalculator) {
 		this.investmentAmount = investmentAmount;
 		this.interestRate = interestRate;
 		this.investPeriod = investPeriod;
-		this.interestType = interestType;
+		this.interestCalculator = interestCalculator;
 	}
 
 	public List<InvestmentDetail> createDetails() {
 		List<InvestmentDetail> result = new ArrayList<>();
 
-		Money principal = investmentAmount.getAmount();
+		Money originalAmount = investmentAmount.getAmount();
+		Money principal = originalAmount;
 		Money interest = principal.times(BigDecimal.ZERO);
-		Money profit = investmentAmount.getAmount();
+		Money profit = originalAmount;
 		result.add(new InvestmentDetail(0, principal, interest, profit));
 
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
-			interest = switch (interestType) {
-				case NONE -> principal.times(BigDecimal.ZERO);
-				case SIMPLE -> interestRate.calMonthlyInterest(investmentAmount.getAmount());
-				case COMPOUND -> interestRate.calMonthlyInterest(principal);
-			};
+			interest = interestCalculator.calculate(originalAmount, principal, interestRate);
 			profit = principal.add(interest);
 			result.add(new InvestmentDetail(i, principal, interest, profit));
 		}

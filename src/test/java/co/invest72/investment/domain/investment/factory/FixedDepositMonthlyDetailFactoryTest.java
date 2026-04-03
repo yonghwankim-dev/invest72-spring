@@ -13,8 +13,11 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.CompoundInterestCalculator;
+import co.invest72.investment.domain.investment.InterestCalculator;
 import co.invest72.investment.domain.investment.InvestmentDetail;
+import co.invest72.investment.domain.investment.NoneInterestCalculator;
+import co.invest72.investment.domain.investment.SimpleInterestCalculator;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
@@ -27,8 +30,9 @@ class FixedDepositMonthlyDetailFactoryTest {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
 		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
-		InterestType interestType = InterestType.SIMPLE;
-		factory = new FixedDepositMonthlyDetailFactory(investmentAmount, interestRate, investPeriod, interestType);
+		InterestCalculator interestCalculator = new SimpleInterestCalculator();
+		factory = new FixedDepositMonthlyDetailFactory(investmentAmount, interestRate, investPeriod,
+			interestCalculator);
 	}
 
 	@DisplayName("단리-예금-월별 데이터 생성")
@@ -54,7 +58,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 	void givenFactory_whenInterestTypeCompoundAndDepositAndMonthly_thenReturnDetails() {
 		// given
 		factory = factory.toBuilder()
-			.interestType(InterestType.COMPOUND)
+			.interestCalculator(new CompoundInterestCalculator())
 			.build();
 		// when
 		List<InvestmentDetail> details = factory.createDetails();
@@ -71,4 +75,25 @@ class FixedDepositMonthlyDetailFactoryTest {
 		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_008_350.69)));
 	}
 
+	@DisplayName("이자없음-예금-월별 데이터 생성")
+	@Test
+	void givenFactory_whenInterestTypeNoneAndDepositAndMonthly_thenReturnDetails() {
+		// given
+		factory = factory.toBuilder()
+			.interestCalculator(new NoneInterestCalculator())
+			.build();
+		// when
+		List<InvestmentDetail> details = factory.createDetails();
+		// then
+		Assertions.assertThat(details).hasSize(3);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(0)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
+		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
+		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(0)));
+		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
+	}
 }
