@@ -39,4 +39,24 @@ class SimpleFixedDepositYearlyDetailFactoryTest {
 		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(600000));
 		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(12_600_000));
 	}
+
+	@DisplayName("년도 데이터 생성 - 달러 기준 데이터 생성")
+	@Test
+	void givenFactory_whenAmountIsUSD_thenReturnYearlyDetailsData() {
+		// given
+		InvestmentAmount investmentAmount = new YearlyInstallmentInvestmentAmount(Money.dollar(12_000_000));
+		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
+		InvestPeriod investPeriod = new YearlyInvestPeriod(1);
+		factory = new SimpleFixedDepositYearlyDetailFactory(investmentAmount, interestRate, investPeriod);
+		// when
+		List<YearlyInvestmentDetail> details = factory.createDetails();
+		// then
+		Assertions.assertThat(details).hasSize(2);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.dollar(12_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.dollar(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.dollar(12_000_000));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.dollar(12_000_000));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.dollar(600000));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.dollar(12_600_000));
+	}
 }
