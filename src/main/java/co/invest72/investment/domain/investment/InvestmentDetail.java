@@ -11,14 +11,14 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class MonthlyInvestmentDetail {
+public class InvestmentDetail {
 	private final int month;
 	private final Money principal;
 	private final Money interest;
 	private final Money profit;
 
 	@Builder
-	public MonthlyInvestmentDetail(int month, Money principal, Money interest, Money profit) {
+	public InvestmentDetail(int month, Money principal, Money interest, Money profit) {
 		this.month = month;
 		this.principal = Objects.requireNonNull(principal);
 		this.interest = Objects.requireNonNull(interest);

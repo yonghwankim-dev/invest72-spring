@@ -12,7 +12,7 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
-import co.invest72.investment.domain.investment.MonthlyInvestmentDetail;
+import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
@@ -30,7 +30,7 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 			investmentAmount, interestRate, investPeriod);
 
 		// When
-		List<MonthlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);
@@ -57,7 +57,7 @@ class SimpleFixedInstallmentSavingMonthlyDetailFactoryTest {
 			investmentAmount, interestRate, investPeriod);
 
 		// When
-		List<MonthlyInvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createDetails();
 
 		// Then
 		Assertions.assertThat(details).hasSize(3);

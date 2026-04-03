@@ -24,7 +24,7 @@ public class SimpleFixedDeposit implements Investment {
 	private final InvestPeriod investPeriod;
 	private final InterestRate interestRate;
 	private final Taxable taxable;
-	private final List<MonthlyInvestmentDetail> details;
+	private final List<InvestmentDetail> details;
 	private final List<YearlyInvestmentDetail> yearlyDetails;
 
 	@Builder(toBuilder = true)
@@ -100,7 +100,7 @@ public class SimpleFixedDeposit implements Investment {
 	public Money getTotalInterest() {
 		Money totalInterest = details.stream()
 			.skip(1) // 0월은 이자가 없음
-			.map(MonthlyInvestmentDetail::getInterest)
+			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
 		return roundToWholeMoney.apply(totalInterest);
