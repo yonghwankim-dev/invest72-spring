@@ -70,7 +70,7 @@ public class FinancialProductFactory {
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.from(Money.of(data.getAmount(), data.getCurrencyCode())))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
 			.months(new ProductMonths(data.getMonths()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))
