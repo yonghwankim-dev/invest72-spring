@@ -27,7 +27,7 @@ public class SimpleFixedDepositYearlyDetailFactory {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
 
 		Money principal = investmentAmount.getAmount();
-		Money interest = Money.won(BigDecimal.ZERO);
+		Money interest = principal.times(BigDecimal.ZERO);
 		Money profit = investmentAmount.getAmount();
 		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 
