@@ -136,4 +136,21 @@ class FixedDepositMonthlyDetailFactoryTest {
 		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
 		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_054_166.67)));
 	}
+
+	@DisplayName("단리-예금-월별 데이터 생성 - 투자기간이 0개월인 경우 1개의 데이터만 반환해야 한다")
+	@Test
+	void givenFactory_whenInterestTypeSimpleAndDepositAndMonthlyAndPeriodIsZero_thenReturnDetails() {
+		// given
+		factory = factory.toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(0))
+			.build();
+
+		// when
+		List<InvestmentDetail> details = factory.createDetails();
+		// then
+		Assertions.assertThat(details).hasSize(1);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+	}
 }
