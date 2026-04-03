@@ -10,7 +10,9 @@ import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.money.domain.Money;
+import lombok.Builder;
 
+@Builder(toBuilder = true)
 public class FixedDepositMonthlyDetailFactory {
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
@@ -35,7 +37,11 @@ public class FixedDepositMonthlyDetailFactory {
 
 		for (int i = 1; i <= investPeriod.getMonths(); i++) {
 			principal = profit;
-			interest = interestRate.calMonthlyInterest(investmentAmount.getAmount());
+			interest = switch (interestType) {
+				case NONE -> principal.times(BigDecimal.ZERO);
+				case SIMPLE -> interestRate.calMonthlyInterest(investmentAmount.getAmount());
+				case COMPOUND -> interestRate.calMonthlyInterest(principal);
+			};
 			profit = principal.add(interest);
 			result.add(new InvestmentDetail(i, principal, interest, profit));
 		}

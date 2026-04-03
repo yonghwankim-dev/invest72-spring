@@ -49,4 +49,26 @@ class FixedDepositMonthlyDetailFactoryTest {
 		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_008_333.33)));
 	}
 
+	@DisplayName("복리-예금-월별 데이터 생성")
+	@Test
+	void givenFactory_whenInterestTypeCompoundAndDepositAndMonthly_thenReturnDetails() {
+		// given
+		factory = factory.toBuilder()
+			.interestType(InterestType.COMPOUND)
+			.build();
+		// when
+		List<InvestmentDetail> details = factory.createDetails();
+		// then
+		Assertions.assertThat(details).hasSize(3);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
+		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
+		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_184.03)));
+		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_008_350.69)));
+	}
+
 }
