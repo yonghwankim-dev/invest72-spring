@@ -1,5 +1,7 @@
 package co.invest72.investment.domain.investment;
 
+import java.util.Objects;
+
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,8 +20,8 @@ public class MonthlyInvestmentDetail {
 	@Builder
 	public MonthlyInvestmentDetail(int month, Money principal, Money interest, Money profit) {
 		this.month = month;
-		this.principal = principal;
-		this.interest = interest;
-		this.profit = profit;
+		this.principal = Objects.requireNonNull(principal);
+		this.interest = Objects.requireNonNull(interest);
+		this.profit = Objects.requireNonNull(profit);
 	}
 }

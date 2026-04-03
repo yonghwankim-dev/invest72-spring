@@ -12,7 +12,6 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
-import testutil.BigDecimalAssertions;
 
 class SimpleFixedInstallmentSavingYearlyDetailFactoryTest {
 
@@ -31,12 +30,12 @@ class SimpleFixedInstallmentSavingYearlyDetailFactoryTest {
 
 		// then
 		Assertions.assertThat(details).hasSize(2);
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getPrincipal());
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getInterest());
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getProfit());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(2_000_000), details.get(1).getPrincipal());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(12_500), details.get(1).getInterest());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(2_012_500), details.get(1).getProfit());
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(2_000_000)));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(12_500)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(2_012_500)));
 	}
 
 	@DisplayName("연별 투자 상세 정보 생성 - 통화가 USD인 경우")
@@ -54,11 +53,11 @@ class SimpleFixedInstallmentSavingYearlyDetailFactoryTest {
 
 		// then
 		Assertions.assertThat(details).hasSize(2);
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getPrincipal());
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getInterest());
-		BigDecimalAssertions.assertEquals(BigDecimal.ZERO, details.get(0).getProfit());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(2_000_000), details.get(1).getPrincipal());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(12_500), details.get(1).getInterest());
-		BigDecimalAssertions.assertEquals(BigDecimal.valueOf(2_012_500), details.get(1).getProfit());
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.dollar(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.dollar(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.dollar(BigDecimal.ZERO));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.dollar(BigDecimal.valueOf(2_000_000)));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.dollar(BigDecimal.valueOf(12_500)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.dollar(BigDecimal.valueOf(2_012_500)));
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
-import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
 import co.invest72.money.domain.Currency;
@@ -34,10 +33,7 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 		Money profit = Money.of(BigDecimal.ZERO, currency);
 
 		// 0년차 초기값
-		result.add(new YearlyInvestmentDetail(0,
-			Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
-			Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
-			Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
+		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 
 		for (int year = 1; year <= getFinalYear(); year++) {
 			int monthsInYear = calculateMonthsInYear(year);
@@ -66,10 +62,7 @@ public class SimpleFixedInstallmentSavingYearlyDetailFactory {
 			interest = a.add(b);
 
 			profit = principal.add(interest);
-			result.add(new YearlyInvestmentDetail(year,
-				Investment.roundToTwoDecimalPlaces.apply(principal.getValue()),
-				Investment.roundToTwoDecimalPlaces.apply(interest.getValue()),
-				Investment.roundToTwoDecimalPlaces.apply(profit.getValue())));
+			result.add(new YearlyInvestmentDetail(year, principal, interest, profit));
 		}
 
 		return result;
