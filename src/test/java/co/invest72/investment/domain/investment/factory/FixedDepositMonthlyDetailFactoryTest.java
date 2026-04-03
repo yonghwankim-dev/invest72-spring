@@ -16,6 +16,7 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentDetail;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
+import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
 class FixedDepositMonthlyDetailFactoryTest {
@@ -91,5 +92,48 @@ class FixedDepositMonthlyDetailFactoryTest {
 		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
 		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(0)));
 		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_000_000)));
+	}
+
+	@DisplayName("단리-예금-년도별 데이터 생성")
+	@Test
+	void givenFactory_whenInterestTypeSimpleAndDepositAndYearly_thenReturnDetails() {
+		// given
+		factory = factory.toBuilder()
+			.investPeriod(new YearlyInvestPeriod(1))
+			.build();
+
+		// when
+		List<InvestmentDetail> details = factory.createYearlyDetails();
+		// then
+		Assertions.assertThat(details).hasSize(2);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(50_000)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_050_000)));
+	}
+
+	@DisplayName("단리-예금-년도별 데이터 생성 - 투자기간이 13개월인 경우 2년차 데이터가 존재해야 한다")
+	@Test
+	void givenFactory_whenInterestTypeSimpleAndDepositAndYearlyAndPeriodIs13_thenReturnDetails() {
+		// given
+		factory = factory.toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(13))
+			.build();
+
+		// when
+		List<InvestmentDetail> details = factory.createYearlyDetails();
+		// then
+		Assertions.assertThat(details).hasSize(3);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(50_000)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_050_000)));
+		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(1_050_000));
+		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
+		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_054_166.67)));
 	}
 }

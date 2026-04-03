@@ -120,6 +120,6 @@ public class Money implements Comparable<Money> {
 
 	@Override
 	public String toString() {
-		return value.stripTrailingZeros() + currency.getCode();
+		return roundToTwoDecimalPlaces.apply(value.stripTrailingZeros()) + currency.getCode();
 	}
 }
