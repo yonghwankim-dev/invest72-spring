@@ -27,7 +27,7 @@ public class CompoundFixedDepositMonthlyDetailFactory {
 		List<MonthlyInvestmentDetail> result = new ArrayList<>();
 
 		Money principal = investmentAmount.getAmount();
-		Money interest = Money.of(BigDecimal.ZERO, principal.getCurrency());
+		Money interest = principal.times(BigDecimal.ZERO);
 		Money profit = investmentAmount.getAmount();
 		result.add(new MonthlyInvestmentDetail(0, principal, interest, profit));
 

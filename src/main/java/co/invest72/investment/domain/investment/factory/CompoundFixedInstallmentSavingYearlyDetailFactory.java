@@ -8,7 +8,6 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.investment.YearlyInvestmentDetail;
-import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class CompoundFixedInstallmentSavingYearlyDetailFactory {
@@ -27,10 +26,9 @@ public class CompoundFixedInstallmentSavingYearlyDetailFactory {
 
 	public List<YearlyInvestmentDetail> createDetails() {
 		List<YearlyInvestmentDetail> result = new ArrayList<>();
-		Currency currency = investmentAmount.getAmount().getCurrency();
-		Money principal = Money.of(BigDecimal.ZERO, currency);
-		Money interest = Money.of(BigDecimal.ZERO, currency);
-		Money profit = Money.of(BigDecimal.ZERO, currency);
+		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
 
 		result.add(new YearlyInvestmentDetail(0, principal, interest, profit));
 		int years = getFinalYear();
