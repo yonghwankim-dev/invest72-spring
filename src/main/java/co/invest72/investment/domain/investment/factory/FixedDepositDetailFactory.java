@@ -44,6 +44,7 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 			int startMonth = (year - 1) * 12 + 1;
 			int endMonth = Math.min(year * 12, investPeriod.getMonths());
 
+			// 투자기간이 0인 경우 처라
 			if (endMonth < startMonth) {
 				yearlyDetails.add(new InvestmentDetail(
 					year,
