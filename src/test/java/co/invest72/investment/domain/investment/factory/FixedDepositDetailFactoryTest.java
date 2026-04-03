@@ -19,16 +19,16 @@ import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
-class FixedDepositMonthlyDetailFactoryTest {
+class FixedDepositDetailFactoryTest {
 
-	private FixedDepositMonthlyDetailFactory factory;
+	private FixedDepositDetailFactory factory;
 
 	@BeforeEach
 	void setUp() {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
 		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 		InvestPeriod investPeriod = new MonthlyInvestPeriod(2);
-		factory = new FixedDepositMonthlyDetailFactory(investmentAmount, interestRate, investPeriod,
+		factory = new FixedDepositDetailFactory(investmentAmount, interestRate, investPeriod,
 			InterestType.SIMPLE);
 	}
 
@@ -36,7 +36,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 	@Test
 	void givenFactory_whenInterestTypeSimpleAndDepositAndMonthly_thenReturnDetails() {
 		// when
-		List<InvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
@@ -58,7 +58,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 			.interestType(InterestType.COMPOUND)
 			.build();
 		// when
-		List<InvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
@@ -80,7 +80,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 			.interestType(InterestType.NONE)
 			.build();
 		// when
-		List<InvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
@@ -146,7 +146,7 @@ class FixedDepositMonthlyDetailFactoryTest {
 			.build();
 
 		// when
-		List<InvestmentDetail> details = factory.createDetails();
+		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(1);
 		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));

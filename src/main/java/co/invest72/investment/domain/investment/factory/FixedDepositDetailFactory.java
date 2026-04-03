@@ -13,13 +13,13 @@ import co.invest72.money.domain.Money;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public class FixedDepositMonthlyDetailFactory {
+public class FixedDepositDetailFactory {
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
 	private final InvestPeriod investPeriod;
 	private final InterestType interestType;
 
-	public FixedDepositMonthlyDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
+	public FixedDepositDetailFactory(InvestmentAmount investmentAmount, InterestRate interestRate,
 		InvestPeriod investPeriod, InterestType interestType) {
 		this.investmentAmount = investmentAmount;
 		this.interestRate = interestRate;
@@ -27,7 +27,7 @@ public class FixedDepositMonthlyDetailFactory {
 		this.interestType = interestType;
 	}
 
-	public List<InvestmentDetail> createDetails() {
+	public List<InvestmentDetail> createMonthlyDetails() {
 		return createDetailsByPeriod(1, investPeriod.getMonths());
 	}
 
