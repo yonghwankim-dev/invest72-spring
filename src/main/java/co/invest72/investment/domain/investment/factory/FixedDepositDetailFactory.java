@@ -44,10 +44,10 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 		for (int year = 1; year <= getFinalYear(); year++) {
 			int startMonth = (year - 1) * 12 + 1;
 			int endMonth = Math.min(year * 12, investPeriod.getMonths());
-			
+
 			// 해당 연도의 시작 시 원금(그 해 1월의 기초 원금)
 			Money yearlyPrincipal = monthlyDetails.get(startMonth).getPrincipal();
-			// 해당 얀도의 발생한 이자 합산
+			// 해당 연도의 발생한 이자 합산
 			Money yearlyInterest = investmentAmount.getAmount().times(BigDecimal.ZERO);
 
 			for (int m = startMonth; m <= endMonth; m++) {
