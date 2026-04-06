@@ -8,7 +8,7 @@ public interface InterestCalculator {
 	 * 이자 금액을 계산하여 반환한다.
 	 *
 	 * @param originalPrincipal 초기 원금 (단리 계산용)
-	 * @param currentPrincipal 햔재 시점의 원리금 (복리 계산용)
+	 * @param currentPrincipal 현재 시점의 원리금 (복리 계산용)
 	 * @param interestRate 이율
 	 * @return 이자금액
 	 */
