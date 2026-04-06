@@ -20,9 +20,8 @@ import co.invest72.investment.application.dto.CalculateInvestmentDto;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.CashInvestment;
-import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
 import co.invest72.investment.domain.investment.FixedDeposit;
-import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
+import co.invest72.investment.domain.investment.FixedSaving;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
@@ -109,7 +108,7 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(request);
 
 		assertNotNull(investment);
-		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
+		assertInstanceOfInvestment(FixedSaving.class, investment);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-적금-년적립")
@@ -131,7 +130,7 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(request);
 
 		assertNotNull(investment);
-		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investment);
+		assertInstanceOfInvestment(FixedSaving.class, investment);
 		assertEquals(Money.won(12_000_000), investment.getTotalInvestment());
 	}
 
@@ -154,7 +153,7 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(request);
 
 		assertNotNull(investment);
-		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investment);
+		assertInstanceOfInvestment(FixedSaving.class, investment);
 	}
 
 	@DisplayName("투자 객체 생성 - FinancialProduct 객체를 이용하여 Investment 객체 생성")
@@ -170,9 +169,9 @@ class InvestmentFactoryTest {
 		// when & then
 		assertInstanceOfInvestment(CashInvestment.class, investmentFactory.createBy(cash));
 		assertInstanceOfInvestment(FixedDeposit.class, investmentFactory.createBy(simpleDeposit));
-		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investmentFactory.createBy(simpleSavings));
+		assertInstanceOfInvestment(FixedSaving.class, investmentFactory.createBy(simpleSavings));
 		assertInstanceOfInvestment(FixedDeposit.class, investmentFactory.createBy(compoundDeposit));
-		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investmentFactory.createBy(compoundSavings));
+		assertInstanceOfInvestment(FixedSaving.class, investmentFactory.createBy(compoundSavings));
 	}
 
 	@DisplayName("현금 투자 객체 생성 - FinancialProduct 객체를 이용하여 CashInvestment 객체 생성")
