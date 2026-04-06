@@ -77,6 +77,9 @@ public class FixedDepositDetailFactory implements InvestmentDetailFactory {
 	}
 
 	private int getFinalYear() {
+		if (investPeriod.getMonths() == 0) {
+			return 0;
+		}
 		return (investPeriod.getMonths() - 1) / 12 + 1;
 	}
 

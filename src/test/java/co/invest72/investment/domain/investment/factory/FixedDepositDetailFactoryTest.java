@@ -114,6 +114,23 @@ class FixedDepositDetailFactoryTest {
 		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_050_000)));
 	}
 
+	@DisplayName("단리-예금-년도별 데이터 생성 - 투자기간이 0개월인 경우")
+	@Test
+	void givenFactory_whenInvestPeriodIsZero_thenReturnDetails() {
+		// given
+		factory = ((FixedDepositDetailFactory)factory).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(0))
+			.build();
+
+		// when
+		List<InvestmentDetail> details = factory.createYearlyDetails();
+		// then
+		Assertions.assertThat(details).hasSize(1);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
+	}
+
 	@DisplayName("단리-예금-년도별 데이터 생성 - 투자기간이 13개월인 경우 2년차 데이터가 존재해야 한다")
 	@Test
 	void givenFactory_whenInterestTypeSimpleAndDepositAndYearlyAndPeriodIs13_thenReturnDetails() {
