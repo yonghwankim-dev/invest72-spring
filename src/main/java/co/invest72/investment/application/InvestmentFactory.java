@@ -29,11 +29,9 @@ import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.CashInvestment;
-import co.invest72.investment.domain.investment.CompoundFixedDeposit;
-import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
+import co.invest72.investment.domain.investment.FixedDeposit;
+import co.invest72.investment.domain.investment.FixedSaving;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.SimpleFixedDeposit;
-import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.PeriodMonthsRange;
 import co.invest72.investment.domain.period.PeriodType;
@@ -53,10 +51,10 @@ public class InvestmentFactory {
 
 	public InvestmentFactory(ProductAmountMapper productAmountMapper) {
 		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedInstallmentSaving);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedInstallmentSaving);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::fixedDeposit);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::fixedDeposit);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::fixedSaving);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::fixedSaving);
 		this.productAmountMapper = productAmountMapper;
 	}
 
@@ -123,44 +121,25 @@ public class InvestmentFactory {
 		return new CashInvestment(investmentAmount);
 	}
 
-	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
-		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
+	private Investment fixedDeposit(CalculateInvestmentDto dto) {
+		return FixedDeposit.builder()
+			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
+			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
+			.interestRate(dto.getInterestRate())
+			.interestType(dto.getInterestType())
+			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
+			.build();
 	}
 
-	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
-		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
-	}
-
-	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(Money.of(
-			dto.getAmount().getValue(), dto.getCurrency()));
-		return new SimpleFixedInstallmentSaving(
-			investmentAmount,
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
-	}
-
-	private Investment compoundFixedInstallmentSaving(CalculateInvestmentDto dto) {
-		InstallmentInvestmentAmount investmentAmount = new MonthlyInstallmentInvestmentAmount(
-			Money.of(dto.getAmount().getValue(), dto.getCurrency()));
-		return new CompoundFixedInstallmentSaving(
-			investmentAmount,
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
+	private Investment fixedSaving(CalculateInvestmentDto dto) {
+		return FixedSaving.builder()
+			.investmentAmount(new MonthlyInstallmentInvestmentAmount(Money.of(
+				dto.getAmount().getValue(), dto.getCurrency())))
+			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
+			.interestRate(dto.getInterestRate())
+			.interestType(dto.getInterestType())
+			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
+			.build();
 	}
 
 	private PeriodRange createPeriodRange(PeriodType periodType, int periodValue) {

@@ -88,7 +88,7 @@ public class CalculateInvestment {
 	private List<YearlyInvestmentResult> getYearlyInvestmentResults(Investment investment) {
 		List<YearlyInvestmentResult> details = new ArrayList<>();
 
-		int years = (investment.getFinalMonth() - 1) / 12 + 1;
+		int years = getFinalYears(investment);
 		for (int year = 1; year <= years; year++) {
 			Money principal = investment.getPrincipalForYear(year);
 			Money interest = investment.getInterestForYear(year);
@@ -101,6 +101,13 @@ public class CalculateInvestment {
 			));
 		}
 		return details;
+	}
+
+	private int getFinalYears(Investment investment) {
+		if (investment.getFinalMonth() == 0) {
+			return 0;
+		}
+		return (investment.getFinalMonth() - 1) / 12 + 1;
 	}
 
 }
