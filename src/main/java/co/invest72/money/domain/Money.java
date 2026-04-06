@@ -60,6 +60,10 @@ public class Money implements Comparable<Money> {
 		return times(BigDecimal.valueOf(multiplier));
 	}
 
+	public Money times(long multiplier) {
+		return times(BigDecimal.valueOf(multiplier));
+	}
+
 	public Money times(BigDecimal multiplier) {
 		return Money.of(this.value.multiply(multiplier), this.currency);
 	}
