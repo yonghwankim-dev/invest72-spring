@@ -54,15 +54,15 @@ public class SavingDetailFactory implements InvestmentDetailFactory {
 
 		result.add(new InvestmentDetail(0, principal, interest, profit));
 		int years = getFinalYear();
-		for (int i = 1; i <= years; i++) {
-			BigDecimal months = BigDecimal.valueOf(Math.min(12, investPeriod.getMonths() - (i - 1) * 12));
+		for (int year = 1; year <= years; year++) {
+			int months = calculateMonthsInYear(year);
 			Money value = investmentAmount.getAmount().times(months);
 			principal = profit.add(value);
 
-			interest = calculateYearlyInterest(profit, months.intValue());
+			interest = calculateYearlyInterest(profit, months);
 
 			profit = principal.add(interest);
-			result.add(new InvestmentDetail(i, principal, interest, profit));
+			result.add(new InvestmentDetail(year, principal, interest, profit));
 		}
 		return result;
 	}
