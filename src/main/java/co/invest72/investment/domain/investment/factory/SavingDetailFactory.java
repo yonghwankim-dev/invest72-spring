@@ -33,100 +33,47 @@ public class SavingDetailFactory implements InvestmentDetailFactory {
 		return generateMonthlyBaseDetails();
 	}
 
-	// TODO: 년도별 데이터 생성 구현
 	@Override
 	public List<InvestmentDetail> createYearlyDetails() {
+		// 월별 기초 데이터 생성
 		List<InvestmentDetail> monthlyDetails = generateMonthlyBaseDetails();
-		List<InvestmentDetail> result = new ArrayList<>();
-		if (interestType == InterestType.SIMPLE) {
-			result = createSimpleYearlyDetails();
-		} else if (interestType == InterestType.COMPOUND) {
-			result = createCompoundYearlyDetails();
-		}
-		return result;
-	}
+		List<InvestmentDetail> yearlyDetails = new ArrayList<>();
 
-	private List<InvestmentDetail> createCompoundYearlyDetails() {
-		List<InvestmentDetail> result = new ArrayList<>();
-		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
-		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
-		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
-
-		result.add(new InvestmentDetail(0, principal, interest, profit));
+		// 0년차 (초기 데이터)
+		yearlyDetails.add(monthlyDetails.get(0));
 		for (int year = 1; year <= getFinalYear(); year++) {
-			int months = calculateMonthsInYear(year);
-			Money value = investmentAmount.getAmount().times(months);
-			principal = profit.add(value);
+			int startMonth = getStartMonthBy(year);
+			int endMonth = getEndMonthBy(year);
 
-			interest = calculateYearlyInterest(profit, months);
+			// 해당 연도 구간(start ~ end)에 발생한 이자만 모두 합산
+			Money yearlyInterestSum = investmentAmount.getAmount().times(BigDecimal.ZERO);
+			for (int m = startMonth; m <= endMonth; m++) {
+				yearlyInterestSum = yearlyInterestSum.add(monthlyDetails.get(m).getInterest());
+			}
 
-			profit = principal.add(interest);
-			result.add(new InvestmentDetail(year, principal, interest, profit));
+			// 해당 연도 말의 최종 원리금
+			Money yearlyProfit = monthlyDetails.get(endMonth).getProfit();
+			yearlyDetails.add(new InvestmentDetail(
+				year,
+				yearlyProfit.subtract(yearlyInterestSum),
+				yearlyInterestSum,
+				yearlyProfit
+			));
 		}
-		return result;
+		return yearlyDetails;
 	}
 
-	private Money calculateYearlyInterest(Money baseProfit, int month) {
-		Money principal;
-		Money result = baseProfit.times(BigDecimal.ZERO);
-		Money interest;
-		Money profit = baseProfit;
-		for (int i = 1; i <= month; i++) {
-			principal = profit.add(investmentAmount.getAmount());
-			interest = interestRate.calMonthlyInterest(principal);
-			profit = principal.add(interest);
-			result = result.add(interest);
-		}
-		return result;
+	private int getStartMonthBy(int year) {
+		return (year - 1) * 12 + 1;
 	}
 
-	private List<InvestmentDetail> createSimpleYearlyDetails() {
-		List<InvestmentDetail> result = new ArrayList<>();
-		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
-		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
-		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
-
-		// 0년차 초기값
-		result.add(new InvestmentDetail(0, principal, interest, profit));
-
-		for (int year = 1; year <= getFinalYear(); year++) {
-			int months = calculateMonthsInYear(year);
-
-			// 기초 원금 (이전 연도까지 쌓인 순수 투자 원금)
-			Money openingPrincipal = investmentAmount.getAmount()
-				.times(BigDecimal.valueOf((year - 1) * 12L));
-
-			// interest : 당해 발생 이자 (monthsInYear 반영)
-			// a: 기존 누적 원금에 대해 이번 연도 경과 개월수만큼 붙는 이자
-			Money a = interestRate.calMonthlyInterest(openingPrincipal)
-				.times(months);
-
-			// 등차수열 공식을 이용하여 months에 따라 가변적으로 계산
-			// b: 이번 연도에 새로 적립하는 금액들에 대한 단리 적금 이자
-			long sumOfMonths = (long)months * (months + 1) / 2;
-			Money b = interestRate.calMonthlyInterest(investmentAmount.getAmount())
-				.times(sumOfMonths);
-
-			interest = a.add(b);
-
-			// principal : 당해 연도 누적 원금 (이전 총액 + 당해 신규 적립금)
-			// profit(이월총액) + 당해 적립금
-			Money yearlyContribution = investmentAmount.getAmount()
-				.times(months);
-			principal = profit.add(yearlyContribution);
-
-			profit = principal.add(interest);
-			result.add(new InvestmentDetail(year, principal, interest, profit));
-		}
-		return result;
+	private int getEndMonthBy(int year) {
+		int totalMonths = investPeriod.getMonths();
+		return Math.min(year * 12, totalMonths);
 	}
 
 	private int getFinalYear() {
 		return (investPeriod.getMonths() - 1) / 12 + 1;
-	}
-
-	private int calculateMonthsInYear(int currentYear) {
-		return Math.min(12, investPeriod.getMonths() - (currentYear - 1) * 12);
 	}
 
 	private List<InvestmentDetail> generateMonthlyBaseDetails() {
