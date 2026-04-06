@@ -51,8 +51,8 @@ public class InvestmentFactory {
 
 	public InvestmentFactory(ProductAmountMapper productAmountMapper) {
 		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::simpleFixedDeposit);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::compoundFixedDeposit);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::fixedDeposit);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::fixedDeposit);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::simpleFixedSaving);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::compoundFixedSaving);
 		this.productAmountMapper = productAmountMapper;
@@ -121,22 +121,12 @@ public class InvestmentFactory {
 		return new CashInvestment(investmentAmount);
 	}
 
-	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
+	private Investment fixedDeposit(CalculateInvestmentDto dto) {
 		return FixedDeposit.builder()
 			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
-			.interestType(SIMPLE)
-			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
-			.build();
-	}
-
-	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
-		return FixedDeposit.builder()
-			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
-			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
-			.interestRate(dto.getInterestRate())
-			.interestType(COMPOUND)
+			.interestType(dto.getInterestType())
 			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
 			.build();
 	}
