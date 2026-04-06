@@ -117,4 +117,25 @@ class SavingDetailFactoryTest {
 		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(325_000)));
 		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(12_325_000)));
 	}
+
+	@DisplayName("복리-적금-년도별 데이터 생성 - 통화가 KRW인 경우")
+	@Test
+	void givenFactory_whenCompoundYearlyKRW_thenReturnDetails() {
+		// given
+		factory = ((SavingDetailFactory)factory).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(1))
+			.interestType(InterestType.COMPOUND)
+			.build();
+		// When
+		List<InvestmentDetail> details = factory.createYearlyDetails();
+
+		// Then
+		Assertions.assertThat(details).hasSize(2);
+		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(0));
+		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(12_000_000)));
+		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(330_017.39)));
+		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(12_330_017.39)));
+	}
 }

@@ -38,6 +38,51 @@ public class SavingDetailFactory implements InvestmentDetailFactory {
 	public List<InvestmentDetail> createYearlyDetails() {
 		List<InvestmentDetail> monthlyDetails = generateMonthlyBaseDetails();
 		List<InvestmentDetail> result = new ArrayList<>();
+		if (interestType == InterestType.SIMPLE) {
+			result = createSimpleYearlyDetails();
+		} else if (interestType == InterestType.COMPOUND) {
+			result = createCompoundYearlyDetails();
+		}
+		return result;
+	}
+
+	private List<InvestmentDetail> createCompoundYearlyDetails() {
+		List<InvestmentDetail> result = new ArrayList<>();
+		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
+		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
+
+		result.add(new InvestmentDetail(0, principal, interest, profit));
+		int years = getFinalYear();
+		for (int i = 1; i <= years; i++) {
+			BigDecimal months = BigDecimal.valueOf(Math.min(12, investPeriod.getMonths() - (i - 1) * 12));
+			Money value = investmentAmount.getAmount().times(months);
+			principal = profit.add(value);
+
+			interest = calculateYearlyInterest(profit, months.intValue());
+
+			profit = principal.add(interest);
+			result.add(new InvestmentDetail(i, principal, interest, profit));
+		}
+		return result;
+	}
+
+	private Money calculateYearlyInterest(Money baseProfit, int month) {
+		Money principal;
+		Money result = baseProfit.times(BigDecimal.ZERO);
+		Money interest;
+		Money profit = baseProfit;
+		for (int i = 1; i <= month; i++) {
+			principal = profit.add(investmentAmount.getAmount());
+			interest = interestRate.calMonthlyInterest(principal);
+			profit = principal.add(interest);
+			result = result.add(interest);
+		}
+		return result;
+	}
+
+	private List<InvestmentDetail> createSimpleYearlyDetails() {
+		List<InvestmentDetail> result = new ArrayList<>();
 		Money principal = investmentAmount.getAmount().times(BigDecimal.ZERO);
 		Money interest = investmentAmount.getAmount().times(BigDecimal.ZERO);
 		Money profit = investmentAmount.getAmount().times(BigDecimal.ZERO);
