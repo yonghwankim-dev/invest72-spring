@@ -31,8 +31,8 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.CashInvestment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
+import co.invest72.investment.domain.investment.FixedDeposit;
 import co.invest72.investment.domain.investment.InvestmentType;
-import co.invest72.investment.domain.investment.SimpleFixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.PeriodMonthsRange;
@@ -124,12 +124,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment simpleFixedDeposit(CalculateInvestmentDto dto) {
-		return new SimpleFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
+		return FixedDeposit.builder()
+			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
+			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
+			.interestRate(dto.getInterestRate())
+			.interestType(SIMPLE)
+			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
+			.build();
 	}
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {

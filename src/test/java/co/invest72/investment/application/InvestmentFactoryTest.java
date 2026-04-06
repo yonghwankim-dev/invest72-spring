@@ -22,7 +22,7 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.investment.CashInvestment;
 import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
-import co.invest72.investment.domain.investment.SimpleFixedDeposit;
+import co.invest72.investment.domain.investment.FixedDeposit;
 import co.invest72.investment.domain.investment.SimpleFixedInstallmentSaving;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
@@ -66,7 +66,7 @@ class InvestmentFactoryTest {
 		investment = investmentFactory.createBy(request);
 
 		assertNotNull(investment);
-		assertInstanceOfInvestment(SimpleFixedDeposit.class, investment);
+		assertInstanceOfInvestment(FixedDeposit.class, investment);
 	}
 
 	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
@@ -170,7 +170,7 @@ class InvestmentFactoryTest {
 
 		// when & then
 		assertInstanceOfInvestment(CashInvestment.class, investmentFactory.createBy(cash));
-		assertInstanceOfInvestment(SimpleFixedDeposit.class, investmentFactory.createBy(simpleDeposit));
+		assertInstanceOfInvestment(FixedDeposit.class, investmentFactory.createBy(simpleDeposit));
 		assertInstanceOfInvestment(SimpleFixedInstallmentSaving.class, investmentFactory.createBy(simpleSavings));
 		assertInstanceOfInvestment(CompoundFixedDeposit.class, investmentFactory.createBy(compoundDeposit));
 		assertInstanceOfInvestment(CompoundFixedInstallmentSaving.class, investmentFactory.createBy(compoundSavings));
