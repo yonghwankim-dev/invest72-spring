@@ -29,7 +29,6 @@ import co.invest72.investment.domain.amount.MonthlyInstallmentInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.CashInvestment;
-import co.invest72.investment.domain.investment.CompoundFixedDeposit;
 import co.invest72.investment.domain.investment.CompoundFixedInstallmentSaving;
 import co.invest72.investment.domain.investment.FixedDeposit;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -134,12 +133,13 @@ public class InvestmentFactory {
 	}
 
 	private Investment compoundFixedDeposit(CalculateInvestmentDto dto) {
-		return new CompoundFixedDeposit(
-			new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()),
-			new MonthlyInvestPeriod(dto.getMonths().getValue()),
-			dto.getInterestRate(),
-			resolveTaxable(dto.getTaxType(), dto.getTaxRate())
-		);
+		return FixedDeposit.builder()
+			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
+			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
+			.interestRate(dto.getInterestRate())
+			.interestType(COMPOUND)
+			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
+			.build();
 	}
 
 	private Investment simpleFixedInstallmentSaving(CalculateInvestmentDto dto) {
