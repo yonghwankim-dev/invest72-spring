@@ -6,37 +6,40 @@ import java.util.List;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
-import co.invest72.investment.domain.LumpSumInvestmentAmount;
+import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.investment.factory.CompoundFixedDepositMonthlyDetailFactory;
-import co.invest72.investment.domain.investment.factory.CompoundFixedDepositYearlyDetailFactory;
+import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.factory.FixedDepositDetailFactory;
+import co.invest72.investment.domain.investment.factory.InvestmentDetailFactory;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 
-public class CompoundFixedDeposit implements Investment {
-
-	private final LumpSumInvestmentAmount investmentAmount;
+public class FixedDeposit implements Investment {
+	private final InvestmentAmount investmentAmount;
 	private final InvestPeriod investPeriod;
 	private final InterestRate interestRate;
+	private final InterestType interestType;
 	private final Taxable taxable;
-	private final List<MonthlyInvestmentDetail> details;
-	private final List<YearlyInvestmentDetail> yearlyDetails;
+	private final List<InvestmentDetail> details;
+	private final List<InvestmentDetail> yearlyDetails;
 
 	@Builder(toBuilder = true)
-	public CompoundFixedDeposit(LumpSumInvestmentAmount investmentAmount, InvestPeriod investPeriod,
-		InterestRate interestRate,
-		Taxable taxable) {
+	public FixedDeposit(InvestmentAmount investmentAmount, InvestPeriod investPeriod, InterestRate interestRate,
+		InterestType interestType, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
+		this.interestType = interestType;
 		this.taxable = taxable;
-		CompoundFixedDepositMonthlyDetailFactory factory = new CompoundFixedDepositMonthlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.details = factory.createDetails();
-		CompoundFixedDepositYearlyDetailFactory yearlyFactory = new CompoundFixedDepositYearlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.yearlyDetails = yearlyFactory.createDetails();
+		InvestmentDetailFactory factory = new FixedDepositDetailFactory(
+			investmentAmount,
+			interestRate,
+			investPeriod,
+			interestType
+		);
+		this.details = factory.createMonthlyDetails();
+		this.yearlyDetails = factory.createYearlyDetails();
 	}
 
 	@Override
@@ -58,15 +61,9 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public Money getInterest() {
-		return getInterest(investPeriod.getMonths());
+		return getInterest(getFinalMonth());
 	}
 
-	/**
-	 * 지정된 월 회차(month)까지의 누적 이자 금액을 반환합니다.
-	 *
-	 * @param month 회차 (1부터 시작)
-	 * @return 이자 금액=원금×(1+월이자율)^개월수−원금
-	 */
 	@Override
 	public Money getInterest(int month) {
 		if (month > getFinalMonth()) {
@@ -102,8 +99,8 @@ public class CompoundFixedDeposit implements Investment {
 	@Override
 	public Money getTotalInterest() {
 		Money totalInterest = details.stream()
-			.skip(1)
-			.map(MonthlyInvestmentDetail::getInterest)
+			.skip(1) // 0월은 이자가 없음
+			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
 		return roundToWholeMoney.apply(totalInterest);
@@ -117,9 +114,10 @@ public class CompoundFixedDeposit implements Investment {
 
 	@Override
 	public Money getTotalProfit() {
-		Money totalTax = getTotalTax();
-		Money profit = details.get(getFinalMonth()).getProfit();
-		Money totalProfit = profit.subtract(totalTax);
+		Money principal = details.get(getFinalMonth()).getPrincipal();
+		Money interest = details.get(getFinalMonth()).getInterest();
+		Money tax = getTotalTax();
+		Money totalProfit = principal.add(interest).subtract(tax);
 		return roundToWholeMoney.apply(totalProfit);
 	}
 
@@ -158,7 +156,8 @@ public class CompoundFixedDeposit implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return roundToWholeMoney.apply(yearlyDetails.get(year).getInterest());
+		Money interest = yearlyDetails.get(year).getInterest();
+		return roundToWholeMoney.apply(interest);
 	}
 
 	@Override
@@ -170,8 +169,7 @@ public class CompoundFixedDeposit implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		Money profit = yearlyDetails.get(year).getProfit();
-		return roundToWholeMoney.apply(profit);
+		return roundToWholeMoney.apply(yearlyDetails.get(year).getProfit());
 	}
 
 	@Override

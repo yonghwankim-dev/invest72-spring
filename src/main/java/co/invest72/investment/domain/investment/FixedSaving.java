@@ -8,34 +8,38 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.Taxable;
-import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingMonthlyDetailFactory;
-import co.invest72.investment.domain.investment.factory.CompoundFixedInstallmentSavingYearlyDetailFactory;
+import co.invest72.investment.domain.interest.InterestType;
+import co.invest72.investment.domain.investment.factory.InvestmentDetailFactory;
+import co.invest72.investment.domain.investment.factory.SavingDetailFactory;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 
-public class CompoundFixedInstallmentSaving implements Investment {
-
+public class FixedSaving implements Investment {
 	private final InstallmentInvestmentAmount investmentAmount;
 	private final InvestPeriod investPeriod;
 	private final InterestRate interestRate;
+	private final InterestType interestType;
 	private final Taxable taxable;
-	private final List<MonthlyInvestmentDetail> details;
-	private final List<YearlyInvestmentDetail> yearlyDetails;
+	private final List<InvestmentDetail> details;
+	private final List<InvestmentDetail> yearlyDetails;
 
 	@Builder(toBuilder = true)
-	public CompoundFixedInstallmentSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
-		InterestRate interestRate, Taxable taxable) {
+	public FixedSaving(InstallmentInvestmentAmount investmentAmount, InvestPeriod investPeriod,
+		InterestRate interestRate, InterestType interestType, Taxable taxable) {
 		this.investmentAmount = investmentAmount;
 		this.investPeriod = investPeriod;
 		this.interestRate = interestRate;
+		this.interestType = interestType;
 		this.taxable = taxable;
-		CompoundFixedInstallmentSavingMonthlyDetailFactory factory = new CompoundFixedInstallmentSavingMonthlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.details = factory.createDetails();
-		CompoundFixedInstallmentSavingYearlyDetailFactory yearlyFactory = new CompoundFixedInstallmentSavingYearlyDetailFactory(
-			investmentAmount, interestRate, investPeriod);
-		this.yearlyDetails = yearlyFactory.createDetails();
+		InvestmentDetailFactory factory = new SavingDetailFactory(
+			investmentAmount,
+			interestRate,
+			investPeriod,
+			interestType
+		);
+		this.details = factory.createMonthlyDetails();
+		this.yearlyDetails = factory.createYearlyDetails();
 	}
 
 	@Override
@@ -51,8 +55,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		Money principal = details.get(month).getPrincipal();
-		return roundToWholeMoney.apply(principal);
+		return roundToWholeMoney.apply(details.get(month).getPrincipal());
 	}
 
 	@Override
@@ -89,15 +92,15 @@ public class CompoundFixedInstallmentSaving implements Investment {
 
 	@Override
 	public Money getTotalInvestment() {
-		Money totalInvestment = investmentAmount.getAmount().times(BigDecimal.valueOf(investPeriod.getMonths()));
+		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
 		return roundToWholeMoney.apply(totalInvestment);
 	}
 
 	@Override
 	public Money getTotalInterest() {
 		Money totalInterest = details.stream()
-			.skip(1)
-			.map(MonthlyInvestmentDetail::getInterest)
+			.skip(1) // 0월은 이자가 없음
+			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
 		return roundToWholeMoney.apply(totalInterest);
@@ -113,8 +116,8 @@ public class CompoundFixedInstallmentSaving implements Investment {
 	public Money getTotalProfit() {
 		Money principal = details.get(getFinalMonth()).getPrincipal();
 		Money interest = details.get(getFinalMonth()).getInterest();
-		Money totalTax = getTotalTax();
-		Money totalProfit = principal.add(interest).subtract(totalTax);
+		Money tax = getTotalTax();
+		Money totalProfit = principal.add(interest).subtract(tax);
 		return roundToWholeMoney.apply(totalProfit);
 	}
 
@@ -153,8 +156,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		Money interest = yearlyDetails.get(year).getInterest();
-		return roundToWholeMoney.apply(interest);
+		return roundToWholeMoney.apply(yearlyDetails.get(year).getInterest());
 	}
 
 	@Override
@@ -166,8 +168,7 @@ public class CompoundFixedInstallmentSaving implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		Money profit = yearlyDetails.get(year).getProfit();
-		return roundToWholeMoney.apply(profit);
+		return roundToWholeMoney.apply(yearlyDetails.get(year).getProfit());
 	}
 
 	@Override

@@ -11,15 +11,15 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class YearlyInvestmentDetail {
-	private final int year;
+public class InvestmentDetail {
+	private final int sequence;
 	private final Money principal;
 	private final Money interest;
 	private final Money profit;
 
 	@Builder
-	public YearlyInvestmentDetail(int year, Money principal, Money interest, Money profit) {
-		this.year = year;
+	public InvestmentDetail(int sequence, Money principal, Money interest, Money profit) {
+		this.sequence = sequence;
 		this.principal = Objects.requireNonNull(principal);
 		this.interest = Objects.requireNonNull(interest);
 		this.profit = Objects.requireNonNull(profit);
