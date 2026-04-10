@@ -32,8 +32,4 @@ public final class Bank {
 	public void addRate(Currency from, Currency to, BigDecimal rate) {
 		exchangeRateProvider.addRate(new Pair(from, to), rate);
 	}
-
-	public void clearRates() {
-		exchangeRateProvider.clear();
-	}
 }

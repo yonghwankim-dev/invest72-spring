@@ -44,6 +44,20 @@ class FixedExchangeRateProviderTest {
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
 	}
 
+	@DisplayName("환율 추가 - 원화-달러 환율을 추가한다")
+	@Test
+	void addRate_whenKRWToUSD_thenSaveRate() {
+		// given
+		Currency from = Currency.won();
+		Currency to = Currency.dollar();
+		BigDecimal rate = BigDecimal.valueOf(0.001);
+		// when
+		exchangeRateProvider.addRate(new Pair(from, to), rate);
+		// then
+		Assertions.assertThat(exchangeRateProvider.getRate(from, to))
+			.isEqualTo(rate);
+	}
+
 	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
 	@Test
 	void clear() {

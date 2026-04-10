@@ -1,7 +1,5 @@
 package co.invest72.money.domain;
 
-import java.math.BigDecimal;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +14,6 @@ class BankTest {
 	@BeforeEach
 	void setUp() {
 		bank = new Bank(new FixedExchangeRateProvider());
-		bank.addRate(Currency.won(), Currency.dollar(), BigDecimal.valueOf(0.001));
-		bank.addRate(Currency.dollar(), Currency.won(), BigDecimal.valueOf(1000));
 	}
 
 	@DisplayName("환전 - 원화를 원화로 환전하면 금액이 그대로여야 한다")
@@ -56,19 +52,5 @@ class BankTest {
 		// then
 		Money expected = Money.won(1000);
 		Assertions.assertThat(wonMoney).isEqualTo(expected);
-	}
-
-	@DisplayName("환율 추가 - 원화-달러 환율을 추가한다")
-	@Test
-	void addRate_whenKRWToUSD_thenSaveRate() {
-		// given
-		Currency from = Currency.won();
-		Currency to = Currency.dollar();
-		BigDecimal rate = BigDecimal.valueOf(0.001);
-		// when
-		bank.addRate(from, to, rate);
-		// then
-		Assertions.assertThat(bank.reduce(Money.won(1000), Currency.dollar()))
-			.isEqualTo(Money.dollar(1));
 	}
 }
