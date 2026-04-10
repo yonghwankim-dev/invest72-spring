@@ -57,7 +57,7 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		Money balance = calculator.calculateBalance(product, today, expirationDate);
 		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
 		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
@@ -78,7 +78,7 @@ public class FinancialProductService {
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(expirationDate)
-			.balance(balance)
+			.balance(balance.getValue())
 			.progress(progress)
 			.remainingDays(remainingDays)
 			.productCurrency(productCurrency)
@@ -196,7 +196,7 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 		return products.stream()
 			.map(product -> calculator.calculateBalance(product, today))
-			.map(balance -> Money.of(balance, baseCurrency))
+			.map(balance -> balance.reduce(baseCurrency))
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, baseCurrency));
 	}

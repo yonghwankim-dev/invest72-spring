@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
+import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 
 class BalancePolicyTest {
@@ -31,11 +32,11 @@ class BalancePolicyTest {
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 
 		// When
-		BigDecimal balance = policy.calculate(product, today, expirationDate);
+		Money balance = policy.calculate(product, today, expirationDate);
 
 		// Then
-		Assertions.assertThat(balance)
-			.isEqualByComparingTo(product.getAmount().getValue());
+		Money expected = Money.of(product.getAmount().getValue(), product.getAmount().getCurrency());
+		Assertions.assertThat(balance).isEqualByComparingTo(expected);
 	}
 
 	@DisplayName("투자 금액 계산 - ACCUMULATIVE, 기준일자가 시작일자 하루전인 경우 투자 금액은 0이다")
@@ -48,11 +49,11 @@ class BalancePolicyTest {
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 
 		// When
-		BigDecimal balance = policy.calculate(product, today, expirationDate);
+		Money balance = policy.calculate(product, today, expirationDate);
 
 		// Then
 		Assertions.assertThat(balance)
-			.isEqualByComparingTo(BigDecimal.ZERO);
+			.isEqualByComparingTo(Money.won(BigDecimal.ZERO));
 	}
 
 	@DisplayName("투자 금액 계산 - ACCUMULATIVE, 기준일자가 만기일자 하루후인 경우 투자 금액은 원금 * 개월수이다")
@@ -65,11 +66,11 @@ class BalancePolicyTest {
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
 
 		// When
-		BigDecimal balance = policy.calculate(product, today, expirationDate);
+		Money balance = policy.calculate(product, today, expirationDate);
 
 		// Then
-		BigDecimal expectedBalance = product.getAmount().getValue()
-			.multiply(BigDecimal.valueOf(product.getMonths().getValue()));
+		Money expectedBalance = Money.won(product.getAmount().getValue()
+			.multiply(BigDecimal.valueOf(product.getMonths().getValue())));
 		Assertions.assertThat(balance)
 			.isEqualByComparingTo(expectedBalance);
 	}

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class FinancialProductSummary {
 		FinancialProductCalculator calculator
 	) {
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		Money balance = calculator.calculateBalance(product, today, expirationDate);
 		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
 		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
@@ -48,7 +49,7 @@ public class FinancialProductSummary {
 			.interestRate(product.getProductAnnualInterestRate().getValue())
 			.startDate(product.getStartDate())
 			.expirationDate(expirationDate)
-			.balance(balance)
+			.balance(balance.getValue())
 			.expectedInterest(expectedInterest)
 			.progress(progress)
 			.remainingDays(remainingDays)

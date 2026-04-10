@@ -811,16 +811,19 @@ class FinancialProductRestControllerTest {
 			principalUser.getUser().getId());
 		FinancialProduct savingsProduct = FinancialProductDataProvider.createSavingsProduct(
 			principalUser.getUser().getId());
+		FinancialProduct dollarCashProduct = FinancialProductDataProvider.createCashProduct("product-11111111",
+			principalUser.getUser().getId(), Currency.dollar());
 
 		financialProductRepository.save(cashProduct);
 		financialProductRepository.save(depositProduct);
 		financialProductRepository.save(savingsProduct);
+		financialProductRepository.save(dollarCashProduct);
 
 		ProductCurrency currency = ProductCurrency.from(Currency.won());
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/statistics")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
-			.andExpect(jsonPath("$.totalBalance.amount").value(4_000_000))
+			.andExpect(jsonPath("$.totalBalance.amount").value(1_004_000_000))
 			.andExpect(jsonPath("$.totalBalance.currency.code").value(currency.getCode()))
 			.andExpect(jsonPath("$.totalBalance.currency.unit").value(currency.getUnit()))
 			.andExpect(jsonPath("$.totalBalance.currency.name").value(currency.getName()))

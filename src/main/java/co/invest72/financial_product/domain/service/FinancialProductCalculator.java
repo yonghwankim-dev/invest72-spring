@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.investment.domain.investment.InvestmentType;
+import co.invest72.money.domain.Money;
 
 public class FinancialProductCalculator {
 
@@ -16,12 +17,12 @@ public class FinancialProductCalculator {
 		return investmentType.calculateExpirationDate(startDate, months);
 	}
 
-	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today) {
+	public Money calculateBalance(FinancialProduct product, LocalDate today) {
 		LocalDate expirationDate = calculateExpirationDate(product);
 		return calculateBalance(product, today, expirationDate);
 	}
 
-	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+	public Money calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
 		return investmentType.calculateBalance(product, today, expirationDate);
 	}

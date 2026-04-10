@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.money.domain.Money;
 
 class FinancialProductCalculatorTest {
 
@@ -40,9 +41,9 @@ class FinancialProductCalculatorTest {
 	void givenProductAndLocalDate_whenCalculateBalance_thenReturnBalance(FinancialProduct product, LocalDate today,
 		BigDecimal expected, String ignored) {
 		// When
-		BigDecimal balance = calculator.calculateBalance(product, today);
+		Money balance = calculator.calculateBalance(product, today);
 		// Then
-		Assertions.assertThat(balance).isEqualTo(expected);
+		Assertions.assertThat(balance).isEqualTo(Money.won(expected));
 	}
 
 	@DisplayName("금융 상품의 진행률 남은 일수 계산")

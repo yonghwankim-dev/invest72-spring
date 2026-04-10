@@ -1,10 +1,10 @@
 package co.invest72.investment.domain.investment;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.money.domain.Money;
 
 public interface BalanceStrategy {
-	BigDecimal calculate(FinancialProduct product, LocalDate today, LocalDate expirationDate);
+	Money calculate(FinancialProduct product, LocalDate today, LocalDate expirationDate);
 }

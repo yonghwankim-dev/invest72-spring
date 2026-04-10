@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.money.domain.Money;
 import lombok.Getter;
 
 @Getter
@@ -38,7 +39,7 @@ public enum InvestmentType {
 		return periodStrategy.remainingDays(today, expirationDate);
 	}
 
-	public BigDecimal calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
+	public Money calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 		return balanceStrategy.calculate(product, today, expirationDate);
 	}
 

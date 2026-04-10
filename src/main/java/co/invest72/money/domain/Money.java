@@ -99,7 +99,8 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money reduce(Currency currency) {
-		throw new UnsupportedOperationException();
+		Bank bank = Bank.getInstance();
+		return bank.reduce(this, currency);
 	}
 
 	@Override
