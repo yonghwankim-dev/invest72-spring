@@ -9,18 +9,20 @@ import lombok.EqualsAndHashCode;
 
 public final class Bank {
 
-	private static Bank INSTANCE;
+	private static Bank instance;
 
 	private final Map<Pair, BigDecimal> rates = new ConcurrentHashMap<>();
 
 	private Bank() {
+		rates.put(new Pair(Currency.won(), Currency.dollar()), BigDecimal.valueOf(0.001));
+		rates.put(new Pair(Currency.dollar(), Currency.won()), BigDecimal.valueOf(1000));
 	}
 
 	public static Bank getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new Bank();
+		if (instance == null) {
+			instance = new Bank();
 		}
-		return INSTANCE;
+		return instance;
 	}
 
 	/**
