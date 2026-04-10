@@ -51,7 +51,7 @@ public final class Bank {
 	}
 
 	@EqualsAndHashCode
-	private class Pair {
+	private static class Pair {
 		private final Currency from;
 		private final Currency to;
 
