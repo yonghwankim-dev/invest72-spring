@@ -11,8 +11,12 @@ public class TotalBalance {
 	private final BigDecimal amount;
 	private final ProductCurrency currency;
 
-	public TotalBalance(Money amount) {
-		this.amount = Objects.requireNonNull(amount.getValue());
-		this.currency = Objects.requireNonNull(ProductCurrency.from(amount.getCurrency()));
+	public TotalBalance(BigDecimal amount, ProductCurrency currency) {
+		this.amount = Objects.requireNonNull(amount);
+		this.currency = Objects.requireNonNull(currency);
+	}
+
+	public static TotalBalance from(Money amount) {
+		return new TotalBalance(amount.getValue(), ProductCurrency.from(amount.getCurrency()));
 	}
 }

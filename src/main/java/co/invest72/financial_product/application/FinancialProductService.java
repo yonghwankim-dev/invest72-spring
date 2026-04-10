@@ -183,13 +183,16 @@ public class FinancialProductService {
 	public FinancialProductStatisticsResponse getProductStatistics(User user) {
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
-		Money totalBalanceMoney = Money.won(BigDecimal.ZERO);
-		LocalDate today = localDateProvider.now();
-		for (FinancialProduct product : products) {
-			BigDecimal balance = calculator.calculateBalance(product, today);
-			totalBalanceMoney = totalBalanceMoney.add(Money.won(balance));
-		}
-		TotalBalance totalBalance = new TotalBalance(totalBalanceMoney);
+		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products));
 		return new FinancialProductStatisticsResponse(totalBalance);
+	}
+
+	private Money getTotalBalance(List<FinancialProduct> products) {
+		LocalDate today = localDateProvider.now();
+		return products.stream()
+			.map(product -> calculator.calculateBalance(product, today))
+			.map(Money::won)
+			.reduce(Money::add)
+			.orElseGet(() -> Money.won(BigDecimal.ZERO));
 	}
 }
