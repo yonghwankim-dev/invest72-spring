@@ -824,6 +824,10 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.totalBalance.currency.code").value(currency.getCode()))
 			.andExpect(jsonPath("$.totalBalance.currency.unit").value(currency.getUnit()))
 			.andExpect(jsonPath("$.totalBalance.currency.name").value(currency.getName()))
+			.andExpect(jsonPath("$.totalEstimatedInterest.amount").value(375_000))
+			.andExpect(jsonPath("$.totalEstimatedInterest.currency.code").value(currency.getCode()))
+			.andExpect(jsonPath("$.totalEstimatedInterest.currency.unit").value(currency.getUnit()))
+			.andExpect(jsonPath("$.totalEstimatedInterest.currency.name").value(currency.getName()))
 			.andExpect(status().isOk());
 	}
 }

@@ -7,8 +7,11 @@ import lombok.Getter;
 @Getter
 public class FinancialProductStatisticsResponse {
 	private final TotalBalance totalBalance;
+	private final TotalEstimatedInterest totalEstimatedInterest;
 
-	public FinancialProductStatisticsResponse(TotalBalance totalBalance) {
+	public FinancialProductStatisticsResponse(TotalBalance totalBalance,
+		TotalEstimatedInterest totalEstimatedInterest) {
 		this.totalBalance = Objects.requireNonNull(totalBalance);
+		this.totalEstimatedInterest = Objects.requireNonNull(totalEstimatedInterest);
 	}
 }

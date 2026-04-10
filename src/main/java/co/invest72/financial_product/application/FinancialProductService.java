@@ -22,7 +22,9 @@ import co.invest72.financial_product.presentation.dto.response.FinancialProductS
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.financial_product.presentation.dto.response.TotalBalance;
+import co.invest72.financial_product.presentation.dto.response.TotalEstimatedInterest;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.Investment;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
@@ -184,7 +186,9 @@ public class FinancialProductService {
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products));
-		return new FinancialProductStatisticsResponse(totalBalance);
+		TotalEstimatedInterest totalEstimatedInterest = TotalEstimatedInterest.from(
+			getTotalEstimatedInterest(products));
+		return new FinancialProductStatisticsResponse(totalBalance, totalEstimatedInterest);
 	}
 
 	private Money getTotalBalance(List<FinancialProduct> products) {
@@ -194,5 +198,15 @@ public class FinancialProductService {
 			.map(Money::won)
 			.reduce(Money::add)
 			.orElseGet(() -> Money.won(BigDecimal.ZERO));
+	}
+
+	private Money getTotalEstimatedInterest(List<FinancialProduct> products) {
+		Money sum = Money.won(BigDecimal.ZERO);
+		for (FinancialProduct product : products) {
+			Investment investment = investmentFactory.createBy(product);
+			Money totalInterest = investment.getTotalInterest();
+			sum = sum.add(totalInterest);
+		}
+		return sum;
 	}
 }
