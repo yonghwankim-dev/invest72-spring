@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.financial_product.application.FinancialProductService;
@@ -74,8 +75,9 @@ public class FinancialProductRestController {
 	// 상품 통계 데이터 조회
 	@GetMapping("/statistics")
 	public ResponseEntity<FinancialProductStatisticsResponse> getProductStatistics(
-		@AuthenticationPrincipal PrincipalUser user) {
-		FinancialProductStatisticsResponse response = service.getProductStatistics(user.getUser());
+		@AuthenticationPrincipal PrincipalUser user,
+		@RequestParam(value = "currency", required = false, defaultValue = "KRW") String currency) {
+		FinancialProductStatisticsResponse response = service.getProductStatistics(user.getUser(), currency);
 		return ResponseEntity.ok(response);
 	}
 }

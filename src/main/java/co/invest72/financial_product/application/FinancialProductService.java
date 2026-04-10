@@ -182,30 +182,31 @@ public class FinancialProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public FinancialProductStatisticsResponse getProductStatistics(User user) {
+	public FinancialProductStatisticsResponse getProductStatistics(User user, String baseCurrencyCode) {
+		Currency baseCurrency = Currency.from(baseCurrencyCode);
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
-		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products));
+		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products, baseCurrency));
 		TotalEstimatedInterest totalEstimatedInterest = TotalEstimatedInterest.from(
-			getTotalEstimatedInterest(products));
+			getTotalEstimatedInterest(products, baseCurrency));
 		return new FinancialProductStatisticsResponse(totalBalance, totalEstimatedInterest);
 	}
 
-	private Money getTotalBalance(List<FinancialProduct> products) {
+	private Money getTotalBalance(List<FinancialProduct> products, Currency baseCurrency) {
 		LocalDate today = localDateProvider.now();
 		return products.stream()
 			.map(product -> calculator.calculateBalance(product, today))
-			.map(Money::won)
+			.map(balance -> Money.of(balance, baseCurrency))
 			.reduce(Money::add)
-			.orElseGet(() -> Money.won(BigDecimal.ZERO));
+			.orElseGet(() -> Money.of(BigDecimal.ZERO, baseCurrency));
 	}
 
-	private Money getTotalEstimatedInterest(List<FinancialProduct> products) {
-		Money sum = Money.won(BigDecimal.ZERO);
+	private Money getTotalEstimatedInterest(List<FinancialProduct> products, Currency baseCurrency) {
+		Money sum = Money.of(BigDecimal.ZERO, baseCurrency);
 		for (FinancialProduct product : products) {
 			Investment investment = investmentFactory.createBy(product);
 			Money totalInterest = investment.getTotalInterest();
-			sum = sum.add(totalInterest);
+			sum = sum.add(totalInterest.reduce(baseCurrency));
 		}
 		return sum;
 	}

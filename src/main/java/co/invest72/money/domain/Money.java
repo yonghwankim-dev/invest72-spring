@@ -98,6 +98,10 @@ public class Money implements Comparable<Money> {
 		return this.value.compareTo(BigDecimal.ZERO) < 0;
 	}
 
+	public Money reduce(Currency currency) {
+		throw new UnsupportedOperationException();
+	}
+
 	@Override
 	public int compareTo(@Nonnull Money other) {
 		validate(other);
