@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.ExchangeRateProvider;
+import co.invest72.money.domain.Pair;
 
 class FixedExchangeRateProviderTest {
 
@@ -31,4 +32,28 @@ class FixedExchangeRateProviderTest {
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.valueOf(0.001));
 	}
 
+	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")
+	@Test
+	void getRate_whenKRWToKRW_thenReturnOne() {
+		// given
+		Currency won = Currency.won();
+		Currency won2 = Currency.won();
+		// when
+		BigDecimal rate = exchangeRateProvider.getRate(won, won2);
+		// then
+		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
+	}
+
+	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
+	@Test
+	void clear() {
+		// given
+		Pair pair = new Pair(Currency.won(), Currency.dollar());
+		exchangeRateProvider.addRate(pair, BigDecimal.valueOf(0.001));
+		// when
+		exchangeRateProvider.clear();
+		// then
+		BigDecimal rate = exchangeRateProvider.getRate(Currency.won(), Currency.dollar());
+		Assertions.assertThat(rate).isNull();
+	}
 }

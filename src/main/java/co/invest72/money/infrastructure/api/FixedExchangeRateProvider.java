@@ -23,4 +23,14 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 		}
 		return rates.get(new Pair(from, to));
 	}
+
+	@Override
+	public void addRate(Pair pair, BigDecimal rate) {
+		rates.put(pair, rate);
+	}
+
+	@Override
+	public void clear() {
+		rates.clear();
+	}
 }

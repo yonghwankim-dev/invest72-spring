@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 
+import co.invest72.money.infrastructure.api.FixedExchangeRateProvider;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
@@ -99,7 +100,7 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money reduce(Currency currency) {
-		Bank bank = Bank.getInstance();
+		Bank bank = new Bank(new FixedExchangeRateProvider());
 		return bank.reduce(this, currency);
 	}
 

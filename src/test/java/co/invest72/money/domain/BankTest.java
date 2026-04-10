@@ -7,13 +7,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.money.infrastructure.api.FixedExchangeRateProvider;
+
 class BankTest {
 
 	private Bank bank;
 
 	@BeforeEach
 	void setUp() {
-		bank = Bank.getInstance();
+		bank = new Bank(new FixedExchangeRateProvider());
 		bank.addRate(Currency.won(), Currency.dollar(), BigDecimal.valueOf(0.001));
 		bank.addRate(Currency.dollar(), Currency.won(), BigDecimal.valueOf(1000));
 	}
@@ -68,17 +70,5 @@ class BankTest {
 		// then
 		Assertions.assertThat(bank.reduce(Money.won(1000), Currency.dollar()))
 			.isEqualTo(Money.dollar(1));
-	}
-
-	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
-	@Test
-	void clean() {
-		// given
-		bank.addRate(Currency.won(), Currency.dollar(), BigDecimal.valueOf(0.001));
-		// when
-		bank.clearRates();
-		// then
-		Assertions.assertThatThrownBy(() -> bank.reduce(Money.won(BigDecimal.valueOf(1_000)), Currency.dollar()))
-			.isInstanceOf(IllegalArgumentException.class);
 	}
 }

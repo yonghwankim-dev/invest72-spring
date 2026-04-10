@@ -1,25 +1,13 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class Bank {
 
-	private static Bank instance;
+	private final ExchangeRateProvider exchangeRateProvider;
 
-	private final Map<Pair, BigDecimal> rates = new ConcurrentHashMap<>();
-
-	private Bank() {
-		rates.put(new Pair(Currency.won(), Currency.dollar()), BigDecimal.valueOf(0.001));
-		rates.put(new Pair(Currency.dollar(), Currency.won()), BigDecimal.valueOf(1000));
-	}
-
-	public static Bank getInstance() {
-		if (instance == null) {
-			instance = new Bank();
-		}
-		return instance;
+	public Bank(ExchangeRateProvider exchangeRateProvider) {
+		this.exchangeRateProvider = exchangeRateProvider;
 	}
 
 	/**
@@ -33,7 +21,7 @@ public final class Bank {
 			return Money.of(source.getValue(), target);
 		}
 
-		BigDecimal rate = rates.get(new Pair(source.getCurrency(), target));
+		BigDecimal rate = exchangeRateProvider.getRate(source.getCurrency(), target);
 		if (rate == null) {
 			throw new IllegalArgumentException("undefined rate, " + source.getCurrency() + "->" + target);
 		}
@@ -42,10 +30,10 @@ public final class Bank {
 	}
 
 	public void addRate(Currency from, Currency to, BigDecimal rate) {
-		rates.put(new Pair(from, to), rate);
+		exchangeRateProvider.addRate(new Pair(from, to), rate);
 	}
 
 	public void clearRates() {
-		rates.clear();
+		exchangeRateProvider.clear();
 	}
 }
