@@ -28,4 +28,18 @@ class BankTest {
 		Money expected = Money.dollar(1);
 		Assertions.assertThat(dollarMoney).isEqualTo(expected);
 	}
+
+	@DisplayName("환전 - 달러를 원화로 환전한다.")
+	@Test
+	void reduce_whenSourceIsDollar_thenReturnWonMoney() {
+		// given
+		Bank bank = new Bank();
+		Money oneBucks = Money.dollar(1);
+		Currency wonCurrency = Currency.won();
+		// when
+		Money wonMoney = bank.reduce(oneBucks, wonCurrency);
+		// then
+		Money expected = Money.won(1000);
+		Assertions.assertThat(wonMoney).isEqualTo(expected);
+	}
 }
