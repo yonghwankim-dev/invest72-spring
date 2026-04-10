@@ -1,8 +1,27 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Bank {
+import lombok.EqualsAndHashCode;
+
+public final class Bank {
+
+	private static Bank INSTANCE;
+
+	private final Map<Pair, BigDecimal> rates = new ConcurrentHashMap<>();
+
+	private Bank() {
+	}
+
+	public static Bank getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new Bank();
+		}
+		return INSTANCE;
+	}
 
 	/**
 	 * target에 해당하는 통화로 환전하여 반환한다
@@ -11,14 +30,34 @@ public class Bank {
 	 * @return 환전된 금액
 	 */
 	public Money reduce(Money source, Currency target) {
-		BigDecimal rate = BigDecimal.ZERO;
-		if (target.equals(Currency.dollar())) {
-			rate = BigDecimal.valueOf(0.001);
-		} else if (target.equals(Currency.won())) {
-			rate = BigDecimal.valueOf(1000);
+		if (source.getCurrency().equals(target)) {
+			return Money.of(source.getValue(), target);
 		}
 
+		BigDecimal rate = rates.get(new Pair(source.getCurrency(), target));
+		if (rate == null) {
+			throw new IllegalArgumentException("undefined rate, " + source.getCurrency() + "->" + target);
+		}
 		BigDecimal amount = source.getValue().multiply(rate);
 		return Money.of(amount, target);
+	}
+
+	public void addRate(Currency from, Currency to, BigDecimal rate) {
+		rates.put(new Pair(from, to), rate);
+	}
+
+	public void clearRates() {
+		rates.clear();
+	}
+
+	@EqualsAndHashCode
+	private class Pair {
+		private final Currency from;
+		private final Currency to;
+
+		public Pair(Currency from, Currency to) {
+			this.from = Objects.requireNonNull(from);
+			this.to = Objects.requireNonNull(to);
+		}
 	}
 }

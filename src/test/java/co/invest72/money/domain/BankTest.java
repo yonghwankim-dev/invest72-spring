@@ -1,5 +1,7 @@
 package co.invest72.money.domain;
 
+import java.math.BigDecimal;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +13,23 @@ class BankTest {
 
 	@BeforeEach
 	void setUp() {
-		bank = new Bank();
+		bank = Bank.getInstance();
+		bank.addRate(Currency.won(), Currency.dollar(), BigDecimal.valueOf(0.001));
+		bank.addRate(Currency.dollar(), Currency.won(), BigDecimal.valueOf(1000));
 	}
-	
+
+	@DisplayName("환전 - 원화를 원화로 환전하면 금액이 그대로여야 한다")
+	@Test
+	void reduce_whenSourceCurrencyIsSameTargetCurrency_whenReturnSameAmount() {
+		// given
+		Money wonMoney = Money.won(1000);
+		Currency wonCurrency = Currency.won();
+		// when
+		Money reducedMoney = bank.reduce(wonMoney, wonCurrency);
+		// then
+		Assertions.assertThat(reducedMoney).isEqualTo(wonMoney);
+	}
+
 	@DisplayName("환전 - 원화를 달러로 환전한다")
 	@Test
 	void reduce_givenWonMoney_whenTargetIsDollar_thenReturnDollarMoney() {
@@ -38,5 +54,31 @@ class BankTest {
 		// then
 		Money expected = Money.won(1000);
 		Assertions.assertThat(wonMoney).isEqualTo(expected);
+	}
+
+	@DisplayName("환율 추가 - 원화-달러 환율을 추가한다")
+	@Test
+	void addRate_whenKRWToUSD_thenSaveRate() {
+		// given
+		Currency from = Currency.won();
+		Currency to = Currency.dollar();
+		BigDecimal rate = BigDecimal.valueOf(0.001);
+		// when
+		bank.addRate(from, to, rate);
+		// then
+		Assertions.assertThat(bank.reduce(Money.won(1000), Currency.dollar()))
+			.isEqualTo(Money.dollar(1));
+	}
+
+	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
+	@Test
+	void clean() {
+		// given
+		bank.addRate(Currency.won(), Currency.dollar(), BigDecimal.valueOf(0.001));
+		// when
+		bank.clearRates();
+		// then
+		Assertions.assertThatThrownBy(() -> bank.reduce(Money.won(BigDecimal.valueOf(1_000)), Currency.dollar()))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 }
