@@ -2,10 +2,7 @@ package co.invest72.money.domain;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-
-import lombok.EqualsAndHashCode;
 
 public final class Bank {
 
@@ -50,16 +47,5 @@ public final class Bank {
 
 	public void clearRates() {
 		rates.clear();
-	}
-
-	@EqualsAndHashCode
-	private static class Pair {
-		private final Currency from;
-		private final Currency to;
-
-		public Pair(Currency from, Currency to) {
-			this.from = Objects.requireNonNull(from);
-			this.to = Objects.requireNonNull(to);
-		}
 	}
 }
