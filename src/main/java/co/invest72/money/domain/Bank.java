@@ -11,6 +11,8 @@ public class Bank {
 	 * @return 환전된 금액
 	 */
 	public Money reduce(Money source, Currency target) {
-		return Money.of(BigDecimal.valueOf(1), target);
+		BigDecimal rate = BigDecimal.valueOf(0.001);
+		BigDecimal amount = source.getValue().multiply(rate);
+		return Money.of(amount, target);
 	}
 }

@@ -28,5 +28,4 @@ class BankTest {
 		Money expected = Money.dollar(1);
 		Assertions.assertThat(dollarMoney).isEqualTo(expected);
 	}
-
 }
