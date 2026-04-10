@@ -24,6 +24,7 @@ import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.financial_product.presentation.dto.response.TotalBalance;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -180,8 +181,15 @@ public class FinancialProductService {
 
 	@Transactional(readOnly = true)
 	public FinancialProductStatisticsResponse getProductStatistics(User user) {
-		BigDecimal amount = BigDecimal.valueOf(4_000_000);
-		TotalBalance totalBalance = new TotalBalance(amount, Currency.won());
+		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
+
+		Money totalBalanceMoney = Money.won(BigDecimal.ZERO);
+		LocalDate today = localDateProvider.now();
+		for (FinancialProduct product : products) {
+			BigDecimal balance = calculator.calculateBalance(product, today);
+			totalBalanceMoney = totalBalanceMoney.add(Money.won(balance));
+		}
+		TotalBalance totalBalance = new TotalBalance(totalBalanceMoney);
 		return new FinancialProductStatisticsResponse(totalBalance);
 	}
 }
