@@ -18,8 +18,10 @@ import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductStatisticsResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
+import co.invest72.financial_product.presentation.dto.response.TotalBalance;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.infrastructure.MoneyMapper;
@@ -174,5 +176,12 @@ public class FinancialProductService {
 			.thenComparing(FinancialProductSummary::getBalance, Comparator.reverseOrder())
 			.thenComparing(FinancialProductSummary::getCreatedAt)
 			.thenComparing(FinancialProductSummary::getId);
+	}
+
+	@Transactional(readOnly = true)
+	public FinancialProductStatisticsResponse getProductStatistics(User user) {
+		BigDecimal amount = BigDecimal.valueOf(4_000_000);
+		TotalBalance totalBalance = new TotalBalance(amount, Currency.won());
+		return new FinancialProductStatisticsResponse(totalBalance);
 	}
 }
