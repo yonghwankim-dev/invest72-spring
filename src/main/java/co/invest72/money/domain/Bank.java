@@ -2,7 +2,7 @@ package co.invest72.money.domain;
 
 import java.math.BigDecimal;
 
-public final class Bank {
+public class Bank {
 
 	private final ExchangeRateProvider exchangeRateProvider;
 
@@ -27,9 +27,5 @@ public final class Bank {
 		}
 		BigDecimal amount = source.getValue().multiply(rate);
 		return Money.of(amount, target);
-	}
-
-	public void addRate(Currency from, Currency to, BigDecimal rate) {
-		exchangeRateProvider.addRate(new Pair(from, to), rate);
 	}
 }

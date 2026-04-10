@@ -25,6 +25,7 @@ import co.invest72.financial_product.presentation.dto.response.TotalBalance;
 import co.invest72.financial_product.presentation.dto.response.TotalEstimatedInterest;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
+import co.invest72.money.domain.Bank;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
@@ -41,6 +42,7 @@ public class FinancialProductService {
 	private final FinancialProductFactory financialProductFactory;
 	private final FinancialProductCalculator calculator;
 	private final MoneyMapper moneyMapper;
+	private final Bank bank;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -196,7 +198,7 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 		return products.stream()
 			.map(product -> calculator.calculateBalance(product, today))
-			.map(balance -> balance.reduce(baseCurrency))
+			.map(balance -> bank.reduce(balance, baseCurrency))
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, baseCurrency));
 	}
@@ -206,7 +208,7 @@ public class FinancialProductService {
 		for (FinancialProduct product : products) {
 			Investment investment = investmentFactory.createBy(product);
 			Money totalInterest = investment.getTotalInterest();
-			sum = sum.add(totalInterest.reduce(baseCurrency));
+			sum = sum.add(bank.reduce(totalInterest, baseCurrency));
 		}
 		return sum;
 	}
