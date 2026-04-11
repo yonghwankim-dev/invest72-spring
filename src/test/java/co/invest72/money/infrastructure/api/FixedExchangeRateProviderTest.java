@@ -1,6 +1,7 @@
 package co.invest72.money.infrastructure.api;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ class FixedExchangeRateProviderTest {
 		Currency won = Currency.won();
 		Currency dollar = Currency.dollar();
 		// when
-		BigDecimal rate = exchangeRateProvider.getRate(won, dollar);
+		BigDecimal rate = exchangeRateProvider.getRate(won, dollar).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.valueOf(0.001));
 	}
@@ -39,7 +40,7 @@ class FixedExchangeRateProviderTest {
 		Currency won = Currency.won();
 		Currency won2 = Currency.won();
 		// when
-		BigDecimal rate = exchangeRateProvider.getRate(won, won2);
+		BigDecimal rate = exchangeRateProvider.getRate(won, won2).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
 	}
@@ -67,7 +68,7 @@ class FixedExchangeRateProviderTest {
 		// when
 		exchangeRateProvider.clear();
 		// then
-		BigDecimal rate = exchangeRateProvider.getRate(Currency.won(), Currency.dollar());
-		Assertions.assertThat(rate).isNull();
+		Optional<BigDecimal> rate = exchangeRateProvider.getRate(Currency.won(), Currency.dollar());
+		Assertions.assertThat(rate).isEmpty();
 	}
 }

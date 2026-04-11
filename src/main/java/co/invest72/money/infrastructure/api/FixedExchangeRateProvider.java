@@ -2,6 +2,7 @@ package co.invest72.money.infrastructure.api;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.invest72.money.domain.Currency;
@@ -17,11 +18,11 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 	}
 
 	@Override
-	public BigDecimal getRate(Currency from, Currency to) {
+	public Optional<BigDecimal> getRate(Currency from, Currency to) {
 		if (from.equals(to)) {
-			return BigDecimal.ONE;
+			return Optional.of(BigDecimal.ONE);
 		}
-		return rates.get(new Pair(from, to));
+		return Optional.ofNullable(rates.get(new Pair(from, to)));
 	}
 
 	@Override

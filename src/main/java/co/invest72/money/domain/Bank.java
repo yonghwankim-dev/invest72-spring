@@ -21,10 +21,8 @@ public class Bank {
 			return Money.of(source.getValue(), target);
 		}
 
-		BigDecimal rate = exchangeRateProvider.getRate(source.getCurrency(), target);
-		if (rate == null) {
-			throw new IllegalArgumentException("undefined rate, " + source.getCurrency() + "->" + target);
-		}
+		BigDecimal rate = exchangeRateProvider.getRate(source.getCurrency(), target)
+			.orElseThrow(() -> new IllegalArgumentException("undefined rate, " + source.getCurrency() + "->" + target));
 		BigDecimal amount = source.getValue().multiply(rate);
 		return Money.of(amount, target);
 	}
