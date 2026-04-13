@@ -4,9 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
+import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import co.invest72.money.domain.Bank;
-import co.invest72.money.domain.ExchangeRateProvider;
-import co.invest72.money.infrastructure.api.FixedExchangeRateProvider;
 
 @Configuration
 public class MoneyConfig {

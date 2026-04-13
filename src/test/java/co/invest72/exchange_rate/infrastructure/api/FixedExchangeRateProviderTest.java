@@ -1,4 +1,4 @@
-package co.invest72.money.infrastructure.api;
+package co.invest72.exchange_rate.infrastructure.api;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -8,8 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Pair;
 
 class FixedExchangeRateProviderTest {

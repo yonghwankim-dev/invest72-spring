@@ -1,12 +1,12 @@
-package co.invest72.money.infrastructure.api;
+package co.invest72.exchange_rate.infrastructure.api;
 
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Pair;
 
 public class FixedExchangeRateProvider implements ExchangeRateProvider {
