@@ -8,14 +8,20 @@ public class KoreaeximClient {
 	private final WebClient webClient;
 	private final KoreaeximProperties properties;
 
-	public KoreaeximClient(KoreaeximProperties properties) {
-		this.webClient = WebClient.builder()
-			.baseUrl(properties.getBaseUri())
-			.build();
+	public KoreaeximClient(WebClient webClient, KoreaeximProperties properties) {
+		this.webClient = webClient;
 		this.properties = properties;
 	}
 
 	public BigDecimal exchangeJson() {
-		return null;
+		this.webClient.get()
+			.uri(properties.getExchangeJson(), uriBuilder -> uriBuilder
+				.queryParam("authkey", properties.getApiKey())
+				.queryParam("data", "AP01")
+				.build())
+			.retrieve()
+			.bodyToFlux(ExchangeJsonResponse.class)
+			.subscribe(System.out::println);
+		return BigDecimal.ONE;
 	}
 }
