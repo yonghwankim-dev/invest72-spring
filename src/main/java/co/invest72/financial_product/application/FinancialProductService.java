@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.Bank;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
@@ -25,7 +26,6 @@ import co.invest72.financial_product.presentation.dto.response.TotalBalance;
 import co.invest72.financial_product.presentation.dto.response.TotalEstimatedInterest;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
-import co.invest72.money.domain.Bank;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;

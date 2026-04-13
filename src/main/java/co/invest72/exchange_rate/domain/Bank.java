@@ -1,8 +1,9 @@
-package co.invest72.money.domain;
+package co.invest72.exchange_rate.domain;
 
 import java.math.BigDecimal;
 
-import co.invest72.exchange_rate.domain.ExchangeRateProvider;
+import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 
 public class Bank {
 
