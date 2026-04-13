@@ -56,7 +56,7 @@ class FixedExchangeRateProviderTest {
 		exchangeRateProvider.addRate(new Pair(from, to), rate);
 		// then
 		Assertions.assertThat(exchangeRateProvider.getRate(from, to))
-			.isEqualTo(rate);
+			.isEqualTo(Optional.of(rate));
 	}
 
 	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
