@@ -11,7 +11,7 @@ import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.factory.InvestmentDetailFactory;
 import co.invest72.investment.domain.investment.factory.SavingDetailFactory;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 

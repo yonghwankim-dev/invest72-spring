@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.money.domain.Pair;
 
 public class FixedExchangeRateProvider implements ExchangeRateProvider {

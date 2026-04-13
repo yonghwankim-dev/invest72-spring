@@ -35,7 +35,7 @@ import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import source.FinancialProductDataProvider;

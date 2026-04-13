@@ -2,6 +2,7 @@ package co.invest72.money.domain;
 
 import java.util.Objects;
 
+import co.invest72.exchange_rate.domain.Currency;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode

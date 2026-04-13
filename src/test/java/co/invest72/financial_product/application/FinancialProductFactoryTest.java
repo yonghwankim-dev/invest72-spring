@@ -19,7 +19,7 @@ import co.invest72.financial_product.presentation.dto.request.FinancialProductRe
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import source.FinancialProductDataProvider;
 
 class FinancialProductFactoryTest {

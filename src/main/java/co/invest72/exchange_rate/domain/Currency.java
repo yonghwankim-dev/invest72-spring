@@ -1,4 +1,4 @@
-package co.invest72.money.domain;
+package co.invest72.exchange_rate.domain;
 
 import java.util.Objects;
 

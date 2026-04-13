@@ -26,7 +26,7 @@ import co.invest72.financial_product.presentation.dto.response.TotalBalance;
 import co.invest72.financial_product.presentation.dto.response.TotalEstimatedInterest;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.Investment;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;

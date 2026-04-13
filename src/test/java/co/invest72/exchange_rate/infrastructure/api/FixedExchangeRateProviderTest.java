@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 
 class FixedExchangeRateProviderTest {
 

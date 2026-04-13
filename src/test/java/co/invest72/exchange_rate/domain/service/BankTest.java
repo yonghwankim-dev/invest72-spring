@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
-import co.invest72.money.domain.Currency;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.money.domain.Money;
 
 class BankTest {
