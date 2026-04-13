@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import co.invest72.exchange_rate.domain.Currency;
-import co.invest72.exchange_rate.domain.service.Bank;
-import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
@@ -99,11 +97,6 @@ public class Money implements Comparable<Money> {
 
 	public boolean isNegative() {
 		return this.value.compareTo(BigDecimal.ZERO) < 0;
-	}
-
-	public Money reduce(Currency currency) {
-		Bank bank = new Bank(new FixedExchangeRateProvider());
-		return bank.reduce(this, currency);
 	}
 
 	@Override
