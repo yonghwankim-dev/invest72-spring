@@ -1,7 +1,6 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Pair;
 
 class FixedExchangeRateProviderTest {
 
@@ -43,32 +41,5 @@ class FixedExchangeRateProviderTest {
 		BigDecimal rate = exchangeRateProvider.getRate(won, won2).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
-	}
-
-	@DisplayName("환율 추가 - 원화-달러 환율을 추가한다")
-	@Test
-	void addRate_whenKRWToUSD_thenSaveRate() {
-		// given
-		Currency from = Currency.won();
-		Currency to = Currency.dollar();
-		BigDecimal rate = BigDecimal.valueOf(0.001);
-		// when
-		exchangeRateProvider.addRate(new Pair(from, to), rate);
-		// then
-		Assertions.assertThat(exchangeRateProvider.getRate(from, to))
-			.isEqualTo(Optional.of(rate));
-	}
-
-	@DisplayName("환전 초기화 - 저장된 환율 정보를 초기화한다")
-	@Test
-	void clear() {
-		// given
-		Pair pair = new Pair(Currency.won(), Currency.dollar());
-		exchangeRateProvider.addRate(pair, BigDecimal.valueOf(0.001));
-		// when
-		exchangeRateProvider.clear();
-		// then
-		Optional<BigDecimal> rate = exchangeRateProvider.getRate(Currency.won(), Currency.dollar());
-		Assertions.assertThat(rate).isEmpty();
 	}
 }

@@ -4,12 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Pair;
 
 public interface ExchangeRateProvider {
 	Optional<BigDecimal> getRate(Currency from, Currency to);
-
-	void addRate(Pair pair, BigDecimal rate);
-
-	void clear();
 }

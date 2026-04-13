@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "external-api.koreaexim")
 public class KoreaeximProperties {
 	private final String apiKey;
-	private final String baseUrl;
+	private final String baseUri;
 
-	public KoreaeximProperties(String apiKey, String baseUrl) {
+	public KoreaeximProperties(String apiKey, String baseUri) {
 		this.apiKey = Objects.requireNonNull(apiKey);
-		this.baseUrl = Objects.requireNonNull(baseUrl);
+		this.baseUri = Objects.requireNonNull(baseUri);
 	}
 }
