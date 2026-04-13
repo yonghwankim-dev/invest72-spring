@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 
 class FixedExchangeRateProviderTest {
 
@@ -23,10 +23,10 @@ class FixedExchangeRateProviderTest {
 	@Test
 	void getRate_whenKRWToUSE_thenReturnRate() {
 		// given
-		Currency won = Currency.won();
-		Currency dollar = Currency.dollar();
+		Currency from = Currency.won();
+		Currency to = Currency.dollar();
 		// when
-		BigDecimal rate = exchangeRateProvider.getRate(won, dollar).orElseThrow();
+		BigDecimal rate = exchangeRateProvider.getRate(from, to).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.valueOf(0.001));
 	}
@@ -36,9 +36,8 @@ class FixedExchangeRateProviderTest {
 	void getRate_whenKRWToKRW_thenReturnOne() {
 		// given
 		Currency won = Currency.won();
-		Currency won2 = Currency.won();
 		// when
-		BigDecimal rate = exchangeRateProvider.getRate(won, won2).orElseThrow();
+		BigDecimal rate = exchangeRateProvider.getRate(won, won).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
 	}

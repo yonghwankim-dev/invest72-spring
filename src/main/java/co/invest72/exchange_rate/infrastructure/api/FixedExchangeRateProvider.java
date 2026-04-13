@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Pair;
 
 public class FixedExchangeRateProvider implements ExchangeRateProvider {
+	// Key: 대상 통화, Value: 1단위당 원화 금액
 	private final Map<Pair, BigDecimal> rates = new ConcurrentHashMap<>();
 
 	public FixedExchangeRateProvider() {
@@ -22,6 +23,7 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 		if (from.equals(to)) {
 			return Optional.of(BigDecimal.ONE);
 		}
-		return Optional.ofNullable(rates.get(new Pair(from, to)));
+		Pair pair = new Pair(from, to);
+		return Optional.ofNullable(rates.get(pair));
 	}
 }
