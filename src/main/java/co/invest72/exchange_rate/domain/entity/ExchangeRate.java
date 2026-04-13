@@ -1,4 +1,4 @@
-package co.invest72.exchange_rate.domain;
+package co.invest72.exchange_rate.domain.entity;
 
 import java.math.BigDecimal;
 import java.util.Objects;
