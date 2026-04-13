@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 
-import co.invest72.exchange_rate.domain.Bank;
+import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;

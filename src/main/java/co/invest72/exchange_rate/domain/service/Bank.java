@@ -1,7 +1,8 @@
-package co.invest72.exchange_rate.domain;
+package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
 
+import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 

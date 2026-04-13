@@ -1,4 +1,4 @@
-package co.invest72.exchange_rate.domain;
+package co.invest72.exchange_rate.domain.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
