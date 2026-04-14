@@ -1,13 +1,17 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
 import java.math.BigDecimal;
+import java.util.function.Function;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Flux;
 
 class KoreaeximClientTest {
 
@@ -19,6 +23,19 @@ class KoreaeximClientTest {
 		KoreaeximProperties properties = new KoreaeximProperties("test-api-key", "http://localhost:8080",
 			"/exchangeJson");
 		client = new KoreaeximClient(webClient, properties);
+
+		WebClient.RequestHeadersUriSpec requestHeadersUriSpec = BDDMockito.mock(WebClient.RequestHeadersUriSpec.class);
+		BDDMockito.given(webClient.get()).willReturn(requestHeadersUriSpec);
+		WebClient.RequestHeadersSpec requestHeadersSpec = BDDMockito.mock(WebClient.RequestHeadersSpec.class);
+		BDDMockito.given(
+				requestHeadersUriSpec.uri(ArgumentMatchers.anyString(), ArgumentMatchers.any(Function.class)))
+			.willReturn(requestHeadersSpec);
+		WebClient.ResponseSpec responseSpec = BDDMockito.mock(WebClient.ResponseSpec.class);
+		BDDMockito.given(requestHeadersSpec.retrieve())
+			.willReturn(responseSpec);
+		Flux<ExchangeJsonResponse> flux = Flux.just(new ExchangeJsonResponse(1, "KRW", "1"));
+		BDDMockito.given(responseSpec.bodyToFlux(ExchangeJsonResponse.class))
+			.willReturn(flux);
 	}
 
 	@DisplayName("객체 생성")

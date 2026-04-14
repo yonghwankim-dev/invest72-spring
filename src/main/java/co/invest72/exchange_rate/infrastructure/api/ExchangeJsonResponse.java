@@ -15,4 +15,13 @@ public class ExchangeJsonResponse {
 		this.currencyUnit = Objects.requireNonNull(currencyUnit);
 		this.dealingBaseRate = Objects.requireNonNull(dealingBaseRate);
 	}
+
+	@Override
+	public String toString() {
+		return "ExchangeJsonResponse{" +
+			"result=" + result +
+			", currencyUnit='" + currencyUnit + '\'' +
+			", dealingBaseRate='" + dealingBaseRate + '\'' +
+			'}';
+	}
 }
