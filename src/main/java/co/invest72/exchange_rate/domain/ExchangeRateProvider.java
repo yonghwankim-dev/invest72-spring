@@ -19,3 +19,4 @@ public interface ExchangeRateProvider {
 	 */
 	Optional<BigDecimal> getRate(Currency from, Currency to);
 }
+
