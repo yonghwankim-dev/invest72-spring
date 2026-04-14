@@ -17,6 +17,21 @@ public class ExchangeJsonResponse {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof ExchangeJsonResponse that))
+			return false;
+		return Objects.equals(result, that.result) && Objects.equals(currencyUnit, that.currencyUnit)
+			&& Objects.equals(dealingBaseRate, that.dealingBaseRate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(result, currencyUnit, dealingBaseRate);
+	}
+
+	@Override
 	public String toString() {
 		return "ExchangeJsonResponse{" +
 			"result=" + result +
