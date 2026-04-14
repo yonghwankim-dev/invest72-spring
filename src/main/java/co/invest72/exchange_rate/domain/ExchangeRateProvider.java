@@ -3,6 +3,9 @@ package co.invest72.exchange_rate.domain;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import co.invest72.exchange_rate.infrastructure.api.ExchangeJsonResponse;
+import reactor.core.publisher.Flux;
+
 /**
  * 외부 환율 정보를 제공하는 인터페이스
  * <p>
@@ -22,6 +25,6 @@ public interface ExchangeRateProvider {
 	/**
 	 * 환율 정보를 최신 정보롤 업데이트한다.
 	 */
-	void updateRates();
+	Flux<ExchangeJsonResponse> updateRates();
 }
 

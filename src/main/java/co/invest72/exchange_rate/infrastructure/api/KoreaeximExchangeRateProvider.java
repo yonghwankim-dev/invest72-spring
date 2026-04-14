@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Pair;
+import reactor.core.publisher.Flux;
 
 public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 	private final KoreaeximClient client;
@@ -31,11 +32,11 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 	}
 
 	@Override
-	public void updateRates() {
+	public Flux<ExchangeJsonResponse> updateRates() {
 		int success = 1;
-		client.exchangeJson()
+		return client.exchangeJson()
 			.filter(response -> response.getResult() == success)
-			.subscribe(response -> {
+			.doOnNext(response -> {
 				// response.dealingBaseRate = 1외화 단위당 원화(KRW) 가치
 				// ex: currencyUnit="USD", dealingBaseRate="1000"
 

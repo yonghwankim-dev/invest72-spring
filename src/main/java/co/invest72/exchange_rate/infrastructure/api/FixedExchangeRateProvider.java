@@ -9,6 +9,7 @@ import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Pair;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 public class FixedExchangeRateProvider implements ExchangeRateProvider {
@@ -30,7 +31,8 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 	}
 
 	@Override
-	public void updateRates() {
+	public Flux<ExchangeJsonResponse> updateRates() {
 		log.info("FixedExchangeRateProvider: 고정 환율 모드이므로 업데이트를 생략합니다.");
+		return Flux.empty();
 	}
 }
