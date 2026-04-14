@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,23 +20,20 @@ class KoreaeximClientTest {
 
 	@BeforeEach
 	void setUp() {
-		WebClient webClient = BDDMockito.mock(WebClient.class);
-		KoreaeximProperties properties = new KoreaeximProperties("test-api-key", "http://localhost:8080",
-			"/exchangeJson");
-		client = new KoreaeximClient(webClient, properties);
-
-		WebClient.RequestHeadersUriSpec requestHeadersUriSpec = BDDMockito.mock(WebClient.RequestHeadersUriSpec.class);
-		BDDMockito.given(webClient.get()).willReturn(requestHeadersUriSpec);
-		WebClient.RequestHeadersSpec requestHeadersSpec = BDDMockito.mock(WebClient.RequestHeadersSpec.class);
-		BDDMockito.given(
-				requestHeadersUriSpec.uri(ArgumentMatchers.anyString(), ArgumentMatchers.any(Function.class)))
-			.willReturn(requestHeadersSpec);
+		WebClient webClient = BDDMockito.mock(WebClient.class, Answers.RETURNS_DEEP_STUBS);
 		WebClient.ResponseSpec responseSpec = BDDMockito.mock(WebClient.ResponseSpec.class);
-		BDDMockito.given(requestHeadersSpec.retrieve())
+		BDDMockito.given(
+				webClient.get().uri(ArgumentMatchers.anyString(), ArgumentMatchers.any(Function.class)).retrieve())
 			.willReturn(responseSpec);
+		BDDMockito.given(responseSpec.bodyToFlux(ExchangeJsonResponse.class))
+			.willReturn(Flux.empty());
 		Flux<ExchangeJsonResponse> flux = Flux.just(new ExchangeJsonResponse(1, "KRW", "1"));
 		BDDMockito.given(responseSpec.bodyToFlux(ExchangeJsonResponse.class))
 			.willReturn(flux);
+
+		KoreaeximProperties properties = new KoreaeximProperties("test-api-key", "http://localhost:8080",
+			"/exchangeJson");
+		client = new KoreaeximClient(webClient, properties);
 	}
 
 	@DisplayName("객체 생성")
