@@ -1,5 +1,6 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 import org.assertj.core.api.Assertions;
@@ -62,4 +63,16 @@ class KoreaeximClientTest {
 			.expectComplete()
 			.verify();
 	}
+
+	@DisplayName("BigDecimal 변환 - 쉼표가 포함된 문자열 금액을 BigDecimal로 변환해야 한다")
+	@Test
+	void convertToBigDecimal_whenAmountContainComma_thenReturnBigDecimal() {
+		// given
+		String amount = "1,066.9";
+		// when
+		BigDecimal bigDecimal = new BigDecimal(amount.replace(",", ""));
+		// then
+		Assertions.assertThat(bigDecimal).isEqualTo(BigDecimal.valueOf(1066.9));
+	}
+
 }
