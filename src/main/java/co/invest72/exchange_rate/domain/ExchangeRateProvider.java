@@ -18,5 +18,10 @@ public interface ExchangeRateProvider {
 	 * @return 환율 값(BigDecimal), 존재하지 않을 경우 empty 반환.
 	 */
 	Optional<BigDecimal> getRate(Currency from, Currency to);
+
+	/**
+	 * 환율 정보를 최신 정보롤 업데이트한다.
+	 */
+	void updateRates();
 }
 
