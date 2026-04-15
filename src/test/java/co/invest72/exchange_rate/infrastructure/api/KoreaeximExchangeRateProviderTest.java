@@ -52,4 +52,16 @@ class KoreaeximExchangeRateProviderTest {
 		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won())).isEmpty();
 	}
 
+	@DisplayName("환율 업데이트 - 특정 응답의 result이 0이면 해당 환율을 업데이트하지 않아야 한다")
+	@Test
+	void updateRates_whenResultIsZero_thenNotUpdateExchangeRate() {
+		// given
+		BDDMockito.given(client.exchangeJson())
+			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000")));
+		// when
+		provider.updateRates().blockLast();
+		// then
+		Assertions.assertThat(provider.getRate(Currency.won(), Currency.dollar())).isEmpty();
+		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won())).isEmpty();
+	}
 }
