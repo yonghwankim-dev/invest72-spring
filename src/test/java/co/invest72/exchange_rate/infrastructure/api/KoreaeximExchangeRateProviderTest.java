@@ -15,10 +15,11 @@ import reactor.core.publisher.Flux;
 class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
+	private KoreaeximClient client;
 
 	@BeforeEach
 	void setUp() {
-		KoreaeximClient client = BDDMockito.mock(KoreaeximClient.class);
+		client = BDDMockito.mock(KoreaeximClient.class);
 		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1");
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000");
 		BDDMockito.given(client.exchangeJson())
@@ -36,6 +37,19 @@ class KoreaeximExchangeRateProviderTest {
 			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
 		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won()).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
+	}
+
+	@DisplayName("환율 업데이트 - 응답한 데이터가 비어있으면 저장되지 않는다")
+	@Test
+	void updateRates_whenEmptyFlux_thenReturnEmptyOptional() {
+		// given
+		BDDMockito.given(client.exchangeJson())
+			.willReturn(Flux.empty());
+		// when
+		provider.updateRates().blockLast();
+		// then
+		Assertions.assertThat(provider.getRate(Currency.won(), Currency.dollar())).isEmpty();
+		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won())).isEmpty();
 	}
 
 }
