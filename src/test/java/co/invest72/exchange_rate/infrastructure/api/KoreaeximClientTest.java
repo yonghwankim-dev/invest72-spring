@@ -42,12 +42,6 @@ class KoreaeximClientTest {
 		client = new KoreaeximClient(webClient, properties);
 	}
 
-	@DisplayName("객체 생성")
-	@Test
-	void canCreated() {
-		Assertions.assertThat(client).isNotNull();
-	}
-
 	@DisplayName("환율 조회")
 	@Test
 	void exchangeJson() {
