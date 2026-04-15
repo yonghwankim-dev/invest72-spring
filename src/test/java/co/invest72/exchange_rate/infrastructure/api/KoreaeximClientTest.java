@@ -18,19 +18,18 @@ import reactor.test.StepVerifier;
 class KoreaeximClientTest {
 
 	private KoreaeximClient client;
+	private WebClient.ResponseSpec responseSpec;
 
 	@SuppressWarnings("unchecked")
 	@BeforeEach
 	void setUp() {
 		WebClient webClient = BDDMockito.mock(WebClient.class, Answers.RETURNS_DEEP_STUBS);
-		WebClient.ResponseSpec responseSpec = BDDMockito.mock(WebClient.ResponseSpec.class);
+		responseSpec = BDDMockito.mock(WebClient.ResponseSpec.class);
 		BDDMockito.given(
 				webClient.get()
 					.uri(ArgumentMatchers.anyString(), ArgumentMatchers.any(Function.class))
 					.retrieve())
 			.willReturn(responseSpec);
-		BDDMockito.given(responseSpec.bodyToFlux(ExchangeJsonResponse.class))
-			.willReturn(Flux.empty());
 		Flux<ExchangeJsonResponse> flux = Flux.just(
 			new ExchangeJsonResponse(1, "KRW", "1"),
 			new ExchangeJsonResponse(1, "USD", "1,066.9"));
@@ -57,7 +56,7 @@ class KoreaeximClientTest {
 			.expectComplete()
 			.verify();
 	}
-
+	
 	@DisplayName("BigDecimal 변환 - 쉼표가 포함된 문자열 금액을 BigDecimal로 변환해야 한다")
 	@Test
 	void convertToBigDecimal_whenAmountContainComma_thenReturnBigDecimal() {
