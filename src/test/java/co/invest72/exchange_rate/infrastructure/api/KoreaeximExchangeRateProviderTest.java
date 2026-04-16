@@ -39,6 +39,23 @@ class KoreaeximExchangeRateProviderTest {
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
 	}
 
+	@DisplayName("환율 업데이트 - JPY(100)과 같이 100단위로 오는 경우 환율에는 1단위로 정규화 시켜 저장해야 한다")
+	@Test
+	void updateRates_whenCurrencyUnitContain100_thenOneNormalization() {
+		// given
+		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1");
+		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "JPY(100)", "951.05");
+		BDDMockito.given(client.exchangeJson())
+			.willReturn(Flux.just(response1, response2));
+		// when
+		provider.updateRates().blockLast();
+		// then
+		Assertions.assertThat(provider.getRate(Currency.won(), Currency.from("JPY")).orElseThrow())
+			.isEqualByComparingTo(BigDecimal.valueOf(0.11));
+		Assertions.assertThat(provider.getRate(Currency.from("JPY"), Currency.won()).orElseThrow())
+			.isEqualByComparingTo(BigDecimal.valueOf(9.51));
+	}
+
 	@DisplayName("환율 업데이트 - 응답한 데이터가 비어있으면 저장되지 않는다")
 	@Test
 	void updateRates_whenEmptyFlux_thenReturnEmptyOptional() {

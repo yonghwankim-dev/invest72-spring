@@ -28,7 +28,7 @@ public class KoreaeximClient {
 			.timeout(Duration.ofSeconds(10))
 			.onErrorResume(e -> {
 				log.error("환율 조회 중 오류 발생: {}", e.getMessage());
-				return Flux.empty(); // 에러 발생 시 빈 스트림 반환
+				return Flux.empty();
 			});
 	}
 }

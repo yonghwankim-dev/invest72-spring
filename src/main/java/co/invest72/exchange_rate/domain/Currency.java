@@ -51,7 +51,7 @@ public final class Currency {
 		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
 			return won();
 		}
-		throw new IllegalArgumentException("잘못된 통화 코드(code) 입니다.");
+		return new Currency(normalizedCode, normalizedCode, "Unknown");
 	}
 
 	public static Currency dollar() {

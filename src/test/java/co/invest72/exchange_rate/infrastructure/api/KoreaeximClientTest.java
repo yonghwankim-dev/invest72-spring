@@ -94,7 +94,7 @@ class KoreaeximClientTest {
 			.expectNextCount(0)
 			.verifyComplete();
 	}
-
+	
 	@DisplayName("BigDecimal 변환 - 쉼표가 포함된 문자열 금액을 BigDecimal로 변환해야 한다")
 	@Test
 	void convertToBigDecimal_whenAmountContainComma_thenReturnBigDecimal() {
