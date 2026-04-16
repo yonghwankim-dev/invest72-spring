@@ -45,7 +45,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 				// ex: currencyUnit="USD", dealingBaseRate="1000"
 
 				// 통화 코드 추출
-				String currencyCode = extractCurrencyCode(response.getCurrencyUnit());
+				String currencyCode = extractCurrencyCode(response.getCode());
 				// 저장소에 없으면 API 정보를 바탕으로 새로 생성하여 저장
 				Currency from = currencyRepository.findByCode(currencyCode)
 					.orElseGet(() -> {
@@ -72,7 +72,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 	}
 
 	private BigDecimal parseRate(ExchangeJsonResponse response, BigDecimal rate) {
-		if (response.getCurrencyUnit().contains("(100)")) {
+		if (response.getCode().contains("(100)")) {
 			rate = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_EVEN);
 		}
 		return rate;

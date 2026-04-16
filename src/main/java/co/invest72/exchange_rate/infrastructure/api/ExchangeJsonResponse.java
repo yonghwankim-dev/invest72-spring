@@ -8,13 +8,13 @@ import lombok.Getter;
 @Getter
 public class ExchangeJsonResponse {
 	private final Integer result; // 결과
-	private final String currencyUnit; // 통화코드
+	private final String code; // 통화코드
 	private final BigDecimal dealingBaseRate; // 매매기준율
 	private final String name; // 통화 이름
 
-	public ExchangeJsonResponse(Integer result, String currencyUnit, String dealingBaseRate, String name) {
+	public ExchangeJsonResponse(Integer result, String code, String dealingBaseRate, String name) {
 		this.result = Objects.requireNonNull(result);
-		this.currencyUnit = Objects.requireNonNull(currencyUnit);
+		this.code = Objects.requireNonNull(code);
 		this.dealingBaseRate = new BigDecimal(dealingBaseRate.replace(",", ""));
 		this.name = Objects.requireNonNull(name);
 	}
@@ -25,20 +25,20 @@ public class ExchangeJsonResponse {
 			return true;
 		if (!(o instanceof ExchangeJsonResponse that))
 			return false;
-		return Objects.equals(result, that.result) && Objects.equals(currencyUnit, that.currencyUnit)
+		return Objects.equals(result, that.result) && Objects.equals(code, that.code)
 			&& Objects.equals(dealingBaseRate, that.dealingBaseRate) && Objects.equals(name, that.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(result, currencyUnit, dealingBaseRate, name);
+		return Objects.hash(result, code, dealingBaseRate, name);
 	}
 
 	@Override
 	public String toString() {
 		return "ExchangeJsonResponse{" +
 			"result=" + result +
-			", currencyUnit='" + currencyUnit + '\'' +
+			", currencyUnit='" + code + '\'' +
 			", dealingBaseRate=" + dealingBaseRate +
 			", name='" + name + '\'' +
 			'}';
