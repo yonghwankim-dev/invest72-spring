@@ -37,7 +37,7 @@ class CurrencyTest {
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("잘못된 통화 코드(code) 입니다.");
+			.hasMessage("통화 코드(code)는 빈 문자열일 수 없습니다.");
 	}
 
 	@DisplayName("통화 생성 - 통화 코드는 3자리여야 한다")
@@ -48,7 +48,7 @@ class CurrencyTest {
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("잘못된 통화 코드(code) 입니다.");
+			.hasMessage("통화 코드(code)는 3자리여야 합니다.");
 	}
 
 	@DisplayName("통화 비교 - 동일한 통화 코드를 가진 객체들끼리는 동일한 객체로 간주")

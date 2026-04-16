@@ -50,14 +50,14 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 
 				// 단위 변환(예: JPY(100), IDR(100) 등 100단위로 오는 경우 1단위로 정규화
 				if (response.getCurrencyUnit().contains("(100)")) {
-					rate = rate.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+					rate = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_EVEN);
 				}
 
 				// 캐시 업데이트
 				exchangeRateCache.put(new Pair(from, to), rate);
 
 				// 역방향 환율 업데이트
-				BigDecimal reverseRate = BigDecimal.ONE.divide(rate, 2, RoundingMode.HALF_EVEN);
+				BigDecimal reverseRate = BigDecimal.ONE.divide(rate, 4, RoundingMode.HALF_EVEN);
 				exchangeRateCache.put(new Pair(to, from), reverseRate);
 			});
 	}

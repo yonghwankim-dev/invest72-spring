@@ -51,9 +51,9 @@ class KoreaeximExchangeRateProviderTest {
 		provider.updateRates().blockLast();
 		// then
 		Assertions.assertThat(provider.getRate(Currency.won(), Currency.from("JPY")).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.11));
+			.isEqualByComparingTo(BigDecimal.valueOf(0.1051));
 		Assertions.assertThat(provider.getRate(Currency.from("JPY"), Currency.won()).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(9.51));
+			.isEqualByComparingTo(BigDecimal.valueOf(9.5105));
 	}
 
 	@DisplayName("환율 업데이트 - 응답한 데이터가 비어있으면 저장되지 않는다")

@@ -18,14 +18,11 @@ public final class Currency {
 	private final String name;
 
 	private Currency(String code, String unit, String name) {
-		Objects.requireNonNull(code, "통화 코드(code)는 null일 수 없습니다.");
-		Objects.requireNonNull(unit, "통화 단위(unit)는 null일 수 없습니다.");
-		Objects.requireNonNull(name, "통화 이름(name)는 null일 수 없습니다.");
-		String normalizedCode = code.trim().toUpperCase();
+		String normalizedCode = Objects.requireNonNull(code).trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
-		this.unit = unit;
-		this.name = name;
+		this.unit = Objects.requireNonNull(unit);
+		this.name = Objects.requireNonNull(name);
 	}
 
 	private void validate(String code) {
@@ -41,6 +38,10 @@ public final class Currency {
 		if (normalizedCode.length() != 3) {
 			throw new IllegalArgumentException("통화 코드(code)는 3자리여야 합니다.");
 		}
+	}
+
+	public static Currency of(String code, String unit, String name) {
+		return new Currency(code, unit, name);
 	}
 
 	public static Currency from(String code) {
