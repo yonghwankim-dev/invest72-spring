@@ -50,11 +50,11 @@ public final class Currency {
 	}
 
 	public static Currency dollar() {
-		return new Currency("USD", "달러");
+		return new Currency("USD", "미국 달러");
 	}
 
 	public static Currency won() {
-		return new Currency("KRW", "원화");
+		return new Currency("KRW", "한국 원");
 	}
 
 	@Override
