@@ -16,6 +16,6 @@ public class ProductCurrency {
 	private String name;
 
 	public static ProductCurrency from(Currency currency) {
-		return new ProductCurrency(currency.getCode(), currency.getUnit(), currency.getName());
+		return new ProductCurrency(currency.getCode(), currency.getSymbol(), currency.getName());
 	}
 }

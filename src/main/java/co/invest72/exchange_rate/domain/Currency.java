@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @Getter
 public final class Currency {
 	private final String code;
-	private final String unit;
+	private final String symbol;
 	private final String name;
 
-	private Currency(String code, String unit, String name) {
+	private Currency(String code, String symbol, String name) {
 		String normalizedCode = Objects.requireNonNull(code).trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
-		this.unit = Objects.requireNonNull(unit);
+		this.symbol = Objects.requireNonNull(symbol);
 		this.name = Objects.requireNonNull(name);
 	}
 
@@ -40,8 +40,8 @@ public final class Currency {
 		}
 	}
 
-	public static Currency of(String code, String unit, String name) {
-		return new Currency(code, unit, name);
+	public static Currency of(String code, String symbol, String name) {
+		return new Currency(code, symbol, name);
 	}
 
 	public static Currency from(String code) {

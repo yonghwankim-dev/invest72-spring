@@ -16,6 +16,6 @@ public class InvestmentCurrency {
 	private String name;
 
 	public static InvestmentCurrency from(Currency currency) {
-		return new InvestmentCurrency(currency.getCode(), currency.getUnit(), currency.getName());
+		return new InvestmentCurrency(currency.getCode(), currency.getSymbol(), currency.getName());
 	}
 }
