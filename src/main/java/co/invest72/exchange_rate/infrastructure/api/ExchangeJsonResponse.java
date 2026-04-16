@@ -3,6 +3,9 @@ package co.invest72.exchange_rate.infrastructure.api;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 @Getter
@@ -12,10 +15,15 @@ public class ExchangeJsonResponse {
 	private final BigDecimal dealingBaseRate; // 매매기준율
 	private final String name; // 통화 이름
 
-	public ExchangeJsonResponse(Integer result, String code, String dealingBaseRate, String name) {
+	@JsonCreator
+	public ExchangeJsonResponse(
+		@JsonProperty("result") Integer result,
+		@JsonProperty("cur_unit") String code,
+		@JsonProperty("deal_bas_r") String dealingBaseRate,
+		@JsonProperty("cur_nm") String name) {
 		this.result = Objects.requireNonNull(result);
 		this.code = Objects.requireNonNull(code);
-		this.dealingBaseRate = new BigDecimal(dealingBaseRate.replace(",", ""));
+		this.dealingBaseRate = new BigDecimal(Objects.requireNonNull(dealingBaseRate).replace(",", ""));
 		this.name = Objects.requireNonNull(name);
 	}
 
