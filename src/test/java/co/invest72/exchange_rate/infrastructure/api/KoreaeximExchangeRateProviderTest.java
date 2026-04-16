@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
 import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.exchange_rate.domain.CurrencyRepository;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryCurrencyRepository;
 import reactor.core.publisher.Flux;
 
 class KoreaeximExchangeRateProviderTest {
@@ -20,11 +22,12 @@ class KoreaeximExchangeRateProviderTest {
 	@BeforeEach
 	void setUp() {
 		client = BDDMockito.mock(KoreaeximClient.class);
-		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1");
-		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000");
+		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
+		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
-		provider = new KoreaeximExchangeRateProvider(client);
+		CurrencyRepository currencyRepository = new InMemoryCurrencyRepository();
+		provider = new KoreaeximExchangeRateProvider(client, currencyRepository);
 	}
 
 	@DisplayName("환율 업데이트")
@@ -43,8 +46,8 @@ class KoreaeximExchangeRateProviderTest {
 	@Test
 	void updateRates_whenCurrencyUnitContain100_thenOneNormalization() {
 		// given
-		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1");
-		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "JPY(100)", "951.05");
+		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
+		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "JPY(100)", "951.05", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
 		// when
@@ -74,7 +77,7 @@ class KoreaeximExchangeRateProviderTest {
 	void updateRates_whenResultIsZero_thenNotUpdateExchangeRate() {
 		// given
 		BDDMockito.given(client.exchangeJson())
-			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000")));
+			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러")));
 		// when
 		provider.updateRates().blockLast();
 		// then

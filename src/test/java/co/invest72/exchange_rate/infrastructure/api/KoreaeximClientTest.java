@@ -33,8 +33,8 @@ class KoreaeximClientTest {
 					.retrieve())
 			.willReturn(responseSpec);
 		Flux<ExchangeJsonResponse> flux = Flux.just(
-			new ExchangeJsonResponse(1, "KRW", "1"),
-			new ExchangeJsonResponse(1, "USD", "1,066.9"));
+			new ExchangeJsonResponse(1, "KRW", "1", "한국 원"),
+			new ExchangeJsonResponse(1, "USD", "1,066.9", "미국 달러"));
 		BDDMockito.given(responseSpec.bodyToFlux(ExchangeJsonResponse.class))
 			.willReturn(flux);
 
@@ -50,8 +50,8 @@ class KoreaeximClientTest {
 		Flux<ExchangeJsonResponse> flux = client.exchangeJson();
 
 		// then
-		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1");
-		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,066.9");
+		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
+		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,066.9", "미국 달러");
 		StepVerifier.create(flux)
 			.expectNext(response1)
 			.expectNext(response2)
@@ -94,7 +94,7 @@ class KoreaeximClientTest {
 			.expectNextCount(0)
 			.verifyComplete();
 	}
-	
+
 	@DisplayName("BigDecimal 변환 - 쉼표가 포함된 문자열 금액을 BigDecimal로 변환해야 한다")
 	@Test
 	void convertToBigDecimal_whenAmountContainComma_thenReturnBigDecimal() {
