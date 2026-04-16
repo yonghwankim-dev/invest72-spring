@@ -1,6 +1,7 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
 import java.time.Duration;
+import java.util.Objects;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,8 +14,8 @@ public class KoreaeximClient {
 	private final KoreaeximProperties properties;
 
 	public KoreaeximClient(WebClient webClient, KoreaeximProperties properties) {
-		this.webClient = webClient;
-		this.properties = properties;
+		this.webClient = Objects.requireNonNull(webClient);
+		this.properties = Objects.requireNonNull(properties);
 	}
 
 	public Flux<ExchangeJsonResponse> exchangeJson() {
