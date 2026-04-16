@@ -24,10 +24,6 @@ public final class Currency {
 	}
 
 	private void validate(String code) {
-		if (code == null) {
-			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
-		}
-
 		String normalizedCode = code.trim().toUpperCase();
 		if (normalizedCode.isEmpty()) {
 			throw new IllegalArgumentException("통화 코드(code)는 빈 문자열일 수 없습니다.");
