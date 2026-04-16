@@ -44,9 +44,6 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 				// response.dealingBaseRate = 1외화 단위당 원화(KRW) 가치
 				// ex: currencyUnit="USD", dealingBaseRate="1000"
 
-				// 환율 문자열 파싱
-				BigDecimal rate = response.getDealingBaseRate();
-
 				// 통화 코드 추출
 				String currencyCode = extractCurrencyCode(response.getCurrencyUnit());
 				// 저장소에 없으면 API 정보를 바탕으로 새로 생성하여 저장
@@ -59,7 +56,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 				Currency to = Currency.won();
 
 				// 단위 변환(예: JPY(100), IDR(100) 등 100단위로 오는 경우 1단위로 정규화
-				rate = parseRate(response, rate);
+				BigDecimal rate = parseRate(response, response.getDealingBaseRate());
 
 				// 캐시 업데이트
 				exchangeRateCache.put(new Pair(from, to), rate);
