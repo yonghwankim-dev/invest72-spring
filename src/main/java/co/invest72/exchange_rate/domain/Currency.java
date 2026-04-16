@@ -2,15 +2,12 @@ package co.invest72.exchange_rate.domain;
 
 import java.util.Objects;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * 통화 단위를 나타내는 클래스입니다. ISO 4217 통화 코드를 사용하여 통화를 표현합니다.
  * 예를 들어, "USD"는 미국 달러, "KRW"는 한국 원화를 나타냅니다.
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 public final class Currency {
 	private final String code;

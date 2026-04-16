@@ -19,11 +19,11 @@ public class ExchangeRate {
 	@Column(name = "currency_name", nullable = false)
 	private String currencyName; // 통화명
 	@Column(name = "basic_rate_of_exchange", nullable = false)
-	private BigDecimal BasicRateOfExchange; // 매매기준율
+	private BigDecimal basicRateOfExchange; // 매매기준율
 
 	public ExchangeRate(String currencyCode, String currencyName, BigDecimal basicRateOfExchange) {
 		this.currencyCode = Objects.requireNonNull(currencyCode);
 		this.currencyName = Objects.requireNonNull(currencyName);
-		this.BasicRateOfExchange = Objects.requireNonNull(basicRateOfExchange);
+		this.basicRateOfExchange = Objects.requireNonNull(basicRateOfExchange);
 	}
 }
