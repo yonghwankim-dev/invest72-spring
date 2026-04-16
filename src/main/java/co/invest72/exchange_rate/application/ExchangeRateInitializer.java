@@ -17,6 +17,10 @@ public class ExchangeRateInitializer {
 	@EventListener(ApplicationReadyEvent.class)
 	public void init() {
 		log.info("애플리케이션 시작: 초기 환율 데이터를 로드합니다.");
-		provider.updateRates().subscribe();
+		provider.updateRates()
+			.subscribe(
+				response -> log.info("환율 업데이트 성공 : {}", response.getCode()),
+				error -> log.error("환율 업데이트 실패", error),
+				() -> log.info("모든 환율 업데이트 완료"));
 	}
 }
