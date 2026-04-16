@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
 import co.invest72.exchange_rate.domain.Currency;
-import co.invest72.exchange_rate.domain.CurrencyRepository;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryCurrencyRepository;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import reactor.core.publisher.Flux;
 
 class KoreaeximExchangeRateProviderTest {
@@ -26,8 +26,8 @@ class KoreaeximExchangeRateProviderTest {
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
-		CurrencyRepository currencyRepository = new InMemoryCurrencyRepository();
-		provider = new KoreaeximExchangeRateProvider(client, currencyRepository);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		provider = new KoreaeximExchangeRateProvider(client, exchangeRateRepository);
 	}
 
 	@DisplayName("환율 업데이트")

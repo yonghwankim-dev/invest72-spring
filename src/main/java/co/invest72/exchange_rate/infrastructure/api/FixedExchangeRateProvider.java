@@ -33,6 +33,11 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 	@Override
 	public Flux<ExchangeJsonResponse> updateRates() {
 		log.info("FixedExchangeRateProvider: 고정 환율 모드이므로 업데이트를 생략합니다.");
-		return Flux.empty();
+		Currency won = Currency.won();
+		Currency dollar = Currency.dollar();
+		return Flux.just(
+			new ExchangeJsonResponse(1, won.getCode(), "1", won.getName()),
+			new ExchangeJsonResponse(1, dollar.getCode(), "1000", dollar.getName())
+		);
 	}
 }

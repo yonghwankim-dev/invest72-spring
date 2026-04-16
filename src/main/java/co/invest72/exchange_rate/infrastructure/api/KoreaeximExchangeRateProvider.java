@@ -8,8 +8,9 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.invest72.exchange_rate.domain.Currency;
-import co.invest72.exchange_rate.domain.CurrencyRepository;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.money.domain.Pair;
 import reactor.core.publisher.Flux;
 
@@ -18,12 +19,12 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 
 	// 최신 환율 정보를 메모리에 캐싱(Key: 통화코드, Value: 환율)
 	private final Map<Pair, BigDecimal> exchangeRateCache;
-	private final CurrencyRepository currencyRepository;
+	private final ExchangeRateRepository exchangeRateRepository;
 
-	public KoreaeximExchangeRateProvider(KoreaeximClient client, CurrencyRepository currencyRepository) {
+	public KoreaeximExchangeRateProvider(KoreaeximClient client, ExchangeRateRepository exchangeRateRepository) {
 		this.client = Objects.requireNonNull(client);
 		this.exchangeRateCache = new ConcurrentHashMap<>();
-		this.currencyRepository = Objects.requireNonNull(currencyRepository);
+		this.exchangeRateRepository = Objects.requireNonNull(exchangeRateRepository);
 	}
 
 	@Override
@@ -44,19 +45,22 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 				// response.dealingBaseRate = 1외화 단위당 원화(KRW) 가치
 				// ex: currencyUnit="USD", dealingBaseRate="1000"
 
+				// 단위 변환(예: JPY(100), IDR(100) 등 100단위로 오는 경우 1단위로 정규화
+				BigDecimal rate = parseRate(response, response.getDealingBaseRate());
+
 				// 통화 코드 추출
 				String currencyCode = extractCurrencyCode(response.getCode());
 				// 저장소에 없으면 API 정보를 바탕으로 새로 생성하여 저장
-				Currency from = currencyRepository.findByCode(currencyCode)
+				ExchangeRate fromExchangeRate = exchangeRateRepository.findByCode(currencyCode)
 					.orElseGet(() -> {
 						Currency newCurrency = Currency.of(currencyCode, response.getName());
-						currencyRepository.save(newCurrency);
-						return newCurrency;
+						ExchangeRate exchangeRate = new ExchangeRate(newCurrency.getCode(), newCurrency.getName(),
+							rate);
+						exchangeRateRepository.save(exchangeRate);
+						return exchangeRate;
 					});
+				Currency from = Currency.of(fromExchangeRate.getCurrencyCode(), fromExchangeRate.getCurrencyName());
 				Currency to = Currency.won();
-
-				// 단위 변환(예: JPY(100), IDR(100) 등 100단위로 오는 경우 1단위로 정규화
-				BigDecimal rate = parseRate(response, response.getDealingBaseRate());
 
 				// 캐시 업데이트
 				exchangeRateCache.put(new Pair(from, to), rate);
