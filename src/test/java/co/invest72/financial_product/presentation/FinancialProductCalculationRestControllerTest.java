@@ -102,7 +102,6 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -142,7 +141,6 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -181,7 +179,6 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -209,7 +206,6 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -237,7 +233,6 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}

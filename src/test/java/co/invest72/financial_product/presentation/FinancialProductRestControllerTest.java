@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.IdGenerator;
@@ -38,7 +39,6 @@ import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import co.invest72.user.infrastructure.UserIdGenerator;
@@ -287,7 +287,6 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.progress").value(1.0))
 			.andExpect(jsonPath("$.remainingDays").value(0))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
@@ -320,7 +319,6 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.progress").value(0.16))
 			.andExpect(jsonPath("$.remainingDays").value(308))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 
 	}
@@ -356,7 +354,6 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.remainingDays").value(308))
 			.andExpect(jsonPath("$.paymentDay").value(15))
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
-			.andExpect(jsonPath("$.productCurrency.unit").value(productCurrency.getUnit()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()));
 	}
 
@@ -825,11 +822,9 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser)))
 			.andExpect(jsonPath("$.totalBalance.amount").value(1_004_000_000))
 			.andExpect(jsonPath("$.totalBalance.currency.code").value(currency.getCode()))
-			.andExpect(jsonPath("$.totalBalance.currency.unit").value(currency.getUnit()))
 			.andExpect(jsonPath("$.totalBalance.currency.name").value(currency.getName()))
 			.andExpect(jsonPath("$.totalEstimatedInterest.amount").value(375_000))
 			.andExpect(jsonPath("$.totalEstimatedInterest.currency.code").value(currency.getCode()))
-			.andExpect(jsonPath("$.totalEstimatedInterest.currency.unit").value(currency.getUnit()))
 			.andExpect(jsonPath("$.totalEstimatedInterest.currency.name").value(currency.getName()))
 			.andExpect(status().isOk());
 	}

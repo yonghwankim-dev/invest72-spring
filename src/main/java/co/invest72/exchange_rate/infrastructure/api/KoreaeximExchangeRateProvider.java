@@ -49,7 +49,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 				// 저장소에 없으면 API 정보를 바탕으로 새로 생성하여 저장
 				Currency from = currencyRepository.findByCode(currencyCode)
 					.orElseGet(() -> {
-						Currency newCurrency = Currency.of(currencyCode, currencyCode, response.getName());
+						Currency newCurrency = Currency.of(currencyCode, response.getName());
 						currencyRepository.save(newCurrency);
 						return newCurrency;
 					});

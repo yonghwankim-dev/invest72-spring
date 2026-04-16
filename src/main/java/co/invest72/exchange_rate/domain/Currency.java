@@ -14,14 +14,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public final class Currency {
 	private final String code;
-	private final String symbol;
 	private final String name;
 
-	private Currency(String code, String symbol, String name) {
+	private Currency(String code, String name) {
 		String normalizedCode = Objects.requireNonNull(code).trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
-		this.symbol = Objects.requireNonNull(symbol);
 		this.name = Objects.requireNonNull(name);
 	}
 
@@ -40,8 +38,8 @@ public final class Currency {
 		}
 	}
 
-	public static Currency of(String code, String symbol, String name) {
-		return new Currency(code, symbol, name);
+	public static Currency of(String code, String name) {
+		return new Currency(code, name);
 	}
 
 	public static Currency from(String code) {
@@ -52,15 +50,15 @@ public final class Currency {
 		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
 			return won();
 		}
-		return new Currency(normalizedCode, normalizedCode, "Unknown");
+		return new Currency(normalizedCode, "Unknown");
 	}
 
 	public static Currency dollar() {
-		return new Currency("USD", "$", "달러");
+		return new Currency("USD", "달러");
 	}
 
 	public static Currency won() {
-		return new Currency("KRW", "₩", "원화");
+		return new Currency("KRW", "원화");
 	}
 
 	@Override

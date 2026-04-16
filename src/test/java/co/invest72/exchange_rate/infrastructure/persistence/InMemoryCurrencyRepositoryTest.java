@@ -34,7 +34,7 @@ class InMemoryCurrencyRepositoryTest {
 	@Test
 	void findByCode() {
 		// given
-		Currency jpy = Currency.of("JPY", "¥", "엔화");
+		Currency jpy = Currency.of("JPY", "엔화");
 		// when
 		repository.save(jpy);
 
@@ -45,7 +45,7 @@ class InMemoryCurrencyRepositoryTest {
 	@Test
 	void findAll() {
 		// given
-		Currency jpy = Currency.of("JPY", "¥", "엔화");
+		Currency jpy = Currency.of("JPY", "엔화");
 		repository.save(jpy);
 		// when
 		List<Currency> currencies = repository.findAll();
