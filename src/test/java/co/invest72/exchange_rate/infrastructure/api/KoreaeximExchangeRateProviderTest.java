@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
+import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -29,7 +30,9 @@ class KoreaeximExchangeRateProviderTest {
 			.willReturn(Flux.just(response1, response2));
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService();
-		provider = new KoreaeximExchangeRateProvider(client, exchangeRateRepository, exchangeRateService);
+		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService,
+			exchangeRateRepository);
+		provider = new KoreaeximExchangeRateProvider(client, exchangeRateService, exchangeRateUpdateHandler);
 	}
 
 	@DisplayName("환율 업데이트")
