@@ -17,9 +17,9 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-class KoreaeximClientTest {
+class RealKoreaeximClientTest {
 
-	private KoreaeximClient client;
+	private RealKoreaeximClient client;
 	private WebClient.ResponseSpec responseSpec;
 
 	@SuppressWarnings("unchecked")
@@ -40,7 +40,7 @@ class KoreaeximClientTest {
 
 		KoreaeximProperties properties = new KoreaeximProperties("test-api-key", "http://localhost:8080",
 			"/exchangeJson");
-		client = new KoreaeximClient(webClient, properties);
+		client = new RealKoreaeximClient(webClient, properties);
 	}
 
 	@DisplayName("환율 조회")

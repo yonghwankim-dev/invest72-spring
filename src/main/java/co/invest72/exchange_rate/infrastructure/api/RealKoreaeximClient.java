@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 
 @Slf4j
-public class KoreaeximClient {
+public class RealKoreaeximClient {
 	private final WebClient webClient;
 	private final KoreaeximProperties properties;
 
-	public KoreaeximClient(WebClient webClient, KoreaeximProperties properties) {
+	public RealKoreaeximClient(WebClient webClient, KoreaeximProperties properties) {
 		this.webClient = Objects.requireNonNull(webClient);
 		this.properties = Objects.requireNonNull(properties);
 	}

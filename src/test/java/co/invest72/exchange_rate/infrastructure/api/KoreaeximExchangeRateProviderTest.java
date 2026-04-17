@@ -20,12 +20,12 @@ import reactor.core.publisher.Flux;
 class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
-	private KoreaeximClient client;
+	private RealKoreaeximClient client;
 	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
-		client = BDDMockito.mock(KoreaeximClient.class);
+		client = BDDMockito.mock(RealKoreaeximClient.class);
 		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())

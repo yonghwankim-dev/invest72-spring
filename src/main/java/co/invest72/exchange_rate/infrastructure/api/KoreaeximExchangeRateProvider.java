@@ -9,10 +9,11 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
-	private final KoreaeximClient client;
+	private final RealKoreaeximClient client;
 	private final ExchangeRateUpdateHandler exchangeRateUpdateHandler;
 
-	public KoreaeximExchangeRateProvider(KoreaeximClient client, ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
+	public KoreaeximExchangeRateProvider(RealKoreaeximClient client,
+		ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
 		this.client = Objects.requireNonNull(client);
 		this.exchangeRateUpdateHandler = Objects.requireNonNull(exchangeRateUpdateHandler);
 	}
