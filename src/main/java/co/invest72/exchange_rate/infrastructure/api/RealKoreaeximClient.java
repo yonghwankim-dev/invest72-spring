@@ -5,11 +5,12 @@ import java.util.Objects;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
+import co.invest72.exchange_rate.domain.KoreaeximClient;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 
 @Slf4j
-public class RealKoreaeximClient {
+public class RealKoreaeximClient implements KoreaeximClient {
 	private final WebClient webClient;
 	private final KoreaeximProperties properties;
 

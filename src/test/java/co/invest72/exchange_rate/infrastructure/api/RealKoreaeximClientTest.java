@@ -14,12 +14,13 @@ import org.mockito.BDDMockito;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import co.invest72.exchange_rate.domain.KoreaeximClient;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 class RealKoreaeximClientTest {
 
-	private RealKoreaeximClient client;
+	private KoreaeximClient client;
 	private WebClient.ResponseSpec responseSpec;
 
 	@SuppressWarnings("unchecked")
