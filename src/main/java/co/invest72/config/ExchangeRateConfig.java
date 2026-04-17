@@ -21,6 +21,7 @@ public class ExchangeRateConfig {
 	}
 
 	@Bean
+	@Profile(value = "test")
 	public ExchangeRateRepository exchangeRateRepository() {
 		return new InMemoryExchangeRateRepository();
 	}
