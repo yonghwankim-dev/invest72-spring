@@ -5,7 +5,6 @@ import java.util.Objects;
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
-import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,12 +12,9 @@ import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 public class FixedExchangeRateProvider implements ExchangeRateProvider {
-	private final ExchangeRateService exchangeRateService;
 	private final ExchangeRateUpdateHandler exchangeRateUpdateHandler;
 
-	public FixedExchangeRateProvider(ExchangeRateService exchangeRateService,
-		ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
-		this.exchangeRateService = Objects.requireNonNull(exchangeRateService);
+	public FixedExchangeRateProvider(ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
 		this.exchangeRateUpdateHandler = Objects.requireNonNull(exchangeRateUpdateHandler);
 	}
 

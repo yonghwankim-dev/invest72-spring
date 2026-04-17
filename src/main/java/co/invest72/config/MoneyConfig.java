@@ -18,8 +18,7 @@ public class MoneyConfig {
 
 	@Bean
 	@Profile(value = {"local", "test"})
-	public FixedExchangeRateProvider fixedExchangeRateProvider(ExchangeRateService exchangeRateService,
-		ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
-		return new FixedExchangeRateProvider(exchangeRateService, exchangeRateUpdateHandler);
+	public FixedExchangeRateProvider fixedExchangeRateProvider(ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
+		return new FixedExchangeRateProvider(exchangeRateUpdateHandler);
 	}
 }
