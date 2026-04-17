@@ -49,7 +49,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 		Currency to = Currency.won();
 
 		// 2. 캐시 업데이트 (도메인 모델 기반)
-		exchangeRateService.updateRate(from, to, rate);
+		exchangeRateService.saveRate(from, to, rate);
 
 		// 3. DB 업데이트 (Persistence 모델)
 		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);

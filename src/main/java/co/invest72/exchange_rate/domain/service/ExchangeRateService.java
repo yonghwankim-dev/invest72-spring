@@ -12,7 +12,7 @@ import co.invest72.money.domain.Pair;
 public class ExchangeRateService {
 	private final Map<Pair, BigDecimal> exchangeRateCache = new ConcurrentHashMap<>();
 
-	public void updateRate(Currency from, Currency to, BigDecimal rate) {
+	public void saveRate(Currency from, Currency to, BigDecimal rate) {
 		// 정방향 저장
 		exchangeRateCache.put(new Pair(from, to), rate);
 
