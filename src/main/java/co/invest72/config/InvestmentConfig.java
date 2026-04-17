@@ -1,4 +1,4 @@
-package co.invest72.investment.config;
+package co.invest72.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

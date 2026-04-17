@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.Currency;
-import co.invest72.money.domain.Pair;
+import co.invest72.money.domain.CurrencyPair;
 
 class ExchangeRateServiceTest {
 
@@ -29,9 +29,9 @@ class ExchangeRateServiceTest {
 		// when
 		service.saveRate(from, to, rate);
 		// then
-		Assertions.assertThat(service.getRate(new Pair(from, to)).orElseThrow())
+		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
-		Assertions.assertThat(service.getRate(new Pair(to, from)).orElseThrow())
+		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
 	}
 
@@ -45,9 +45,9 @@ class ExchangeRateServiceTest {
 		// when
 		service.saveRate(from, to, rate);
 		// then
-		Assertions.assertThat(service.getRate(new Pair(from, to)).orElseThrow())
+		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.ZERO);
-		Assertions.assertThat(service.getRate(new Pair(to, from))).isEmpty();
+		Assertions.assertThat(service.getRate(new CurrencyPair(to, from))).isEmpty();
 	}
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
@@ -58,7 +58,7 @@ class ExchangeRateServiceTest {
 		Currency to = Currency.dollar();
 		service.saveRate(from, to, BigDecimal.valueOf(0.001));
 		// when
-		BigDecimal rate = service.getRate(new Pair(from, to)).orElseThrow();
+		BigDecimal rate = service.getRate(new CurrencyPair(from, to)).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualByComparingTo(BigDecimal.valueOf(0.001));
 	}
@@ -69,7 +69,7 @@ class ExchangeRateServiceTest {
 		// given
 		Currency won = Currency.won();
 		// when
-		BigDecimal rate = service.getRate(new Pair(won, won)).orElseThrow();
+		BigDecimal rate = service.getRate(new CurrencyPair(won, won)).orElseThrow();
 		// then
 		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
 	}

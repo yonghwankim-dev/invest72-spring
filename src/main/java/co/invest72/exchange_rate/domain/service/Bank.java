@@ -3,8 +3,8 @@ package co.invest72.exchange_rate.domain.service;
 import java.math.BigDecimal;
 
 import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.CurrencyPair;
 import co.invest72.money.domain.Money;
-import co.invest72.money.domain.Pair;
 
 public class Bank {
 
@@ -21,7 +21,7 @@ public class Bank {
 	 * @return 환전된 금액
 	 */
 	public Money reduce(Money money, Currency target) {
-		BigDecimal rate = exchangeRateService.getRate(new Pair(money.getCurrency(), target))
+		BigDecimal rate = exchangeRateService.getRate(new CurrencyPair(money.getCurrency(), target))
 			.orElseThrow(() -> new IllegalArgumentException("undefined rate, " + money.getCurrency() + "->" + target));
 		return money.reduce(target, rate);
 	}
