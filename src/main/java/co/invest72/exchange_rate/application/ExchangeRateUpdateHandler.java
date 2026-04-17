@@ -52,7 +52,7 @@ public class ExchangeRateUpdateHandler {
 		BigDecimal rate = response.getDealingBaseRate();
 		if (response.getCode().contains("(100)")) {
 			// TODO: change scale to 10 and add test case
-			rate = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_EVEN);
+			rate = rate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN);
 		}
 		return rate;
 	}
