@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
-import co.invest72.money.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.CurrencyPair;
 import reactor.core.publisher.Flux;
 
@@ -65,7 +65,7 @@ class KoreaeximExchangeRateProviderTest {
 		// then
 		Assertions.assertThat(
 				exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.1051));
+			.isEqualByComparingTo(BigDecimal.valueOf(0.1051469429));
 		Assertions.assertThat(
 				exchangeRateService.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(9.5105));
