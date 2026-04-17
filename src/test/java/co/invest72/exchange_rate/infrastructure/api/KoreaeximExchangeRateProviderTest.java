@@ -11,6 +11,7 @@ import org.mockito.BDDMockito;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import reactor.core.publisher.Flux;
 
@@ -27,7 +28,8 @@ class KoreaeximExchangeRateProviderTest {
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		provider = new KoreaeximExchangeRateProvider(client, exchangeRateRepository);
+		ExchangeRateService exchangeRateService = new ExchangeRateService();
+		provider = new KoreaeximExchangeRateProvider(client, exchangeRateRepository, exchangeRateService);
 	}
 
 	@DisplayName("환율 업데이트")
