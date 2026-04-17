@@ -18,7 +18,7 @@ public class ExchangeRateService {
 
 		// 역방향 저장
 		if (isPositiveRate(rate)) {
-			BigDecimal reverseRate = BigDecimal.ONE.divide(rate, 4, RoundingMode.HALF_EVEN);
+			BigDecimal reverseRate = BigDecimal.ONE.divide(rate, 10, RoundingMode.HALF_EVEN);
 			exchangeRateCache.put(new CurrencyPair(to, from), reverseRate);
 		}
 	}

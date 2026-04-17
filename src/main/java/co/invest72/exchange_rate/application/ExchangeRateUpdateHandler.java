@@ -7,11 +7,11 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.invest72.money.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.api.ExchangeJsonResponse;
+import co.invest72.money.domain.Currency;
 
 @Service
 public class ExchangeRateUpdateHandler {
@@ -51,6 +51,7 @@ public class ExchangeRateUpdateHandler {
 	private BigDecimal parseRate(ExchangeJsonResponse response) {
 		BigDecimal rate = response.getDealingBaseRate();
 		if (response.getCode().contains("(100)")) {
+			// TODO: change scale to 10 and add test case
 			rate = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_EVEN);
 		}
 		return rate;

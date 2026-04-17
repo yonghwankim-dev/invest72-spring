@@ -1,6 +1,7 @@
 package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,28 @@ class ExchangeRateServiceTest {
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
 		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
+	}
+
+	@DisplayName("환율 저장 - 원달러 환율이 1300원인 경우에 100만원은 769.23달러여야 한다")
+	@Test
+	void save_whenScaleIs4() {
+		// given
+		Currency from = Currency.dollar();
+		Currency to = Currency.won();
+		BigDecimal rate = BigDecimal.valueOf(1300);
+		// when
+		service.saveRate(from, to, rate);
+		// then
+		// 100만원 * (1/1300)원 = 769.23
+		BigDecimal reverseRate = service.getRate(new CurrencyPair(to, from)).orElseThrow();
+		BigDecimal sourceAmount = BigDecimal.valueOf(1_000_000);
+		BigDecimal dollarResult = sourceAmount.multiply(reverseRate).setScale(2, RoundingMode.HALF_EVEN);
+		Assertions.assertThat(dollarResult).isEqualByComparingTo(BigDecimal.valueOf(769.23));
+
+		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
+			.isEqualByComparingTo(BigDecimal.valueOf(1300));
+		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
+			.isEqualByComparingTo(BigDecimal.valueOf(0.0007692308));
 	}
 
 	@DisplayName("환율 저장 - 환율이 양수가 아니면 역방향 환율이 저장되지 않는다")
