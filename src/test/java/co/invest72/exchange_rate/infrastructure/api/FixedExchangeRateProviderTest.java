@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -21,7 +22,9 @@ class FixedExchangeRateProviderTest {
 	void setUp() {
 		ExchangeRateService exchangeRateService = new ExchangeRateService();
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateProvider = new FixedExchangeRateProvider(exchangeRateService, exchangeRateRepository);
+		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService,
+			exchangeRateRepository);
+		exchangeRateProvider = new FixedExchangeRateProvider(exchangeRateService, exchangeRateUpdateHandler);
 		exchangeRateProvider.updateRates().blockLast();
 	}
 
