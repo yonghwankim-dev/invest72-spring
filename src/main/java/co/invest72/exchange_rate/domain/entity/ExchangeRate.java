@@ -26,4 +26,27 @@ public class ExchangeRate {
 		this.currencyName = Objects.requireNonNull(currencyName);
 		this.basicRateOfExchange = Objects.requireNonNull(basicRateOfExchange);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof ExchangeRate that))
+			return false;
+		return Objects.equals(currencyCode, that.currencyCode);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(currencyCode);
+	}
+
+	@Override
+	public String toString() {
+		return "ExchangeRate{" +
+			"currencyCode='" + currencyCode + '\'' +
+			", currencyName='" + currencyName + '\'' +
+			", basicRateOfExchange=" + basicRateOfExchange +
+			'}';
+	}
 }
