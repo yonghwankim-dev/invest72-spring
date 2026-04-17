@@ -3,6 +3,7 @@ package co.invest72.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -11,6 +12,9 @@ import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import co.invest72.exchange_rate.infrastructure.api.FixedKoreaeximClient;
+import co.invest72.exchange_rate.infrastructure.api.KoreaeximExchangeRateProvider;
+import co.invest72.exchange_rate.infrastructure.api.KoreaeximProperties;
+import co.invest72.exchange_rate.infrastructure.api.RealKoreaeximClient;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 
 @Configuration
@@ -33,8 +37,17 @@ public class ExchangeRateConfig {
 
 	@Bean
 	@Profile(value = {"local", "test"})
-	public KoreaeximClient koreaeximClient() {
+	public FixedKoreaeximClient koreaeximClient() {
 		return new FixedKoreaeximClient();
+	}
+
+	@Bean
+	@Profile(value = {"production"})
+	public RealKoreaeximClient realKoreaeximClient(KoreaeximProperties properties) {
+		WebClient webClient = WebClient.builder()
+			.baseUrl(properties.getBaseUri())
+			.build();
+		return new RealKoreaeximClient(webClient, properties);
 	}
 
 	@Bean
@@ -42,5 +55,12 @@ public class ExchangeRateConfig {
 	public FixedExchangeRateProvider fixedExchangeRateProvider(KoreaeximClient koreaeximClient,
 		ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
 		return new FixedExchangeRateProvider(koreaeximClient, exchangeRateUpdateHandler);
+	}
+
+	@Bean
+	@Profile(value = {"production"})
+	public KoreaeximExchangeRateProvider koreaeximExchangeRateProvider(KoreaeximClient koreaeximClient,
+		ExchangeRateUpdateHandler handler) {
+		return new KoreaeximExchangeRateProvider(koreaeximClient, handler);
 	}
 }
