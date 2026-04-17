@@ -12,6 +12,7 @@ import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.KoreaeximClient;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.money.domain.Pair;
@@ -20,12 +21,12 @@ import reactor.core.publisher.Flux;
 class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
-	private RealKoreaeximClient client;
+	private KoreaeximClient client;
 	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
-		client = BDDMockito.mock(RealKoreaeximClient.class);
+		client = BDDMockito.mock(KoreaeximClient.class);
 		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
