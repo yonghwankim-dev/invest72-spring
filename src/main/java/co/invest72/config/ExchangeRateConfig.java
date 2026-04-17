@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
+import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import co.invest72.exchange_rate.infrastructure.api.FixedKoreaeximClient;
@@ -14,6 +15,11 @@ import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRate
 
 @Configuration
 public class ExchangeRateConfig {
+	@Bean
+	public Bank bank(ExchangeRateService exchangeRateService) {
+		return new Bank(exchangeRateService);
+	}
+
 	@Bean
 	public ExchangeRateRepository exchangeRateRepository() {
 		return new InMemoryExchangeRateRepository();
