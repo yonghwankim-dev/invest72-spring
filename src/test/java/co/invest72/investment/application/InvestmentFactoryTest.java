@@ -25,7 +25,7 @@ import co.invest72.investment.domain.investment.FixedSaving;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 

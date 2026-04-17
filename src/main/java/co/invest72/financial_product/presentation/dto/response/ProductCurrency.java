@@ -1,6 +1,6 @@
 package co.invest72.financial_product.presentation.dto.response;
 
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

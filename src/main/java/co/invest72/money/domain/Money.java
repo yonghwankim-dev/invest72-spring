@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 
-import co.invest72.exchange_rate.domain.Currency;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 

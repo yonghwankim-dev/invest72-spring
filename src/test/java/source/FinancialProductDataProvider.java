@@ -18,7 +18,7 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 
 public class FinancialProductDataProvider {
 	public static FinancialProduct createCashProduct(String userId) {

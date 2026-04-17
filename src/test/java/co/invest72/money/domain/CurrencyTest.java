@@ -4,8 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.exchange_rate.domain.Currency;
-
 class CurrencyTest {
 
 	@DisplayName("통화 객체 생성 - 원화 생성")

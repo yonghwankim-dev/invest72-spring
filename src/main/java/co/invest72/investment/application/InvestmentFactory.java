@@ -41,7 +41,7 @@ import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.investment.domain.tax.resolver.KoreanStringBasedTaxableResolver;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class InvestmentFactory {

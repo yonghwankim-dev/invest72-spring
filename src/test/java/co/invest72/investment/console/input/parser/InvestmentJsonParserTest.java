@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.investment.domain.amount.AmountType;
 import co.invest72.investment.presentation.request.CalculateInvestmentRequest;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 
 class InvestmentJsonParserTest {
 

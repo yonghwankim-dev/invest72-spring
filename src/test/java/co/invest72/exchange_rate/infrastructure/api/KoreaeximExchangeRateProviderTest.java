@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.KoreaeximClient;

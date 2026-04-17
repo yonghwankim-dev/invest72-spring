@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
 import lombok.Getter;

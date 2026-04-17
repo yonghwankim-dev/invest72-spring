@@ -2,7 +2,7 @@ package co.invest72.exchange_rate.infrastructure.api;
 
 import java.util.List;
 
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;

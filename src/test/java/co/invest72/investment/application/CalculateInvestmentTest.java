@@ -21,7 +21,7 @@ import co.invest72.investment.presentation.response.CalculateMonthlyInvestmentRe
 import co.invest72.investment.presentation.response.CalculateYearlyInvestmentResponse;
 import co.invest72.investment.presentation.response.MonthlyInvestmentResult;
 import co.invest72.investment.presentation.response.YearlyInvestmentResult;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.infrastructure.MoneyMapper;
 
 class CalculateInvestmentTest {

@@ -3,7 +3,7 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

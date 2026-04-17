@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.investment.domain.amount.AmountType;
-import co.invest72.exchange_rate.domain.Currency;
+import co.invest72.money.domain.Currency;
 
 class CalculateInvestmentRequestTest {
 
