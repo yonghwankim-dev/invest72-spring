@@ -14,12 +14,14 @@ import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
+import co.invest72.money.domain.Pair;
 import reactor.core.publisher.Flux;
 
 class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
 	private KoreaeximClient client;
+	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
@@ -29,10 +31,10 @@ class KoreaeximExchangeRateProviderTest {
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService();
+		exchangeRateService = new ExchangeRateService();
 		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService,
 			exchangeRateRepository);
-		provider = new KoreaeximExchangeRateProvider(client, exchangeRateService, exchangeRateUpdateHandler);
+		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
 	}
 
 	@DisplayName("환율 업데이트")
@@ -41,9 +43,9 @@ class KoreaeximExchangeRateProviderTest {
 		// when
 		provider.updateRates().blockLast();
 		// then
-		Assertions.assertThat(provider.getRate(Currency.won(), Currency.dollar()).orElseThrow())
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.won(), Currency.dollar())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
-		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won()).orElseThrow())
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.dollar(), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
 	}
 
@@ -58,9 +60,9 @@ class KoreaeximExchangeRateProviderTest {
 		// when
 		provider.updateRates().blockLast();
 		// then
-		Assertions.assertThat(provider.getRate(Currency.won(), Currency.from("JPY")).orElseThrow())
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.won(), Currency.from("JPY"))).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(0.1051));
-		Assertions.assertThat(provider.getRate(Currency.from("JPY"), Currency.won()).orElseThrow())
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.from("JPY"), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(9.5105));
 	}
 
@@ -73,8 +75,8 @@ class KoreaeximExchangeRateProviderTest {
 		// when
 		provider.updateRates().blockLast();
 		// then
-		Assertions.assertThat(provider.getRate(Currency.won(), Currency.dollar())).isEmpty();
-		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won())).isEmpty();
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.won(), Currency.dollar()))).isEmpty();
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.dollar(), Currency.won()))).isEmpty();
 	}
 
 	@DisplayName("환율 업데이트 - 특정 응답의 result이 0이면 해당 환율을 업데이트하지 않아야 한다")
@@ -86,7 +88,7 @@ class KoreaeximExchangeRateProviderTest {
 		// when
 		provider.updateRates().blockLast();
 		// then
-		Assertions.assertThat(provider.getRate(Currency.won(), Currency.dollar())).isEmpty();
-		Assertions.assertThat(provider.getRate(Currency.dollar(), Currency.won())).isEmpty();
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.won(), Currency.dollar()))).isEmpty();
+		Assertions.assertThat(exchangeRateService.getRate(new Pair(Currency.dollar(), Currency.won()))).isEmpty();
 	}
 }

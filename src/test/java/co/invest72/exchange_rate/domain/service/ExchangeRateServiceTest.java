@@ -49,4 +49,28 @@ class ExchangeRateServiceTest {
 			.isEqualByComparingTo(BigDecimal.ZERO);
 		Assertions.assertThat(service.getRate(new Pair(to, from))).isEmpty();
 	}
+
+	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
+	@Test
+	void getRate_whenKRWToUSE_thenReturnRate() {
+		// given
+		Currency from = Currency.won();
+		Currency to = Currency.dollar();
+		service.saveRate(from, to, BigDecimal.valueOf(0.001));
+		// when
+		BigDecimal rate = service.getRate(new Pair(from, to)).orElseThrow();
+		// then
+		Assertions.assertThat(rate).isEqualByComparingTo(BigDecimal.valueOf(0.001));
+	}
+
+	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")
+	@Test
+	void getRate_whenKRWToKRW_thenReturnOne() {
+		// given
+		Currency won = Currency.won();
+		// when
+		BigDecimal rate = service.getRate(new Pair(won, won)).orElseThrow();
+		// then
+		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
+	}
 }

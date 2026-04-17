@@ -1,8 +1,5 @@
 package co.invest72.exchange_rate.domain;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
 import co.invest72.exchange_rate.infrastructure.api.ExchangeJsonResponse;
 import reactor.core.publisher.Flux;
 
@@ -13,15 +10,6 @@ import reactor.core.publisher.Flux;
  * </p>
  */
 public interface ExchangeRateProvider {
-	/**
-	 * 특정 통화간의 환율(rate)을 조회한다.
-	 *
-	 * @param from 원본 통화
-	 * @param to 대상 통화
-	 * @return 환율 값(BigDecimal), 존재하지 않을 경우 empty 반환.
-	 */
-	Optional<BigDecimal> getRate(Currency from, Currency to);
-
 	/**
 	 * 환율 정보를 최신 정보롤 업데이트한다.
 	 */
