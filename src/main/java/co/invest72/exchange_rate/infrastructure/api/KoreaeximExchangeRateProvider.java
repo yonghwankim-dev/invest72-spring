@@ -12,6 +12,7 @@ import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.money.domain.Pair;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 	private final KoreaeximClient client;
@@ -39,7 +40,9 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 		int success = 1;
 		return client.exchangeJson()
 			.filter(response -> response.getResult() == success)
-			.doOnNext(this::handleUpdateRates);
+			.flatMap(response ->
+				Mono.fromRunnable(() -> handleUpdateRates(response))
+					.thenReturn(response));
 	}
 
 	private void handleUpdateRates(ExchangeJsonResponse response) {

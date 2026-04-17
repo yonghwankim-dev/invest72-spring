@@ -1,11 +1,12 @@
 package co.invest72.exchange_rate.domain.service;
 
+import java.math.BigDecimal;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.money.domain.Money;
 
@@ -15,7 +16,9 @@ class BankTest {
 
 	@BeforeEach
 	void setUp() {
-		bank = new Bank(new FixedExchangeRateProvider());
+		ExchangeRateService exchangeRateService = new ExchangeRateService();
+		exchangeRateService.saveRate(Currency.dollar(), Currency.won(), BigDecimal.valueOf(1000));
+		bank = new Bank(exchangeRateService);
 	}
 
 	@DisplayName("환전 - 원화를 원화로 환전하면 금액이 그대로여야 한다")

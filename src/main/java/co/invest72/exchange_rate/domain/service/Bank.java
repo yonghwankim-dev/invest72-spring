@@ -3,15 +3,15 @@ package co.invest72.exchange_rate.domain.service;
 import java.math.BigDecimal;
 
 import co.invest72.exchange_rate.domain.Currency;
-import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Pair;
 
 public class Bank {
 
-	private final ExchangeRateProvider exchangeRateProvider;
+	private final ExchangeRateService exchangeRateService;
 
-	public Bank(ExchangeRateProvider exchangeRateProvider) {
-		this.exchangeRateProvider = exchangeRateProvider;
+	public Bank(ExchangeRateService exchangeRateService) {
+		this.exchangeRateService = exchangeRateService;
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class Bank {
 	 * @return 환전된 금액
 	 */
 	public Money reduce(Money money, Currency target) {
-		BigDecimal rate = exchangeRateProvider.getRate(money.getCurrency(), target)
+		BigDecimal rate = exchangeRateService.getRate(new Pair(money.getCurrency(), target))
 			.orElseThrow(() -> new IllegalArgumentException("undefined rate, " + money.getCurrency() + "->" + target));
 		return money.reduce(target, rate);
 	}

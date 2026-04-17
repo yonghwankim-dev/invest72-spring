@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.Currency;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 
 class FixedExchangeRateProviderTest {
 
@@ -16,7 +19,10 @@ class FixedExchangeRateProviderTest {
 
 	@BeforeEach
 	void setUp() {
-		exchangeRateProvider = new FixedExchangeRateProvider();
+		ExchangeRateService exchangeRateService = new ExchangeRateService();
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		exchangeRateProvider = new FixedExchangeRateProvider(exchangeRateService, exchangeRateRepository);
+		exchangeRateProvider.updateRates().blockLast();
 	}
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
@@ -28,7 +34,7 @@ class FixedExchangeRateProviderTest {
 		// when
 		BigDecimal rate = exchangeRateProvider.getRate(from, to).orElseThrow();
 		// then
-		Assertions.assertThat(rate).isEqualTo(BigDecimal.valueOf(0.001));
+		Assertions.assertThat(rate).isEqualByComparingTo(BigDecimal.valueOf(0.001));
 	}
 
 	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")

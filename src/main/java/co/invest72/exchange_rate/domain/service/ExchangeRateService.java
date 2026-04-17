@@ -28,6 +28,9 @@ public class ExchangeRateService {
 	}
 
 	public Optional<BigDecimal> getRate(Pair key) {
+		if (key.isSameCurrency()) {
+			return Optional.of(BigDecimal.ONE);
+		}
 		return Optional.ofNullable(exchangeRateCache.get(key));
 	}
 }

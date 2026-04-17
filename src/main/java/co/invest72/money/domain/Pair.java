@@ -14,4 +14,8 @@ public class Pair {
 		this.from = Objects.requireNonNull(from);
 		this.to = Objects.requireNonNull(to);
 	}
+
+	public boolean isSameCurrency() {
+		return this.from.equals(to);
+	}
 }
