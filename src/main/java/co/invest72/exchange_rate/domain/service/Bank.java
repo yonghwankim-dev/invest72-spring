@@ -23,7 +23,6 @@ public class Bank {
 	public Money reduce(Money money, Currency target) {
 		BigDecimal rate = exchangeRateProvider.getRate(money.getCurrency(), target)
 			.orElseThrow(() -> new IllegalArgumentException("undefined rate, " + money.getCurrency() + "->" + target));
-		BigDecimal amount = money.times(rate).getValue();
-		return Money.of(amount, target);
+		return money.reduce(target, rate);
 	}
 }
