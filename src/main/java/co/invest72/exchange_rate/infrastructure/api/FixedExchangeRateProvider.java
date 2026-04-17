@@ -9,6 +9,7 @@ import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 public class FixedExchangeRateProvider implements ExchangeRateProvider {
@@ -32,6 +33,7 @@ public class FixedExchangeRateProvider implements ExchangeRateProvider {
 				new ExchangeJsonResponse(1, dollar.getCode(), "1000", dollar.getName())
 			).filter(response -> response.getResult() == success)
 			.flatMap(response -> Mono.fromRunnable(() -> exchangeRateUpdateHandler.handleUpdateRates(response))
+				.subscribeOn(Schedulers.boundedElastic())
 				.thenReturn(response));
 	}
 }

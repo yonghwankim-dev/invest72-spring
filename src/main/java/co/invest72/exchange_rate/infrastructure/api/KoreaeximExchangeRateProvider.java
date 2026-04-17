@@ -6,6 +6,7 @@ import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 	private final KoreaeximClient client;
@@ -23,6 +24,7 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 			.filter(response -> response.getResult() == success)
 			.flatMap(response ->
 				Mono.fromRunnable(() -> exchangeRateUpdateHandler.handleUpdateRates(response))
+					.subscribeOn(Schedulers.boundedElastic())
 					.thenReturn(response));
 	}
 }
