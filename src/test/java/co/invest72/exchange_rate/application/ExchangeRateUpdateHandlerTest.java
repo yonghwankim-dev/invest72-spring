@@ -6,11 +6,9 @@ import java.math.RoundingMode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
@@ -26,20 +24,14 @@ class ExchangeRateUpdateHandlerTest {
 	@Test
 	void updateRates() {
 		// given
-		ExchangeRateService service = new ExchangeRateService();
 		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
+		ExchangeRateService service = new ExchangeRateService(repository);
 		// 이벤트 캡처 위해서 ArgumentCaptor 사용
-		ArgumentCaptor<ExchangeRateUpdateEvent> eventCaptor = ArgumentCaptor.forClass(
-			ExchangeRateUpdateEvent.class);
-		ApplicationEventPublisher eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
-		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository, eventPublisher);
+		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service);
 		// 외화 1단위당 원화 몇원
 		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
 		// when
 		handler.handleUpdateRates(response);
-		// 이벤트 발행 검증 및 캡처
-		BDDMockito.verify(eventPublisher).publishEvent(eventCaptor.capture());
-		handler.cacheExchangeRate(eventCaptor.getValue());
 		// then
 		Assertions.assertThat(
 				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
@@ -64,14 +56,13 @@ class ExchangeRateUpdateHandlerTest {
 	@Test
 	void updateRates_whenFailSaveRate_thenNotSaveCache() {
 		// given
-		ExchangeRateService service = new ExchangeRateService();
 		ExchangeRateRepository repository = Mockito.mock(ExchangeRateRepository.class);
+		ExchangeRateService service = new ExchangeRateService(repository);
 		// 환율 저장 무조건 실패
 		BDDMockito.willThrow(RuntimeException.class)
 			.given(repository)
 			.save(ArgumentMatchers.any(ExchangeRate.class));
-		ApplicationEventPublisher eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
-		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository, eventPublisher);
+		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service);
 		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> handler.handleUpdateRates(response));
@@ -84,6 +75,38 @@ class ExchangeRateUpdateHandlerTest {
 		Currency jpy = Currency.from("JPY");
 		Assertions.assertThat(service.getRate(new CurrencyPair(won, jpy))).isEmpty();
 		Assertions.assertThat(service.getRate(new CurrencyPair(jpy, won))).isEmpty();
+	}
+
+	@DisplayName("환율 업데이트 - DB 저장은 성공했지만, 캐시 업데이트에 실패하는 경우")
+	@Test
+	void updateRates_whenSuccessDBAndFailCacheWork() {
+		// given
+		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
+		ExchangeRateService service = new ExchangeRateService(repository);
+		// 이벤트 캡처 위해서 ArgumentCaptor 사용
+		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service);
+		// 외화 1단위당 원화 몇원
+		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
+		// when
+		handler.handleUpdateRates(response);
+		// then
+		Assertions.assertThat(
+				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+			.isEqualByComparingTo(new BigDecimal("10.9608260078"));
+		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+			.isEqualByComparingTo(new BigDecimal("0.091234"));
+
+		BigDecimal wonAmount = BigDecimal.valueOf(1000);
+		BigDecimal yenResult = wonAmount.multiply(
+				service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+			.setScale(2, RoundingMode.HALF_EVEN);
+		Assertions.assertThat(yenResult).isEqualTo(new BigDecimal("91.23"));
+
+		BigDecimal yenAmount = new BigDecimal("91.23");
+		BigDecimal wonResult = yenAmount.multiply(
+				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+			.setScale(2, RoundingMode.HALF_EVEN);
+		Assertions.assertThat(wonResult).isEqualTo(new BigDecimal("999.96"));
 	}
 
 }

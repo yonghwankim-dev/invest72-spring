@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
@@ -24,6 +23,7 @@ class KoreaeximExchangeRateProviderTest {
 	private ExchangeRateProvider provider;
 	private KoreaeximClient client;
 	private ExchangeRateService exchangeRateService;
+	private ExchangeRateRepository exchangeRateRepository;
 
 	@BeforeEach
 	void setUp() {
@@ -32,11 +32,9 @@ class KoreaeximExchangeRateProviderTest {
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService();
-		ApplicationEventPublisher eventPublisher = BDDMockito.mock(ApplicationEventPublisher.class);
-		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService,
-			exchangeRateRepository, eventPublisher);
+		exchangeRateRepository = new InMemoryExchangeRateRepository();
+		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService);
 		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
 	}
 
@@ -77,11 +75,13 @@ class KoreaeximExchangeRateProviderTest {
 	@Test
 	void updateRates_whenEmptyFlux_thenReturnEmptyOptional() {
 		// given
+		exchangeRateRepository.clear();
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.empty());
 		// when
 		provider.updateRates().blockLast();
 		// then
+
 		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.dollar())))
 			.isEmpty();
 		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.dollar(), Currency.won())))
@@ -92,6 +92,7 @@ class KoreaeximExchangeRateProviderTest {
 	@Test
 	void updateRates_whenResultIsZero_thenNotUpdateExchangeRate() {
 		// given
+		exchangeRateRepository.clear();
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러")));
 		// when

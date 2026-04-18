@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.CurrencyPair;
 
@@ -17,7 +20,8 @@ class ExchangeRateServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new ExchangeRateService();
+		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
+		service = new ExchangeRateService(repository);
 	}
 
 	@DisplayName("환율 저장")
@@ -40,13 +44,15 @@ class ExchangeRateServiceTest {
 	@Test
 	void save_whenScaleIs4() {
 		// given
-		Currency from = Currency.dollar();
-		Currency to = Currency.won();
+		Currency dollar = Currency.dollar();
 		BigDecimal rate = BigDecimal.valueOf(1300);
+		ExchangeRate exchangeRate = new ExchangeRate(dollar.getCode(), dollar.getName(), rate);
 		// when
-		service.saveRate(from, to, rate);
+		service.saveRate(exchangeRate);
 		// then
 		// 100만원 * (1/1300)원 = 769.23
+		Currency from = Currency.dollar();
+		Currency to = Currency.won();
 		BigDecimal reverseRate = service.getRate(new CurrencyPair(to, from)).orElseThrow();
 		BigDecimal sourceAmount = BigDecimal.valueOf(1_000_000);
 		BigDecimal dollarResult = sourceAmount.multiply(reverseRate).setScale(2, RoundingMode.HALF_EVEN);
@@ -65,8 +71,9 @@ class ExchangeRateServiceTest {
 		Currency from = Currency.dollar();
 		Currency to = Currency.won();
 		BigDecimal rate = BigDecimal.ZERO;
+		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
 		// when
-		service.saveRate(from, to, rate);
+		service.saveRate(exchangeRate);
 		// then
 		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.ZERO);
@@ -79,7 +86,6 @@ class ExchangeRateServiceTest {
 		// given
 		Currency from = Currency.won();
 		Currency to = Currency.dollar();
-		service.saveRate(from, to, BigDecimal.valueOf(0.001));
 		// when
 		BigDecimal rate = service.getRate(new CurrencyPair(from, to)).orElseThrow();
 		// then

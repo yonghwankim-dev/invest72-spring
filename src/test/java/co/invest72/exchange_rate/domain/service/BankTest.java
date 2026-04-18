@@ -7,6 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
@@ -16,8 +19,10 @@ class BankTest {
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateService exchangeRateService = new ExchangeRateService();
-		exchangeRateService.saveRate(Currency.dollar(), Currency.won(), BigDecimal.valueOf(1000));
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		Currency dollar = Currency.dollar();
+		exchangeRateService.saveRate(new ExchangeRate(dollar.getCode(), dollar.getName(), BigDecimal.valueOf(1000)));
 		bank = new Bank(exchangeRateService);
 	}
 
