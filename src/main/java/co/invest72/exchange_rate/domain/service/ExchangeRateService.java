@@ -47,9 +47,14 @@ public class ExchangeRateService {
 			return Optional.empty();
 		}
 
+		return calRate(fromExchangeRate, toExchangeRate);
+	}
+	
+	private Optional<BigDecimal> calRate(ExchangeRate fromExchangeRate, ExchangeRate toExchangeRate) {
 		try {
+			final int scale = 10;
 			BigDecimal result = fromExchangeRate.getBasicRateOfExchange()
-				.divide(toExchangeRate.getBasicRateOfExchange(), 10, RoundingMode.HALF_EVEN);
+				.divide(toExchangeRate.getBasicRateOfExchange(), scale, RoundingMode.HALF_EVEN);
 			return Optional.of(result);
 		} catch (ArithmeticException e) {
 			log.warn(e.getMessage());
