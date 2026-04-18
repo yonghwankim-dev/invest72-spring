@@ -29,10 +29,6 @@ public class ExchangeRateService {
 
 	}
 
-	private boolean isPositiveRate(BigDecimal rate) {
-		return rate.compareTo(BigDecimal.ZERO) > 0;
-	}
-
 	@Transactional
 	public void saveRate(ExchangeRate exchangeRate) {
 		repository.save(exchangeRate);

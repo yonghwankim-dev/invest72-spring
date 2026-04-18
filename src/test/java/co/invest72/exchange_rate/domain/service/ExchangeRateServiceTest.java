@@ -29,11 +29,12 @@ class ExchangeRateServiceTest {
 	void save() {
 		// given
 		Currency from = Currency.dollar();
-		Currency to = Currency.won();
 		BigDecimal rate = BigDecimal.valueOf(1000);
+		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
 		// when
-		service.saveRate(from, to, rate);
+		service.saveRate(exchangeRate);
 		// then
+		Currency to = Currency.won();
 		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(1000));
 		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
