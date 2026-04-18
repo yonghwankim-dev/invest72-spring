@@ -32,4 +32,9 @@ public class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
 	public List<ExchangeRate> findAll() {
 		return jpaRepository.findAll();
 	}
+
+	@Override
+	public void clear() {
+		jpaRepository.deleteAll();
+	}
 }

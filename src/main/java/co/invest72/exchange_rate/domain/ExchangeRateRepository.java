@@ -11,4 +11,6 @@ public interface ExchangeRateRepository {
 	Optional<ExchangeRate> findByCode(String code);
 
 	List<ExchangeRate> findAll();
+
+	void clear();
 }

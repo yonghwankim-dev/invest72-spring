@@ -41,4 +41,9 @@ public class InMemoryExchangeRateRepository implements ExchangeRateRepository {
 	public List<ExchangeRate> findAll() {
 		return new ArrayList<>(store.values());
 	}
+
+	@Override
+	public void clear() {
+		store.clear();
+	}
 }
