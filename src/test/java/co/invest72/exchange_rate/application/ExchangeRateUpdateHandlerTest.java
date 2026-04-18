@@ -7,11 +7,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.api.ExchangeJsonResponse;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
@@ -57,4 +59,31 @@ class ExchangeRateUpdateHandlerTest {
 			.setScale(2, RoundingMode.HALF_EVEN);
 		Assertions.assertThat(wonResult).isEqualTo(new BigDecimal("999.96"));
 	}
+
+	@DisplayName("환율 업데이트 - DB 저장이 실패하면 캐시도 저장되지 않아야 한다")
+	@Test
+	void updateRates_whenFailSaveRate_thenNotSaveCache() {
+		// given
+		ExchangeRateService service = new ExchangeRateService();
+		ExchangeRateRepository repository = Mockito.mock(ExchangeRateRepository.class);
+		// 환율 저장 무조건 실패
+		BDDMockito.willThrow(RuntimeException.class)
+			.given(repository)
+			.save(ArgumentMatchers.any(ExchangeRate.class));
+		ApplicationEventPublisher eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
+		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository, eventPublisher);
+		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> handler.handleUpdateRates(response));
+
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(RuntimeException.class);
+
+		Currency won = Currency.won();
+		Currency jpy = Currency.from("JPY");
+		Assertions.assertThat(service.getRate(new CurrencyPair(won, jpy))).isEmpty();
+		Assertions.assertThat(service.getRate(new CurrencyPair(jpy, won))).isEmpty();
+	}
+
 }
