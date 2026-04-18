@@ -3,34 +3,65 @@ package co.invest72.exchange_rate.domain.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.CurrencyPair;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ExchangeRateService {
-	private final Map<CurrencyPair, BigDecimal> exchangeRateCache = new ConcurrentHashMap<>();
+	private final Map<CurrencyPair, BigDecimal> exchangeRateCache;
+	private final ExchangeRateRepository repository;
+
+	public ExchangeRateService(ExchangeRateRepository repository) {
+		this.exchangeRateCache = new ConcurrentHashMap<>();
+		this.repository = repository;
+	}
 
 	public void saveRate(Currency from, Currency to, BigDecimal rate) {
-		// 정방향 저장
-		exchangeRateCache.put(new CurrencyPair(from, to), rate);
 
-		// 역방향 저장
-		if (isPositiveRate(rate)) {
-			BigDecimal reverseRate = BigDecimal.ONE.divide(rate, 10, RoundingMode.HALF_EVEN);
-			exchangeRateCache.put(new CurrencyPair(to, from), reverseRate);
-		}
 	}
 
 	private boolean isPositiveRate(BigDecimal rate) {
 		return rate.compareTo(BigDecimal.ZERO) > 0;
 	}
 
-	public Optional<BigDecimal> getRate(CurrencyPair key) {
-		if (key.isSameCurrency()) {
+	@Transactional
+	public void saveRate(ExchangeRate exchangeRate) {
+		repository.save(exchangeRate);
+	}
+
+	public Optional<BigDecimal> getRate(CurrencyPair pair) {
+		if (pair.isSameCurrency()) {
 			return Optional.of(BigDecimal.ONE);
 		}
-		return Optional.ofNullable(exchangeRateCache.get(key));
+		Currency from = pair.getFrom();
+		Currency to = pair.getTo();
+
+		ExchangeRate fromExchangeRate;
+		ExchangeRate toExchangeRate;
+		try {
+			fromExchangeRate = repository.findByCode(from.getCode()).orElseThrow();
+			toExchangeRate = repository.findByCode(to.getCode()).orElseThrow();
+		} catch (NoSuchElementException e) {
+			log.warn(e.getMessage());
+			return Optional.empty();
+		}
+
+		try {
+			BigDecimal result = fromExchangeRate.getBasicRateOfExchange()
+				.divide(toExchangeRate.getBasicRateOfExchange(), 10, RoundingMode.HALF_EVEN);
+			return Optional.of(result);
+		} catch (ArithmeticException e) {
+			log.warn(e.getMessage());
+			return Optional.empty();
+		}
 	}
 }
