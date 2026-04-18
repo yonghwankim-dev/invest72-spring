@@ -14,8 +14,10 @@ import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.api.ExchangeJsonResponse;
 import co.invest72.money.domain.Currency;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class ExchangeRateUpdateHandler {
 	private final ExchangeRateService exchangeRateService;
 	private final ExchangeRateRepository exchangeRateRepository;
@@ -61,10 +63,11 @@ public class ExchangeRateUpdateHandler {
 	}
 
 	@TransactionalEventListener
-	private void cacheExchangeRate(ExchangeRateUpdateEvent event) {
+	public void cacheExchangeRate(ExchangeRateUpdateEvent event) {
 		Currency from = event.getFrom();
 		Currency to = event.getTo();
 		BigDecimal rate = event.getRate();
 		exchangeRateService.saveRate(from, to, rate);
+		log.info("캐시 저장소에 환율 정보 저장, {} to {} rate={}", from, to, rate);
 	}
 }

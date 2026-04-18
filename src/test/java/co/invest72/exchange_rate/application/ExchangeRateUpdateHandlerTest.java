@@ -6,7 +6,9 @@ import java.math.RoundingMode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -18,20 +20,27 @@ import co.invest72.money.domain.CurrencyPair;
 
 class ExchangeRateUpdateHandlerTest {
 
-	@DisplayName("환율 업데이트 - 원-엔 환율이 9.1234이면 환율은 0.091234여야 한다")
+	@DisplayName("환율 업데이트 - 100단위 외화 API 응답 시 정규화된 1단위 환율 저장 및 원/외화 상호 변환이 정확해야 한다")
 	@Test
 	void updateRates() {
 		// given
 		ExchangeRateService service = new ExchangeRateService();
 		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
-		ApplicationEventPublisher eventPublisher = BDDMockito.mock(ApplicationEventPublisher.class);
+		// 이벤트 캡처 위해서 ArgumentCaptor 사용
+		ArgumentCaptor<ExchangeRateUpdateEvent> eventCaptor = ArgumentCaptor.forClass(
+			ExchangeRateUpdateEvent.class);
+		ApplicationEventPublisher eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository, eventPublisher);
 		// 외화 1단위당 원화 몇원
 		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
 		// when
 		handler.handleUpdateRates(response);
+		// 이벤트 발행 검증 및 캡처
+		BDDMockito.verify(eventPublisher).publishEvent(eventCaptor.capture());
+		handler.cacheExchangeRate(eventCaptor.getValue());
 		// then
-		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+		Assertions.assertThat(
+				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("10.9608260078"));
 		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("0.091234"));
