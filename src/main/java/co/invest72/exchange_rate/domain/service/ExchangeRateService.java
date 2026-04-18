@@ -2,10 +2,8 @@ package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ExchangeRateService {
-	private final Map<CurrencyPair, BigDecimal> exchangeRateCache;
 	private final ExchangeRateRepository repository;
 
 	public ExchangeRateService(ExchangeRateRepository repository) {
-		this.exchangeRateCache = new ConcurrentHashMap<>();
 		this.repository = repository;
 	}
 
@@ -30,6 +26,16 @@ public class ExchangeRateService {
 		repository.save(exchangeRate);
 	}
 
+	/**
+	 * 통화쌍에 대한 환율을 계산하여 반환합니다.
+	 * <p>
+	 * 예를 들어 1USD=1000KRW이라면<br>
+	 * USD -> KRW = 1000<br>
+	 * KRW -> USD = 0.001<br>
+	 * </p>
+	 * @param pair 통화쌍
+	 * @return 환율값
+	 */
 	public Optional<BigDecimal> getRate(CurrencyPair pair) {
 		if (pair.isSameCurrency()) {
 			return Optional.of(BigDecimal.ONE);
@@ -49,7 +55,7 @@ public class ExchangeRateService {
 
 		return calRate(fromExchangeRate, toExchangeRate);
 	}
-	
+
 	private Optional<BigDecimal> calRate(ExchangeRate fromExchangeRate, ExchangeRate toExchangeRate) {
 		try {
 			final int scale = 10;
