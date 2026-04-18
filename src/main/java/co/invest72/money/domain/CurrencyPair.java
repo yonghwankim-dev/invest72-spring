@@ -3,7 +3,9 @@ package co.invest72.money.domain;
 import java.util.Objects;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Getter
 @EqualsAndHashCode
 public class CurrencyPair {
 	private final Currency from;
