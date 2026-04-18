@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
@@ -22,7 +24,8 @@ class ExchangeRateUpdateHandlerTest {
 		// given
 		ExchangeRateService service = new ExchangeRateService();
 		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
-		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository);
+		ApplicationEventPublisher eventPublisher = BDDMockito.mock(ApplicationEventPublisher.class);
+		ExchangeRateUpdateHandler handler = new ExchangeRateUpdateHandler(service, repository, eventPublisher);
 		// 외화 1단위당 원화 몇원
 		ExchangeJsonResponse response = new ExchangeJsonResponse(1, "JPY(100)", "9.1234", "일본 엔화");
 		// when

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.springframework.context.ApplicationEventPublisher;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
@@ -33,8 +34,9 @@ class KoreaeximExchangeRateProviderTest {
 			.willReturn(Flux.just(response1, response2));
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		exchangeRateService = new ExchangeRateService();
+		ApplicationEventPublisher eventPublisher = BDDMockito.mock(ApplicationEventPublisher.class);
 		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService,
-			exchangeRateRepository);
+			exchangeRateRepository, eventPublisher);
 		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
 	}
 
