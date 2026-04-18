@@ -36,6 +36,7 @@ public class ExchangeRateService {
 	 * @param pair 통화쌍
 	 * @return 환율값
 	 */
+	@Transactional(readOnly = true)
 	public Optional<BigDecimal> getRate(CurrencyPair pair) {
 		if (pair.isSameCurrency()) {
 			return Optional.of(BigDecimal.ONE);
