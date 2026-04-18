@@ -25,10 +25,6 @@ public class ExchangeRateService {
 		this.repository = repository;
 	}
 
-	public void saveRate(Currency from, Currency to, BigDecimal rate) {
-
-	}
-
 	@Transactional
 	public void saveRate(ExchangeRate exchangeRate) {
 		repository.save(exchangeRate);
