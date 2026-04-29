@@ -27,6 +27,7 @@ import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.investment.domain.tax.FixedTaxRate;
 import co.invest72.investment.domain.tax.KoreanTaxableFactory;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 class FixedDepositTest {
@@ -38,7 +39,8 @@ class FixedDepositTest {
 
 		@BeforeEach
 		void setUp() {
-			LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000), "KRW");
+			LumpSumInvestmentAmount investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000),
+				Currency.won());
 			PeriodRange periodRange = new PeriodYearRange(1);
 			InvestPeriod investPeriod = new MonthlyInvestPeriod(periodRange.toMonths());
 			InterestRate interestRate = new AnnualInterestRate(0.05);
@@ -339,7 +341,8 @@ class FixedDepositTest {
 
 		@BeforeEach
 		void setUp() {
-			LumpSumInvestmentAmount depositAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000), "KRW");
+			LumpSumInvestmentAmount depositAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000),
+				Currency.won());
 			InvestPeriod investPeriod = new YearlyInvestPeriod(1);
 			InterestRate interestRate = new AnnualInterestRate(0.05);
 			TaxableFactory taxableFactory = new KoreanTaxableFactory();

@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
@@ -41,13 +44,16 @@ class InvestmentFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
-		investmentFactory = new InvestmentFactory(productAmountMapper);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
@@ -58,7 +64,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -70,6 +77,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
@@ -80,7 +88,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -92,6 +101,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
@@ -102,7 +112,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -114,6 +125,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 단리-적금-년적립")
 	@Test
 	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(YEARLY.getDescription())
@@ -124,7 +136,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -137,6 +150,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
@@ -147,7 +161,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
