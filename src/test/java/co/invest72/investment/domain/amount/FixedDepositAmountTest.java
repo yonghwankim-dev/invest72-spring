@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 class FixedDepositAmountTest {
@@ -20,7 +21,7 @@ class FixedDepositAmountTest {
 
 	@BeforeEach
 	void setUp() {
-		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000), "KRW");
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(1_000_000), Currency.won());
 	}
 
 	@Test
@@ -30,7 +31,8 @@ class FixedDepositAmountTest {
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
-		assertThrows(IllegalArgumentException.class, () -> new FixedDepositAmount(BigDecimal.valueOf(-1), "KRW"));
+		assertThrows(IllegalArgumentException.class,
+			() -> new FixedDepositAmount(BigDecimal.valueOf(-1), Currency.won()));
 	}
 
 	@Test
@@ -54,7 +56,7 @@ class FixedDepositAmountTest {
 	@DisplayName("연이자 계산 - 예치금이 10조원인 상태에서 이자를 정확히 계삲되어야 한다.")
 	@Test
 	void calAnnualInterest_shouldReturnAnnualInterest() {
-		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000"), "KRW"); // 10조원
+		investmentAmount = new FixedDepositAmount(new BigDecimal("10000000000000"), Currency.won()); // 10조원
 		InterestRate interestRate = new AnnualInterestRate(0.05);
 
 		Money interest = investmentAmount.calAnnualInterest(interestRate);
@@ -86,7 +88,7 @@ class FixedDepositAmountTest {
 	@DisplayName("금액 반환 - 달러 Money 타입 예치금 반환")
 	@Test
 	void getDepositAmount_shouldReturnMoneyInDollars() {
-		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(5), "USD");
+		investmentAmount = new FixedDepositAmount(BigDecimal.valueOf(5), Currency.dollar());
 		Money depositAmount = investmentAmount.getDepositAmount();
 
 		Money expected = Money.dollar(5);

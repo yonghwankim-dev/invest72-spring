@@ -3,6 +3,7 @@ package co.invest72.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
@@ -18,8 +19,8 @@ public class FinancialProductSpringConfig {
 	}
 
 	@Bean
-	public FinancialProductCalculator financialProductCalculator() {
-		return new FinancialProductCalculator();
+	public FinancialProductCalculator financialProductCalculator(ExchangeRateRepository exchangeRateRepository) {
+		return new FinancialProductCalculator(exchangeRateRepository);
 	}
 
 	@Bean

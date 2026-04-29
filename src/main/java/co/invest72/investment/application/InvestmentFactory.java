@@ -121,13 +121,17 @@ public class InvestmentFactory {
 	}
 
 	private Investment cash(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency());
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), currency);
 		return new CashInvestment(investmentAmount);
 	}
 
 	private Investment deposit(CalculateInvestmentDto dto) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		return FixedDeposit.builder()
-			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
+			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), currency))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
 			.interestType(dto.getInterestType())

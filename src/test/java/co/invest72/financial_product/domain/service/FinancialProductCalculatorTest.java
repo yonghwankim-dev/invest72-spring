@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.money.domain.Money;
 
@@ -18,7 +20,8 @@ class FinancialProductCalculatorTest {
 
 	@BeforeEach
 	void setUp() {
-		calculator = new FinancialProductCalculator();
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		calculator = new FinancialProductCalculator(exchangeRateRepository);
 	}
 
 	@DisplayName("금융 상품 만기일 계산")
