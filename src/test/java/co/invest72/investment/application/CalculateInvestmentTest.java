@@ -38,7 +38,7 @@ class CalculateInvestmentTest {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
-		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 
 		Currency won = Currency.won();

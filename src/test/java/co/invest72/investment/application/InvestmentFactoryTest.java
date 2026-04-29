@@ -47,7 +47,7 @@ class InvestmentFactoryTest {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
-		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
 
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")

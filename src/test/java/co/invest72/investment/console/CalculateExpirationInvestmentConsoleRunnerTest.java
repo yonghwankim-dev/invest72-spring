@@ -113,7 +113,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
-		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,
@@ -143,7 +143,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
-		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
 			investmentReaderDelegator,

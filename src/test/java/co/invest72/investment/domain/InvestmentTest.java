@@ -38,7 +38,7 @@ class InvestmentTest {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
-		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
 
 	@DisplayName("예금 상품 수익 계산 - 최대값 검증")

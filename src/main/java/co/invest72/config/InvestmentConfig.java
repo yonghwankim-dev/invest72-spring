@@ -3,7 +3,7 @@ package co.invest72.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
@@ -21,8 +21,8 @@ public class InvestmentConfig {
 
 	@Bean
 	public InvestmentFactory investmentFactory(ProductAmountMapper productAmountMapper,
-		ExchangeRateRepository exchangeRateRepository) {
-		return new InvestmentFactory(productAmountMapper, exchangeRateRepository);
+		ExchangeRateService exchangeRateService) {
+		return new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
 
 	@Bean
