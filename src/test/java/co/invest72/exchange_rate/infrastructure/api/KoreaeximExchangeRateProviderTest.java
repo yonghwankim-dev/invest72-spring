@@ -64,10 +64,10 @@ class KoreaeximExchangeRateProviderTest {
 		provider.updateRates().blockLast();
 		// then
 		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+				exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(0.1051469429));
 		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+				exchangeRateService.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(BigDecimal.valueOf(9.5105));
 	}
 

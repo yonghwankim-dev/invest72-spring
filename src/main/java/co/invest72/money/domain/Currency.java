@@ -43,7 +43,7 @@ public final class Currency {
 		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
 			return won();
 		}
-		return new Currency(normalizedCode, "Unknown");
+		throw new IllegalArgumentException("unknown code, code=" + code);
 	}
 
 	public static Currency dollar() {
@@ -52,6 +52,10 @@ public final class Currency {
 
 	public static Currency won() {
 		return new Currency("KRW", "한국 원");
+	}
+
+	public static Currency jpy() {
+		return new Currency("JPY", "일본 엔");
 	}
 
 	@Override

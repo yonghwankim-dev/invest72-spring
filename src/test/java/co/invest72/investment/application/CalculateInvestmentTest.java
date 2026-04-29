@@ -36,6 +36,7 @@ class CalculateInvestmentTest {
 		investmentFactory = new InvestmentFactory(productAmountMapper);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(AmountType.ONE_TIME.getDescription())
@@ -46,7 +47,8 @@ class CalculateInvestmentTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(0.154)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 	}
 

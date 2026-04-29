@@ -23,6 +23,7 @@ class InvestmentJsonParserTest {
 
 	@Test
 	void parse_shouldReturnInvestmentRequest() {
+		Currency won = Currency.won();
 		CalculateInvestmentRequest expectedInvestmentRequest = CalculateInvestmentRequest.builder()
 			.type("예금")
 			.amountType(AmountType.ONE_TIME.getDescription())
@@ -33,7 +34,8 @@ class InvestmentJsonParserTest {
 			.annualInterestRate(0.05)
 			.taxType("일반과세")
 			.taxRate(0.154)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 		File file = new File("src/test/resources/simple-fixed-deposit.json");
 

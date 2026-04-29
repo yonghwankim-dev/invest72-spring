@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
@@ -165,11 +166,15 @@ public class FinancialProductService {
 
 		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
+			ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrency())
+				.orElseThrow(() -> new IllegalArgumentException(
+					"not found ExchangeRate, code=" + product.getAmount().getCurrency()));
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),
 				today,
-				calculator
+				calculator,
+				exchangeRate
 			);
 			result.add(data);
 		}
@@ -190,7 +195,10 @@ public class FinancialProductService {
 
 	@Transactional(readOnly = true)
 	public FinancialProductStatisticsResponse getProductStatistics(User user, String baseCurrencyCode) {
-		Currency baseCurrency = Currency.from(baseCurrencyCode);
+		Currency baseCurrency = exchangeRateRepository.findByCode(baseCurrencyCode)
+			.map(exchangeRate -> Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName()))
+			.orElseThrow(() ->
+				new IllegalArgumentException("not found ExchangeRate, baseCurrencyCode=" + baseCurrencyCode));
 		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
 
 		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products, baseCurrency));

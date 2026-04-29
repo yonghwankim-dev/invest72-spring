@@ -48,6 +48,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 단리-예금 객체 생성")
 	@Test
 	void shouldReturnInvestment_whenRequestIsSimpleFixedDeposit() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
@@ -58,7 +59,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -70,6 +72,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 복리-예금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedDeposit_whenRequestIsCompoundFixedDeposit() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(ONE_TIME.getDescription())
@@ -80,7 +83,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -92,6 +96,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 단리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfSimpleFixedInstallmentSaving_whenRequestIsSimpleFixedInstallmentSaving() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
@@ -102,7 +107,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -114,6 +120,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 단리-적금-년적립")
 	@Test
 	void createBy_whenProductIsSimpleSavingsAndYearlyAmount_thenReturnInvestment() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(YEARLY.getDescription())
@@ -124,7 +131,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);
@@ -137,6 +145,7 @@ class InvestmentFactoryTest {
 	@DisplayName("투자 객체 생성 - 복리-적금 객체 생성")
 	@Test
 	void shouldInstanceOfCompoundFixedInstallmentSaving_whenRequestIsCompoundFixedInstallmentSaving() {
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(SAVINGS.name())
 			.amountType(MONTHLY.getDescription())
@@ -147,7 +156,8 @@ class InvestmentFactoryTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.NON_TAX.name())
 			.taxRate(0.0)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		investment = investmentFactory.createBy(request);

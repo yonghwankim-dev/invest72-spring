@@ -27,26 +27,26 @@ class CurrencyTest {
 			.hasMessage("통화 코드(code)는 null이면 안됩니다.");
 	}
 
-	@DisplayName("통화 생성 - 비어있는 문자열을 전달하면 예외가 발생해야 한다")
+	@DisplayName("통화 생성 - 통화 코드가 공백이면 예외가 발생해야 한다")
 	@Test
-	void newInstance_whenCurrencyIsEmpty_thenThrowException() {
+	void newInstance_whenCurrencyCodeIsEmpty_thenThrowException() {
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> Currency.from(""));
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("통화 코드(code)는 빈 문자열일 수 없습니다.");
+			.hasMessage("unknown code, code=");
 	}
 
-	@DisplayName("통화 생성 - 통화 코드는 3자리여야 한다")
+	@DisplayName("통화 생성 - 알려져 있지 않는 통화 코드 전달시 예외가 발생해야 한다")
 	@Test
-	void newInstance_whenCurrencyCodeIsNotThreeLetters_thenThrowException() {
+	void newInstance_whenUnknownCurrencyCode_thenThrowException() {
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> Currency.from("US"));
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("통화 코드(code)는 3자리여야 합니다.");
+			.hasMessage("unknown code, code=US");
 	}
 
 	@DisplayName("통화 비교 - 동일한 통화 코드를 가진 객체들끼리는 동일한 객체로 간주")

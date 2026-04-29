@@ -10,6 +10,7 @@ class CalculateInvestmentRequestTest {
 
 	@Test
 	void canCreated() {
+		Currency won = Currency.won();
 		CalculateInvestmentRequest request = CalculateInvestmentRequest.builder()
 			.type("예금")
 			.amountType(AmountType.ONE_TIME.getDescription())
@@ -20,7 +21,8 @@ class CalculateInvestmentRequestTest {
 			.annualInterestRate(0.05)
 			.taxType("일반과세")
 			.taxRate(0.154)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 
 		Assertions.assertThat(request).isNotNull();

@@ -34,20 +34,20 @@ class ExchangeRateUpdateHandlerTest {
 		handler.handleUpdateRates(response);
 		// then
 		Assertions.assertThat(
-				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("10.9608260078"));
-		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("0.091234"));
 
 		BigDecimal wonAmount = BigDecimal.valueOf(1000);
 		BigDecimal yenResult = wonAmount.multiply(
-				service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
 			.setScale(2, RoundingMode.HALF_EVEN);
 		Assertions.assertThat(yenResult).isEqualTo(new BigDecimal("91.23"));
 
 		BigDecimal yenAmount = new BigDecimal("91.23");
 		BigDecimal wonResult = yenAmount.multiply(
-				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
 			.setScale(2, RoundingMode.HALF_EVEN);
 		Assertions.assertThat(wonResult).isEqualTo(new BigDecimal("999.96"));
 	}
@@ -72,7 +72,7 @@ class ExchangeRateUpdateHandlerTest {
 			.isInstanceOf(RuntimeException.class);
 
 		Currency won = Currency.won();
-		Currency jpy = Currency.from("JPY");
+		Currency jpy = Currency.jpy();
 		Assertions.assertThat(service.getRate(new CurrencyPair(won, jpy))).isEmpty();
 		Assertions.assertThat(service.getRate(new CurrencyPair(jpy, won))).isEmpty();
 	}
@@ -91,20 +91,20 @@ class ExchangeRateUpdateHandlerTest {
 		handler.handleUpdateRates(response);
 		// then
 		Assertions.assertThat(
-				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("10.9608260078"));
-		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+		Assertions.assertThat(service.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
 			.isEqualByComparingTo(new BigDecimal("0.091234"));
 
 		BigDecimal wonAmount = BigDecimal.valueOf(1000);
 		BigDecimal yenResult = wonAmount.multiply(
-				service.getRate(new CurrencyPair(Currency.from("JPY"), Currency.won())).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
 			.setScale(2, RoundingMode.HALF_EVEN);
 		Assertions.assertThat(yenResult).isEqualTo(new BigDecimal("91.23"));
 
 		BigDecimal yenAmount = new BigDecimal("91.23");
 		BigDecimal wonResult = yenAmount.multiply(
-				service.getRate(new CurrencyPair(Currency.won(), Currency.from("JPY"))).orElseThrow())
+				service.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
 			.setScale(2, RoundingMode.HALF_EVEN);
 		Assertions.assertThat(wonResult).isEqualTo(new BigDecimal("999.96"));
 	}
