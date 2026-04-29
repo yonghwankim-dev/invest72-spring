@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
  */
 public interface ExchangeRateProvider {
 	/**
-	 * 환율 정보를 최신 정보롤 업데이트한다.
+	 * 환율 정보를 최신 정보로 업데이트한다.
 	 */
 	Flux<ExchangeJsonResponse> updateRates();
 }
