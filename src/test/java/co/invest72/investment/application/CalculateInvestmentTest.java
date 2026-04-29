@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.amount.AmountType;
@@ -32,10 +35,13 @@ class CalculateInvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
-		investmentFactory = new InvestmentFactory(productAmountMapper);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 
+		Currency won = Currency.won();
 		request = CalculateInvestmentRequest.builder()
 			.type(DEPOSIT.name())
 			.amountType(AmountType.ONE_TIME.getDescription())
@@ -46,7 +52,8 @@ class CalculateInvestmentTest {
 			.annualInterestRate(0.05)
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(0.154)
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(won.getCode())
+			.currencyName(won.getName())
 			.build();
 	}
 

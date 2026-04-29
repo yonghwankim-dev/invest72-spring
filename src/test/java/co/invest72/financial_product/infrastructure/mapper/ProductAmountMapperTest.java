@@ -7,6 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.money.domain.Money;
 
@@ -16,7 +19,9 @@ class ProductAmountMapperTest {
 
 	@BeforeEach
 	void setUp() {
-		mapper = new ProductAmountMapper();
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		mapper = new ProductAmountMapper(exchangeRateService);
 	}
 
 	@DisplayName("ProductAmount 변환 - Money 객체를 ProductAmount로 변환할 때, 올바른 금액이 반환되어야 한다.")

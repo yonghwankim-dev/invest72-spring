@@ -9,7 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
+import co.invest72.money.domain.Money;
 
 class FinancialProductCalculatorTest {
 
@@ -17,7 +20,8 @@ class FinancialProductCalculatorTest {
 
 	@BeforeEach
 	void setUp() {
-		calculator = new FinancialProductCalculator();
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		calculator = new FinancialProductCalculator(exchangeRateRepository);
 	}
 
 	@DisplayName("금융 상품 만기일 계산")
@@ -40,9 +44,9 @@ class FinancialProductCalculatorTest {
 	void givenProductAndLocalDate_whenCalculateBalance_thenReturnBalance(FinancialProduct product, LocalDate today,
 		BigDecimal expected, String ignored) {
 		// When
-		BigDecimal balance = calculator.calculateBalance(product, today);
+		Money balance = calculator.calculateBalance(product, today);
 		// Then
-		Assertions.assertThat(balance).isEqualTo(expected);
+		Assertions.assertThat(balance).isEqualTo(Money.won(expected));
 	}
 
 	@DisplayName("금융 상품의 진행률 남은 일수 계산")

@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -32,8 +35,10 @@ class InvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
-		investmentFactory = new InvestmentFactory(productAmountMapper);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
 
 	@DisplayName("예금 상품 수익 계산 - 최대값 검증")

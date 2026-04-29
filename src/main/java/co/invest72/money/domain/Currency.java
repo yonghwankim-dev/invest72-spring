@@ -2,37 +2,25 @@ package co.invest72.money.domain;
 
 import java.util.Objects;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * 통화 단위를 나타내는 클래스입니다. ISO 4217 통화 코드를 사용하여 통화를 표현합니다.
  * 예를 들어, "USD"는 미국 달러, "KRW"는 한국 원화를 나타냅니다.
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 public final class Currency {
 	private final String code;
-	private final String unit;
 	private final String name;
 
-	private Currency(String code, String unit, String name) {
-		Objects.requireNonNull(code, "통화 코드(code)는 null일 수 없습니다.");
-		Objects.requireNonNull(unit, "통화 단위(unit)는 null일 수 없습니다.");
-		Objects.requireNonNull(name, "통화 이름(name)는 null일 수 없습니다.");
-		String normalizedCode = code.trim().toUpperCase();
+	private Currency(String code, String name) {
+		String normalizedCode = Objects.requireNonNull(code).trim().toUpperCase();
 		validate(normalizedCode);
 		this.code = normalizedCode;
-		this.unit = unit;
-		this.name = name;
+		this.name = Objects.requireNonNull(name);
 	}
 
 	private void validate(String code) {
-		if (code == null) {
-			throw new IllegalArgumentException("통화 코드(code)는 null일 수 없습니다.");
-		}
-
 		String normalizedCode = code.trim().toUpperCase();
 		if (normalizedCode.isEmpty()) {
 			throw new IllegalArgumentException("통화 코드(code)는 빈 문자열일 수 없습니다.");
@@ -43,23 +31,20 @@ public final class Currency {
 		}
 	}
 
-	public static Currency from(String code) {
-		Objects.requireNonNull(code, "통화 코드(code)는 null이면 안됩니다.");
-		String normalizedCode = code.trim().toUpperCase();
-		if ("USD".equalsIgnoreCase(normalizedCode)) {
-			return dollar();
-		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
-			return won();
-		}
-		throw new IllegalArgumentException("잘못된 통화 코드(code) 입니다.");
+	public static Currency of(String code, String name) {
+		return new Currency(code, name);
 	}
 
 	public static Currency dollar() {
-		return new Currency("USD", "$", "달러");
+		return new Currency("USD", "미국 달러");
 	}
 
 	public static Currency won() {
-		return new Currency("KRW", "₩", "원화");
+		return new Currency("KRW", "한국 원");
+	}
+
+	public static Currency jpy() {
+		return new Currency("JPY", "일본 엔");
 	}
 
 	@Override

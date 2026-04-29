@@ -7,3 +7,4 @@ COMPOUND
 TAX_BENEFIT
 1.4
 KRW
+한국 원

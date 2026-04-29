@@ -8,5 +8,6 @@
   "annualInterestRate": 0.05,
   "taxType": "일반과세",
   "taxRate": 0.154,
-  "currencyCode": "KRW"
+  "currencyCode": "KRW",
+  "currencyName": "한국 원"
 }

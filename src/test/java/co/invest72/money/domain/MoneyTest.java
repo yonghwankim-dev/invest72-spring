@@ -105,9 +105,9 @@ class MoneyTest {
 	void dollar_whenCreateDollar_thenCurrencyIsUSD() {
 		// given
 		BigDecimal value = BigDecimal.valueOf(5);
-		String currency = "USD";
+		Currency dollar = Currency.dollar();
 		// when
-		Money money = Money.of(value, currency);
+		Money money = Money.of(value, dollar);
 		// then
 		Assertions.assertThat(money).isEqualTo(Money.dollar(5));
 	}

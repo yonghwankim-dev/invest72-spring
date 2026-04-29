@@ -13,15 +13,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.Bank;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductStatisticsResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
+import co.invest72.financial_product.presentation.dto.response.TotalBalance;
+import co.invest72.financial_product.presentation.dto.response.TotalEstimatedInterest;
 import co.invest72.investment.application.InvestmentFactory;
+import co.invest72.investment.domain.Investment;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +44,8 @@ public class FinancialProductService {
 	private final FinancialProductFactory financialProductFactory;
 	private final FinancialProductCalculator calculator;
 	private final MoneyMapper moneyMapper;
+	private final Bank bank;
+	private final ExchangeRateService exchangeRateService;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -52,11 +62,13 @@ public class FinancialProductService {
 		LocalDate today = localDateProvider.now();
 
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		BigDecimal balance = calculator.calculateBalance(product, today, expirationDate);
+		Money balance = calculator.calculateBalance(product, today, expirationDate);
 		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
 		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
-		Currency currency = Currency.from(product.getAmount().getCurrency());
+		// exchangeRate 조회
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
@@ -73,7 +85,7 @@ public class FinancialProductService {
 			.startDate(product.getStartDate())
 			.createdAt(product.getCreatedAt())
 			.expirationDate(expirationDate)
-			.balance(balance)
+			.balance(balance.getValue())
 			.progress(progress)
 			.remainingDays(remainingDays)
 			.productCurrency(productCurrency)
@@ -153,11 +165,13 @@ public class FinancialProductService {
 
 		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
+			ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrency());
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),
 				today,
-				calculator
+				calculator,
+				exchangeRate
 			);
 			result.add(data);
 		}
@@ -174,5 +188,36 @@ public class FinancialProductService {
 			.thenComparing(FinancialProductSummary::getBalance, Comparator.reverseOrder())
 			.thenComparing(FinancialProductSummary::getCreatedAt)
 			.thenComparing(FinancialProductSummary::getId);
+	}
+
+	@Transactional(readOnly = true)
+	public FinancialProductStatisticsResponse getProductStatistics(User user, String baseCurrencyCode) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(baseCurrencyCode);
+		Currency baseCurrency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
+		List<FinancialProduct> products = repository.findAllByUserId(user.getId());
+
+		TotalBalance totalBalance = TotalBalance.from(getTotalBalance(products, baseCurrency));
+		TotalEstimatedInterest totalEstimatedInterest = TotalEstimatedInterest.from(
+			getTotalEstimatedInterest(products, baseCurrency));
+		return new FinancialProductStatisticsResponse(totalBalance, totalEstimatedInterest);
+	}
+
+	private Money getTotalBalance(List<FinancialProduct> products, Currency baseCurrency) {
+		LocalDate today = localDateProvider.now();
+		return products.stream()
+			.map(product -> calculator.calculateBalance(product, today))
+			.map(balance -> bank.reduce(balance, baseCurrency))
+			.reduce(Money::add)
+			.orElseGet(() -> Money.of(BigDecimal.ZERO, baseCurrency));
+	}
+
+	private Money getTotalEstimatedInterest(List<FinancialProduct> products, Currency baseCurrency) {
+		Money sum = Money.of(BigDecimal.ZERO, baseCurrency);
+		for (FinancialProduct product : products) {
+			Investment investment = investmentFactory.createBy(product);
+			Money totalInterest = investment.getTotalInterest();
+			sum = sum.add(bank.reduce(totalInterest, baseCurrency));
+		}
+		return sum;
 	}
 }

@@ -38,10 +38,6 @@ public class Money implements Comparable<Money> {
 		return of(value, Currency.won());
 	}
 
-	public static Money of(BigDecimal value, String currency) {
-		return of(value, Currency.from(currency));
-	}
-
 	public static Money of(BigDecimal value, Currency currency) {
 		return new Money(value, currency);
 	}
@@ -57,10 +53,6 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money times(int multiplier) {
-		return times(BigDecimal.valueOf(multiplier));
-	}
-
-	public Money times(long multiplier) {
 		return times(BigDecimal.valueOf(multiplier));
 	}
 
@@ -88,6 +80,11 @@ public class Money implements Comparable<Money> {
 		}
 		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
 		return of(newValue, this.currency);
+	}
+
+	public Money reduce(Currency target, BigDecimal rate) {
+		BigDecimal amount = value.multiply(rate);
+		return Money.of(amount, target);
 	}
 
 	private boolean isZero(BigDecimal divisor) {

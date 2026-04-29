@@ -3,7 +3,6 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -24,12 +23,10 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
-	private ProductAmount(BigDecimal value, Currency currency) {
-		Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
-		Objects.requireNonNull(currency, "통화는 null일 수 없습니다.");
+	private ProductAmount(BigDecimal value, String currencyCode) {
 		validateRange(value);
-		this.value = value;
-		this.currency = currency.getCode();
+		this.value = Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		this.currency = Objects.requireNonNull(currencyCode, "통화는 null일 수 없습니다.");
 	}
 
 	private void validateRange(BigDecimal value) {
@@ -51,13 +48,11 @@ public class ProductAmount {
 
 	public static ProductAmount from(Money money) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
-		return new ProductAmount(money.getValue(), money.getCurrency());
+		return of(money.getValue(), money.getCurrency().getCode());
 	}
 
 	public static ProductAmount of(BigDecimal amount, String currencyCode) {
-		Objects.requireNonNull(amount, "상품 금액은 null이면 안된다.");
-		Objects.requireNonNull(currencyCode, "통화 코드는 null이면 안된다.");
-		return new ProductAmount(amount, Currency.from(currencyCode));
+		return new ProductAmount(amount, currencyCode);
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
@@ -48,14 +50,16 @@ public class InvestmentFactory {
 
 	private final Map<InvestmentKey, Function<CalculateInvestmentDto, Investment>> dtoRegistry = new HashMap<>();
 	private final ProductAmountMapper productAmountMapper;
+	private final ExchangeRateService exchangeRateService;
 
-	public InvestmentFactory(ProductAmountMapper productAmountMapper) {
-		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::fixedDeposit);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::fixedDeposit);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::fixedSaving);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::fixedSaving);
+	public InvestmentFactory(ProductAmountMapper productAmountMapper, ExchangeRateService exchangeRateService) {
+		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cash);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::deposit);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::deposit);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::savings);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::savings);
 		this.productAmountMapper = productAmountMapper;
+		this.exchangeRateService = exchangeRateService;
 	}
 
 	public Investment createBy(CalculateInvestmentDto dto) {
@@ -86,7 +90,7 @@ public class InvestmentFactory {
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
-		Currency currency = Currency.from(request.getCurrencyCode());
+		Currency currency = Currency.of(request.getCurrencyCode(), request.getCurrencyName());
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
 		Money amount = Money.of(BigDecimal.valueOf(request.getAmount()), currency);
@@ -116,14 +120,18 @@ public class InvestmentFactory {
 		return new InvestmentKey(investmentType, interestType);
 	}
 
-	private Investment cashInvestment(CalculateInvestmentDto dto) {
-		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency());
+	private Investment cash(CalculateInvestmentDto dto) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
+		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), currency);
 		return new CashInvestment(investmentAmount);
 	}
 
-	private Investment fixedDeposit(CalculateInvestmentDto dto) {
+	private Investment deposit(CalculateInvestmentDto dto) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		return FixedDeposit.builder()
-			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
+			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), currency))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
 			.interestType(dto.getInterestType())
@@ -131,10 +139,12 @@ public class InvestmentFactory {
 			.build();
 	}
 
-	private Investment fixedSaving(CalculateInvestmentDto dto) {
+	private Investment savings(CalculateInvestmentDto dto) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
+		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		return FixedSaving.builder()
 			.investmentAmount(new MonthlyInstallmentInvestmentAmount(Money.of(
-				dto.getAmount().getValue(), dto.getCurrency())))
+				dto.getAmount().getValue(), currency)))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
 			.interestType(dto.getInterestType())

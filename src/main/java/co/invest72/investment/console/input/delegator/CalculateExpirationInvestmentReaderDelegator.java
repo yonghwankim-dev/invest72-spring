@@ -30,6 +30,7 @@ public class CalculateExpirationInvestmentReaderDelegator {
 		String taxType = reader.readTaxType();
 		double taxRate = reader.readTaxRate();
 		String currency = reader.readCurrency();
+		String currencyName = reader.readCurrencyName();
 
 		return CalculateInvestmentRequest.builder()
 			.type(investmentType)
@@ -42,6 +43,7 @@ public class CalculateExpirationInvestmentReaderDelegator {
 			.taxType(taxType)
 			.taxRate(taxRate)
 			.currencyCode(currency)
+			.currencyName(currencyName)
 			.build();
 	}
 

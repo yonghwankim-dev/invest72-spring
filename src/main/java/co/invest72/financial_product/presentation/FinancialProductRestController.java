@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
 import co.invest72.financial_product.presentation.dto.response.CreateFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
+import co.invest72.financial_product.presentation.dto.response.FinancialProductStatisticsResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.security.PrincipalUser;
 import jakarta.validation.Valid;
@@ -68,5 +70,14 @@ public class FinancialProductRestController {
 	public ResponseEntity<Void> deleteProduct(@AuthenticationPrincipal PrincipalUser user, @PathVariable String id) {
 		service.deleteProduct(user.getUser(), id);
 		return ResponseEntity.noContent().build();
+	}
+
+	// 상품 통계 데이터 조회
+	@GetMapping("/statistics")
+	public ResponseEntity<FinancialProductStatisticsResponse> getProductStatistics(
+		@AuthenticationPrincipal PrincipalUser user,
+		@RequestParam(value = "currency", required = false, defaultValue = "KRW") String currency) {
+		FinancialProductStatisticsResponse response = service.getProductStatistics(user.getUser(), currency);
+		return ResponseEntity.ok(response);
 	}
 }

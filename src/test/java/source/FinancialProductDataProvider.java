@@ -18,15 +18,24 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 
 public class FinancialProductDataProvider {
 	public static FinancialProduct createCashProduct(String userId) {
+		return createCashProduct(userId, Currency.won());
+	}
+
+	public static FinancialProduct createCashProduct(String userId, Currency currency) {
+		return createCashProduct("product-1234", userId, currency);
+	}
+
+	public static FinancialProduct createCashProduct(String productId, String userId, Currency currency) {
 		return CashProduct.builder()
-			.id("product-1234")
+			.id(productId)
 			.userId(userId)
 			.name("현금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), currency.getCode()))
 			.months(new ProductMonths(0))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
 			.productInterestType(ProductInterestType.from(InterestType.NONE))

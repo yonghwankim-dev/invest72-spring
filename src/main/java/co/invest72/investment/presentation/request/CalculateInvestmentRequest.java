@@ -55,10 +55,13 @@ public class CalculateInvestmentRequest {
 	@Pattern(regexp = "^[A-Z]{3}$", message = "The call code must be 3 uppercase alphabetic characters.")
 	private String currencyCode;
 
+	@NotBlank(message = "currencyName must not be null or empty string")
+	private String currencyName;
+
 	@Builder(toBuilder = true)
 	private CalculateInvestmentRequest(String type, String amountType, Integer amount, String periodType,
 		Integer periodValue, String interestType, Double annualInterestRate, String taxType, Double taxRate,
-		String currencyCode) {
+		String currencyCode, String currencyName) {
 		this.type = Objects.requireNonNull(type, "type must not be null");
 		this.amountType = Objects.requireNonNull(amountType, "amountType must not be null");
 		this.amount = Objects.requireNonNull(amount, "amount must not be null");
@@ -69,6 +72,7 @@ public class CalculateInvestmentRequest {
 		this.taxType = Objects.requireNonNull(taxType, "taxType must not be null");
 		this.taxRate = Objects.requireNonNull(taxRate, "taxRate must not be null");
 		this.currencyCode = Objects.requireNonNull(currencyCode, "currencyCode must not be null");
+		this.currencyName = Objects.requireNonNull(currencyName, "currencyName must not be null");
 	}
 
 	@Override

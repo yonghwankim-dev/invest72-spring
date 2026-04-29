@@ -7,3 +7,4 @@ COMPOUND
 NON_TAX
 0
 KRW
+한국 원
