@@ -35,17 +35,6 @@ public final class Currency {
 		return new Currency(code, name);
 	}
 
-	public static Currency from(String code) {
-		Objects.requireNonNull(code, "통화 코드(code)는 null이면 안됩니다.");
-		String normalizedCode = code.trim().toUpperCase();
-		if ("USD".equalsIgnoreCase(normalizedCode)) {
-			return dollar();
-		} else if ("KRW".equalsIgnoreCase(normalizedCode)) {
-			return won();
-		}
-		throw new IllegalArgumentException("unknown code, code=" + code);
-	}
-
 	public static Currency dollar() {
 		return new Currency("USD", "미국 달러");
 	}
