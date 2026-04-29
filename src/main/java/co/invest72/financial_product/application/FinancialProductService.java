@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
@@ -43,6 +44,7 @@ public class FinancialProductService {
 	private final FinancialProductCalculator calculator;
 	private final MoneyMapper moneyMapper;
 	private final Bank bank;
+	private final ExchangeRateRepository exchangeRateRepository;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -63,7 +65,10 @@ public class FinancialProductService {
 		BigDecimal progress = calculator.calculateProgress(product, today, expirationDate);
 		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
-		Currency currency = Currency.from(product.getAmount().getCurrency());
+		// exchangeRate 조회
+		Currency currency = exchangeRateRepository.findByCode(product.getAmount().getCurrency())
+			.map(exchangeRate -> Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName()))
+			.orElseThrow(() -> new IllegalArgumentException("not found ExchangeRate entity"));
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return DetailedFinancialProductResponse.builder()
 			.id(product.getId())
