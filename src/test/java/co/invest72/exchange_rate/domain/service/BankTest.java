@@ -21,6 +21,9 @@ class BankTest {
 	void setUp() {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
 		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		// 엔화 추가
+		Currency jpy = Currency.jpy();
+		exchangeRateService.saveRate(new ExchangeRate(jpy.getCode(), jpy.getName(), new BigDecimal("9.5105")));
 		Currency dollar = Currency.dollar();
 		exchangeRateService.saveRate(new ExchangeRate(dollar.getCode(), dollar.getName(), BigDecimal.valueOf(1000)));
 		bank = new Bank(exchangeRateService);
@@ -62,5 +65,18 @@ class BankTest {
 		// then
 		Money expected = Money.won(1000);
 		Assertions.assertThat(wonMoney).isEqualTo(expected);
+	}
+
+	@DisplayName("환전 - 엔화를 달러로 변환한다")
+	@Test
+	void reduce_whenJpyToUsd_thenReturnMoney() {
+		// given
+		Money jpyMoney = Money.of(BigDecimal.valueOf(1000), Currency.jpy());
+
+		// when
+		Money dollarMoney = bank.reduce(jpyMoney, Currency.dollar());
+		// then
+		Money expected = Money.dollar(new BigDecimal("9.51"));
+		Assertions.assertThat(dollarMoney).isEqualTo(expected);
 	}
 }
