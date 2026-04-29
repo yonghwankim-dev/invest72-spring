@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +30,7 @@ public class InMemoryExchangeRateRepository implements ExchangeRateRepository {
 
 	@Override
 	public Optional<ExchangeRate> findByCode(String code) {
-		return Optional.ofNullable(store.get(code.toUpperCase()));
+		return Optional.ofNullable(store.get(Objects.requireNonNull(code).trim().toUpperCase()));
 	}
 
 	@Override

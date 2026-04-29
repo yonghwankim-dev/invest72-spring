@@ -1,6 +1,7 @@
 package co.invest72.exchange_rate.infrastructure.persistence;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -18,7 +19,7 @@ public class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
 
 	@Override
 	public Optional<ExchangeRate> findByCode(String code) {
-		return jpaRepository.findById(code);
+		return jpaRepository.findById(Objects.requireNonNull(code).trim().toUpperCase());
 	}
 
 	@Override
