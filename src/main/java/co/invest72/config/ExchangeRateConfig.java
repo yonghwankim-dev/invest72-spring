@@ -10,7 +10,6 @@ import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.api.FixedExchangeRateProvider;
 import co.invest72.exchange_rate.infrastructure.api.FixedKoreaeximClient;
 import co.invest72.exchange_rate.infrastructure.api.KoreaeximExchangeRateProvider;
 import co.invest72.exchange_rate.infrastructure.api.KoreaeximProperties;
@@ -44,14 +43,6 @@ public class ExchangeRateConfig {
 	}
 
 	@Bean
-	@Profile(value = {"local", "test"})
-	public FixedExchangeRateProvider fixedExchangeRateProvider(KoreaeximClient koreaeximClient,
-		ExchangeRateUpdateHandler exchangeRateUpdateHandler) {
-		return new FixedExchangeRateProvider(koreaeximClient, exchangeRateUpdateHandler);
-	}
-
-	@Bean
-	@Profile(value = {"production"})
 	public KoreaeximExchangeRateProvider koreaeximExchangeRateProvider(KoreaeximClient koreaeximClient,
 		ExchangeRateUpdateHandler handler) {
 		return new KoreaeximExchangeRateProvider(koreaeximClient, handler);
