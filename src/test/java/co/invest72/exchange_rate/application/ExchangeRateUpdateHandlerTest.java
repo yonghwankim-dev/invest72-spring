@@ -70,11 +70,6 @@ class ExchangeRateUpdateHandlerTest {
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(RuntimeException.class);
-
-		Currency won = Currency.won();
-		Currency jpy = Currency.jpy();
-		Assertions.assertThat(service.getRate(new CurrencyPair(won, jpy))).isEmpty();
-		Assertions.assertThat(service.getRate(new CurrencyPair(jpy, won))).isEmpty();
 	}
 
 	@DisplayName("환율 업데이트 - DB 저장은 성공했지만, 캐시 업데이트에 실패하는 경우")

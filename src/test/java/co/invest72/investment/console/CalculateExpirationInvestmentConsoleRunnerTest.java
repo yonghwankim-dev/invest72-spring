@@ -25,6 +25,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.CalculateInvestment;
@@ -110,7 +111,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
 		investment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,
@@ -139,7 +141,8 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
 			err,

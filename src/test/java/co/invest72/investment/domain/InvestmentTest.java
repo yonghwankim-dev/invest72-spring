@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
@@ -35,7 +36,8 @@ class InvestmentTest {
 	@BeforeEach
 	void setUp() {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
 	}
 
