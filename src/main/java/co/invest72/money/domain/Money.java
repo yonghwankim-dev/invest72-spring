@@ -38,11 +38,6 @@ public class Money implements Comparable<Money> {
 		return of(value, Currency.won());
 	}
 
-	// TODO: 제거 예정  
-	public static Money of(BigDecimal value, String currency) {
-		return of(value, Currency.from(currency));
-	}
-
 	public static Money of(BigDecimal value, Currency currency) {
 		return new Money(value, currency);
 	}
