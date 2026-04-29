@@ -86,7 +86,7 @@ public class InvestmentFactory {
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
-		Currency currency = Currency.from(request.getCurrencyCode());
+		Currency currency = Currency.of(request.getCurrencyCode(), request.getCurrencyName());
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
 		Money amount = Money.of(BigDecimal.valueOf(request.getAmount()), currency);
