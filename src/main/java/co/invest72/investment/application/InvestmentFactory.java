@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
@@ -48,14 +49,16 @@ public class InvestmentFactory {
 
 	private final Map<InvestmentKey, Function<CalculateInvestmentDto, Investment>> dtoRegistry = new HashMap<>();
 	private final ProductAmountMapper productAmountMapper;
+	private final ExchangeRateRepository exchangeRateRepository;
 
-	public InvestmentFactory(ProductAmountMapper productAmountMapper) {
-		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cashInvestment);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::fixedDeposit);
-		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::fixedDeposit);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::fixedSaving);
-		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::fixedSaving);
+	public InvestmentFactory(ProductAmountMapper productAmountMapper, ExchangeRateRepository exchangeRateRepository) {
+		dtoRegistry.put(new InvestmentKey(CASH, NONE), this::cash);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, SIMPLE), this::deposit);
+		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::deposit);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::savings);
+		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::savings);
 		this.productAmountMapper = productAmountMapper;
+		this.exchangeRateRepository = exchangeRateRepository;
 	}
 
 	public Investment createBy(CalculateInvestmentDto dto) {
@@ -116,12 +119,12 @@ public class InvestmentFactory {
 		return new InvestmentKey(investmentType, interestType);
 	}
 
-	private Investment cashInvestment(CalculateInvestmentDto dto) {
+	private Investment cash(CalculateInvestmentDto dto) {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency());
 		return new CashInvestment(investmentAmount);
 	}
 
-	private Investment fixedDeposit(CalculateInvestmentDto dto) {
+	private Investment deposit(CalculateInvestmentDto dto) {
 		return FixedDeposit.builder()
 			.investmentAmount(new FixedDepositAmount(dto.getAmount().getValue(), dto.getCurrency()))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
@@ -131,10 +134,14 @@ public class InvestmentFactory {
 			.build();
 	}
 
-	private Investment fixedSaving(CalculateInvestmentDto dto) {
+	private Investment savings(CalculateInvestmentDto dto) {
+		Currency currency = exchangeRateRepository.findByCode(dto.getCurrency())
+			.map(exchangeRate -> Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName()))
+			.orElseThrow(
+				() -> new IllegalArgumentException("not found ExchangeRate, currencyCode=" + dto.getCurrency()));
 		return FixedSaving.builder()
 			.investmentAmount(new MonthlyInstallmentInvestmentAmount(Money.of(
-				dto.getAmount().getValue(), dto.getCurrency())))
+				dto.getAmount().getValue(), currency)))
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
 			.interestType(dto.getInterestType())

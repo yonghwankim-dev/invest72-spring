@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.amount.AmountType;
@@ -32,8 +34,9 @@ class CalculateInvestmentTest {
 
 	@BeforeEach
 	void setUp() {
-		ProductAmountMapper productAmountMapper = new ProductAmountMapper();
-		investmentFactory = new InvestmentFactory(productAmountMapper);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateRepository);
+		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateRepository);
 		calculateMonthlyInvestment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
 
 		Currency won = Currency.won();
