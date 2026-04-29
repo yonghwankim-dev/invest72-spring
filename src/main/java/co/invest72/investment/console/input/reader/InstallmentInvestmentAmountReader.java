@@ -36,7 +36,7 @@ public class InstallmentInvestmentAmountReader implements InvestmentAmountReader
 			throw new IllegalArgumentException("투자 기간 단위는 '월' 또는 '년'이어야 합니다.");
 		} else if (periodType.equals("월")) {
 			int amount = Integer.parseInt(parts[1]);
-			return new MonthlyInstallmentInvestmentAmount(Money.of(BigDecimal.valueOf(amount), "KRW"));
+			return new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(amount)));
 		} else {
 			int amount = Integer.parseInt(parts[1]);
 			return new YearlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(amount)));

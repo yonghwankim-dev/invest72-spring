@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.LumpSumInvestmentAmount;
+import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public class FixedDepositAmount implements LumpSumInvestmentAmount {
@@ -11,6 +12,10 @@ public class FixedDepositAmount implements LumpSumInvestmentAmount {
 	private final Money amount;
 
 	public FixedDepositAmount(BigDecimal amount, String currency) {
+		this(Money.of(amount, currency));
+	}
+
+	public FixedDepositAmount(BigDecimal amount, Currency currency) {
 		this(Money.of(amount, currency));
 	}
 
