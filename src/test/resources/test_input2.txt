@@ -7,3 +7,4 @@ COMPOUND
 STANDARD
 15.4
 KRW
+한국 원

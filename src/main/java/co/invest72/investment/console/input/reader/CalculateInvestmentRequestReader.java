@@ -62,4 +62,8 @@ public class CalculateInvestmentRequestReader implements InvestmentAmountReader 
 	public String readCurrency() throws IOException {
 		return reader.readLine();
 	}
+
+	public String readCurrencyName() throws IOException {
+		return reader.readLine();
+	}
 }
