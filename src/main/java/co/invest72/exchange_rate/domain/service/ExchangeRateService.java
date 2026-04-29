@@ -29,7 +29,7 @@ public class ExchangeRateService {
 	@Transactional(readOnly = true)
 	public ExchangeRate findExchangeRate(String currencyCode) {
 		return repository.findByCode(currencyCode)
-			.orElseThrow(() -> new IllegalArgumentException("not found ExchangeRate, currencyCode=" + currencyCode));
+			.orElseThrow(() -> new NoSuchElementException("not found ExchangeRate, currencyCode=" + currencyCode));
 	}
 
 	/**
@@ -53,8 +53,8 @@ public class ExchangeRateService {
 		ExchangeRate fromExchangeRate;
 		ExchangeRate toExchangeRate;
 		try {
-			fromExchangeRate = repository.findByCode(from.getCode()).orElseThrow();
-			toExchangeRate = repository.findByCode(to.getCode()).orElseThrow();
+			fromExchangeRate = findExchangeRate(from.getCode());
+			toExchangeRate = findExchangeRate(to.getCode());
 		} catch (NoSuchElementException e) {
 			log.warn(e.getMessage());
 			return Optional.empty();
