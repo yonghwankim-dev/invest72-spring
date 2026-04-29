@@ -14,9 +14,25 @@ import co.invest72.exchange_rate.infrastructure.api.FixedKoreaeximClient;
 import co.invest72.exchange_rate.infrastructure.api.KoreaeximExchangeRateProvider;
 import co.invest72.exchange_rate.infrastructure.api.KoreaeximProperties;
 import co.invest72.exchange_rate.infrastructure.api.RealKoreaeximClient;
+import co.invest72.exchange_rate.infrastructure.persistence.ExchangeRateRepositoryImpl;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
+import co.invest72.exchange_rate.infrastructure.persistence.JpaExchangeRateRepository;
 
 @Configuration
 public class ExchangeRateConfig {
+
+	@Bean
+	@Profile(value = "test")
+	public InMemoryExchangeRateRepository inMemoryExchangeRateRepository() {
+		return new InMemoryExchangeRateRepository();
+	}
+
+	@Bean
+	@Profile(value = "!test")
+	public ExchangeRateRepositoryImpl exchangeRateRepositoryImpl(JpaExchangeRateRepository jpaExchangeRateRepository) {
+		return new ExchangeRateRepositoryImpl(jpaExchangeRateRepository);
+	}
+
 	@Bean
 	public Bank bank(ExchangeRateService exchangeRateService) {
 		return new Bank(exchangeRateService);

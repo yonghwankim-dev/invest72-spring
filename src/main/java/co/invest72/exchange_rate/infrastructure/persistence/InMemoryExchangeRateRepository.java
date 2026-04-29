@@ -7,15 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
-
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.money.domain.Currency;
 
-@Repository
-@Profile("test")
 public class InMemoryExchangeRateRepository implements ExchangeRateRepository {
 
 	private final Map<String, ExchangeRate> store = new ConcurrentHashMap<>();
