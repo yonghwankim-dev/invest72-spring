@@ -26,6 +26,12 @@ public class ExchangeRateService {
 		repository.save(exchangeRate);
 	}
 
+	@Transactional(readOnly = true)
+	public ExchangeRate findExchangeRate(String currencyCode) {
+		return repository.findByCode(currencyCode)
+			.orElseThrow(() -> new IllegalArgumentException("not found ExchangeRate, currencyCode=" + currencyCode));
+	}
+
 	/**
 	 * 통화쌍에 대한 환율을 계산하여 반환합니다.
 	 * <p>
