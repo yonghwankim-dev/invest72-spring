@@ -27,7 +27,7 @@ public class RealKoreaeximClient implements KoreaeximClient {
 				.build())
 			.retrieve()
 			.bodyToFlux(ExchangeJsonResponse.class)
-			.timeout(Duration.ofSeconds(10))
+			.timeout(Duration.ofMinutes(5))
 			.onErrorResume(e -> {
 				log.error("환율 조회 중 오류 발생: {}", e.getMessage());
 				return Flux.empty();
