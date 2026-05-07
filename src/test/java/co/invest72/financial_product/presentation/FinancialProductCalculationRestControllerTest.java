@@ -21,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import co.invest72.money.domain.Currency;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
@@ -36,6 +35,7 @@ import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
+import co.invest72.money.domain.Currency;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 import source.FinancialProductDataProvider;
@@ -102,6 +102,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.country").value(productCurrency.getCountry()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -141,6 +142,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.country").value(productCurrency.getCountry()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -179,6 +181,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.country").value(productCurrency.getCountry()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -206,6 +209,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.country").value(productCurrency.getCountry()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}
@@ -233,6 +237,7 @@ class FinancialProductCalculationRestControllerTest {
 			.andExpect(jsonPath("$.monthlyDetails").isArray())
 			.andExpect(jsonPath("$.yearlyDetails").isArray())
 			.andExpect(jsonPath("$.productCurrency.code").value(productCurrency.getCode()))
+			.andExpect(jsonPath("$.productCurrency.country").value(productCurrency.getCountry()))
 			.andExpect(jsonPath("$.productCurrency.name").value(productCurrency.getName()))
 			.andDo(MockMvcResultHandlers.print());
 	}

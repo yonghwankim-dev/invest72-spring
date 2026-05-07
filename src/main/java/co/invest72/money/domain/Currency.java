@@ -13,6 +13,11 @@ public final class Currency {
 	private final String code;
 	private final String name;
 
+	/**
+	 * 통화 객체 생성
+	 * @param code 통화 코드, 예: "KRW", "USD"
+	 * @param name 나라명 + 단위 이름, 예: "한국 원", "미국 달러"
+	 */
 	private Currency(String code, String name) {
 		String normalizedCode = Objects.requireNonNull(code).trim().toUpperCase();
 		validate(normalizedCode);

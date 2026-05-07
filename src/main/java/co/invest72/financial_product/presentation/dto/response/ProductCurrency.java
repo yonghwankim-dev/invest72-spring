@@ -12,9 +12,13 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class ProductCurrency {
 	private String code;
+	private String country;
 	private String name;
 
 	public static ProductCurrency from(Currency currency) {
-		return new ProductCurrency(currency.getCode(), currency.getName());
+		String fullName = currency.getName();
+		String country = fullName.split(" ")[0];
+		String name = fullName.split(" ")[1];
+		return new ProductCurrency(currency.getCode(), country, name);
 	}
 }
