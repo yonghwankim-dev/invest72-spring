@@ -57,6 +57,8 @@ public class FinancialProductSourceProvider {
 			Arguments.of(product, LocalDate.of(2026, 2, 14), unit, "2월 15일 전날: 여전히 100만원"),
 			Arguments.of(product, LocalDate.of(2026, 2, 15), unit.multiply(BigDecimal.valueOf(2)),
 				"2월 15일: 첫 정기 납입 발생 (총 200만원)"),
+			Arguments.of(product, LocalDate.of(2026, 2, 16), unit.multiply(BigDecimal.valueOf(2)),
+				"2월 16일: 첫 정기 납입 다음날 (총 200만원)"),
 			// 3월 정기 납입
 			Arguments.of(product, LocalDate.of(2026, 3, 15), unit.multiply(BigDecimal.valueOf(3)),
 				"3월 15일: 두번째 정기 납입 발생 (총 300만원)"),
