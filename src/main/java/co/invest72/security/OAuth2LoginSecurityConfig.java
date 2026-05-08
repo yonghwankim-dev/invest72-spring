@@ -63,7 +63,9 @@ public class OAuth2LoginSecurityConfig {
 			.oauth2Login(oauth2 -> oauth2
 				.userInfoEndpoint(userInfo -> userInfo
 					.oidcUserService(customOidcUserService))
-				.successHandler(successHandler))
+				.successHandler(successHandler)
+				.failureHandler(oAuth2AuthenticationFailureHandler())
+			)
 			.logout(logout -> logout
 				.logoutUrl("/api/v1/auth/logout")
 				.logoutSuccessHandler((request, response, authentication) ->
@@ -98,5 +100,10 @@ public class OAuth2LoginSecurityConfig {
 			cookie.sameSite("Lax");
 		});
 		return repository;
+	}
+
+	@Bean
+	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+		return new OAuth2AuthenticationFailureHandler();
 	}
 }
