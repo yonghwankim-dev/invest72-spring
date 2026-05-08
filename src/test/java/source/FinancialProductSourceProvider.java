@@ -43,18 +43,31 @@ public class FinancialProductSourceProvider {
 
 	public static Stream<Arguments> provideSavingsBalanceSource() {
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
+		BigDecimal unit = BigDecimal.valueOf(1_000_000);
 		return Stream.of(
+			// 기준일자가 시작일 이전
 			Arguments.of(product, LocalDate.of(2026, 1, 1).minusMonths(2), BigDecimal.ZERO,
-				"적금 상품: 기준일자가 시작일자보다 이전인 경우 잔액은 0을 반환해야 한다."),
-			Arguments.of(product, LocalDate.of(2027, 1, 2),
-				BigDecimal.valueOf(1_000_000L).multiply(BigDecimal.valueOf(12)),
-				"적금 상품: 기준일자가 만기일 이후인 경우 잔액은 월 적립액 * 총 개월 수를 반환해야 한다."),
-			Arguments.of(product, LocalDate.of(2026, 2, 14), BigDecimal.valueOf(1_000_000),
-				"적금 상품: 기준일자의 days가 납입일 이전이라면 잔액이 1개월분 적립되어야 한다."),
-			Arguments.of(product, LocalDate.of(2026, 2, 15), BigDecimal.valueOf(2_000_000),
-				"적금 상품: 기준일자의 days가 납입일과 동일하면 잔액이 2개월분 적립되어야 한다."),
-			Arguments.of(product, LocalDate.of(2026, 2, 16), BigDecimal.valueOf(2_000_000),
-				"적금 상품: 기준일자의 days가 납입일 이후라면 잔액이 2개월분 적립되어야 한다")
+				"2025년 11월 1일: 초회 납입 시작 안함 (총 0원)"),
+
+			// 가입 당일 ~ 1월 전체(초회 납입 1회만 인정)
+			Arguments.of(product, LocalDate.of(2026, 1, 1), unit, "가입 당일: 초회납입 100만 적립"),
+			Arguments.of(product, LocalDate.of(2026, 1, 15), unit, "1월 15일: 가입일 정기납입은 스킵되므로 여전히 100만원"),
+			Arguments.of(product, LocalDate.of(2026, 1, 31), unit, "1월 31일: 여전히 100만원"),
+			// 2월 정기 납입 (첫 정기납입 시작)
+			Arguments.of(product, LocalDate.of(2026, 2, 14), unit, "2월 15일 전날: 여전히 100만원"),
+			Arguments.of(product, LocalDate.of(2026, 2, 15), unit.multiply(BigDecimal.valueOf(2)),
+				"2월 15일: 첫 정기 납입 발생 (총 200만원)"),
+			Arguments.of(product, LocalDate.of(2026, 2, 16), unit.multiply(BigDecimal.valueOf(2)),
+				"2월 16일: 첫 정기 납입 다음날 (총 200만원)"),
+			// 3월 정기 납입
+			Arguments.of(product, LocalDate.of(2026, 3, 15), unit.multiply(BigDecimal.valueOf(3)),
+				"3월 15일: 두번째 정기 납입 발생 (총 300만원)"),
+			// 12월 정기 납입
+			Arguments.of(product, LocalDate.of(2026, 12, 15), unit.multiply(BigDecimal.valueOf(12)),
+				"12월 15일: 열두번째 정기 납입 발생 (총 1200만원)"),
+			// 만기일 이후 (예: 만기 12개월 가정시, 초회 1회 + 정기 11 = 총 12회)
+			Arguments.of(product, LocalDate.of(2027, 1, 1), unit.multiply(BigDecimal.valueOf(12)),
+				"만기일: 최종 12회차 적립 완료 (총 1200만원)")
 		);
 	}
 
