@@ -47,7 +47,7 @@ public class FinancialProductSourceProvider {
 		return Stream.of(
 			// 기준일자가 시작일 이전
 			Arguments.of(product, LocalDate.of(2026, 1, 1).minusMonths(2), BigDecimal.ZERO,
-				"2025월 11월 1일: 초회 납입 시작 안함 (총 0원)"),
+				"2025년 11월 1일: 초회 납입 시작 안함 (총 0원)"),
 
 			// 가입 당일 ~ 1월 전체(초회 납입 1회만 인정)
 			Arguments.of(product, LocalDate.of(2026, 1, 1), unit, "가입 당일: 초회납입 100만 적립"),
