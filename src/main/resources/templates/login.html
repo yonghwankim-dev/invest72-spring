@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - invest72</title>
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: #f5f7f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285F4;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* 에러 메시지 스타일 */
+        .error-container {
+            background-color: #fff5f5;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none; /* 기본적으로 숨김 */
+        }
+
+        /* 구글 공식 가이드라인 버튼 스타일 */
+        .gsi-material-button {
+            background-color: white;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: #3c4043;
+            cursor: pointer;
+            font-family: 'Google Sans', arial, sans-serif;
+            font-size: 14px;
+            height: 40px;
+            letter-spacing: 0.25px;
+            outline: none;
+            overflow: hidden;
+            padding: 0 12px;
+            position: relative;
+            text-align: center;
+            transition: background-color .218s, border-color .218s, box-shadow .218s;
+            vertical-align: middle;
+            white-space: nowrap;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .gsi-material-button:hover {
+            background-color: #f7f8f8;
+            border-color: #d2dce0;
+            box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+        }
+
+        .gsi-material-button-icon {
+            height: 18px;
+            margin-right: 10px;
+            min-width: 18px;
+            width: 18px;
+        }
+
+        .gsi-material-button-content-wrapper {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="logo">invest72</div>
+    <h1>서비스 이용을 위해 로그인해주세요</h1>
+
+    <!-- 에러 발생 시 출력되는 영역 -->
+    <div id="error-box" class="error-container">
+        <span id="error-message"></span>
+    </div>
+
+    <!-- 구글 소셜 로그인 버튼 -->
+    <!-- href 주소는 사용자의 백엔드 설정에 맞춰 작성 -->
+    <a href="/oauth2/authorization/google" class="gsi-material-button">
+        <div class="gsi-material-button-content-wrapper">
+            <div class="gsi-material-button-icon">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
+                    <path fill="#EA4335"
+                          d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                    <path fill="#4285F4"
+                          d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                    <path fill="#FBBC05"
+                          d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                    <path fill="#34A853"
+                          d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                </svg>
+            </div>
+            <span class="gsi-material-button-contents">Google 계정으로 계속하기</span>
+        </div>
+    </a>
+</div>
+
+<script>
+    // URL 파라미터에서 error를 읽어 화면에 표시하는 스크립트
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+
+        if (error) {
+            const errorBox = document.getElementById('error-box');
+            const errorMsg = document.getElementById('error-message');
+
+            errorBox.style.display = 'block';
+
+            // error가 true로 넘어올 경우와 상세 메시지로 넘어올 경우 분기 처리
+            if (error === 'true') {
+                errorMsg.innerText = "로그인 도중 오류가 발생했습니다.";
+            } else {
+                errorMsg.innerText = decodeURIComponent(error);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

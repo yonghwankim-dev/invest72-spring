@@ -27,7 +27,6 @@ public class CustomOidcUserService extends OidcUserService {
 		String providerId = oidcUser.getSubject(); // 구글의 sub값
 
 		User user = userRepository.findByProviderId(providerId).orElseGet(() -> saveNewUser(oidcUser, providerId));
-
 		return new PrincipalUser(user, oidcUser.getAttributes(), oidcUser.getIdToken(), oidcUser.getUserInfo());
 	}
 

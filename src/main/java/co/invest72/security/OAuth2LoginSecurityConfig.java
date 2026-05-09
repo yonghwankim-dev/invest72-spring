@@ -2,6 +2,8 @@ package co.invest72.security;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -30,6 +34,8 @@ public class OAuth2LoginSecurityConfig {
 	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
+	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+
 	@Value("${app.domain}")
 	private String csrfCookieDomain;
 
@@ -61,6 +67,9 @@ public class OAuth2LoginSecurityConfig {
 					.requestMatchers(HttpMethod.OPTIONS).permitAll()
 					.anyRequest().authenticated())
 			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/login")
+				.authorizationEndpoint(
+					authorization -> authorization.authorizationRequestRepository(authorizationRequestRepository))
 				.userInfoEndpoint(userInfo -> userInfo
 					.oidcUserService(customOidcUserService))
 				.successHandler(successHandler)
@@ -104,6 +113,7 @@ public class OAuth2LoginSecurityConfig {
 
 	@Bean
 	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
-		return new OAuth2AuthenticationFailureHandler();
+		List<String> allowedOrigins = corsConfigurationProperties.getAllowedOrigins();
+		return new OAuth2AuthenticationFailureHandler(allowedOrigins);
 	}
 }
