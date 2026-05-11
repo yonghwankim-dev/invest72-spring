@@ -1,25 +1,27 @@
 package co.invest72.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AuthorizedRedirectUriCheckerTest {
 
-	@DisplayName("객체 생성")
-	@Test
-	void canCreated() {
-		// when
-		AuthorizedRedirectUriChecker checker = new AuthorizedRedirectUriChecker();
-		// then
-		Assertions.assertThat(checker).isNotNull();
+	private AuthorizedRedirectUriChecker checker;
+
+	@BeforeEach
+	void setUp() {
+		List<String> allowedOrigins = new ArrayList<>();
+		checker = new AuthorizedRedirectUriChecker(allowedOrigins);
 	}
 
 	@DisplayName("URI 검사")
 	@Test
 	void check() {
 		// given
-		AuthorizedRedirectUriChecker checker = new AuthorizedRedirectUriChecker();
 		String uri = "http://localhost:3000";
 		// when
 		boolean actual = checker.check(uri);

@@ -1,7 +1,23 @@
 package co.invest72.security;
 
+import java.net.URI;
+import java.util.List;
+
 public class AuthorizedRedirectUriChecker {
+
+	private final List<String> allowedOrigins;
+
+	public AuthorizedRedirectUriChecker(List<String> allowedOrigins) {
+		this.allowedOrigins = allowedOrigins;
+	}
+
 	public boolean check(String uri) {
-		return false;
+		URI clientRedirectUri = URI.create(uri);
+		return allowedOrigins.stream()
+			.anyMatch(authorizedRedirectUri -> {
+				URI authorizedURI = URI.create(authorizedRedirectUri);
+				return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+					&& authorizedURI.getPort() == clientRedirectUri.getPort();
+			});
 	}
 }
