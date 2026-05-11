@@ -14,4 +14,16 @@ class AuthorizedRedirectUriCheckerTest {
 		// then
 		Assertions.assertThat(checker).isNotNull();
 	}
+
+	@DisplayName("URI 검사")
+	@Test
+	void check() {
+		// given
+		AuthorizedRedirectUriChecker checker = new AuthorizedRedirectUriChecker();
+		String uri = "http://localhost:3000";
+		// when
+		boolean actual = checker.check(uri);
+		// then
+		Assertions.assertThat(actual).isFalse();
+	}
 }
