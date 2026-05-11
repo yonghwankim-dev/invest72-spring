@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class HttpCookieOAuth2AuthorizationRequestRepository
 	implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 	public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirectUri";
@@ -40,6 +42,10 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 	@Override
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
 		HttpServletResponse response) {
-		return this.loadAuthorizationRequest(request);
+		OAuth2AuthorizationRequest authorizationRequest = this.loadAuthorizationRequest(request);
+		if (authorizationRequest != null) {
+			request.getSession().removeAttribute(OAUTH2_AUTH_REQUEST_NAME);
+		}
+		return authorizationRequest;
 	}
 }
