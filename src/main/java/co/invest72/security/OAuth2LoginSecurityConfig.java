@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -35,6 +36,7 @@ public class OAuth2LoginSecurityConfig {
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+	private final AuthenticationEntryPoint authenticationEntryPoint;
 
 	@Value("${app.domain}")
 	private String csrfCookieDomain;
@@ -81,6 +83,9 @@ public class OAuth2LoginSecurityConfig {
 					response.setStatus(HttpServletResponse.SC_OK)
 				)
 				.invalidateHttpSession(true) // 세션 무효화
+			)
+			.exceptionHandling(configurer ->
+				configurer.authenticationEntryPoint(authenticationEntryPoint)
 			);
 		return http.build();
 	}
