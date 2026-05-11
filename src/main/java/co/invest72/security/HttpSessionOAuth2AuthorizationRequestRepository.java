@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpSessionOAuth2AuthorizationRequestRepository
 	implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
-	public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirectUri";
+	public static final String REDIRECT_URI_PARAM_SESSION_NAME = "redirectUri";
 	private static final String OAUTH2_AUTH_REQUEST_NAME = "oauth2_auth_request";
 
 	@Override
@@ -25,7 +25,7 @@ public class HttpSessionOAuth2AuthorizationRequestRepository
 		HttpServletResponse response) {
 		if (authorizationRequest == null) {
 			request.getSession().removeAttribute(OAUTH2_AUTH_REQUEST_NAME);
-			request.getSession().removeAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
+			request.getSession().removeAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
 			return;
 		}
 
@@ -33,9 +33,9 @@ public class HttpSessionOAuth2AuthorizationRequestRepository
 		request.getSession().setAttribute(OAUTH2_AUTH_REQUEST_NAME, authorizationRequest);
 
 		// 쿼리 파라미터로 넘어온 redirect_url을 세션에 저장
-		String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+		String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_SESSION_NAME);
 		if (redirectUriAfterLogin != null && !redirectUriAfterLogin.isBlank()) {
-			request.getSession().setAttribute(REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin);
+			request.getSession().setAttribute(REDIRECT_URI_PARAM_SESSION_NAME, redirectUriAfterLogin);
 		}
 	}
 

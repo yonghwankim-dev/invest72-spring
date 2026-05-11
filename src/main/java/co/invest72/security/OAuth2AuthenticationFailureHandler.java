@@ -26,7 +26,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		log.warn("Failed Authentication : {}", exception.getMessage(), exception);
 
 		// 세션에 저장해둔 redirect_uri 가져오기
-		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
+		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
 
 		// 화이트리스트 검증 로직 추가
 		if (targetUrl != null && !checker.check(targetUrl)) {
@@ -54,7 +54,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 			: targetUrl + "?error=" + encodedMessage;
 
 		// 사용한 세션 데이터 삭제 (Clean up)
-		request.getSession().removeAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
+		request.getSession().removeAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
 
 		getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 	}
