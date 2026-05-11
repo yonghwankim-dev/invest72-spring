@@ -1,6 +1,5 @@
 package co.invest72.security;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -14,7 +13,7 @@ class AuthorizedRedirectUriCheckerTest {
 
 	@BeforeEach
 	void setUp() {
-		List<String> allowedOrigins = new ArrayList<>();
+		List<String> allowedOrigins = List.of("http://localhost:3000");
 		checker = new AuthorizedRedirectUriChecker(allowedOrigins);
 	}
 
@@ -26,6 +25,6 @@ class AuthorizedRedirectUriCheckerTest {
 		// when
 		boolean actual = checker.check(uri);
 		// then
-		Assertions.assertThat(actual).isFalse();
+		Assertions.assertThat(actual).isTrue();
 	}
 }
