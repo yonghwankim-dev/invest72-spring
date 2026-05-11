@@ -39,4 +39,15 @@ class AuthorizedRedirectUriCheckerTest {
 		// then
 		Assertions.assertThat(actual).isFalse();
 	}
+
+	@DisplayName("URI 검사 - uri가 null이면 false를 반환해야 한다")
+	@Test
+	void check_whenUriIsNull_thenReturnFalse() {
+		// given
+		String uri = null;
+		// when
+		boolean actual = checker.check(uri);
+		// then
+		Assertions.assertThat(actual).isFalse();
+	}
 }
