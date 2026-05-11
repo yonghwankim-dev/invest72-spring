@@ -1,13 +1,13 @@
 package co.invest72.security;
 
+import static co.invest72.security.HttpSessionOAuth2AuthorizationRequestRepository.*;
+
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,12 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-	private final String redirectUri;
 
-	public OAuth2AuthenticationSuccessHandler(
-		@Value("${app.oauth2.authorized-redirect-uri}") String redirectUri) {
+	public OAuth2AuthenticationSuccessHandler() {
 		super("/");
-		this.redirectUri = redirectUri;
 	}
 
 	@Override
@@ -35,8 +32,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			csrfToken.getToken();
 		}
 
-		// redirectUri는 프론트에서 로그인 성공 후 리다이렉트할 URL입니다. 예를 들어, "http://localhost:3000"와 같은 URL이 될 수 있습니다.
-		String targetUrl = UriComponentsBuilder.fromUriString(redirectUri).build().toUriString();
+		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
+		if (targetUrl == null || targetUrl.isBlank()) {
+			// 백엔드 서버의 루트 경로로 리다이렉트
+			targetUrl = getDefaultTargetUrl();
+		}
+		log.info("success login, targetUrl={}", targetUrl);
+
+		// clean up user session data
+		request.getSession().removeAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
+
+		// redirect
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 	}
 }
