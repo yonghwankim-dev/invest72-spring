@@ -39,11 +39,22 @@ class AuthorizedRedirectUriCheckerTest {
 		Assertions.assertThat(actual).isFalse();
 	}
 
-	@DisplayName("URI 검사 - 허용되지 않는 도메인은 false를 반환하여야 한다")
+	@DisplayName("URI 검사 - 출처가 포트가 다르면 false를 반환하여야 한다")
 	@Test
-	void check_whenUriIsNotAllowedOrigin_thenReturnFalse() {
+	void check_whenPortIsDiff_thenReturnFalse() {
 		// given
-		String uri = "http://hacker.com";
+		String uri = "https://localhost:4000";
+		// when
+		boolean actual = checker.check(uri);
+		// then
+		Assertions.assertThat(actual).isFalse();
+	}
+
+	@DisplayName("URI 검사 - 호스트가 다르면 false를 반환하여야 한다")
+	@Test
+	void check_whenHostIsDiff_thenReturnFalse() {
+		// given
+		String uri = "http://hacker.com:3000";
 		// when
 		boolean actual = checker.check(uri);
 		// then
