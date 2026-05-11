@@ -25,10 +25,10 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException exception) throws IOException {
-		// 세션에 저장해둔 redirect_url 가져오기
+		// 세션에 저장해둔 redirect_uri 가져오기
 		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
 
-		// 1. 화이트리스트 검증 로직 추가
+		// 화이트리스트 검증 로직 추가
 		if (targetUrl != null && !isAuthorizedRedirectUri(targetUrl)) {
 			log.warn("비인가 리다이렉트 시도 차단: {}", targetUrl);
 			targetUrl = LOGIN_URL; // 안전하지 않은 주소일 경우 백엔드 기본 로그인으로 강제 설정
