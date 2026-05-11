@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @EnableConfigurationProperties(CorsConfigurationProperties.class)
 public class OAuth2LoginSecurityConfig {
 
-	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
@@ -43,6 +42,8 @@ public class OAuth2LoginSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		AuthorizedRedirectUriChecker authorizedRedirectUriChecker = authorizedRedirectUriChecker();
+
 		// 필터 등록
 		http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // 인증 필터 이후에 실행
 
@@ -74,8 +75,8 @@ public class OAuth2LoginSecurityConfig {
 					authorization -> authorization.authorizationRequestRepository(authorizationRequestRepository))
 				.userInfoEndpoint(userInfo -> userInfo
 					.oidcUserService(customOidcUserService))
-				.successHandler(successHandler)
-				.failureHandler(oAuth2AuthenticationFailureHandler())
+				.successHandler(oAuth2AuthenticationSuccessHandler(authorizedRedirectUriChecker))
+				.failureHandler(oAuth2AuthenticationFailureHandler(authorizedRedirectUriChecker))
 			)
 			.logout(logout -> logout
 				.logoutUrl("/api/v1/auth/logout")
@@ -117,13 +118,19 @@ public class OAuth2LoginSecurityConfig {
 	}
 
 	@Bean
-	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
-		return new OAuth2AuthenticationFailureHandler(authorizedRedirectUriChecker());
+	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler(AuthorizedRedirectUriChecker checker) {
+		return new OAuth2AuthenticationFailureHandler(checker);
 	}
 
 	@Bean
 	public AuthorizedRedirectUriChecker authorizedRedirectUriChecker() {
 		List<String> allowedOrigins = corsConfigurationProperties.getAllowedOrigins();
 		return new AuthorizedRedirectUriChecker(allowedOrigins);
+	}
+
+	@Bean
+	public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(
+		AuthorizedRedirectUriChecker checker) {
+		return new OAuth2AuthenticationSuccessHandler(checker);
 	}
 }

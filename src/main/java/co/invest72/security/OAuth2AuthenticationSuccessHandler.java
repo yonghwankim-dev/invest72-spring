@@ -7,19 +7,20 @@ import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	public OAuth2AuthenticationSuccessHandler() {
+	private final AuthorizedRedirectUriChecker authorizedRedirectUriChecker;
+
+	public OAuth2AuthenticationSuccessHandler(AuthorizedRedirectUriChecker authorizedRedirectUriChecker) {
 		super("/");
+		this.authorizedRedirectUriChecker = authorizedRedirectUriChecker;
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		}
 
 		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
-		if (targetUrl == null || targetUrl.isBlank()) {
+		if (targetUrl == null || targetUrl.isBlank() || !authorizedRedirectUriChecker.check(targetUrl)) {
 			// 백엔드 서버의 루트 경로로 리다이렉트
 			targetUrl = getDefaultTargetUrl();
 		}
