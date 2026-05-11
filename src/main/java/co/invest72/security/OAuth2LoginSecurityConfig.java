@@ -2,6 +2,8 @@ package co.invest72.security;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -27,14 +32,18 @@ import lombok.RequiredArgsConstructor;
 @EnableConfigurationProperties(CorsConfigurationProperties.class)
 public class OAuth2LoginSecurityConfig {
 
-	private final OAuth2AuthenticationSuccessHandler successHandler;
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
+	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+	private final AuthenticationEntryPoint authenticationEntryPoint;
+
 	@Value("${app.domain}")
 	private String csrfCookieDomain;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		AuthorizedRedirectUriChecker authorizedRedirectUriChecker = authorizedRedirectUriChecker();
+
 		// 필터 등록
 		http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // 인증 필터 이후에 실행
 
@@ -61,15 +70,23 @@ public class OAuth2LoginSecurityConfig {
 					.requestMatchers(HttpMethod.OPTIONS).permitAll()
 					.anyRequest().authenticated())
 			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/login")
+				.authorizationEndpoint(
+					authorization -> authorization.authorizationRequestRepository(authorizationRequestRepository))
 				.userInfoEndpoint(userInfo -> userInfo
 					.oidcUserService(customOidcUserService))
-				.successHandler(successHandler))
+				.successHandler(oAuth2AuthenticationSuccessHandler(authorizedRedirectUriChecker))
+				.failureHandler(oAuth2AuthenticationFailureHandler(authorizedRedirectUriChecker))
+			)
 			.logout(logout -> logout
 				.logoutUrl("/api/v1/auth/logout")
 				.logoutSuccessHandler((request, response, authentication) ->
 					response.setStatus(HttpServletResponse.SC_OK)
 				)
 				.invalidateHttpSession(true) // 세션 무효화
+			)
+			.exceptionHandling(configurer ->
+				configurer.authenticationEntryPoint(authenticationEntryPoint)
 			);
 		return http.build();
 	}
@@ -98,5 +115,22 @@ public class OAuth2LoginSecurityConfig {
 			cookie.sameSite("Lax");
 		});
 		return repository;
+	}
+
+	@Bean
+	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler(AuthorizedRedirectUriChecker checker) {
+		return new OAuth2AuthenticationFailureHandler(checker);
+	}
+
+	@Bean
+	public AuthorizedRedirectUriChecker authorizedRedirectUriChecker() {
+		List<String> allowedOrigins = corsConfigurationProperties.getAllowedOrigins();
+		return new AuthorizedRedirectUriChecker(allowedOrigins);
+	}
+
+	@Bean
+	public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(
+		AuthorizedRedirectUriChecker checker) {
+		return new OAuth2AuthenticationSuccessHandler(checker);
 	}
 }
