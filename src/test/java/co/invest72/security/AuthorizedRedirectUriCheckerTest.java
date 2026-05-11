@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class AuthorizedRedirectUriCheckerTest {
 
@@ -17,9 +19,9 @@ class AuthorizedRedirectUriCheckerTest {
 		checker = new AuthorizedRedirectUriChecker(allowedOrigins);
 	}
 
-	@DisplayName("URI 검사")
+	@DisplayName("URI 검사 - 프로토콜, 호스트, 포트가 대소문자 관계없이 일치하면 true를 반환해야 한다")
 	@Test
-	void check() {
+	void check_whenOriginIsMatched_thenReturnTrue() {
 		// given
 		String uri = "http://localhost:3000";
 		// when
@@ -28,33 +30,10 @@ class AuthorizedRedirectUriCheckerTest {
 		Assertions.assertThat(actual).isTrue();
 	}
 
-	@DisplayName("URI 검사 - 출처가 프로토콜이 다르면 false를 반환하여야 한다")
-	@Test
-	void check_whenProtocolIsDiff_thenReturnFalse() {
-		// given
-		String uri = "https://localhost:3000";
-		// when
-		boolean actual = checker.check(uri);
-		// then
-		Assertions.assertThat(actual).isFalse();
-	}
-
-	@DisplayName("URI 검사 - 출처가 포트가 다르면 false를 반환하여야 한다")
-	@Test
-	void check_whenPortIsDiff_thenReturnFalse() {
-		// given
-		String uri = "https://localhost:4000";
-		// when
-		boolean actual = checker.check(uri);
-		// then
-		Assertions.assertThat(actual).isFalse();
-	}
-
-	@DisplayName("URI 검사 - 호스트가 다르면 false를 반환하여야 한다")
-	@Test
-	void check_whenHostIsDiff_thenReturnFalse() {
-		// given
-		String uri = "http://hacker.com:3000";
+	@DisplayName("URI 검사 - 프로토콜, 호스트, 포트가 다르면 false를 반환해야 한다")
+	@ParameterizedTest
+	@ValueSource(strings = {"https://localhost:3000", "http://hacker.com:3000", "http://localhost:4000"})
+	void check_whenOriginIsDiff_thenReturnFalse(String uri) {
 		// when
 		boolean actual = checker.check(uri);
 		// then
