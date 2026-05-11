@@ -35,7 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			csrfToken.getToken();
 		}
 
-		// redirectUri는 프론트에서 로그인 성공 후 리다이렉트할 URL입니다. 예를 들어, "http://localhost:3000/login-success"와 같은 URL이 될 수 있습니다.
+		// redirectUri는 프론트에서 로그인 성공 후 리다이렉트할 URL입니다. 예를 들어, "http://localhost:3000"와 같은 URL이 될 수 있습니다.
 		String targetUrl = UriComponentsBuilder.fromUriString(redirectUri).build().toUriString();
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 	}
