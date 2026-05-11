@@ -3,10 +3,8 @@ package co.invest72.security;
 import static co.invest72.security.HttpCookieOAuth2AuthorizationRequestRepository.*;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -20,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 	private static final String LOGIN_URL = "/login";
-	private final List<String> allowedOrigins;
+	private final AuthorizedRedirectUriChecker checker;
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -31,7 +29,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
 
 		// 화이트리스트 검증 로직 추가
-		if (targetUrl != null && !isAuthorizedRedirectUri(targetUrl)) {
+		if (targetUrl != null && !checker.check(targetUrl)) {
 			log.warn("비인가 리다이렉트 시도 차단: {}", targetUrl);
 			targetUrl = null; // 안전하지 않은 주소일 경우 백엔드 기본 로그인으로 강제 설정
 			log.debug("targetUrl : {}", targetUrl);
@@ -59,15 +57,5 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		request.getSession().removeAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
 
 		getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-	}
-
-	private boolean isAuthorizedRedirectUri(String uri) {
-		URI clientRedirectUri = URI.create(uri);
-		return allowedOrigins.stream()
-			.anyMatch(authorizedRedirectUri -> {
-				URI authorizedURI = URI.create(authorizedRedirectUri);
-				return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-					&& authorizedURI.getPort() == clientRedirectUri.getPort();
-			});
 	}
 }

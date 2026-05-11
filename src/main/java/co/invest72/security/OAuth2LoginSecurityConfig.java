@@ -118,7 +118,12 @@ public class OAuth2LoginSecurityConfig {
 
 	@Bean
 	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+		return new OAuth2AuthenticationFailureHandler(authorizedRedirectUriChecker());
+	}
+
+	@Bean
+	public AuthorizedRedirectUriChecker authorizedRedirectUriChecker() {
 		List<String> allowedOrigins = corsConfigurationProperties.getAllowedOrigins();
-		return new OAuth2AuthenticationFailureHandler(allowedOrigins);
+		return new AuthorizedRedirectUriChecker(allowedOrigins);
 	}
 }
