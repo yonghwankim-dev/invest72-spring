@@ -25,6 +25,8 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException exception) throws IOException {
+		log.warn("Failed Authentication : {}", exception.getMessage(), exception);
+
 		// 세션에 저장해둔 redirect_uri 가져오기
 		String targetUrl = (String)request.getSession().getAttribute(REDIRECT_URI_PARAM_COOKIE_NAME);
 
@@ -37,7 +39,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		// 메시지 인코딩
 		String message = (exception.getLocalizedMessage() != null)
 			? exception.getLocalizedMessage()
-			: "Authentication failed";
+			: "Failed Authentication";
 		String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
 
 		if (targetUrl == null || targetUrl.isBlank()) {
