@@ -30,9 +30,10 @@ class AuthorizedRedirectUriCheckerTest {
 		Assertions.assertThat(actual).isTrue();
 	}
 
-	@DisplayName("URI 검사 - 프로토콜, 호스트, 포트가 다르면 false를 반환해야 한다")
+	@DisplayName("URI 검사 - uri가 허용되는 출처 목록에 없거나 유효하지 않은 형식이면 false를 반환해야 한다")
 	@ParameterizedTest
-	@ValueSource(strings = {"https://localhost:3000", "http://hacker.com:3000", "http://localhost:4000"})
+	@ValueSource(strings = {"https://localhost:3000", "http://hacker.com:3000", "http://localhost:4000",
+		"http", "localhost", "3000"})
 	void check_whenOriginIsDiff_thenReturnFalse(String uri) {
 		// when
 		boolean actual = checker.check(uri);

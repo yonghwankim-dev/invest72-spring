@@ -20,7 +20,7 @@ public class AuthorizedRedirectUriChecker {
 			.filter(this::checkUri)
 			.isPresent();
 	}
-
+	
 	private Optional<URI> createURI(String uri) {
 		try {
 			URI clientRedirectUri = URI.create(uri);
@@ -31,14 +31,14 @@ public class AuthorizedRedirectUriChecker {
 		}
 	}
 
-	private boolean checkUri(URI uri) {
+	private boolean checkUri(URI clientURI) {
 		return allowedOrigins.stream()
-			.anyMatch(authorizedRedirectUri -> {
-				URI authorizedURI = URI.create(authorizedRedirectUri);
-				return
-					authorizedURI.getScheme().equalsIgnoreCase(uri.getScheme())
-						&& authorizedURI.getHost().equalsIgnoreCase(uri.getHost())
-						&& authorizedURI.getPort() == uri.getPort();
-			});
+			.anyMatch(authorizedRedirectUri ->
+				createURI(authorizedRedirectUri)
+					.filter(authURI -> authURI.getScheme().equals(clientURI.getScheme()))
+					.filter(authURI -> authURI.getHost().equalsIgnoreCase(clientURI.getHost()))
+					.filter(authURI -> authURI.getPort() == clientURI.getPort())
+					.isPresent()
+			);
 	}
 }
