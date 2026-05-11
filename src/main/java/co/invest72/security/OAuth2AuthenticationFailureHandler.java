@@ -1,6 +1,6 @@
 package co.invest72.security;
 
-import static co.invest72.security.HttpCookieOAuth2AuthorizationRequestRepository.*;
+import static co.invest72.security.HttpSessionOAuth2AuthorizationRequestRepository.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;

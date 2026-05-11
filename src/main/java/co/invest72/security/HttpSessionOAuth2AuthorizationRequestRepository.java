@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class HttpCookieOAuth2AuthorizationRequestRepository
+public class HttpSessionOAuth2AuthorizationRequestRepository
 	implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 	public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirectUri";
 	private static final String OAUTH2_AUTH_REQUEST_NAME = "oauth2_auth_request";
