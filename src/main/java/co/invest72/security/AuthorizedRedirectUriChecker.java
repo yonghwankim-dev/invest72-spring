@@ -16,8 +16,10 @@ public class AuthorizedRedirectUriChecker {
 		return allowedOrigins.stream()
 			.anyMatch(authorizedRedirectUri -> {
 				URI authorizedURI = URI.create(authorizedRedirectUri);
-				return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-					&& authorizedURI.getPort() == clientRedirectUri.getPort();
+				return
+					authorizedURI.getScheme().equalsIgnoreCase(clientRedirectUri.getScheme())
+						&& authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+						&& authorizedURI.getPort() == clientRedirectUri.getPort();
 			});
 	}
 }
