@@ -33,7 +33,8 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		// 화이트리스트 검증 로직 추가
 		if (targetUrl != null && !isAuthorizedRedirectUri(targetUrl)) {
 			log.warn("비인가 리다이렉트 시도 차단: {}", targetUrl);
-			targetUrl = LOGIN_URL; // 안전하지 않은 주소일 경우 백엔드 기본 로그인으로 강제 설정
+			targetUrl = null; // 안전하지 않은 주소일 경우 백엔드 기본 로그인으로 강제 설정
+			log.debug("targetUrl : {}", targetUrl);
 		}
 
 		// 메시지 인코딩
