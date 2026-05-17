@@ -73,4 +73,31 @@ class TransactionServiceTest {
 		// then
 		Assertions.assertThat(list).hasSize(2);
 	}
+
+	@DisplayName("거래 수정 - 지출 거래 수정")
+	@Test
+	void updateTransaction_whenTypeIsExpense() {
+		// given
+		String userId = "user-1234";
+		TransactionDto dto = new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId);
+		String transactionId = service.save(dto);
+
+		TransactionDto updateDto = TransactionDto.builder()
+			.type(TransactionType.INCOME)
+			.amount(BigDecimal.valueOf(20_000))
+			.content("저녁")
+			.userId(userId)
+			.build();
+		// when
+		service.update(updateDto, transactionId);
+		// then
+		TransactionEntity expected = TransactionEntity.builder()
+			.id(transactionId)
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content("저녁")
+			.userId(userId)
+			.build();
+		Assertions.assertThat(transactionRepository.findByTransactionId(transactionId)).contains(expected);
+	}
 }

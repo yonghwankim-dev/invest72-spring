@@ -2,6 +2,7 @@ package co.invest72.transaction.infrastructure.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.invest72.transaction.domain.TransactionRepository;
@@ -16,8 +17,9 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 	}
 
 	@Override
-	public void save(TransactionEntity transaction) {
+	public String save(TransactionEntity transaction) {
 		store.put(transaction.getId(), transaction);
+		return transaction.getId();
 	}
 
 	@Override
@@ -27,4 +29,8 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 			.toList();
 	}
 
+	@Override
+	public Optional<TransactionEntity> findByTransactionId(String transactionId) {
+		return Optional.ofNullable(store.get(transactionId));
+	}
 }

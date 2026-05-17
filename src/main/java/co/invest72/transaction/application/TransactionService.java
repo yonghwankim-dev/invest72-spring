@@ -1,6 +1,7 @@
 package co.invest72.transaction.application;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +19,16 @@ public class TransactionService {
 	private final TransactionRepository repository;
 
 	@Transactional
-	public void save(TransactionDto dto) {
+	public String save(TransactionDto dto) {
 		TransactionEntity entity = TransactionEntity.builder()
 			.type(dto.getType())
 			.amount(dto.getAmount())
 			.content(dto.getContent())
 			.userId(dto.getUserId())
 			.build();
-		repository.save(entity);
+		return repository.save(entity);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<TransactionDto> getTransactions(TransactionType type, String userId) {
 		return repository.findByUserId(userId).stream()
@@ -40,5 +41,20 @@ public class TransactionService {
 				.build()
 			)
 			.toList();
+	}
+
+	@Transactional
+	public void update(TransactionDto updateDto, String transactionId) {
+		TransactionEntity originalEntity = repository.findByTransactionId(transactionId)
+			.orElseThrow(() -> new NoSuchElementException("not found transaction, transactionId=" + transactionId));
+		TransactionEntity updatedEntity = TransactionEntity.builder()
+			.id(originalEntity.getId())
+			.type(updateDto.getType())
+			.amount(updateDto.getAmount())
+			.content(updateDto.getContent())
+			.userId(originalEntity.getUserId())
+			.build();
+
+		originalEntity.update(updatedEntity);
 	}
 }
