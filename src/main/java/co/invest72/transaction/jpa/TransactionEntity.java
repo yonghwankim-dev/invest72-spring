@@ -44,7 +44,7 @@ public class TransactionEntity {
 
 	@Builder(toBuilder = true)
 	public TransactionEntity(String type, BigDecimal amount, String content, String userId) {
-		this.id = idGenerator.generateId();
+		this.id = Objects.requireNonNull(idGenerator.generateId());
 		this.type = Objects.requireNonNull(type);
 		this.amount = Objects.requireNonNull(amount);
 		this.content = Objects.requireNonNull(content);
