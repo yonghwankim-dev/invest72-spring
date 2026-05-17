@@ -37,4 +37,21 @@ class TransactionServiceTest {
 		List<TransactionEntity> entities = transactionRepository.findByUserId(userId);
 		Assertions.assertThat(entities).hasSize(1);
 	}
+
+	@DisplayName("지출 거래 목록 조회")
+	@Test
+	void getExpenseTransactions_whenTypeIsExpense_thenReturnExpenseList() {
+		// given
+		String userId = "user-1234";
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", userId));
+		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(100_000), "용돈", userId));
+
+		String otherUserId = "user-4567";
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
+		// when
+		List<TransactionDto> dtos = service.getExpenseTransactions(userId);
+		// then
+		Assertions.assertThat(dtos).hasSize(2);
+	}
 }

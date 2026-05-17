@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import co.invest72.transaction.domain.TransactionType;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -13,6 +14,7 @@ public class TransactionDto {
 	private final String content;
 	private final String userId;
 
+	@Builder
 	public TransactionDto(TransactionType type, BigDecimal amount, String content, String userId) {
 		this.type = Objects.requireNonNull(type.name());
 		this.amount = Objects.requireNonNull(amount);
