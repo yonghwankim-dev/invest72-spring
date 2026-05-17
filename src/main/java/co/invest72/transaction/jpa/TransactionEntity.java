@@ -1,6 +1,8 @@
 package co.invest72.transaction.jpa;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "transaction")
 @Getter
-@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionEntity {
@@ -31,6 +32,18 @@ public class TransactionEntity {
 	@Column(name = "content")
 	private String content;
 
-	@Column(name = "userId", nullable = false)
+	@Column(name = "user_id", nullable = false)
 	private String userId;
+
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
+
+	@Builder(toBuilder = true)
+	public TransactionEntity(String type, BigDecimal amount, String content, String userId) {
+		this.id = "transaction-" + UUID.randomUUID();
+		this.type = type;
+		this.amount = amount;
+		this.content = content;
+		this.userId = userId;
+	}
 }

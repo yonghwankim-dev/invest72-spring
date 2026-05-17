@@ -1,7 +1,5 @@
 package co.invest72.transaction.application;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,6 @@ public class TransactionService {
 	@Transactional
 	public void save(TransactionDto dto) {
 		TransactionEntity entity = TransactionEntity.builder()
-			.id("transaction-" + UUID.randomUUID())
 			.type(dto.getType())
 			.amount(dto.getAmount())
 			.content(dto.getContent())
