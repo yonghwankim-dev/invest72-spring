@@ -27,28 +27,18 @@ public class TransactionService {
 			.build();
 		repository.save(entity);
 	}
-
+	
 	@Transactional(readOnly = true)
-	public List<TransactionDto> getExpenseTransactions(String userId) {
-		return repository.findExpenseTransactionByUserId(userId).stream()
+	public List<TransactionDto> getTransactions(TransactionType type, String userId) {
+		return repository.findByUserId(userId).stream()
+			.filter(t -> t.getType().equalsIgnoreCase(type.name()))
 			.map(t -> TransactionDto.builder()
 				.type(TransactionType.valueOf(t.getType()))
 				.amount(t.getAmount())
 				.content(t.getContent())
 				.userId(t.getUserId())
 				.build()
-			).toList();
-	}
-
-	@Transactional
-	public List<TransactionDto> getIncomeTransactions(String userId) {
-		return repository.findIncomeTransactionByUserId(userId).stream()
-			.map(t -> TransactionDto.builder()
-				.type(TransactionType.valueOf(t.getType()))
-				.amount(t.getAmount())
-				.content(t.getContent())
-				.userId(t.getUserId())
-				.build()
-			).toList();
+			)
+			.toList();
 	}
 }

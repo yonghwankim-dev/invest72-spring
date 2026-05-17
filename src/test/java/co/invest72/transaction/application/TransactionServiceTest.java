@@ -40,7 +40,7 @@ class TransactionServiceTest {
 
 	@DisplayName("지출 거래 목록 조회")
 	@Test
-	void getExpenseTransactions_whenTypeIsExpense_thenReturnExpenseList() {
+	void getTransactions_whenTypeIsExpense_thenReturnExpenseList() {
 		// given
 		String userId = "user-1234";
 		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
@@ -50,14 +50,14 @@ class TransactionServiceTest {
 		String otherUserId = "user-4567";
 		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
 		// when
-		List<TransactionDto> list = service.getExpenseTransactions(userId);
+		List<TransactionDto> list = service.getTransactions(TransactionType.EXPENSE, userId);
 		// then
 		Assertions.assertThat(list).hasSize(2);
 	}
 
 	@DisplayName("수입 거래 목록 조회")
 	@Test
-	void getIncomeTransactions_whenTypeIsIncome_thenReturnIncomeList() {
+	void getTransactions_whenTypeIsIncome_thenReturnIncomeList() {
 		// given
 		String userId = "user-1234";
 		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
@@ -69,7 +69,7 @@ class TransactionServiceTest {
 		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
 		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(200_000), "용돈", otherUserId));
 		// when
-		List<TransactionDto> list = service.getIncomeTransactions(userId);
+		List<TransactionDto> list = service.getTransactions(TransactionType.INCOME, userId);
 		// then
 		Assertions.assertThat(list).hasSize(2);
 	}

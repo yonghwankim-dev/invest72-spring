@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.invest72.transaction.domain.TransactionRepository;
-import co.invest72.transaction.domain.TransactionType;
 import co.invest72.transaction.jpa.TransactionEntity;
 
 public class InMemoryTransactionRepository implements TransactionRepository {
@@ -28,19 +27,4 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 			.toList();
 	}
 
-	@Override
-	public List<TransactionEntity> findExpenseTransactionByUserId(String userId) {
-		return store.values().stream()
-			.filter(t -> t.getUserId().equals(userId))
-			.filter(t -> t.getType().equals(TransactionType.EXPENSE.name()))
-			.toList();
-	}
-
-	@Override
-	public List<TransactionEntity> findIncomeTransactionByUserId(String userId) {
-		return store.values().stream()
-			.filter(t -> t.getUserId().equals(userId))
-			.filter(t -> t.getType().equals(TransactionType.INCOME.name()))
-			.toList();
-	}
 }

@@ -8,8 +8,4 @@ public interface TransactionRepository {
 	void save(TransactionEntity transaction);
 
 	List<TransactionEntity> findByUserId(String userId);
-
-	List<TransactionEntity> findExpenseTransactionByUserId(String userId);
-
-	List<TransactionEntity> findIncomeTransactionByUserId(String userId);
 }
