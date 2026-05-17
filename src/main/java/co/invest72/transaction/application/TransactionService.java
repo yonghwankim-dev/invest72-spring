@@ -62,4 +62,9 @@ public class TransactionService {
 
 		originalEntity.update(updatedEntity);
 	}
+
+	@Transactional
+	public void delete(List<String> transactionIds, String userId) {
+		repository.deleteByIdAndUserId(transactionIds, userId);
+	}
 }

@@ -166,4 +166,19 @@ class TransactionServiceTest {
 		Assertions.assertThat(actual.getUserId()).isNotEqualTo("user-4567");
 		Assertions.assertThat(actual.getCreatedAt()).isNotEqualTo(LocalDate.of(2026, 1, 1).atStartOfDay());
 	}
+
+	@DisplayName("거래 내역 삭제")
+	@Test
+	void delete() {
+		// given
+		List<TransactionDto> dtos = getTransactionDtos(userId);
+		List<String> transactionIds = dtos.stream()
+			.map(dto -> service.save(dto))
+			.toList();
+		// when
+		service.delete(transactionIds, userId);
+		// then
+		Assertions.assertThat(transactionRepository.findByUserId(userId)).isEmpty();
+	}
+
 }
