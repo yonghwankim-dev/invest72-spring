@@ -2,6 +2,7 @@ package co.invest72.transaction.jpa;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -41,9 +42,9 @@ public class TransactionEntity {
 	@Builder(toBuilder = true)
 	public TransactionEntity(String type, BigDecimal amount, String content, String userId) {
 		this.id = "transaction-" + UUID.randomUUID();
-		this.type = type;
-		this.amount = amount;
-		this.content = content;
-		this.userId = userId;
+		this.type = Objects.requireNonNull(type);
+		this.amount = Objects.requireNonNull(amount);
+		this.content = Objects.requireNonNull(content);
+		this.userId = Objects.requireNonNull(userId);
 	}
 }
