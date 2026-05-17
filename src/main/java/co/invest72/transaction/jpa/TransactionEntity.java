@@ -3,8 +3,9 @@ package co.invest72.transaction.jpa;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
+import co.invest72.financial_product.domain.IdGenerator;
+import co.invest72.transaction.infrastructure.TransactionIdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -39,9 +40,11 @@ public class TransactionEntity {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
+	private static final IdGenerator idGenerator = new TransactionIdGenerator("transaction");
+
 	@Builder(toBuilder = true)
 	public TransactionEntity(String type, BigDecimal amount, String content, String userId) {
-		this.id = "transaction-" + UUID.randomUUID();
+		this.id = idGenerator.generateId();
 		this.type = Objects.requireNonNull(type);
 		this.amount = Objects.requireNonNull(amount);
 		this.content = Objects.requireNonNull(content);
