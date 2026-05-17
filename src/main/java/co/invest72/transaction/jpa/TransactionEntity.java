@@ -40,7 +40,7 @@ public class TransactionEntity {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-	private static final IdGenerator idGenerator = new TransactionIdGenerator("transaction");
+	private static final IdGenerator idGenerator = new TransactionIdGenerator("transaction-");
 
 	@Builder(toBuilder = true)
 	public TransactionEntity(String id, String type, BigDecimal amount, String content, String userId,
