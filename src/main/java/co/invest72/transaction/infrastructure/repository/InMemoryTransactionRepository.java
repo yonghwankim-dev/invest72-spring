@@ -35,4 +35,12 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 			.filter(t -> t.getType().equals(TransactionType.EXPENSE.name()))
 			.toList();
 	}
+
+	@Override
+	public List<TransactionEntity> findIncomeTransactionByUserId(String userId) {
+		return store.values().stream()
+			.filter(t -> t.getUserId().equals(userId))
+			.filter(t -> t.getType().equals(TransactionType.INCOME.name()))
+			.toList();
+	}
 }

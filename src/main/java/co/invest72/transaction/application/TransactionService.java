@@ -30,8 +30,19 @@ public class TransactionService {
 
 	@Transactional(readOnly = true)
 	public List<TransactionDto> getExpenseTransactions(String userId) {
-		// 쿼리로 하는 방법 vs 애플리케이션에서 필터링하는 방법
 		return repository.findExpenseTransactionByUserId(userId).stream()
+			.map(t -> TransactionDto.builder()
+				.type(TransactionType.valueOf(t.getType()))
+				.amount(t.getAmount())
+				.content(t.getContent())
+				.userId(t.getUserId())
+				.build()
+			).toList();
+	}
+
+	@Transactional
+	public List<TransactionDto> getIncomeTransactions(String userId) {
+		return repository.findIncomeTransactionByUserId(userId).stream()
 			.map(t -> TransactionDto.builder()
 				.type(TransactionType.valueOf(t.getType()))
 				.amount(t.getAmount())

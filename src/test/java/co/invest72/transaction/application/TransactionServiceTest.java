@@ -50,8 +50,27 @@ class TransactionServiceTest {
 		String otherUserId = "user-4567";
 		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
 		// when
-		List<TransactionDto> dtos = service.getExpenseTransactions(userId);
+		List<TransactionDto> list = service.getExpenseTransactions(userId);
 		// then
-		Assertions.assertThat(dtos).hasSize(2);
+		Assertions.assertThat(list).hasSize(2);
+	}
+
+	@DisplayName("수입 거래 목록 조회")
+	@Test
+	void getIncomeTransactions_whenTypeIsIncome_thenReturnIncomeList() {
+		// given
+		String userId = "user-1234";
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", userId));
+		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(100_000), "용돈", userId));
+		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(200_000), "용돈", userId));
+
+		String otherUserId = "user-4567";
+		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
+		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(200_000), "용돈", otherUserId));
+		// when
+		List<TransactionDto> list = service.getIncomeTransactions(userId);
+		// then
+		Assertions.assertThat(list).hasSize(2);
 	}
 }

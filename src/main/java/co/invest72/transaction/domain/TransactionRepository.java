@@ -10,4 +10,6 @@ public interface TransactionRepository {
 	List<TransactionEntity> findByUserId(String userId);
 
 	List<TransactionEntity> findExpenseTransactionByUserId(String userId);
+
+	List<TransactionEntity> findIncomeTransactionByUserId(String userId);
 }
