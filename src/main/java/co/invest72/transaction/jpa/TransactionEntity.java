@@ -49,5 +49,6 @@ public class TransactionEntity {
 		this.amount = Objects.requireNonNull(amount);
 		this.content = Objects.requireNonNull(content);
 		this.userId = Objects.requireNonNull(userId);
+		this.createdAt = LocalDateTime.now();
 	}
 }
