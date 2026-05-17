@@ -34,7 +34,7 @@ public class TransactionService {
 		return repository.findByUserId(userId).stream()
 			.filter(t -> t.getType().equalsIgnoreCase(type.name()))
 			.map(t -> TransactionDto.builder()
-				.type(TransactionType.valueOf(t.getType()))
+				.type(t.getType())
 				.amount(t.getAmount())
 				.content(t.getContent())
 				.userId(t.getUserId())
@@ -47,12 +47,17 @@ public class TransactionService {
 	public void update(TransactionDto updateDto, String transactionId) {
 		TransactionEntity originalEntity = repository.findByTransactionId(transactionId)
 			.orElseThrow(() -> new NoSuchElementException("not found transaction, transactionId=" + transactionId));
+		TransactionDto dto = updateDto.withTransactionId(originalEntity.getId())
+			.withUserId(originalEntity.getUserId())
+			.withCreatedAt(originalEntity.getCreatedAt());
+
 		TransactionEntity updatedEntity = TransactionEntity.builder()
-			.id(originalEntity.getId())
-			.type(updateDto.getType())
-			.amount(updateDto.getAmount())
-			.content(updateDto.getContent())
-			.userId(originalEntity.getUserId())
+			.id(dto.getTransactionId())
+			.type(dto.getType())
+			.amount(dto.getAmount())
+			.content(dto.getContent())
+			.userId(dto.getUserId())
+			.createdAt(dto.getCreatedAt())
 			.build();
 
 		originalEntity.update(updatedEntity);

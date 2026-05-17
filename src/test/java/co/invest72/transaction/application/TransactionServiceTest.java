@@ -1,6 +1,7 @@
 package co.invest72.transaction.application;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -18,19 +19,66 @@ class TransactionServiceTest {
 
 	private TransactionService service;
 	private TransactionRepository transactionRepository;
+	private String userId;
+
+	private List<TransactionDto> getTransactionDtos(String userId) {
+		TransactionDto dto1 = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build();
+		TransactionDto dto2 = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content("책2")
+			.userId(userId)
+			.build();
+		TransactionDto dto3 = TransactionDto.builder()
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(100_000))
+			.content("용돈")
+			.userId(userId)
+			.build();
+		TransactionDto dto4 = TransactionDto.builder()
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(200_000))
+			.content("용돈")
+			.userId(userId)
+			.build();
+		TransactionDto dto5 = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content("책2")
+			.userId("user-4567")
+			.build();
+		TransactionDto dto6 = TransactionDto.builder()
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(200_000))
+			.content("용돈")
+			.userId("user-4567")
+			.build();
+		return List.of(dto1, dto2, dto3, dto4, dto5, dto6);
+	}
 
 	@BeforeEach
 	void setUp() {
 		transactionRepository = new InMemoryTransactionRepository();
 		service = new TransactionService(transactionRepository);
+		userId = "user-1234";
 	}
 
-	@DisplayName("지출 거래 생성")
+	@DisplayName("지출 거래 내역 생성")
 	@Test
 	void save_whenTypeIsExpense_thenSaveTransaction() {
 		// given
 		String userId = "user-1234";
-		TransactionDto dto = new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10000), "책", userId);
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build();
 		// when
 		service.save(dto);
 		// then
@@ -38,52 +86,41 @@ class TransactionServiceTest {
 		Assertions.assertThat(entities).hasSize(1);
 	}
 
-	@DisplayName("지출 거래 목록 조회")
+	@DisplayName("지출 거래 내역 목록 조회")
 	@Test
 	void getTransactions_whenTypeIsExpense_thenReturnExpenseList() {
 		// given
-		String userId = "user-1234";
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", userId));
-		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(100_000), "용돈", userId));
-
-		String otherUserId = "user-4567";
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
+		getTransactionDtos(userId).forEach(service::save);
 		// when
 		List<TransactionDto> list = service.getTransactions(TransactionType.EXPENSE, userId);
 		// then
 		Assertions.assertThat(list).hasSize(2);
 	}
 
-	@DisplayName("수입 거래 목록 조회")
+	@DisplayName("수입 거래 내역 목록 조회")
 	@Test
 	void getTransactions_whenTypeIsIncome_thenReturnIncomeList() {
 		// given
-		String userId = "user-1234";
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId));
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", userId));
-		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(100_000), "용돈", userId));
-		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(200_000), "용돈", userId));
-
-		String otherUserId = "user-4567";
-		service.save(new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(20_000), "책2", otherUserId));
-		service.save(new TransactionDto(TransactionType.INCOME, BigDecimal.valueOf(200_000), "용돈", otherUserId));
+		getTransactionDtos(userId).forEach(service::save);
 		// when
 		List<TransactionDto> list = service.getTransactions(TransactionType.INCOME, userId);
 		// then
 		Assertions.assertThat(list).hasSize(2);
 	}
 
-	@DisplayName("거래 수정 - 지출 거래 수정")
+	@DisplayName("거래 내역 수정 - 지출 거래 수정")
 	@Test
 	void updateTransaction_whenTypeIsExpense() {
 		// given
-		String userId = "user-1234";
-		TransactionDto dto = new TransactionDto(TransactionType.EXPENSE, BigDecimal.valueOf(10_000), "책", userId);
-		String transactionId = service.save(dto);
+		String transactionId = service.save(TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build());
 
 		TransactionDto updateDto = TransactionDto.builder()
-			.type(TransactionType.INCOME)
+			.type(TransactionType.INCOME.name())
 			.amount(BigDecimal.valueOf(20_000))
 			.content("저녁")
 			.userId(userId)
@@ -99,5 +136,34 @@ class TransactionServiceTest {
 			.userId(userId)
 			.build();
 		Assertions.assertThat(transactionRepository.findByTransactionId(transactionId)).contains(expected);
+	}
+
+	@DisplayName("거래 내역 수정 - 거래 내역에서 거래내역 식별자, 사용자 식별자, 생성시간을  수정할 수 없다")
+	@Test
+	void updateTransaction_whenChangeTransactionIdAndUserIdAndCreatedAt_thenNotChangedData() {
+		// given
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build();
+		String transactionId = service.save(dto);
+
+		TransactionDto updateDto = TransactionDto.builder()
+			.transactionId("transaction-4567")
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content("저녁")
+			.userId("user-4567") // other user id
+			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
+			.build();
+		// when
+		service.update(updateDto, transactionId);
+		// then
+		TransactionEntity actual = transactionRepository.findByTransactionId(transactionId).orElseThrow();
+		Assertions.assertThat(actual.getId()).isNotEqualTo("transaction-4567");
+		Assertions.assertThat(actual.getUserId()).isNotEqualTo("user-4567");
+		Assertions.assertThat(actual.getCreatedAt()).isNotEqualTo(LocalDate.of(2026, 1, 1).atStartOfDay());
 	}
 }
