@@ -43,4 +43,9 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 			}
 		}
 	}
+
+	@Override
+	public void clear() {
+		store.clear();
+	}
 }

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,11 @@ class TransactionServiceTest {
 		transactionRepository = new InMemoryTransactionRepository();
 		service = new TransactionService(transactionRepository);
 		userId = "user-1234";
+	}
+
+	@AfterEach
+	void tearDown() {
+		transactionRepository.clear();
 	}
 
 	@DisplayName("지출 거래 내역 생성")

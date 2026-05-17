@@ -13,4 +13,6 @@ public interface TransactionRepository {
 	Optional<TransactionEntity> findByTransactionId(String transactionId);
 
 	void deleteByIdAndUserId(List<String> transactionIds, String userId);
+
+	void clear();
 }
