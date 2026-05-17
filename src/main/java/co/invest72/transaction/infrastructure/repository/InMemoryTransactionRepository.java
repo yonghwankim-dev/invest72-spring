@@ -1,5 +1,6 @@
 package co.invest72.transaction.infrastructure.repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,5 +18,12 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 	@Override
 	public void save(TransactionEntity transaction) {
 		store.put(transaction.getId(), transaction);
+	}
+
+	@Override
+	public List<TransactionEntity> findByUserId(String userId) {
+		return store.values().stream()
+			.filter(t -> t.getUserId().equals(userId))
+			.toList();
 	}
 }

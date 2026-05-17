@@ -2,7 +2,6 @@ package co.invest72.transaction.application;
 
 import java.util.UUID;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +15,15 @@ import lombok.RequiredArgsConstructor;
 public class TransactionService {
 
 	private final TransactionRepository repository;
-	private final ModelMapper modelMapper;
 
 	@Transactional
 	public void save(TransactionDto dto) {
-		TransactionEntity entity = modelMapper.map(dto, TransactionEntity.class).toBuilder()
+		TransactionEntity entity = TransactionEntity.builder()
 			.id("transaction-" + UUID.randomUUID())
+			.type(dto.getType())
+			.amount(dto.getAmount())
+			.content(dto.getContent())
+			.userId(dto.getUserId())
 			.build();
 		repository.save(entity);
 	}
