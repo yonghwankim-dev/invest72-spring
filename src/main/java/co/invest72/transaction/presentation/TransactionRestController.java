@@ -77,7 +77,7 @@ public class TransactionRestController {
 
 	@PutMapping("/api/v1/transactions/{transactionId}")
 	public ResponseEntity<Void> updateTransaction(@AuthenticationPrincipal PrincipalUser user,
-		@PathVariable("transactionId") String transactionId, @RequestBody TransactionRequest request) {
+		@PathVariable("transactionId") String transactionId, @RequestBody @Valid TransactionRequest request) {
 		TransactionDto dto = TransactionDto.builder()
 			.type(request.getType())
 			.amount(request.getAmount())
@@ -91,7 +91,7 @@ public class TransactionRestController {
 
 	@DeleteMapping("/api/v1/transactions")
 	public ResponseEntity<Void> deleteTransactions(@AuthenticationPrincipal PrincipalUser user,
-		@RequestBody TransactionDeleteRequest request) {
+		@RequestBody @Valid TransactionDeleteRequest request) {
 		service.delete(request.getTransactionIds(), user.getUser().getId());
 		return ResponseEntity.noContent().build();
 	}
