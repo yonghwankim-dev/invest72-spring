@@ -65,7 +65,7 @@ class TransactionRestControllerTest {
 	void saveTransaction_whenTypeIsExpense_thenResponseTransactionId() throws Exception {
 		// given
 		TransactionRequest request = TransactionRequest.builder()
-			.type(TransactionType.EXPENSE.name())
+			.type(TransactionType.EXPENSE)
 			.amount(BigDecimal.valueOf(10_000))
 			.content("책")
 			.build();
@@ -168,7 +168,7 @@ class TransactionRestControllerTest {
 		String saveTransactionId = service.save(dto);
 
 		TransactionRequest request = TransactionRequest.builder()
-			.type(TransactionType.INCOME.name())
+			.type(TransactionType.INCOME)
 			.amount(BigDecimal.valueOf(20_000))
 			.content("용돈")
 			.build();

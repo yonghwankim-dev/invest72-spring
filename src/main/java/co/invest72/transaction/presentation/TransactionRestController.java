@@ -35,7 +35,7 @@ public class TransactionRestController {
 	public ResponseEntity<TransactionSaveResponse> saveTransaction(@AuthenticationPrincipal PrincipalUser user,
 		@RequestBody @Valid TransactionRequest request) {
 		TransactionDto dto = TransactionDto.builder()
-			.type(request.getType())
+			.type(request.getType().name())
 			.amount(request.getAmount())
 			.content(request.getContent())
 			.userId(user.getUser().getId())
@@ -79,7 +79,7 @@ public class TransactionRestController {
 	public ResponseEntity<Void> updateTransaction(@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable("transactionId") String transactionId, @RequestBody @Valid TransactionRequest request) {
 		TransactionDto dto = TransactionDto.builder()
-			.type(request.getType())
+			.type(request.getType().name())
 			.amount(request.getAmount())
 			.content(request.getContent())
 			.userId(user.getUser().getId())

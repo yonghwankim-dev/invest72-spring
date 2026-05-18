@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 @DecimalMin(value = "0", message = "투자 금액은 0원 이상이어야 합니다.")
 @DecimalMax(value = "10000000000000", message = "투자 금액은 10조원 이하이어야 합니다.")
 @Documented
-public @interface FinancialAmount {
+public @interface BigDecimalAmount {
 	String message() default "유효하지 않은 금액입니다.";
 
 	Class<?>[] groups() default {};
