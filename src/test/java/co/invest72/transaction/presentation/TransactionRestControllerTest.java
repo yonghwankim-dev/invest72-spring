@@ -102,6 +102,41 @@ class TransactionRestControllerTest {
 	}
 
 	@Test
+	@DisplayName("거래 내역 수정")
+	void updateTransaction() throws Exception {
+		// given
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(principalUser.getUser().getId())
+			.build();
+		String saveTransactionId = service.save(dto);
+
+		TransactionRequest request = TransactionRequest.builder()
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content("용돈")
+			.build();
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/transactions/{transactionId}", saveTransactionId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isOk())
+			.andDo(MockMvcResultHandlers.print());
+		TransactionDto updatedDto = service.getTransactions(TransactionType.INCOME, principalUser.getUser().getId())
+			.stream()
+			.findAny()
+			.orElseThrow();
+		Assertions.assertThat(updatedDto.getType()).isEqualTo(TransactionType.INCOME.name());
+		Assertions.assertThat(updatedDto.getAmount()).isEqualByComparingTo(BigDecimal.valueOf(20_000));
+		Assertions.assertThat(updatedDto.getContent()).isEqualTo("용돈");
+	}
+
+	@Test
 	@DisplayName("거래 내역 삭제")
 	void deleteTransactions_whenMultipleTransactions_thenDeleteData() throws Exception {
 		// given

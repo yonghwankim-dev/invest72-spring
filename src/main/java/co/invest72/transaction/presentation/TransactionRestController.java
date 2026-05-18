@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,8 +61,22 @@ public class TransactionRestController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PutMapping("/api/v1/transactions/{transactionId}")
+	public ResponseEntity<Void> updateTransaction(@AuthenticationPrincipal PrincipalUser user,
+		@PathVariable("transactionId") String transactionId, @RequestBody TransactionRequest request) {
+		TransactionDto dto = TransactionDto.builder()
+			.type(request.getType())
+			.amount(request.getAmount())
+			.content(request.getContent())
+			.userId(user.getUser().getId())
+			.build();
+		service.update(dto, transactionId);
+
+		return ResponseEntity.ok().build();
+	}
+
 	@DeleteMapping("/api/v1/transactions")
-	public ResponseEntity<Void> getTransactions(@AuthenticationPrincipal PrincipalUser user,
+	public ResponseEntity<Void> deleteTransactions(@AuthenticationPrincipal PrincipalUser user,
 		@RequestBody TransactionDeleteRequest request) {
 		service.delete(request.getTransactionIds(), user.getUser().getId());
 		return ResponseEntity.noContent().build();
