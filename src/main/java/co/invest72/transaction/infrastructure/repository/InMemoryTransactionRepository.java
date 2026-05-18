@@ -39,7 +39,7 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 	public void deleteByIdAndUserId(List<String> transactionIds, String userId) {
 		for (String id : transactionIds) {
 			TransactionEntity entity = store.get(id);
-			if (entity.getUserId().equalsIgnoreCase(userId)) {
+			if (entity != null && entity.getUserId().equalsIgnoreCase(userId)) {
 				store.remove(id);
 			}
 		}
