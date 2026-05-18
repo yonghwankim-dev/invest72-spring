@@ -18,6 +18,6 @@ public class TransactionIdGenerator implements IdGenerator {
 
 	@Override
 	public String generateId() {
-		return prefix + UUID.randomUUID();
+		return prefix + "-" + UUID.randomUUID();
 	}
 }

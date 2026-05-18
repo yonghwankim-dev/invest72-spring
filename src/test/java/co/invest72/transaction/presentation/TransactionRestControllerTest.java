@@ -22,7 +22,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.security.PrincipalUser;
+import co.invest72.transaction.application.TransactionService;
 import co.invest72.transaction.domain.TransactionType;
+import co.invest72.transaction.dto.TransactionDto;
 import co.invest72.transaction.presentation.vo.TransactionRequest;
 import co.invest72.user.domain.User;
 
@@ -36,6 +38,9 @@ class TransactionRestControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private TransactionService service;
 
 	private PrincipalUser principalUser;
 
@@ -67,6 +72,28 @@ class TransactionRestControllerTest {
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.transactionId").value(notNullValue()))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	@DisplayName("거래 내역 목록 조회")
+	void getTransactions_whenTypeIsExpense_thenReturnList() throws Exception {
+		// given
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(principalUser.getUser().getId())
+			.build();
+		service.save(dto);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions")
+				.queryParam("type", TransactionType.EXPENSE.name())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.transactions").isArray())
 			.andDo(MockMvcResultHandlers.print());
 	}
 }

@@ -34,10 +34,12 @@ public class TransactionService {
 		return repository.findByUserId(userId).stream()
 			.filter(t -> t.getType().equalsIgnoreCase(type.name()))
 			.map(t -> TransactionDto.builder()
+				.transactionId(t.getId())
 				.type(t.getType())
 				.amount(t.getAmount())
 				.content(t.getContent())
 				.userId(t.getUserId())
+				.createdAt(t.getCreatedAt())
 				.build()
 			)
 			.toList();
