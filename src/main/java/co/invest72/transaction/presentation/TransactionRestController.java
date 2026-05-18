@@ -42,9 +42,8 @@ public class TransactionRestController {
 
 	@GetMapping("/api/v1/transactions")
 	public ResponseEntity<TransactionListResponse> getTransactions(@AuthenticationPrincipal PrincipalUser user,
-		@RequestParam(name = "type") String type) {
-		List<TransactionDto> transactions = service.getTransactions(TransactionType.valueOf(type),
-			user.getUser().getId());
+		@RequestParam(name = "type") TransactionType type) {
+		List<TransactionDto> transactions = service.getTransactions(type, user.getUser().getId());
 		List<TransactionResponse> responseList = transactions.stream()
 			.map(t -> TransactionResponse.builder()
 				.transactionId(t.getTransactionId())
