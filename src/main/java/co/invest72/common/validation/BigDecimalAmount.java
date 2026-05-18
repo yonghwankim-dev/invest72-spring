@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotNull;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
-@NotNull(message = "투자 금액은 필수입니다.")
-@DecimalMin(value = "0", message = "투자 금액은 0원 이상이어야 합니다.")
-@DecimalMax(value = "10000000000000", message = "투자 금액은 10조원 이하이어야 합니다.")
+@NotNull(message = "금액은 필수입니다.")
+@DecimalMin(value = "0", message = "금액은 0원 이상이어야 합니다.")
+@DecimalMax(value = "10000000000000", message = "금액은 10조원 이하이어야 합니다.")
 @Documented
 public @interface BigDecimalAmount {
 	String message() default "유효하지 않은 금액입니다.";
