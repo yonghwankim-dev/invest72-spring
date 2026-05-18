@@ -4,8 +4,11 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import co.invest72.security.PrincipalUser;
 import co.invest72.transaction.application.TransactionService;
 import co.invest72.transaction.domain.TransactionType;
 import co.invest72.transaction.dto.TransactionDto;
+import co.invest72.transaction.presentation.vo.TransactionDeleteRequest;
 import co.invest72.transaction.presentation.vo.TransactionRequest;
 import co.invest72.user.domain.User;
 
@@ -95,5 +99,33 @@ class TransactionRestControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.transactions").isArray())
 			.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	@DisplayName("거래 내역 삭제")
+	void deleteTransactions_whenMultipleTransactions_thenDeleteData() throws Exception {
+		// given
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(principalUser.getUser().getId())
+			.build();
+		String saveTransactionId1 = service.save(dto);
+		String saveTransactionId2 = service.save(dto);
+		List<String> transactionIds = Arrays.asList(saveTransactionId1, saveTransactionId2);
+		TransactionDeleteRequest request = new TransactionDeleteRequest(transactionIds);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/transactions")
+				.queryParam("type", TransactionType.EXPENSE.name())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isNoContent())
+			.andDo(MockMvcResultHandlers.print());
+		Assertions.assertThat(service.getTransactions(TransactionType.EXPENSE, principalUser.getUser().getId()))
+			.isEmpty();
 	}
 }

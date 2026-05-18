@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import co.invest72.security.PrincipalUser;
 import co.invest72.transaction.application.TransactionService;
 import co.invest72.transaction.domain.TransactionType;
 import co.invest72.transaction.dto.TransactionDto;
+import co.invest72.transaction.presentation.vo.TransactionDeleteRequest;
 import co.invest72.transaction.presentation.vo.TransactionListResponse;
 import co.invest72.transaction.presentation.vo.TransactionRequest;
 import co.invest72.transaction.presentation.vo.TransactionResponse;
@@ -55,5 +57,12 @@ public class TransactionRestController {
 			.toList();
 		TransactionListResponse response = new TransactionListResponse(responseList);
 		return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping("/api/v1/transactions")
+	public ResponseEntity<Void> getTransactions(@AuthenticationPrincipal PrincipalUser user,
+		@RequestBody TransactionDeleteRequest request) {
+		service.delete(request.getTransactionIds(), user.getUser().getId());
+		return ResponseEntity.noContent().build();
 	}
 }
