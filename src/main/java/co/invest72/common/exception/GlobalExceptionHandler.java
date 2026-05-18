@@ -1,6 +1,7 @@
 package co.invest72.common.exception;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,14 @@ public class GlobalExceptionHandler {
 		log.warn("IllegalArgumentException: {}", e.getMessage());
 		ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid request", List.of());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(response);
+	}
+
+	@ExceptionHandler(NoSuchElementException.class)
+	protected ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
+		log.warn("NoSuchElementException: {}", e.getMessage());
+		ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "not found resource", List.of());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(response);
 	}
 }
