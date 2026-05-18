@@ -78,7 +78,6 @@ class TransactionServiceTest {
 	@Test
 	void save_whenTypeIsExpense_thenSaveTransaction() {
 		// given
-		String userId = "user-1234";
 		TransactionDto dto = TransactionDto.builder()
 			.type(TransactionType.EXPENSE.name())
 			.amount(BigDecimal.valueOf(10_000))
@@ -112,6 +111,30 @@ class TransactionServiceTest {
 		List<TransactionDto> list = service.getTransactions(TransactionType.INCOME, userId);
 		// then
 		Assertions.assertThat(list).hasSize(2);
+	}
+
+	@DisplayName("특정 거래 내역 조회")
+	@Test
+	void getDetailedTransaction() {
+		// given
+		String transactionId = service.save(TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build());
+		// when
+		TransactionDto dto = service.getDetailedTransaction(transactionId);
+		// then
+		TransactionDto expected = TransactionDto.builder()
+			.transactionId(transactionId)
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.createdAt(dto.getCreatedAt())
+			.build();
+		Assertions.assertThat(dto).isEqualTo(expected);
 	}
 
 	@DisplayName("거래 내역 수정 - 지출 거래 수정")
