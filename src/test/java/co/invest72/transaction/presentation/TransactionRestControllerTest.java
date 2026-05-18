@@ -102,6 +102,31 @@ class TransactionRestControllerTest {
 	}
 
 	@Test
+	@DisplayName("특정 거래 내역 조회")
+	void getDetailedTransaction() throws Exception {
+		// given
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(principalUser.getUser().getId())
+			.build();
+		String transactionId = service.save(dto);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions/{transactionId}", transactionId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("transactionId").value(equalTo(transactionId)))
+			.andExpect(jsonPath("type").value(equalTo(dto.getType())))
+			.andExpect(jsonPath("amount").value(equalTo(dto.getAmount().intValue())))
+			.andExpect(jsonPath("content").value(equalTo(dto.getContent())))
+			.andExpect(jsonPath("createdAt").value(notNullValue()))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
 	@DisplayName("거래 내역 수정")
 	void updateTransaction() throws Exception {
 		// given

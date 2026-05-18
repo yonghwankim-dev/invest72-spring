@@ -61,6 +61,20 @@ public class TransactionRestController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/api/v1/transactions/{transactionId}")
+	public ResponseEntity<TransactionResponse> getTransactions(@AuthenticationPrincipal PrincipalUser user,
+		@PathVariable("transactionId") String transactionId) {
+		TransactionDto dto = service.getDetailedTransaction(transactionId);
+		TransactionResponse response = TransactionResponse.builder()
+			.transactionId(dto.getTransactionId())
+			.type(dto.getType())
+			.amount(dto.getAmount())
+			.content(dto.getContent())
+			.createdAt(dto.getCreatedAt())
+			.build();
+		return ResponseEntity.ok(response);
+	}
+
 	@PutMapping("/api/v1/transactions/{transactionId}")
 	public ResponseEntity<Void> updateTransaction(@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable("transactionId") String transactionId, @RequestBody TransactionRequest request) {
