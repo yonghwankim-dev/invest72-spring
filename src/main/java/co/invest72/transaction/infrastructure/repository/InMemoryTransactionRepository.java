@@ -30,8 +30,9 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 	}
 
 	@Override
-	public Optional<TransactionEntity> findByTransactionId(String transactionId) {
-		return Optional.ofNullable(store.get(transactionId));
+	public Optional<TransactionEntity> findBy(String transactionId, String userId) {
+		return Optional.ofNullable(store.get(transactionId))
+			.filter(t -> t.getUserId().equalsIgnoreCase(userId));
 	}
 
 	@Override

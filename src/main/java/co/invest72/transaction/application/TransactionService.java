@@ -46,8 +46,8 @@ public class TransactionService {
 	}
 
 	@Transactional(readOnly = true)
-	public TransactionDto getDetailedTransaction(String transactionId) {
-		return repository.findByTransactionId(transactionId)
+	public TransactionDto getDetailedTransaction(String transactionId, String currentUserId) {
+		return repository.findBy(transactionId, currentUserId)
 			.map(t -> TransactionDto.builder()
 				.transactionId(t.getId())
 				.type(t.getType())
@@ -61,8 +61,8 @@ public class TransactionService {
 	}
 
 	@Transactional
-	public void update(TransactionDto updateDto, String transactionId) {
-		TransactionEntity originalEntity = repository.findByTransactionId(transactionId)
+	public void update(TransactionDto updateDto, String transactionId, String currentUserId) {
+		TransactionEntity originalEntity = repository.findBy(transactionId, currentUserId)
 			.orElseThrow(() -> new NoSuchElementException("not found transaction, transactionId=" + transactionId));
 		TransactionDto dto = updateDto.withTransactionId(originalEntity.getId())
 			.withUserId(originalEntity.getUserId())

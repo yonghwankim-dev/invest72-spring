@@ -124,7 +124,7 @@ class TransactionServiceTest {
 			.userId(userId)
 			.build());
 		// when
-		TransactionDto dto = service.getDetailedTransaction(transactionId);
+		TransactionDto dto = service.getDetailedTransaction(transactionId, userId);
 		// then
 		TransactionDto expected = TransactionDto.builder()
 			.transactionId(transactionId)
@@ -155,7 +155,7 @@ class TransactionServiceTest {
 			.userId(userId)
 			.build();
 		// when
-		service.update(updateDto, transactionId);
+		service.update(updateDto, transactionId, userId);
 		// then
 		TransactionEntity expected = TransactionEntity.builder()
 			.id(transactionId)
@@ -164,7 +164,7 @@ class TransactionServiceTest {
 			.content("저녁")
 			.userId(userId)
 			.build();
-		Assertions.assertThat(transactionRepository.findByTransactionId(transactionId)).contains(expected);
+		Assertions.assertThat(transactionRepository.findBy(transactionId, userId)).contains(expected);
 	}
 
 	@DisplayName("거래 내역 수정 - 거래 내역에서 거래내역 식별자, 사용자 식별자, 생성시간을  수정할 수 없다")
@@ -188,9 +188,9 @@ class TransactionServiceTest {
 			.createdAt(LocalDate.of(2026, 1, 1).atStartOfDay())
 			.build();
 		// when
-		service.update(updateDto, transactionId);
+		service.update(updateDto, transactionId, userId);
 		// then
-		TransactionEntity actual = transactionRepository.findByTransactionId(transactionId).orElseThrow();
+		TransactionEntity actual = transactionRepository.findBy(transactionId, userId).orElseThrow();
 		Assertions.assertThat(actual.getId()).isNotEqualTo("transaction-4567");
 		Assertions.assertThat(actual.getUserId()).isNotEqualTo("user-4567");
 		Assertions.assertThat(actual.getCreatedAt()).isNotEqualTo(LocalDate.of(2026, 1, 1).atStartOfDay());

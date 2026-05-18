@@ -10,7 +10,7 @@ public interface TransactionRepository {
 
 	List<TransactionEntity> findByUserId(String userId);
 
-	Optional<TransactionEntity> findByTransactionId(String transactionId);
+	Optional<TransactionEntity> findBy(String transactionId, String userId);
 
 	void deleteByIdAndUserId(List<String> transactionIds, String userId);
 

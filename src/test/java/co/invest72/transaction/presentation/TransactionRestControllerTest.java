@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
@@ -123,6 +124,34 @@ class TransactionRestControllerTest {
 			.andExpect(jsonPath("amount").value(equalTo(dto.getAmount().intValue())))
 			.andExpect(jsonPath("content").value(equalTo(dto.getContent())))
 			.andExpect(jsonPath("createdAt").value(notNullValue()))
+			.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	@DisplayName("특정 거래 내역 조회 - 사용자가 다른 사용자의 거래 내역을 조회하면 안된다")
+	void getDetailedTransaction_whenUnAuthorizedUserRequestOtherUserTransaction_thenResponseForbidden() throws
+		Exception {
+		// given
+		User hackerUser = new User("hacker@gmail.com", "hacker", "providerId-1234");
+		PrincipalUser principalHacker = PrincipalUser.of()
+			.user(hackerUser)
+			.build();
+
+		TransactionDto dto = TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(principalUser.getUser().getId())
+			.build();
+		String transactionId = service.save(dto);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions/{transactionId}", transactionId)
+				.with(SecurityMockMvcRequestPostProcessors.user(principalHacker))
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("status").value(equalTo(HttpStatus.NOT_FOUND.value())))
+			.andExpect(jsonPath("message").value(equalTo("not found resource")))
 			.andDo(MockMvcResultHandlers.print());
 	}
 

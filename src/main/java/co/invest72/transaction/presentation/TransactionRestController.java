@@ -64,7 +64,7 @@ public class TransactionRestController {
 	@GetMapping("/api/v1/transactions/{transactionId}")
 	public ResponseEntity<TransactionResponse> getTransactions(@AuthenticationPrincipal PrincipalUser user,
 		@PathVariable("transactionId") String transactionId) {
-		TransactionDto dto = service.getDetailedTransaction(transactionId);
+		TransactionDto dto = service.getDetailedTransaction(transactionId, user.getUser().getId());
 		TransactionResponse response = TransactionResponse.builder()
 			.transactionId(dto.getTransactionId())
 			.type(dto.getType())
@@ -84,7 +84,7 @@ public class TransactionRestController {
 			.content(request.getContent())
 			.userId(user.getUser().getId())
 			.build();
-		service.update(dto, transactionId);
+		service.update(dto, transactionId, user.getUser().getId());
 
 		return ResponseEntity.ok().build();
 	}
