@@ -61,10 +61,10 @@ public class TransactionEntity {
 	}
 
 	private void validate(TransactionEntity updatedTransaction) {
-		if (!id.equals(updatedTransaction.getId())) {
+		if (!id.equalsIgnoreCase(updatedTransaction.getId())) {
 			throw new IllegalArgumentException("거래 내역 ID는 변경할 수 없습니다.");
 		}
-		if (!userId.equals(updatedTransaction.getUserId())) {
+		if (!userId.equalsIgnoreCase(updatedTransaction.getUserId())) {
 			throw new IllegalArgumentException("거래 내역 소유자(userId)는 변경할 수 없습니다.");
 		}
 		if (!createdAt.equals(updatedTransaction.getCreatedAt())) {
