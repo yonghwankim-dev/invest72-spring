@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "transaction")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id", "type", "amount", "content", "userId"})
+@EqualsAndHashCode(of = {"id"})
 public class TransactionEntity {
 	@Id
 	private String id;
