@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,11 +39,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			// 백엔드 서버의 루트 경로로 리다이렉트
 			targetUrl = getDefaultTargetUrl();
 		}
+		// add login success query param
+		targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
+			.queryParam("login", "success")
+			.build()
+			.toUriString();
 		log.info("success login, targetUrl={}", targetUrl);
 
 		// clean up user session data
 		request.getSession().removeAttribute(REDIRECT_URI_PARAM_SESSION_NAME);
-
 		// redirect
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 	}

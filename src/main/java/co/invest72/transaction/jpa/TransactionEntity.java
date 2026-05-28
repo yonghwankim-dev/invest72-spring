@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "transaction")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id", "type", "amount", "content", "userId"})
+@EqualsAndHashCode(of = {"id"})
 public class TransactionEntity {
 	@Id
 	private String id;
@@ -57,14 +57,14 @@ public class TransactionEntity {
 		validate(updatedTransaction);
 		this.type = Objects.requireNonNull(updatedTransaction.type);
 		this.amount = Objects.requireNonNull(updatedTransaction.amount);
-		this.content = Objects.requireNonNull(updatedTransaction.content);
+		this.content = updatedTransaction.content;
 	}
 
 	private void validate(TransactionEntity updatedTransaction) {
-		if (!id.equals(updatedTransaction.getId())) {
+		if (!id.equalsIgnoreCase(updatedTransaction.getId())) {
 			throw new IllegalArgumentException("거래 내역 ID는 변경할 수 없습니다.");
 		}
-		if (!userId.equals(updatedTransaction.getUserId())) {
+		if (!userId.equalsIgnoreCase(updatedTransaction.getUserId())) {
 			throw new IllegalArgumentException("거래 내역 소유자(userId)는 변경할 수 없습니다.");
 		}
 		if (!createdAt.equals(updatedTransaction.getCreatedAt())) {
