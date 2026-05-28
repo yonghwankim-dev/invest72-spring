@@ -167,7 +167,37 @@ class TransactionServiceTest {
 		Assertions.assertThat(transactionRepository.findBy(transactionId, userId)).contains(expected);
 	}
 
-	@DisplayName("거래 내역 수정 - 거래 내역에서 거래내역 식별자, 사용자 식별자, 생성시간을  수정할 수 없다")
+	@DisplayName("거래 내역 수정 - 거래의 내용을 null로 수정한다")
+	@Test
+	void updateTransaction_whenContentIsNull() {
+		// given
+		String transactionId = service.save(TransactionDto.builder()
+			.type(TransactionType.EXPENSE.name())
+			.amount(BigDecimal.valueOf(10_000))
+			.content("책")
+			.userId(userId)
+			.build());
+
+		TransactionDto updateDto = TransactionDto.builder()
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content(null)
+			.userId(userId)
+			.build();
+		// when
+		service.update(updateDto, transactionId, userId);
+		// then
+		TransactionEntity expected = TransactionEntity.builder()
+			.id(transactionId)
+			.type(TransactionType.INCOME.name())
+			.amount(BigDecimal.valueOf(20_000))
+			.content(null)
+			.userId(userId)
+			.build();
+		Assertions.assertThat(transactionRepository.findBy(transactionId, userId)).contains(expected);
+	}
+
+	@DisplayName("거래 내역 수정 - 거래 내역에서 거래내역 식별자, 사용자 식별자, 생성시간을 수정할 수 없다")
 	@Test
 	void updateTransaction_whenChangeTransactionIdAndUserIdAndCreatedAt_thenNotChangedData() {
 		// given

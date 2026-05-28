@@ -57,7 +57,7 @@ public class TransactionEntity {
 		validate(updatedTransaction);
 		this.type = Objects.requireNonNull(updatedTransaction.type);
 		this.amount = Objects.requireNonNull(updatedTransaction.amount);
-		this.content = Objects.requireNonNull(updatedTransaction.content);
+		this.content = updatedTransaction.content;
 	}
 
 	private void validate(TransactionEntity updatedTransaction) {
