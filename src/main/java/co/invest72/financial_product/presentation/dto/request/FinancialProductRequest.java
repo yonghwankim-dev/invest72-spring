@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import co.invest72.common.validation.BigDecimalAmount;
 import co.invest72.common.validation.EnumValid;
-import co.invest72.common.validation.FinancialAmount;
 import co.invest72.common.validation.FinancialMonths;
 import co.invest72.common.validation.FinancialProductName;
 import co.invest72.common.validation.FinancialRate;
@@ -31,7 +31,7 @@ public class FinancialProductRequest implements FinancialProductData {
 	@NotNull(message = "상품 유형은 필수입니다.")
 	private String investmentType;
 
-	@FinancialAmount
+	@BigDecimalAmount
 	private BigDecimal amount;
 
 	@FinancialMonths

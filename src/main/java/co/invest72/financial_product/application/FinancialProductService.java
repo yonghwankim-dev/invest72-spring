@@ -99,7 +99,7 @@ public class FinancialProductService {
 	}
 
 	private void validateFinancialProduct(User user, FinancialProduct product) {
-		if (product == null || !product.getUserId().equals(user.getId())) {
+		if (product == null || !product.getUserId().equalsIgnoreCase(user.getId())) {
 			throw new IllegalArgumentException("상품을 찾을 수 없거나 접근 권한이 없습니다.");
 		}
 	}
