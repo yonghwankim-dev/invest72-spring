@@ -25,7 +25,7 @@ public class CustomOidcUserService extends OidcUserService {
 	private final UserRepository userRepository;
 	private final String adminEmail;
 
-	public CustomOidcUserService(UserRepository userRepository, @Value("${admin.user.email}") String adminEmail) {
+	public CustomOidcUserService(UserRepository userRepository, @Value("${admin.user.email:none}") String adminEmail) {
 		this.userRepository = userRepository;
 		this.adminEmail = adminEmail;
 	}
