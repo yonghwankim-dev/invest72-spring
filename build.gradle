@@ -38,7 +38,7 @@ dependencies {
     // PostgreSQL 드라이버 추가
     runtimeOnly 'org.postgresql:postgresql'
     // prometheus
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.15.11'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok'
