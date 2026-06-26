@@ -3,26 +3,32 @@ package co.invest72.security;
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +37,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableConfigurationProperties(CorsConfigurationProperties.class)
 public class OAuth2LoginSecurityConfig {
+
+	private static final List<IpAddressMatcher> LOCAL_IP_MATCHERS = List.of(
+		new IpAddressMatcher("127.0.0.1/32"),
+		new IpAddressMatcher("0:0:0:0:0:0:0:1/128")
+	);
 
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
@@ -64,12 +75,20 @@ public class OAuth2LoginSecurityConfig {
 			)
 			.authorizeHttpRequests(authorize ->
 				// 1. 루트와 정적 리소스 파일들을 모두 허용합니다.
-				authorize.requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/error").permitAll()
-					.requestMatchers("/investments/**").permitAll() // 투자 계산 페이지는 인증 없이 접근 허용
-					.requestMatchers("/login/**", "/oauth2/**", "/error").permitAll()
-					.requestMatchers("/actuator/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.OPTIONS).permitAll()
-					.anyRequest().authenticated())
+				authorize.requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/error")
+					.permitAll()
+					.requestMatchers("/investments/**")
+					.permitAll() // 투자 계산 페이지는 인증 없이 접근 허용
+					.requestMatchers("/login/**", "/oauth2/**", "/error")
+					.permitAll()
+					.requestMatchers("/actuator/prometheus")
+					.access(this::hasIpAddress)
+					.requestMatchers("/actuator/**")
+					.hasRole("ADMIN")
+					.requestMatchers(HttpMethod.OPTIONS)
+					.permitAll()
+					.anyRequest()
+					.authenticated())
 			.oauth2Login(oauth2 -> oauth2
 				.loginPage("/login")
 				.authorizationEndpoint(
@@ -90,6 +109,17 @@ public class OAuth2LoginSecurityConfig {
 				configurer.authenticationEntryPoint(authenticationEntryPoint)
 			);
 		return http.build();
+	}
+
+	private AuthorizationDecision hasIpAddress(Supplier<Authentication> supplier,
+		RequestAuthorizationContext context) {
+		return new AuthorizationDecision(isLocalRequest(context.getRequest()));
+	}
+
+	private boolean isLocalRequest(HttpServletRequest request) {
+		String remoteAddr = request.getRemoteAddr();
+		return LOCAL_IP_MATCHERS.stream()
+			.anyMatch(matcher -> matcher.matches(remoteAddr));
 	}
 
 	// CORS 정책 설정
