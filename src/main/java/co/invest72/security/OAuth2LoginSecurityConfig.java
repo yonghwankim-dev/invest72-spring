@@ -30,10 +30,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(CorsConfigurationProperties.class)
+@Slf4j
 public class OAuth2LoginSecurityConfig {
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
@@ -125,6 +127,7 @@ public class OAuth2LoginSecurityConfig {
 
 	private boolean isLocalRequest(HttpServletRequest request) {
 		String remoteAddr = request.getRemoteAddr();
+		log.info("remoteAddr : {}", remoteAddr);
 		return ipAddressMatchers.stream()
 			.anyMatch(matcher -> matcher.matches(remoteAddr));
 	}
