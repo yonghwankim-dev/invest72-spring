@@ -30,26 +30,33 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableConfigurationProperties(CorsConfigurationProperties.class)
 public class OAuth2LoginSecurityConfig {
-
-	private static final List<IpAddressMatcher> LOCAL_IP_MATCHERS = List.of(
-		new IpAddressMatcher("127.0.0.1/32"),
-		new IpAddressMatcher("0:0:0:0:0:0:0:1/128")
-	);
-
 	private final CustomOidcUserService customOidcUserService;
 	private final CorsConfigurationProperties corsConfigurationProperties;
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
 	private final AuthenticationEntryPoint authenticationEntryPoint;
+	private final String csrfCookieDomain;
+	private final List<IpAddressMatcher> ipAddressMatchers;
 
-	@Value("${app.domain}")
-	private String csrfCookieDomain;
+	public OAuth2LoginSecurityConfig(CustomOidcUserService customOidcUserService,
+		CorsConfigurationProperties corsConfigurationProperties,
+		AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository,
+		AuthenticationEntryPoint authenticationEntryPoint,
+		@Value("${app.domain}") String csrfCookieDomain,
+		@Value("${app.security.prometheus.allowed-ips}") List<String> allowedIps) {
+		this.customOidcUserService = customOidcUserService;
+		this.corsConfigurationProperties = corsConfigurationProperties;
+		this.authorizationRequestRepository = authorizationRequestRepository;
+		this.authenticationEntryPoint = authenticationEntryPoint;
+		this.csrfCookieDomain = csrfCookieDomain;
+		this.ipAddressMatchers = allowedIps.stream()
+			.map(IpAddressMatcher::new)
+			.toList();
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -118,7 +125,7 @@ public class OAuth2LoginSecurityConfig {
 
 	private boolean isLocalRequest(HttpServletRequest request) {
 		String remoteAddr = request.getRemoteAddr();
-		return LOCAL_IP_MATCHERS.stream()
+		return ipAddressMatchers.stream()
 			.anyMatch(matcher -> matcher.matches(remoteAddr));
 	}
 
