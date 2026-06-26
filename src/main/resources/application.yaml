@@ -19,5 +19,9 @@ spring:
         # 실행되는 SQL을 콘솔에 보기 좋게 출력
         format_sql: true
     show-sql: true
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
 

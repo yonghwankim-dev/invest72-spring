@@ -17,8 +17,9 @@ public class InMemoryUserRepository implements UserRepository {
 	private final Map<String, User> userStore = new ConcurrentHashMap<>();
 
 	@Override
-	public void save(User user) {
+	public User save(User user) {
 		userStore.put(user.getId(), user);
+		return user;
 	}
 
 	@Override
