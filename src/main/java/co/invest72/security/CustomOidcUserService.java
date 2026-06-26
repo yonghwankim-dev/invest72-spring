@@ -47,7 +47,7 @@ public class CustomOidcUserService extends OidcUserService {
 	}
 
 	private boolean isAdminEmail(String email) {
-		return email.equals(adminEmail);
+		return adminEmail.equals(email);
 	}
 
 	private User saveNewUser(OidcUser oidcUser, String providerId) {
@@ -55,7 +55,6 @@ public class CustomOidcUserService extends OidcUserService {
 		String email = oidcUser.getEmail(); // 구글에서 제공하는 이메일 정보
 		String nickname = oidcUser.getGivenName();
 		User newUser = new User(email, nickname, providerId);
-		userRepository.save(newUser);
-		return newUser;
+		return userRepository.save(newUser);
 	}
 }

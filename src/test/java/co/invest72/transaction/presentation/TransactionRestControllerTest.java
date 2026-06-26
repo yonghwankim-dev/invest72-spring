@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -57,6 +59,7 @@ class TransactionRestControllerTest {
 		User testUser = new User(email, nickname, providerId);
 		principalUser = PrincipalUser.of()
 			.user(testUser)
+			.authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
 			.build();
 	}
 
@@ -135,6 +138,7 @@ class TransactionRestControllerTest {
 		User hackerUser = new User("hacker@gmail.com", "hacker", "providerId-1234");
 		PrincipalUser principalHacker = PrincipalUser.of()
 			.user(hackerUser)
+			.authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
 			.build();
 
 		TransactionDto dto = TransactionDto.builder()
