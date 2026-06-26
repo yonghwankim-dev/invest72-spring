@@ -1,11 +1,9 @@
 package co.invest72.security;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -25,8 +23,9 @@ public class PrincipalUser extends org.springframework.security.core.userdetails
 	private final OidcUserInfo userInfo;
 
 	@Builder(builderMethodName = "of")
-	public PrincipalUser(User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
-		super(user.getId(), "", Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+	public PrincipalUser(User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo,
+		Collection<GrantedAuthority> authorities) {
+		super(user.getId(), "", authorities);
 		this.user = user;
 		this.attributes = attributes;
 		this.idToken = idToken;

@@ -1,5 +1,12 @@
 package co.invest72.security;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -9,15 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.user.domain.User;
 import co.invest72.user.domain.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class CustomOidcUserService extends OidcUserService {
 
 	private final UserRepository userRepository;
+	private final String adminEmail;
+
+	public CustomOidcUserService(UserRepository userRepository, @Value("${admin.user.email}") String adminEmail) {
+		this.userRepository = userRepository;
+		this.adminEmail = adminEmail;
+	}
 
 	@Transactional
 	@Override
@@ -27,7 +38,16 @@ public class CustomOidcUserService extends OidcUserService {
 		String providerId = oidcUser.getSubject(); // 구글의 sub값
 
 		User user = userRepository.findByProviderId(providerId).orElseGet(() -> saveNewUser(oidcUser, providerId));
-		return new PrincipalUser(user, oidcUser.getAttributes(), oidcUser.getIdToken(), oidcUser.getUserInfo());
+		Set<GrantedAuthority> roles = new HashSet<>(
+			Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+		if (isAdminEmail(user.getEmail())) {
+			roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}
+		return new PrincipalUser(user, oidcUser.getAttributes(), oidcUser.getIdToken(), oidcUser.getUserInfo(), roles);
+	}
+
+	private boolean isAdminEmail(String email) {
+		return email.equals(adminEmail);
 	}
 
 	private User saveNewUser(OidcUser oidcUser, String providerId) {
