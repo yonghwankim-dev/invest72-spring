@@ -24,13 +24,14 @@ class RepurchaseAgreementTest {
 		// given
 		RepurchaseAgreement rp = new TermRepurchaseAgreement();
 		LocalDate startDate = LocalDate.of(2026, 9, 11);
-		int dayOfMonth = 30;
+		int days = 30;
 
 		// when
-		LocalDate expirationDate = rp.calculateExpirationDate(startDate, dayOfMonth);
+		LocalDate expirationDate = rp.calculateExpirationDate(startDate, days);
 
 		// then
 		LocalDate expected = LocalDate.of(2026, 10, 11);
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
+
 }

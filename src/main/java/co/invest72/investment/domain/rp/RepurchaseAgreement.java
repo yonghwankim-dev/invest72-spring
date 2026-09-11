@@ -7,5 +7,5 @@ import java.time.LocalDate;
  */
 public interface RepurchaseAgreement {
 
-	LocalDate calculateExpirationDate(LocalDate startDate, int dayOfMonth);
+	LocalDate calculateExpirationDate(LocalDate startDate, int daysToAdd);
 }
