@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class RepurchaseAgreementTest {
 
@@ -34,4 +36,18 @@ class RepurchaseAgreementTest {
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 
+	@ParameterizedTest
+	@DisplayName("일수(days)가 0이하이면 시작일자를 반환한다.")
+	@ValueSource(ints = {-1, 0})
+	void should_return_start_date_when_days_is_zero_or_negative(int days) {
+		// given
+		RepurchaseAgreement rp = new TermRepurchaseAgreement();
+		LocalDate startDate = LocalDate.of(2026, 9, 11);
+
+		// when
+		LocalDate expirationDate = rp.calculateExpirationDate(startDate, days);
+
+		// then
+		Assertions.assertThat(expirationDate).isEqualTo(startDate);
+	}
 }

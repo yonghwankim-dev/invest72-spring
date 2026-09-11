@@ -6,6 +6,9 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
 	@Override
 	public LocalDate calculateExpirationDate(LocalDate startDate, int daysToAdd) {
+		if (daysToAdd <= 0) {
+			return startDate;
+		}
 		return startDate.plusDays(daysToAdd);
 	}
 }
