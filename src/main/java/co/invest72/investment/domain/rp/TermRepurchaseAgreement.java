@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.investment.domain.InterestRate;
+import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.money.domain.Money;
@@ -14,12 +15,15 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	private final InvestmentAmount investmentAmount;
 	private final InterestRate interestRate;
 	private final LocalDate startDate;
+	private final InvestPeriod investPeriod;
 
 	@Builder(toBuilder = true)
-	public TermRepurchaseAgreement(InvestmentAmount investmentAmount, InterestRate interestRate, LocalDate startDate) {
+	public TermRepurchaseAgreement(InvestmentAmount investmentAmount, InterestRate interestRate, LocalDate startDate,
+		InvestPeriod investPeriod) {
 		this.investmentAmount = investmentAmount;
 		this.interestRate = interestRate;
 		this.startDate = startDate;
+		this.investPeriod = investPeriod;
 	}
 
 	@Override
@@ -39,5 +43,10 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 			return Money.of(BigDecimal.ZERO, interest.getCurrency());
 		}
 		return Investment.roundToWholeMoney.apply(interest);
+	}
+
+	@Override
+	public LocalDate getExpirationDate() {
+		return startDate.plusMonths(investPeriod.getMonths());
 	}
 }

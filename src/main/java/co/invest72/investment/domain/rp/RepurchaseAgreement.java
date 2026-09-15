@@ -20,4 +20,6 @@ public interface RepurchaseAgreement {
 	 * @return 이자 금액
 	 */
 	Money calculateInterestForDays(int days);
+
+	LocalDate getExpirationDate();
 }

@@ -20,4 +20,5 @@ public class PeriodMonthsRange implements PeriodRange {
 	public int toMonths() {
 		return months;
 	}
+
 }

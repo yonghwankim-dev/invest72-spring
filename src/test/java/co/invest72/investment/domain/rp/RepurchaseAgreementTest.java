@@ -14,6 +14,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
+import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
 class RepurchaseAgreementTest {
@@ -131,5 +132,33 @@ class RepurchaseAgreementTest {
 		Money expected = Money.won(0);
 		Assertions.assertThat(interest)
 			.isEqualTo(expected);
+	}
+
+	@Test
+	@DisplayName("약정 일수가 30일인 RP 상품의 만기일자를 조회한다")
+	void should_return_expiration_date_when_days_is_30() {
+		// given
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(1))
+			.build();
+		// when
+		LocalDate expirationDate = newRp.getExpirationDate();
+		// then
+		LocalDate expected = LocalDate.of(2026, 10, 11);
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
+	}
+
+	@Test
+	@DisplayName("약정 일수가 60일인 RP 상품의 만기일자를 조회한다")
+	void should_return_expiration_date_when_days_is_60() {
+		// given
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.investPeriod(new MonthlyInvestPeriod(2))
+			.build();
+		// when
+		LocalDate expirationDate = newRp.getExpirationDate();
+		// then
+		LocalDate expected = LocalDate.of(2026, 11, 11);
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 }
