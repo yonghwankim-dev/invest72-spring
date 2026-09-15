@@ -5,14 +5,19 @@ import java.time.LocalDate;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.Investment;
+import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.money.domain.Money;
+import lombok.Builder;
 
 public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
+	private final InvestmentAmount investmentAmount;
 	private final LocalDate startDate;
 
-	public TermRepurchaseAgreement(LocalDate startDate) {
+	@Builder(toBuilder = true)
+	public TermRepurchaseAgreement(InvestmentAmount investmentAmount, LocalDate startDate) {
+		this.investmentAmount = investmentAmount;
 		this.startDate = startDate;
 	}
 
@@ -25,12 +30,11 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
-	public Money calculateInterestUntil(int days) {
+	public Money calculateInterestForDays(int days) {
 		// 투자 금액 x 약정수익률(연이율) x (예치 일수 / 365)
-		Money investmentAmount = Money.won(1_000_000);
 		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 
-		Money interest = investmentAmount.times(interestRate.getAnnualRate())
+		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)
 			.divide(BigDecimal.valueOf(365L));
 

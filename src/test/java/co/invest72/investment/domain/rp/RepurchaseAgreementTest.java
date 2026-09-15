@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import co.invest72.investment.domain.InvestmentAmount;
+import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.money.domain.Money;
 
 class RepurchaseAgreementTest {
@@ -17,8 +19,12 @@ class RepurchaseAgreementTest {
 
 	@BeforeEach
 	void setUp() {
+		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
 		LocalDate startDate = LocalDate.of(2026, 9, 11);
-		rp = new TermRepurchaseAgreement(startDate);
+		rp = TermRepurchaseAgreement.builder()
+			.investmentAmount(investmentAmount)
+			.startDate(startDate)
+			.build();
 	}
 
 	@Test
@@ -61,7 +67,7 @@ class RepurchaseAgreementTest {
 		// given
 		int days = 30;
 		// when
-		Money interest = rp.calculateInterestUntil(days);
+		Money interest = rp.calculateInterestForDays(days);
 		// then
 		Money expected = Money.won(4_110);
 		Assertions.assertThat(interest)
@@ -74,9 +80,24 @@ class RepurchaseAgreementTest {
 		// given
 		int days = 15;
 		// when
-		Money interest = rp.calculateInterestUntil(days);
+		Money interest = rp.calculateInterestForDays(days);
 		// then
 		Money expected = Money.won(2_055);
+		Assertions.assertThat(interest).isEqualTo(expected);
+	}
+
+	@Test
+	@DisplayName("원금이 200만원이고 만기까지의 이자 금액 계산")
+	void should_return_interest_amount_when_days_is_expiration_days() {
+		// given
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.investmentAmount(new FixedDepositAmount(Money.won(2_000_000)))
+			.build();
+		int days = 30;
+		// when
+		Money interest = newRp.calculateInterestForDays(days);
+		// then
+		Money expected = Money.won(8_219);
 		Assertions.assertThat(interest).isEqualTo(expected);
 	}
 }
