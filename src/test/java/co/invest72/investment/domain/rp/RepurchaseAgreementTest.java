@@ -1,5 +1,6 @@
 package co.invest72.investment.domain.rp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
@@ -9,8 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
+import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.money.domain.Money;
 
 class RepurchaseAgreementTest {
@@ -20,9 +23,11 @@ class RepurchaseAgreementTest {
 	@BeforeEach
 	void setUp() {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
+		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 		LocalDate startDate = LocalDate.of(2026, 9, 11);
 		rp = TermRepurchaseAgreement.builder()
 			.investmentAmount(investmentAmount)
+			.interestRate(interestRate)
 			.startDate(startDate)
 			.build();
 	}
@@ -92,6 +97,21 @@ class RepurchaseAgreementTest {
 		// given
 		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
 			.investmentAmount(new FixedDepositAmount(Money.won(2_000_000)))
+			.build();
+		int days = 30;
+		// when
+		Money interest = newRp.calculateInterestForDays(days);
+		// then
+		Money expected = Money.won(8_219);
+		Assertions.assertThat(interest).isEqualTo(expected);
+	}
+
+	@Test
+	@DisplayName("연수익율이 10%이고 만기까지의 이자 금액 계산")
+	void given_annual_interest_is_10_percent_when_days_is_expiration_days_then_return_interest() {
+		// given
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.1)))
 			.build();
 		int days = 30;
 		// when
