@@ -35,7 +35,9 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)
 			.divide(BigDecimal.valueOf(365L));
-
+		if (interest.isNegative()) {
+			return Money.of(BigDecimal.ZERO, interest.getCurrency());
+		}
 		return Investment.roundToWholeMoney.apply(interest);
 	}
 }

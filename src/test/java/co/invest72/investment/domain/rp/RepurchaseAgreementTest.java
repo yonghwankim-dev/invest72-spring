@@ -120,4 +120,16 @@ class RepurchaseAgreementTest {
 		Money expected = Money.won(8_219);
 		Assertions.assertThat(interest).isEqualTo(expected);
 	}
+
+	@ParameterizedTest
+	@DisplayName("약정일수가 0 이하인 경우에는 이자는 0원을 반환해야 한다")
+	@ValueSource(ints = {-1, 0})
+	void should_return_zero_interest_when_days_is_zero_or_negative(int days) {
+		// when
+		Money interest = rp.calculateInterestForDays(days);
+		// then
+		Money expected = Money.won(0);
+		Assertions.assertThat(interest)
+			.isEqualTo(expected);
+	}
 }
