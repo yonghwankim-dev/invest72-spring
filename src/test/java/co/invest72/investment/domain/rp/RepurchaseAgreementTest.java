@@ -31,11 +31,10 @@ class RepurchaseAgreementTest {
 	@DisplayName("RP 상품의 만기일자를 계산한다")
 	void should_calculate_expiration_date_correctly_when_months_given() {
 		// given
-		LocalDate startDate = LocalDate.of(2026, 9, 11);
 		int days = 30;
 
 		// when
-		LocalDate expirationDate = rp.calculateExpirationDate(startDate, days);
+		LocalDate expirationDate = rp.calculateExpirationDate(days);
 
 		// then
 		LocalDate expected = LocalDate.of(2026, 10, 11);
@@ -46,13 +45,11 @@ class RepurchaseAgreementTest {
 	@DisplayName("일수(days)가 0이하이면 시작일자를 반환한다.")
 	@ValueSource(ints = {-1, 0})
 	void should_return_start_date_when_days_is_zero_or_negative(int days) {
-		// given
-		LocalDate startDate = LocalDate.of(2026, 9, 11);
-
 		// when
-		LocalDate expirationDate = rp.calculateExpirationDate(startDate, days);
+		LocalDate expirationDate = rp.calculateExpirationDate(days);
 
 		// then
-		Assertions.assertThat(expirationDate).isEqualTo(startDate);
+		LocalDate expected = LocalDate.of(2026, 9, 11);
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 }

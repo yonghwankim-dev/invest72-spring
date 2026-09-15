@@ -9,5 +9,4 @@ public interface RepurchaseAgreement {
 
 	LocalDate calculateExpirationDate(int daysToAdd);
 
-	LocalDate calculateExpirationDate(LocalDate startDate, int daysToAdd);
 }
