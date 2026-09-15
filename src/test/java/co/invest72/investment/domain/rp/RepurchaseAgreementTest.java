@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import co.invest72.money.domain.Money;
+
 class RepurchaseAgreementTest {
 
 	private RepurchaseAgreement rp;
@@ -54,14 +56,27 @@ class RepurchaseAgreementTest {
 	}
 
 	@Test
-	@DisplayName("특정 약정 일수까지의 이자 금액 계산")
-	void should_return_interest_amount_given_days() {
+	@DisplayName("만기일(30일)까지의 이자 금액 계산")
+	void should_return_interest_amount_when_days_is_30() {
 		// given
 		int days = 30;
 		// when
-		int interest = rp.calculateInterestUntil(days);
+		Money interest = rp.calculateInterestUntil(days);
 		// then
-		int expected = 4_167;
+		Money expected = Money.won(4_110);
+		Assertions.assertThat(interest)
+			.isEqualTo(expected);
+	}
+
+	@Test
+	@DisplayName("15일까지의 이자 금액 계산")
+	void should_return_interest_amount_when_days_is_15() {
+		// given
+		int days = 15;
+		// when
+		Money interest = rp.calculateInterestUntil(days);
+		// then
+		Money expected = Money.won(2_055);
 		Assertions.assertThat(interest).isEqualTo(expected);
 	}
 }
