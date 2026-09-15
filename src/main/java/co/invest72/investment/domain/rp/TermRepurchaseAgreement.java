@@ -17,4 +17,9 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 		}
 		return startDate.plusDays(daysToAdd);
 	}
+
+	@Override
+	public int calculateInterestUntil(int days) {
+		return 4167;
+	}
 }

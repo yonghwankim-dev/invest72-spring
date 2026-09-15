@@ -52,4 +52,16 @@ class RepurchaseAgreementTest {
 		LocalDate expected = LocalDate.of(2026, 9, 11);
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
+
+	@Test
+	@DisplayName("특정 약정 일수까지의 이자 금액 계산")
+	void should_return_interest_amount_given_days() {
+		// given
+		int days = 30;
+		// when
+		int interest = rp.calculateInterestUntil(days);
+		// then
+		int expected = 4_167;
+		Assertions.assertThat(interest).isEqualTo(expected);
+	}
 }

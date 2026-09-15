@@ -9,4 +9,5 @@ public interface RepurchaseAgreement {
 
 	LocalDate calculateExpirationDate(int daysToAdd);
 
+	int calculateInterestUntil(int days);
 }
