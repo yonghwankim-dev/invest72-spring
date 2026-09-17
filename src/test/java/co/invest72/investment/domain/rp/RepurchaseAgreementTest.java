@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import co.invest72.investment.domain.DailyInvestPeriod;
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
@@ -161,4 +162,20 @@ class RepurchaseAgreementTest {
 		LocalDate expected = LocalDate.of(2026, 11, 11);
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
+
+	@Test
+	@DisplayName("약정 일수가 90일인 RP 상품의 만기일자를 조회한다")
+	void should_return_expiration_date_when_days_is_90() {
+		// given
+		LocalDate startDate = LocalDate.of(2026, 9, 11);
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.investPeriod(new DailyInvestPeriod(startDate, 90))
+			.build();
+		// when
+		LocalDate expirationDate = newRp.getExpirationDate();
+		// then
+		LocalDate expected = LocalDate.of(2026, 12, 9);
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
+	}
+
 }

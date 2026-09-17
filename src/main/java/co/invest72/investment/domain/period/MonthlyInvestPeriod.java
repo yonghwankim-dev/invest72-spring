@@ -18,5 +18,4 @@ public class MonthlyInvestPeriod implements InvestPeriod {
 	public int getMonths() {
 		return periodRange.toMonths();
 	}
-
 }
