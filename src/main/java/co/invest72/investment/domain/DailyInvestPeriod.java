@@ -35,4 +35,13 @@ public class DailyInvestPeriod implements InvestPeriod {
 		LocalDate endDate = this.startDate.plusDays(days);
 		return (int)ChronoUnit.MONTHS.between(this.startDate, endDate);
 	}
+
+	@Override
+	public int getDays(LocalDate startDate) {
+		if (startDate == null) {
+			throw new IllegalArgumentException("startDate must not null");
+		}
+		LocalDate endDate = startDate.plusDays(days);
+		return (int)ChronoUnit.DAYS.between(startDate, endDate);
+	}
 }

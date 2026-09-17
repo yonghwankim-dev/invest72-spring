@@ -8,6 +8,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import co.invest72.investment.domain.InvestPeriod;
 
@@ -55,14 +57,30 @@ class MonthlyInvestPeriodTest {
 	}
 
 	@Test
-	@DisplayName("투자 기간이 1개월일때 투자 일수를 계산하여 반환해야 한다")
-	void should_return_invest_days_when_months_is_one() {
+	@DisplayName("투자 개월수가 0개월일때 0일을 반환한다")
+	void should_return_zero_days_when_months_is_zero() {
 		// given
-		investPeriod = new MonthlyInvestPeriod(1);
+		investPeriod = new MonthlyInvestPeriod(0);
 		LocalDate startDate = LocalDate.of(2026, 1, 1);
 		// when
 		int days = investPeriod.getDays(startDate);
 		// then
-		Assertions.assertThat(days).isEqualTo(31);
+		Assertions.assertThat(days).isZero();
+	}
+
+	@ParameterizedTest(name = "투자 개월수가 {0}개월일때 {1}일을 반환한다")
+	@CsvSource({
+		"1, 31", // 1월1일 ~ 2월1일, 총 31일
+		"2, 59", // 1월1일 ~ 3월1일, 총 59일
+		"12, 365" // 1월1일 ~ 27년 1월1일, 총 365
+	})
+	void should_return_invest_days_when_months_is_one(int months, int expectedMonths) {
+		// given
+		investPeriod = new MonthlyInvestPeriod(months);
+		LocalDate startDate = LocalDate.of(2026, 1, 1);
+		// when
+		int days = investPeriod.getDays(startDate);
+		// then
+		Assertions.assertThat(days).isEqualTo(expectedMonths);
 	}
 }

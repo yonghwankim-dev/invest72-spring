@@ -74,4 +74,20 @@ class DailyInvestPeriodTest {
 			Assertions.assertThat(months).isEqualTo(expectedMonth);
 		}
 	}
+
+	@Nested
+	@DisplayName("투자 일수 계산 검증")
+	class getDaysTest {
+		@Test
+		void should_return_invest_days_when_days_is_30() {
+			// given
+			LocalDate startDate = LocalDate.of(2026, 1, 1);
+			int days = 30;
+			InvestPeriod sut = new DailyInvestPeriod(startDate, days);
+			// when
+			int investDays = sut.getDays(startDate);
+			// then
+			Assertions.assertThat(investDays).isEqualTo(30);
+		}
+	}
 }
