@@ -24,6 +24,15 @@ public class YearlyInvestPeriod implements InvestPeriod {
 	}
 
 	@Override
+	public int getMonths(LocalDate startDate) {
+		if (startDate == null) {
+			throw new IllegalArgumentException("startDate must not null");
+		}
+		LocalDate endDate = startDate.plusMonths(periodRange.toMonths());
+		return (int)ChronoUnit.MONTHS.between(startDate, endDate);
+	}
+
+	@Override
 	public int getDays(LocalDate startDate) {
 		if (startDate == null) {
 			throw new IllegalArgumentException("startDate must not null");

@@ -163,6 +163,7 @@ class RepurchaseAgreementTest {
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 
+	// TODO: DailyInvestPeriod 타입일때 만기일자 계산 테스트 성공시키기
 	@Test
 	@DisplayName("약정 일수가 90일인 RP 상품의 만기일자를 조회한다")
 	void should_return_expiration_date_when_days_is_90() {
@@ -174,7 +175,7 @@ class RepurchaseAgreementTest {
 		// when
 		LocalDate expirationDate = newRp.getExpirationDate();
 		// then
-		LocalDate expected = LocalDate.of(2026, 12, 9);
+		LocalDate expected = LocalDate.of(2026, 12, 10);
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 

@@ -32,6 +32,11 @@ public class DailyInvestPeriod implements InvestPeriod {
 
 	@Override
 	public int getMonths() {
+		return getMonths(this.startDate);
+	}
+
+	@Override
+	public int getMonths(LocalDate startDate) {
 		LocalDate endDate = this.startDate.plusDays(days);
 		return (int)ChronoUnit.MONTHS.between(this.startDate, endDate);
 	}
