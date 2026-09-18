@@ -16,6 +16,7 @@ import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
+import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
 class RepurchaseAgreementTest {
@@ -163,7 +164,6 @@ class RepurchaseAgreementTest {
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 
-	// TODO: DailyInvestPeriod 타입일때 만기일자 계산 테스트 성공시키기
 	@Test
 	@DisplayName("약정 일수가 90일인 RP 상품의 만기일자를 조회한다")
 	void should_return_expiration_date_when_days_is_90() {
@@ -179,4 +179,17 @@ class RepurchaseAgreementTest {
 		Assertions.assertThat(expirationDate).isEqualTo(expected);
 	}
 
+	@Test
+	@DisplayName("약정 일수가 1년인 RP 상품의 만기일자를 조회한다")
+	void should_return_expiration_date_when_years_is_one() {
+		// given
+		RepurchaseAgreement newRp = ((TermRepurchaseAgreement)rp).toBuilder()
+			.investPeriod(new YearlyInvestPeriod(1))
+			.build();
+		// when
+		LocalDate expirationDate = newRp.getExpirationDate();
+		// then
+		LocalDate expected = LocalDate.of(2027, 9, 11);
+		Assertions.assertThat(expirationDate).isEqualTo(expected);
+	}
 }
