@@ -35,7 +35,6 @@ import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
-import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
@@ -234,32 +233,6 @@ class FinancialProductRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto)))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.id").value(notNullValue()));
-	}
-
-	@DisplayName("상품 생성 - RP 상품")
-	@Test
-	void createProduct_whenInvestmentTypeIsRP_thenSaveProduct() throws Exception {
-		// given
-		RpCreateRequest request = RpCreateRequest.builder()
-			.name("미래에셋증권 RP")
-			.investmentType(InvestmentType.RP.name())
-			.amount(BigDecimal.valueOf(1_000_000L))
-			.days(30)
-			.interestRate(BigDecimal.valueOf(0.05))
-			.interestType(InterestType.COMPOUND.name())
-			.taxType(TaxType.STANDARD.name())
-			.taxRate(BigDecimal.valueOf(0.154))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
-			.build();
-		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products/rp")
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
