@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +21,7 @@ import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
+import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductStatisticsResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
@@ -53,6 +55,13 @@ public class FinancialProductService {
 		FinancialProductData dtoWithUserId = dto.withUserId(user.getId());
 		FinancialProduct product = financialProductFactory.create(dtoWithUserId);
 		return repository.save(product);
+	}
+
+	@Transactional
+	@CacheEvict(value = {"productSummary"}, key = "#user.id")
+	public String createRp(User user, RpCreateRequest request) {
+		// todo: convert request to entity
+		return UUID.randomUUID().toString();
 	}
 
 	@Transactional(readOnly = true)

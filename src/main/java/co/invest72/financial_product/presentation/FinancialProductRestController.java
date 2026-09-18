@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.invest72.financial_product.application.FinancialProductService;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
+import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
 import co.invest72.financial_product.presentation.dto.response.CreateFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductStatisticsResponse;
@@ -37,6 +38,16 @@ public class FinancialProductRestController {
 	public ResponseEntity<CreateFinancialProductResponse> createProduct(@AuthenticationPrincipal PrincipalUser user,
 		@Valid @RequestBody FinancialProductRequest dto) {
 		String id = service.createProduct(user.getUser(), dto);
+		CreateFinancialProductResponse response = new CreateFinancialProductResponse(id);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(response);
+	}
+
+	// RP 상품 생성
+	@PostMapping("/rp")
+	public ResponseEntity<CreateFinancialProductResponse> createRpProduct(@AuthenticationPrincipal PrincipalUser user,
+		@Valid @RequestBody RpCreateRequest request) {
+		String id = service.createRp(user.getUser(), request);
 		CreateFinancialProductResponse response = new CreateFinancialProductResponse(id);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(response);

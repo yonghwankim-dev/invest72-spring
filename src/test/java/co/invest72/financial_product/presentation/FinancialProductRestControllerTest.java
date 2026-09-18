@@ -35,6 +35,7 @@ import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
+import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
 import co.invest72.financial_product.presentation.dto.response.FinancialProductSummary;
 import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.domain.interest.InterestType;
@@ -241,11 +242,11 @@ class FinancialProductRestControllerTest {
 	@Test
 	void createProduct_whenInvestmentTypeIsRP_thenSaveProduct() throws Exception {
 		// given
-		FinancialProductData dto = FinancialProductRequest.builder()
+		RpCreateRequest request = RpCreateRequest.builder()
 			.name("미래에셋증권 RP")
 			.investmentType(InvestmentType.RP.name())
 			.amount(BigDecimal.valueOf(1_000_000L))
-			.months(12)
+			.days(30)
 			.interestRate(BigDecimal.valueOf(0.05))
 			.interestType(InterestType.COMPOUND.name())
 			.taxType(TaxType.STANDARD.name())
@@ -254,11 +255,11 @@ class FinancialProductRestControllerTest {
 			.currencyCode(Currency.won().getCode())
 			.build();
 		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products/rp")
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
 				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto)))
+				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
