@@ -47,6 +47,6 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
 	@Override
 	public LocalDate getExpirationDate() {
-		return startDate.plusMonths(investPeriod.getMonths());
+		return startDate.plusDays(investPeriod.getDays(this.startDate));
 	}
 }
