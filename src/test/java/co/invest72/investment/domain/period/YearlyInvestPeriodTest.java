@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import co.invest72.investment.domain.InvestPeriod;
@@ -38,16 +39,21 @@ class YearlyInvestPeriodTest {
 	@Nested
 	@DisplayName("투자 개월수 계산 검증")
 	class getMonthsTest {
-		@Test
+		@ParameterizedTest
+		@CsvSource({
+			"0, 0",
+			"1, 12",
+			"2, 24",
+			"12, 144"
+		})
 		@DisplayName("투자 년수가 1년이면 12개월을 반환해야 한다")
-		void should_return_invest_months_when_years_is_one() {
+		void should_return_invest_months_given_years(int years, int expectedMonths) {
 			// given
-			int years = 1;
 			InvestPeriod sut = new YearlyInvestPeriod(years);
 			// when
 			int months = sut.getMonths();
 			// then
-			Assertions.assertThat(months).isEqualTo(12);
+			Assertions.assertThat(months).isEqualTo(expectedMonths);
 		}
 	}
 

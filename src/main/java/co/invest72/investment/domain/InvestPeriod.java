@@ -14,9 +14,7 @@ public interface InvestPeriod {
 	 * @param startDate 시작일자
 	 * @return 개월수
 	 */
-	default int getMonths(LocalDate startDate) {
-		return 0;
-	}
+	int getMonths(LocalDate startDate);
 
 	/**
 	 * 지정한 시작일로부터 설정된 기간이 경과했을 때의 총 투자 일(경과 일수)를 계산한다
