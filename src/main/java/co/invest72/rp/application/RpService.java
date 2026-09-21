@@ -1,6 +1,7 @@
 package co.invest72.rp.application;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.NoSuchElementException;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -54,28 +55,42 @@ public class RpService {
 
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
-		BigDecimal maturityInterest = calculateMaturityInterest();
-		BigDecimal currentInterest = BigDecimal.valueOf(2795);
-		BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
 		return repository.findById(id)
-			.map(rp -> RpDetailedResponse.builder()
-				.id(rp.getId())
-				.investmentType(rp.getTypeName())
-				.name(rp.getName())
-				.amount(rp.getAmount().getValue())
-				.currency(rp.getAmount().getCurrency())
-				.interestRate(rp.getProductAnnualInterestRate().getValue())
-				.startDate(rp.getStartDate())
-				.termOfAgreement(rp.getDays())
-				.maturityInterest(maturityInterest)
-				.currentInterest(currentInterest)
-				.currentInterestRate(currentInterestRate)
-				.isAutoReinvest(true)
-				.build())
+			.map(rp -> {
+				BigDecimal maturityInterest = calculateMaturityInterest(rp);
+				BigDecimal currentInterest = BigDecimal.valueOf(2795);
+				BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
+				return RpDetailedResponse.builder()
+					.id(rp.getId())
+					.investmentType(rp.getTypeName())
+					.name(rp.getName())
+					.amount(rp.getAmount().getValue())
+					.currency(rp.getAmount().getCurrency())
+					.interestRate(rp.getProductAnnualInterestRate().getValue())
+					.startDate(rp.getStartDate())
+					.termOfAgreement(rp.getDays())
+					.maturityInterest(maturityInterest)
+					.currentInterest(currentInterest)
+					.currentInterestRate(currentInterestRate)
+					.isAutoReinvest(true)
+					.build();
+			})
 			.orElseThrow(() -> new NoSuchElementException("not found rp, id=" + id));
 	}
 
-	private BigDecimal calculateMaturityInterest() {
-		return BigDecimal.valueOf(2795);
+	/**
+	 * 만기 이자 금액 계산
+	 * <p>
+	 * - 원금 x 연 이자율 x (투자 일수 / 365)
+	 * - 만기 이자 금액 반환시 소수점 둘째짜리 까지 표현
+	 * @return 만기 이자 금액
+	 */
+	private BigDecimal calculateMaturityInterest(RepurchaseAgreementEntity entity) {
+		BigDecimal amount = entity.getAmount().getValue();
+		BigDecimal annualInterest = entity.getProductAnnualInterestRate().getValue();
+		Integer days = entity.getDays();
+		return amount.multiply(annualInterest)
+			.multiply(BigDecimal.valueOf(days))
+			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
 	}
 }
