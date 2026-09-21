@@ -54,7 +54,9 @@ public class RpService {
 
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
-
+		BigDecimal maturityInterest = BigDecimal.valueOf(2795);
+		BigDecimal currentInterest = BigDecimal.ZERO;
+		BigDecimal currentInterestRate = BigDecimal.ZERO;
 		return repository.findById(id)
 			.map(rp -> RpDetailedResponse.builder()
 				.id(rp.getId())
@@ -65,9 +67,9 @@ public class RpService {
 				.interestRate(rp.getProductAnnualInterestRate().getValue())
 				.startDate(rp.getStartDate())
 				.termOfAgreement(rp.getDays())
-				.maturityInterest(BigDecimal.ZERO)
-				.currentInterest(BigDecimal.ZERO)
-				.currentInterestRate(BigDecimal.ZERO)
+				.maturityInterest(maturityInterest)
+				.currentInterest(currentInterest)
+				.currentInterestRate(currentInterestRate)
 				.isAutoReinvest(true)
 				.build())
 			.orElseThrow(() -> new NoSuchElementException("not found rp, id=" + id));
