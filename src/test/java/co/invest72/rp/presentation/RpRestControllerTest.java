@@ -27,11 +27,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
+import co.invest72.financial_product.domain.ProductAmount;
+import co.invest72.financial_product.domain.ProductAnnualInterestRate;
+import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductTaxRate;
+import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
+import co.invest72.rp.entity.RepurchaseAgreementEntity;
+import co.invest72.rp.infrastructure.RpRepository;
+import co.invest72.rp.presentation.dto.RpCreateRequest;
 import co.invest72.security.PrincipalUser;
 import co.invest72.user.domain.User;
 
@@ -48,6 +55,9 @@ class RpRestControllerTest {
 
 	@MockitoBean
 	private LocalDateProvider localDateProviderMock;
+
+	@Autowired
+	private RpRepository repository;
 
 	private PrincipalUser principalUser;
 
@@ -90,6 +100,34 @@ class RpRestControllerTest {
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").value(notNullValue()));
+	}
+
+	@DisplayName("RP 상품 조회")
+	@Test
+	void should_return_rp_data() throws Exception {
+		// given
+		LocalDate startDate = LocalDate.of(2026, 1, 1);
+		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
+			.id(UUID.randomUUID().toString())
+			.userId(UUID.randomUUID().toString())
+			.name("미래에셋증권 RP")
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
+			.days(30)
+			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
+			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
+			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
+			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
+			.startDate(startDate)
+			.createdAt(startDate.atStartOfDay())
+			.build();
+		repository.save(entity);
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/rp")
+				.queryParam("id", entity.getId())
+				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(entity.getId()));
 	}
 
 }
