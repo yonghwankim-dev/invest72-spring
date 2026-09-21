@@ -1,4 +1,4 @@
-package co.invest72.financial_product.presentation.dto.request;
+package co.invest72.rp.presentation.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
