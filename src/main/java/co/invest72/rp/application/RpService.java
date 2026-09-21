@@ -55,8 +55,8 @@ public class RpService {
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
 		BigDecimal maturityInterest = BigDecimal.valueOf(2795);
-		BigDecimal currentInterest = BigDecimal.ZERO;
-		BigDecimal currentInterestRate = BigDecimal.ZERO;
+		BigDecimal currentInterest = BigDecimal.valueOf(2795);
+		BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
 		return repository.findById(id)
 			.map(rp -> RpDetailedResponse.builder()
 				.id(rp.getId())
