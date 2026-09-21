@@ -39,7 +39,7 @@ class RpServiceTest {
 	@DisplayName("RP 엔티티 저장")
 	class createRp {
 		@Test
-		@DisplayName("RP 엔티티 저장한다")
+		@DisplayName("RP 엔티티를 저장소에 저장한다")
 		void save_rp_entity() {
 			// given
 			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);

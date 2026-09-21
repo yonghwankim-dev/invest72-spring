@@ -30,6 +30,7 @@ import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.investment.domain.interest.InterestType;
@@ -110,6 +111,7 @@ class RpRestControllerTest {
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 			.id(UUID.randomUUID().toString())
 			.userId(UUID.randomUUID().toString())
+			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
 			.name("미래에셋증권 RP")
 			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
 			.days(30)
@@ -128,6 +130,8 @@ class RpRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id").value(entity.getId()));
+		// .andExpect(jsonPath("$.investmentType").value(equalTo(entity.getProductInvestmentType())));
+
 	}
 
 }

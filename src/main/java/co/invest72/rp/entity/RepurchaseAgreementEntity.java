@@ -7,6 +7,7 @@ import java.util.Objects;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import jakarta.persistence.Column;
@@ -27,6 +28,9 @@ public class RepurchaseAgreementEntity {
 
 	@Column(name = "user_id", nullable = false, updatable = false)
 	private String userId;
+
+	@Embedded
+	private ProductInvestmentType productInvestmentType;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
@@ -56,11 +60,13 @@ public class RepurchaseAgreementEntity {
 	private LocalDateTime createdAt; // 생성 일시
 
 	@Builder(toBuilder = true)
-	public RepurchaseAgreementEntity(String id, String userId, String name, ProductAmount amount, Integer days,
+	public RepurchaseAgreementEntity(String id, String userId, ProductInvestmentType productInvestmentType, String name,
+		ProductAmount amount, Integer days,
 		ProductAnnualInterestRate productAnnualInterestRate, ProductInterestType productInterestType,
 		ProductTaxType productTaxType, ProductTaxRate productTaxRate, LocalDate startDate, LocalDateTime createdAt) {
 		this.id = Objects.requireNonNull(id);
 		this.userId = Objects.requireNonNull(userId);
+		this.productInvestmentType = Objects.requireNonNull(productInvestmentType);
 		this.name = Objects.requireNonNull(name);
 		this.amount = Objects.requireNonNull(amount);
 		this.days = Objects.requireNonNull(days);

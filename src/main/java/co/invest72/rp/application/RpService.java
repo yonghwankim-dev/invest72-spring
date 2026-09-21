@@ -12,6 +12,7 @@ import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
+import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -35,6 +36,7 @@ public class RpService {
 	public String createRp(User user, RpCreateRequest request) {
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 			.id(idGenerator.generateId())
+			.productInvestmentType(ProductInvestmentType.from(request.getInvestmentType()))
 			.name(request.getName())
 			.amount(ProductAmount.of(request.getAmount(), request.getCurrencyCode()))
 			.days(request.getDays())
