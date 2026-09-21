@@ -128,7 +128,7 @@ class RpServiceTest {
 				.termOfAgreement(30)
 				.maturityInterest(BigDecimal.valueOf(2795))
 				.currentInterest(BigDecimal.valueOf(2795))
-				.currentInterestRate(BigDecimal.valueOf(0.00279))
+				.currentInterestRate(BigDecimal.valueOf(0.0028))
 				.isAutoReinvest(true)
 				.build();
 			Assertions.assertThat(response)
