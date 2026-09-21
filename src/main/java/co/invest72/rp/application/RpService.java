@@ -107,9 +107,14 @@ public class RpService {
 	private BigDecimal calculateCurrentInterest(RepurchaseAgreementEntity rp) {
 		BigDecimal principal = rp.getAmount().getValue();
 		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
-		int holdingPeriod = 30; // 예치 일수
+		int holdingPeriod = calculateHoldingPeriod();
 		return principal.multiply(annualInterest)
 			.multiply(BigDecimal.valueOf(holdingPeriod))
 			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
+	}
+
+	private int calculateHoldingPeriod() {
+		int holdingPeriod = 30; // 예치 일수
+		return holdingPeriod;
 	}
 }
