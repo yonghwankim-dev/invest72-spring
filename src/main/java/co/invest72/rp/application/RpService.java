@@ -1,7 +1,7 @@
 package co.invest72.rp.application;
 
+import java.math.BigDecimal;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -54,9 +54,22 @@ public class RpService {
 
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
-		Optional<RepurchaseAgreementEntity> foundedRp = repository.findById(id);
-		RepurchaseAgreementEntity rp = foundedRp.orElseThrow(
-			() -> new NoSuchElementException("not found rp, id=" + id));
-		return RpDetailedResponse.fromEntity(rp);
+
+		return repository.findById(id)
+			.map(rp -> RpDetailedResponse.builder()
+				.id(rp.getId())
+				.investmentType(rp.getTypeName())
+				.name(rp.getName())
+				.amount(rp.getAmount().getValue())
+				.currency(rp.getAmount().getCurrency())
+				.interestRate(rp.getProductAnnualInterestRate().getValue())
+				.startDate(rp.getStartDate())
+				.termOfAgreement(rp.getDays())
+				.maturityInterest(BigDecimal.ZERO)
+				.currentInterest(BigDecimal.ZERO)
+				.currentInterestRate(BigDecimal.ZERO)
+				.isAutoReinvest(true)
+				.build())
+			.orElseThrow(() -> new NoSuchElementException("not found rp, id=" + id));
 	}
 }
