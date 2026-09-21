@@ -61,7 +61,7 @@ public class RpService {
 			.map(rp -> {
 				BigDecimal maturityInterest = calculateMaturityInterest(rp);
 				BigDecimal currentInterest = calculateCurrentInterest(rp);
-				BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
+				BigDecimal currentInterestRate = BigDecimal.valueOf(0.00279);
 				return RpDetailedResponse.builder()
 					.id(rp.getId())
 					.investmentType(rp.getTypeName())

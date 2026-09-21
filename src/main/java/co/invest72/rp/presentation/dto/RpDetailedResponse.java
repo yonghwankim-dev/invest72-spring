@@ -6,10 +6,14 @@ import java.util.Objects;
 
 import co.invest72.rp.entity.RepurchaseAgreementEntity;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Builder
 @Getter
+@EqualsAndHashCode
+@ToString
 public class RpDetailedResponse {
 	private String id; // 식별자
 	private String investmentType; // 상품 타입
