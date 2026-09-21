@@ -127,10 +127,31 @@ public class RpService {
 		return (int)startDate.until(nowDate, ChronoUnit.DAYS);
 	}
 
+	/**
+	 * 현재 이자 금액에 대한 수익률을 비율(Ratio) 형태의 실수값으로 계산하여 반환한다.
+	 * <p><b>계산식:</b>
+	 * <ul>
+	 *   <li>{@code 현재 이자 수익률 = 현재 이자 금액 / 원금}</li>
+	 * </ul>
+	 *
+	 * <p><b>반환 형식 및 반올림 정책:</b>
+	 * <ul>
+	 *   <li>백분율(%)이 아닌 <b>소수점 형태의 비율(Ratio) 값</b>으로 반환한다. (예: 2% → {@code 0.02})</li>
+	 *   <li>소수점 이하 둘째 자리까지 표기하며, {@link RoundingMode#HALF_EVEN} (Banker's Rounding) 정책을 적용한다.</li>
+	 * </ul>
+	 *
+	 * @param rp {@link RepurchaseAgreementEntity}
+	 * @return {@link BigDecimal} 현재 이자 금액 수익율
+	 */
 	private BigDecimal calculateCurrentInterestRate(RepurchaseAgreementEntity rp) {
 		// 현재 이자 금액 계산
+		BigDecimal principal = rp.getAmount().getValue();
+		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
+		int holdingPeriod = calculateHoldingPeriod(rp);
+		BigDecimal currentInterest = principal.multiply(annualInterest)
+			.multiply(BigDecimal.valueOf(holdingPeriod))
+			.divide(BigDecimal.valueOf(365), 8, RoundingMode.HALF_EVEN);
 		// 현재 아지 금액 수익율 계산
-		BigDecimal currentInterestRate = BigDecimal.valueOf(0.00279);
-		return currentInterestRate;
+		return currentInterest.divide(principal, 4, RoundingMode.HALF_EVEN);
 	}
 }
