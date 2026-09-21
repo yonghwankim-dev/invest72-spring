@@ -54,7 +54,7 @@ public class RpService {
 
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
-		BigDecimal maturityInterest = BigDecimal.valueOf(2795);
+		BigDecimal maturityInterest = calculateMaturityInterest();
 		BigDecimal currentInterest = BigDecimal.valueOf(2795);
 		BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
 		return repository.findById(id)
@@ -73,5 +73,9 @@ public class RpService {
 				.isAutoReinvest(true)
 				.build())
 			.orElseThrow(() -> new NoSuchElementException("not found rp, id=" + id));
+	}
+
+	private BigDecimal calculateMaturityInterest() {
+		return BigDecimal.valueOf(2795);
 	}
 }
