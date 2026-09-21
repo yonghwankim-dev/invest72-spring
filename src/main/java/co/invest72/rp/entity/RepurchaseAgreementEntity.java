@@ -39,7 +39,7 @@ public class RepurchaseAgreementEntity {
 	private ProductAmount amount;
 
 	@Column(name = "days", nullable = false)
-	private Integer days; // 기간 (개월)
+	private Integer days; // 약정 일수
 
 	@Embedded
 	private ProductAnnualInterestRate productAnnualInterestRate; // 연이율

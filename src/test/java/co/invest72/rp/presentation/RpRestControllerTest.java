@@ -138,6 +138,8 @@ class RpRestControllerTest {
 			.andExpect(jsonPath("$.currency").value(equalTo("KRW")))
 			.andExpect(jsonPath("$.interestRate").value(equalTo(0.034)))
 			.andExpect(jsonPath("$.startDate").value(equalTo("2026-01-01")))
+			.andExpect(jsonPath("$.termOfAgreement").value(equalTo(30)))
+			.andExpect(jsonPath("$.maturityInterest").value(equalTo(0)))
 			.andExpect(jsonPath("$.currentInterest").value(equalTo(0)))
 			.andExpect(jsonPath("$.currentInterestRate").value(equalTo(0)))
 			.andExpect(jsonPath("$.isAutoReinvest").value(equalTo(true)))
