@@ -61,7 +61,7 @@ public class RpService {
 			.map(rp -> {
 				BigDecimal maturityInterest = calculateMaturityInterest(rp);
 				BigDecimal currentInterest = calculateCurrentInterest(rp);
-				BigDecimal currentInterestRate = BigDecimal.valueOf(0.00279);
+				BigDecimal currentInterestRate = calculateCurrentInterestRate(rp);
 				return RpDetailedResponse.builder()
 					.id(rp.getId())
 					.investmentType(rp.getTypeName())
@@ -125,5 +125,12 @@ public class RpService {
 		LocalDate nowDate = localDateProvider.now();
 		LocalDate startDate = rp.getStartDate();
 		return (int)startDate.until(nowDate, ChronoUnit.DAYS);
+	}
+
+	private BigDecimal calculateCurrentInterestRate(RepurchaseAgreementEntity rp) {
+		// 현재 이자 금액 계산
+		// 현재 아지 금액 수익율 계산
+		BigDecimal currentInterestRate = BigDecimal.valueOf(0.00279);
+		return currentInterestRate;
 	}
 }
