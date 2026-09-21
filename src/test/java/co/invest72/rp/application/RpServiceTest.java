@@ -12,13 +12,13 @@ import org.mockito.BDDMockito;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.financial_product.domain.IdGenerator;
-import co.invest72.financial_product.presentation.dto.request.RpCreateRequest;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
 import co.invest72.rp.infrastructure.InMemoryRpRepository;
 import co.invest72.rp.infrastructure.RpRepository;
+import co.invest72.rp.presentation.dto.RpCreateRequest;
 import co.invest72.user.domain.User;
 
 class RpServiceTest {
