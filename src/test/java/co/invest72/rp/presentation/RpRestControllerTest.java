@@ -108,6 +108,8 @@ class RpRestControllerTest {
 	@Test
 	void should_return_rp_data() throws Exception {
 		// given
+		BDDMockito.given(localDateProviderMock.now())
+			.willReturn(LocalDate.of(2026, 1, 31));
 		LocalDate startDate = LocalDate.of(2026, 1, 1);
 		String rpId = UUID.randomUUID().toString();
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()

@@ -2,6 +2,8 @@ package co.invest72.rp.application;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.NoSuchElementException;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -107,14 +109,21 @@ public class RpService {
 	private BigDecimal calculateCurrentInterest(RepurchaseAgreementEntity rp) {
 		BigDecimal principal = rp.getAmount().getValue();
 		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
-		int holdingPeriod = calculateHoldingPeriod();
+		int holdingPeriod = calculateHoldingPeriod(rp);
 		return principal.multiply(annualInterest)
 			.multiply(BigDecimal.valueOf(holdingPeriod))
 			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
 	}
 
-	private int calculateHoldingPeriod() {
-		int holdingPeriod = 30; // 예치 일수
-		return holdingPeriod;
+	/**
+	 * 예치 일수 계산하여 반환한다.
+	 * <p>
+	 * - 예치 일수 = 현재 일자 - 시작 일자
+	 * @return int 예치 일수
+	 */
+	private int calculateHoldingPeriod(RepurchaseAgreementEntity rp) {
+		LocalDate nowDate = localDateProvider.now();
+		LocalDate startDate = rp.getStartDate();
+		return (int)startDate.until(nowDate, ChronoUnit.DAYS);
 	}
 }
