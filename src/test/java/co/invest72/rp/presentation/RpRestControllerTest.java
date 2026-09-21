@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -108,8 +109,9 @@ class RpRestControllerTest {
 	void should_return_rp_data() throws Exception {
 		// given
 		LocalDate startDate = LocalDate.of(2026, 1, 1);
+		String rpId = UUID.randomUUID().toString();
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
-			.id(UUID.randomUUID().toString())
+			.id(rpId)
 			.userId(UUID.randomUUID().toString())
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
 			.name("미래에셋증권 RP")
@@ -129,9 +131,16 @@ class RpRestControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.id").value(entity.getId()));
-		// .andExpect(jsonPath("$.investmentType").value(equalTo(entity.getProductInvestmentType())));
-
+			.andExpect(jsonPath("$.id").value(rpId))
+			.andExpect(jsonPath("$.investmentType").value(equalTo("RP")))
+			.andExpect(jsonPath("$.name").value(equalTo("미래에셋증권 RP")))
+			.andExpect(jsonPath("$.amount").value(equalTo(1_000_000)))
+			.andExpect(jsonPath("$.currency").value(equalTo("KRW")))
+			.andExpect(jsonPath("$.interestRate").value(equalTo(0.034)))
+			.andExpect(jsonPath("$.startDate").value(equalTo("2026-01-01")))
+			.andExpect(jsonPath("$.currentInterest").value(equalTo(0)))
+			.andExpect(jsonPath("$.currentInterestRate").value(equalTo(0)))
+			.andExpect(jsonPath("$.isAutoReinvest").value(equalTo(true)))
+			.andDo(MockMvcResultHandlers.print());
 	}
-
 }

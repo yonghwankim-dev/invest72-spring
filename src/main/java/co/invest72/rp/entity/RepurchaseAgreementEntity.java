@@ -77,4 +77,8 @@ public class RepurchaseAgreementEntity {
 		this.startDate = Objects.requireNonNull(startDate);
 		this.createdAt = Objects.requireNonNull(createdAt);
 	}
+
+	public String getTypeName() {
+		return getProductInvestmentType().getName();
+	}
 }
