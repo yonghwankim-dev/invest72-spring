@@ -58,7 +58,7 @@ public class RpService {
 		return repository.findById(id)
 			.map(rp -> {
 				BigDecimal maturityInterest = calculateMaturityInterest(rp);
-				BigDecimal currentInterest = BigDecimal.valueOf(2795);
+				BigDecimal currentInterest = calculateCurrentInterest();
 				BigDecimal currentInterestRate = BigDecimal.valueOf(0.034);
 				return RpDetailedResponse.builder()
 					.id(rp.getId())
@@ -92,5 +92,10 @@ public class RpService {
 		return amount.multiply(annualInterest)
 			.multiply(BigDecimal.valueOf(days))
 			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
+	}
+
+	private BigDecimal calculateCurrentInterest() {
+		BigDecimal currentInterest = BigDecimal.valueOf(2795);
+		return currentInterest;
 	}
 }
