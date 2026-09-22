@@ -94,14 +94,21 @@ public class RpService {
 		BigDecimal annualInterest = entity.getProductAnnualInterestRate().getValue();
 		Integer days = entity.getDays();
 
-		return calculateInterestForHoldingPeriod(amount, annualInterest, days)
-			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
+		BigDecimal interestForHoldingPeriod = calculateInterestForHoldingPeriod(amount, annualInterest, days);
+		return applyDailyInterest(interestForHoldingPeriod);
 	}
 
 	private BigDecimal calculateInterestForHoldingPeriod(BigDecimal principal, BigDecimal annualInterestRate,
 		Integer holdingPeriod) {
 		return principal.multiply(annualInterestRate)
 			.multiply(BigDecimal.valueOf(holdingPeriod));
+	}
+
+	private BigDecimal applyDailyInterest(BigDecimal interest) {
+		if (interest == null) {
+			return BigDecimal.ZERO;
+		}
+		return interest.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
 	}
 
 	/**
@@ -116,8 +123,10 @@ public class RpService {
 		BigDecimal principal = rp.getAmount().getValue();
 		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
 		int holdingPeriod = calculateHoldingPeriod(rp);
-		return calculateInterestForHoldingPeriod(principal, annualInterest, holdingPeriod)
-			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
+
+		BigDecimal interestForHoldingPeriod = calculateInterestForHoldingPeriod(principal, annualInterest,
+			holdingPeriod);
+		return applyDailyInterest(interestForHoldingPeriod);
 	}
 
 	/**
@@ -153,10 +162,13 @@ public class RpService {
 		BigDecimal principal = rp.getAmount().getValue();
 		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
 		int holdingPeriod = calculateHoldingPeriod(rp);
-		BigDecimal currentInterest = principal.multiply(annualInterest)
-			.multiply(BigDecimal.valueOf(holdingPeriod))
-			.divide(BigDecimal.valueOf(365), 8, RoundingMode.HALF_EVEN);
+		BigDecimal dailyInterest = applyDailyInterest(
+			calculateInterestForHoldingPeriod(principal, annualInterest, holdingPeriod));
 		// 현재 아지 금액 수익율 계산
-		return currentInterest.divide(principal, 4, RoundingMode.HALF_EVEN);
+		return applyInterestRate(dailyInterest, principal);
+	}
+
+	private BigDecimal applyInterestRate(BigDecimal interest, BigDecimal principal) {
+		return interest.divide(principal, 4, RoundingMode.HALF_EVEN);
 	}
 }
