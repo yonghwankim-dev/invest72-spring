@@ -43,10 +43,6 @@ public class ProductAmount {
 		}
 	}
 
-	public static ProductAmount won(BigDecimal amount, ExchangeRate exchangeRate) {
-		return of(amount, exchangeRate);
-	}
-
 	public static ProductAmount dollar(BigDecimal amount, ExchangeRate exchangeRate) {
 		return of(amount, exchangeRate);
 	}

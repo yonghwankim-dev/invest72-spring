@@ -140,7 +140,7 @@ class FinancialProductServiceTest {
 		service.updateProduct(user, productId, dto);
 		// then
 		Assertions.assertThat(originalProduct.getName()).isEqualTo(changeName);
-		Assertions.assertThat(originalProduct.getAmount()).isEqualTo(ProductAmount.won(changeAmount, exchangeRate));
+		Assertions.assertThat(originalProduct.getAmount()).isEqualTo(ProductAmount.of(changeAmount, exchangeRate));
 		Assertions.assertThat(originalProduct.getMonths()).isEqualTo(new ProductMonths(24));
 		Assertions.assertThat(originalProduct.getProductAnnualInterestRate())
 			.isEqualTo(new ProductAnnualInterestRate(changeInterestRate));

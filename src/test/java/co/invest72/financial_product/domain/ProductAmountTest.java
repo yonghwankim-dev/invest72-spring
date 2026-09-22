@@ -17,7 +17,7 @@ class ProductAmountTest {
 	@MethodSource(value = "source.ProductAmountTestDataProvider#validAmounts")
 	void newInstance_whenAmountIsValid_thenCreateInstance(BigDecimal value, String ignored) {
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
-		Assertions.assertThatCode(() -> ProductAmount.won(value, exchangeRate))
+		Assertions.assertThatCode(() -> ProductAmount.of(value, exchangeRate))
 			.doesNotThrowAnyException();
 	}
 
@@ -26,7 +26,7 @@ class ProductAmountTest {
 	void newInstance_whenAmountIsNull_thenThrowException() {
 		// when
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
-		Throwable throwable = Assertions.catchThrowable(() -> ProductAmount.won(null, exchangeRate));
+		Throwable throwable = Assertions.catchThrowable(() -> ProductAmount.of(null, exchangeRate));
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(NullPointerException.class)
@@ -38,7 +38,7 @@ class ProductAmountTest {
 	@MethodSource(value = "source.ProductAmountTestDataProvider#invalidAmounts")
 	void newInstance_whenAmountIsInvalid_thenThrowException(BigDecimal value) {
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
-		Assertions.assertThatThrownBy(() -> ProductAmount.won(value, exchangeRate))
+		Assertions.assertThatThrownBy(() -> ProductAmount.of(value, exchangeRate))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -46,8 +46,8 @@ class ProductAmountTest {
 	@Test
 	void hashCode_whenSameValue_thenHashCodesAreEqual() {
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
-		ProductAmount amount1 = ProductAmount.won(new BigDecimal("0.1"), exchangeRate);
-		ProductAmount amount2 = ProductAmount.won(new BigDecimal("0.10"), exchangeRate);
+		ProductAmount amount1 = ProductAmount.of(new BigDecimal("0.1"), exchangeRate);
+		ProductAmount amount2 = ProductAmount.of(new BigDecimal("0.10"), exchangeRate);
 
 		Assertions.assertThat(amount1).isEqualTo(amount2);
 		Assertions.assertThat(amount1.hashCode()).hasSameHashCodeAs(amount2.hashCode());
@@ -60,7 +60,7 @@ class ProductAmountTest {
 		BigDecimal value = BigDecimal.valueOf(1000);
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		// when
-		ProductAmount productAmount = ProductAmount.won(value, exchangeRate);
+		ProductAmount productAmount = ProductAmount.of(value, exchangeRate);
 		// then
 		Assertions.assertThat(productAmount).isNotNull();
 	}

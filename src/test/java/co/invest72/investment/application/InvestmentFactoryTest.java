@@ -210,7 +210,7 @@ class InvestmentFactoryTest {
 		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
 			.type(CASH)
-			.amount(ProductAmount.won(amount, exchangeRate)) // 10조원
+			.amount(ProductAmount.of(amount, exchangeRate)) // 10조원
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(0.0))
 			.interestType(NONE)

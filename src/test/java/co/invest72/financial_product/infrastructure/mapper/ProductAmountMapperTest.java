@@ -37,7 +37,7 @@ class ProductAmountMapperTest {
 
 		// then
 		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(money.getCurrency().getCode());
-		ProductAmount expected = ProductAmount.won(BigDecimal.valueOf(10000), exchangeRate);
+		ProductAmount expected = ProductAmount.of(BigDecimal.valueOf(10000), exchangeRate);
 		Assertions.assertThat(productAmount)
 			.hasSameHashCodeAs(expected)
 			.isEqualTo(expected);
@@ -57,7 +57,7 @@ class ProductAmountMapperTest {
 	void toMoney_whenProductAmountIsValid_thenReturnMoneyWithCorrectCurrency() {
 		// given
 		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
-		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(10000), exchangeRate);
+		ProductAmount productAmount = ProductAmount.of(BigDecimal.valueOf(10000), exchangeRate);
 
 		// when
 		Money result = mapper.toMoney(productAmount);

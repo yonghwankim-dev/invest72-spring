@@ -23,7 +23,7 @@ class SavingsProductTest {
 			.userId("user2")
 			.name("Updated Savings")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(BigDecimal.valueOf(2000), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2000), exchangeRate))
 			.months(new ProductMonths(24))
 			.paymentDay(new PaymentDay(15))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
@@ -122,7 +122,7 @@ class SavingsProductTest {
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.name("Updated Deposit")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(2000), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2000), exchangeRate))
 			.months(new ProductMonths(24))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

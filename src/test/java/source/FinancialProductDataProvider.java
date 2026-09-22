@@ -70,7 +70,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("예금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(interestType))
@@ -105,7 +105,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("적금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), exchangeRate))
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))

@@ -52,7 +52,7 @@ class InvestmentTest {
 			.userId("user-1")
 			.name("정기예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(new BigDecimal("10000000000000"), exchangeRate)) // 10조
+			.amount(ProductAmount.of(new BigDecimal("10000000000000"), exchangeRate)) // 10조
 			.months(new ProductMonths(999 * 12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
@@ -85,7 +85,7 @@ class InvestmentTest {
 			.userId("user-1")
 			.name("적금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(new BigDecimal("10000000000000"), exchangeRate)) // 10조
+			.amount(ProductAmount.of(new BigDecimal("10000000000000"), exchangeRate)) // 10조
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
