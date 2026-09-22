@@ -18,6 +18,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.BDDMockito;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
@@ -60,7 +63,9 @@ class RpServiceTest {
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
 			RpRepository repository = new InMemoryRpRepository();
-			service = new RpService(idGenerator, localDateProvider, repository);
+			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
 		}
 
 		@Test
@@ -156,7 +161,9 @@ class RpServiceTest {
 				.createdAt(startDate.atStartOfDay())
 				.build();
 			repository.save(entity);
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
+			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+			RpService service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
 			// when
 			RpDetailedResponse response = service.getRp(rpId);
 			// then
@@ -193,7 +200,9 @@ class RpServiceTest {
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
 			RpRepository repository = new InMemoryRpRepository();
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
+			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+			RpService service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
 			// when & then
 			Assertions.assertThatThrownBy(() -> service.getRp(rpId))
 				.isInstanceOf(NoSuchElementException.class)

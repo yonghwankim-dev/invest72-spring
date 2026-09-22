@@ -4,9 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -14,17 +19,26 @@ import source.FinancialProductDataProvider;
 
 class DepositProductTest {
 
+	private ExchangeRateService exchangeRateService;
+
+	@BeforeEach
+	void setUp() {
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+	}
+
 	/**
 	 * 변경되면 안되는 정보가 변경된 예금 상품 객체 생성
 	 * @return 변경되면 안되는 정보가 변경된 예금 상품 객체
 	 */
 	private DepositProduct createInvalidUpdatedDeposit() {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		return DepositProduct.builder()
 			.id("new-id") // id 변경
 			.userId("user2") // userId 변경
 			.name("Updated Deposit")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000), exchangeRate))
 			.months(new ProductMonths(24))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
@@ -37,6 +38,7 @@ class InvestmentFactoryTest {
 	private InvestmentFactory investmentFactory;
 	private CalculateInvestmentRequest request;
 	private Investment investment;
+	private ExchangeRateService exchangeRateService;
 
 	private void assertInstanceOfInvestment(Class<?> expectedType, Investment investment) {
 		assertInstanceOf(expectedType, investment);
@@ -45,7 +47,7 @@ class InvestmentFactoryTest {
 	@BeforeEach
 	void setUp() {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
@@ -205,9 +207,10 @@ class InvestmentFactoryTest {
 	void createBy_givenCashFinancialProductWithMaxAmount_whenCreateInvestment_thenReturnCashInvestment() {
 		// given
 		BigDecimal amount = new BigDecimal("10000000000000"); // 10조원
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		CalculateInvestmentDto dto = CalculateInvestmentDto.builder()
 			.type(CASH)
-			.amount(ProductAmount.won(amount)) // 10조원
+			.amount(ProductAmount.won(amount, exchangeRate)) // 10조원
 			.months(new ProductMonths(0))
 			.interestRate(new AnnualInterestRate(0.0))
 			.interestType(NONE)

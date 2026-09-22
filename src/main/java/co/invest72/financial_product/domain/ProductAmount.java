@@ -3,9 +3,13 @@ package co.invest72.financial_product.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +27,15 @@ public class ProductAmount {
 	@Column(name = "currency", nullable = false, length = 3)
 	private String currency;
 
-	private ProductAmount(BigDecimal value, String currencyCode) {
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "currency_code", nullable = false)
+	private ExchangeRate exchangeRate;
+
+	private ProductAmount(BigDecimal value, String currencyCode, ExchangeRate exchangeRate) {
 		validateRange(value);
 		this.value = Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
 		this.currency = Objects.requireNonNull(currencyCode, "통화는 null일 수 없습니다.");
+		this.exchangeRate = Objects.requireNonNull(exchangeRate, "exchangeRate must not null");
 	}
 
 	private void validateRange(BigDecimal value) {
@@ -39,20 +48,43 @@ public class ProductAmount {
 	}
 
 	public static ProductAmount won(BigDecimal amount) {
-		return from(Money.won(amount));
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
+		return won(amount, exchangeRate);
 	}
 
+	// TODO: delete method
 	public static ProductAmount dollar(BigDecimal amount) {
-		return from(Money.dollar(amount));
+		ExchangeRate exchangeRate = new ExchangeRate("USD", "미국 달러", BigDecimal.ONE);
+		return from(Money.dollar(amount), exchangeRate);
 	}
 
+	public static ProductAmount dollar(BigDecimal amount, ExchangeRate exchangeRate) {
+		return from(Money.dollar(amount), exchangeRate);
+	}
+
+	public static ProductAmount won(BigDecimal amount, ExchangeRate exchangeRate) {
+		return from(Money.won(amount), exchangeRate);
+	}
+
+	// TODO: temp code, delete method
 	public static ProductAmount from(Money money) {
+		ExchangeRate exchangeRate = new ExchangeRate(money.getCurrency().getCode(), money.getCurrency().getName(),
+			BigDecimal.ONE);
+		return from(money, exchangeRate);
+	}
+
+	public static ProductAmount from(Money money, ExchangeRate exchangeRate) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
-		return of(money.getValue(), money.getCurrency().getCode());
+		return of(money.getValue(), money.getCurrency().getCode(), exchangeRate);
 	}
 
 	public static ProductAmount of(BigDecimal amount, String currencyCode) {
-		return new ProductAmount(amount, currencyCode);
+		ExchangeRate exchangeRate = new ExchangeRate(currencyCode, "tempName", BigDecimal.ONE);
+		return new ProductAmount(amount, currencyCode, exchangeRate);
+	}
+
+	public static ProductAmount of(BigDecimal amount, String currencyCode, ExchangeRate exchangeRate) {
+		return new ProductAmount(amount, currencyCode, exchangeRate);
 	}
 
 	@Override

@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
@@ -53,7 +55,6 @@ class FinancialProductServiceTest {
 	@Mock
 	private LocalDateProvider localDateProvider;
 
-	@Mock
 	private ExchangeRateService exchangeRateService;
 
 	@Mock
@@ -62,11 +63,15 @@ class FinancialProductServiceTest {
 
 	@BeforeEach
 	void setUp() {
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		InvestmentFactory investmentFactory = new InvestmentFactory(
 			new ProductAmountMapper(exchangeRateService),
 			exchangeRateService
 		);
-		FinancialProductFactory financialProductFactory = new FinancialProductFactory(localDateProvider, idGenerator);
+
+		FinancialProductFactory financialProductFactory = new FinancialProductFactory(localDateProvider, idGenerator,
+			exchangeRateService);
 		FinancialProductCalculator financialProductCalculator = new FinancialProductCalculator(
 			new InMemoryExchangeRateRepository());
 		MoneyMapper moneyMapper = new MoneyMapper();
@@ -111,12 +116,15 @@ class FinancialProductServiceTest {
 			.currencyCode(Currency.won().getCode())
 			.build();
 		Money amount = Money.won(1_000_000);
+
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
+
 		FinancialProduct originalProduct = RepurchaseAgreementProduct.builder()
 			.id(productId)
 			.userId(user.getId())
 			.name("미래에셋증권 RP")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-			.amount(ProductAmount.from(amount))
+			.amount(ProductAmount.from(amount, exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.03)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
@@ -132,7 +140,7 @@ class FinancialProductServiceTest {
 		service.updateProduct(user, productId, dto);
 		// then
 		Assertions.assertThat(originalProduct.getName()).isEqualTo(changeName);
-		Assertions.assertThat(originalProduct.getAmount()).isEqualTo(ProductAmount.won(changeAmount));
+		Assertions.assertThat(originalProduct.getAmount()).isEqualTo(ProductAmount.won(changeAmount, exchangeRate));
 		Assertions.assertThat(originalProduct.getMonths()).isEqualTo(new ProductMonths(24));
 		Assertions.assertThat(originalProduct.getProductAnnualInterestRate())
 			.isEqualTo(new ProductAnnualInterestRate(changeInterestRate));
@@ -152,12 +160,13 @@ class FinancialProductServiceTest {
 		// given
 		String productId = UUID.randomUUID().toString();
 		LocalDate startDate = LocalDate.of(2026, 8, 27);
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct product = RepurchaseAgreementProduct.builder()
 			.id(productId)
 			.userId(user.getId())
 			.name("미래에셋증권 RP")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-			.amount(ProductAmount.from(Money.won(1_000_000)))
+			.amount(ProductAmount.from(Money.won(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.03)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

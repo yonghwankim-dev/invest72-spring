@@ -2,9 +2,12 @@ package co.invest72.financial_product.application;
 
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
@@ -23,12 +26,14 @@ import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
 import lombok.RequiredArgsConstructor;
 
-@Component
+@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FinancialProductFactory {
 
 	private final LocalDateProvider localDateProvider;
 	private final IdGenerator idGenerator;
+	private final ExchangeRateService exchangeRateService;
 
 	/**
 	 * FinancialProductData를 기반으로 FinancialProduct 객체 생성하여 반환
@@ -66,12 +71,14 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct cash(FinancialProductData data) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(data.getCurrencyCode());
+
 		return CashProduct.builder()
 			.id(data.getProductId().orElseThrow())
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode(), exchangeRate))
 			.months(new ProductMonths(data.getMonths()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))
@@ -83,12 +90,14 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct deposit(FinancialProductData data) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(data.getCurrencyCode());
+
 		return DepositProduct.builder()
 			.id(data.getProductId().orElseThrow())
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode(), exchangeRate))
 			.months(new ProductMonths(data.getMonths()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))
@@ -100,12 +109,14 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct savings(FinancialProductData data) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(data.getCurrencyCode());
+
 		return SavingsProduct.builder()
 			.id(data.getProductId().orElseThrow())
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode(), exchangeRate))
 			.months(new ProductMonths(data.getMonths()))
 			.paymentDay(new PaymentDay(data.getPaymentDay().orElse(null)))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
@@ -118,12 +129,14 @@ public class FinancialProductFactory {
 	}
 
 	private FinancialProduct rp(FinancialProductData data) {
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(data.getCurrencyCode());
+
 		return RepurchaseAgreementProduct.builder()
 			.id(data.getProductId().orElseThrow())
 			.userId(data.getUserId().orElseThrow())
 			.name(data.getName())
 			.productInvestmentType(ProductInvestmentType.from(data.getInvestmentType()))
-			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode()))
+			.amount(ProductAmount.of(data.getAmount(), data.getCurrencyCode(), exchangeRate))
 			.months(new ProductMonths(data.getMonths()))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(data.getInterestRate()))
 			.productInterestType(ProductInterestType.from(data.getInterestType()))

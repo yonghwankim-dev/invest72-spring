@@ -12,6 +12,9 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
+import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
@@ -36,7 +39,9 @@ class FinancialProductFactoryTest {
 		idGenerator = Mockito.mock(ProductIdGenerator.class);
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
-		factory = new FinancialProductFactory(localDateProvider, idGenerator);
+		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
+		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		factory = new FinancialProductFactory(localDateProvider, idGenerator, exchangeRateService);
 		userId = "user-1234";
 	}
 

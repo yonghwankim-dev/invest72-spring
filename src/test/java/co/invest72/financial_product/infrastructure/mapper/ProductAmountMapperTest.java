@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -16,11 +17,12 @@ import co.invest72.money.domain.Money;
 class ProductAmountMapperTest {
 
 	private ProductAmountMapper mapper;
+	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
 		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
 		mapper = new ProductAmountMapper(exchangeRateService);
 	}
 
@@ -34,7 +36,8 @@ class ProductAmountMapperTest {
 		ProductAmount productAmount = mapper.toProductAmount(money);
 
 		// then
-		ProductAmount expected = ProductAmount.won(BigDecimal.valueOf(10000));
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(money.getCurrency().getCode());
+		ProductAmount expected = ProductAmount.won(BigDecimal.valueOf(10000), exchangeRate);
 		Assertions.assertThat(productAmount)
 			.hasSameHashCodeAs(expected)
 			.isEqualTo(expected);
@@ -53,7 +56,8 @@ class ProductAmountMapperTest {
 	@Test
 	void toMoney_whenProductAmountIsValid_thenReturnMoneyWithCorrectCurrency() {
 		// given
-		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(10000));
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
+		ProductAmount productAmount = ProductAmount.won(BigDecimal.valueOf(10000), exchangeRate);
 
 		// when
 		Money result = mapper.toMoney(productAmount);
