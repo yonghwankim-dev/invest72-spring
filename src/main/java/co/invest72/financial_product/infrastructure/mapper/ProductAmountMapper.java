@@ -22,7 +22,7 @@ public class ProductAmountMapper {
 	public ProductAmount toProductAmount(Money money) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
 		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(money.getCurrency().getCode());
-		return ProductAmount.from(money, exchangeRate);
+		return ProductAmount.of(money.getValue(), exchangeRate);
 	}
 
 	@Transactional(readOnly = true)

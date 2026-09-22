@@ -40,7 +40,6 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Money;
 import co.invest72.money.infrastructure.MoneyMapper;
 import co.invest72.user.domain.User;
 
@@ -115,8 +114,7 @@ class FinancialProductServiceTest {
 			.startDate(changeStartDate)
 			.currencyCode(Currency.won().getCode())
 			.build();
-		Money amount = Money.won(1_000_000);
-
+		BigDecimal amount = BigDecimal.valueOf(1_000_000);
 		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 
 		FinancialProduct originalProduct = RepurchaseAgreementProduct.builder()
@@ -124,7 +122,7 @@ class FinancialProductServiceTest {
 			.userId(user.getId())
 			.name("미래에셋증권 RP")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-			.amount(ProductAmount.from(amount, exchangeRate))
+			.amount(ProductAmount.of(amount, exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.03)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
@@ -166,7 +164,7 @@ class FinancialProductServiceTest {
 			.userId(user.getId())
 			.name("미래에셋증권 RP")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-			.amount(ProductAmount.from(Money.won(1_000_000), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.03)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

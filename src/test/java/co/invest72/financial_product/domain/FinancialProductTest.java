@@ -23,7 +23,6 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 
 class FinancialProductTest {
@@ -95,7 +94,7 @@ class FinancialProductTest {
 		// then
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -128,7 +127,7 @@ class FinancialProductTest {
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -161,7 +160,7 @@ class FinancialProductTest {
 		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((SavingsProduct)FinancialProductDataProvider.createSavingsProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}

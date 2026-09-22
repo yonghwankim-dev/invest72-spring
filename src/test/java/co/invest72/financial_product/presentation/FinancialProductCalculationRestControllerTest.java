@@ -126,7 +126,7 @@ class FinancialProductCalculationRestControllerTest {
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(SIMPLE))
