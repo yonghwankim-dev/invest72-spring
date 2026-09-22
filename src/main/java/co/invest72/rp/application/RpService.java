@@ -93,9 +93,15 @@ public class RpService {
 		BigDecimal amount = entity.getAmount().getValue();
 		BigDecimal annualInterest = entity.getProductAnnualInterestRate().getValue();
 		Integer days = entity.getDays();
-		return amount.multiply(annualInterest)
-			.multiply(BigDecimal.valueOf(days))
+
+		return calculateInterestForHoldingPeriod(amount, annualInterest, days)
 			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
+	}
+
+	private BigDecimal calculateInterestForHoldingPeriod(BigDecimal principal, BigDecimal annualInterestRate,
+		Integer holdingPeriod) {
+		return principal.multiply(annualInterestRate)
+			.multiply(BigDecimal.valueOf(holdingPeriod));
 	}
 
 	/**
@@ -110,8 +116,7 @@ public class RpService {
 		BigDecimal principal = rp.getAmount().getValue();
 		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
 		int holdingPeriod = calculateHoldingPeriod(rp);
-		return principal.multiply(annualInterest)
-			.multiply(BigDecimal.valueOf(holdingPeriod))
+		return calculateInterestForHoldingPeriod(principal, annualInterest, holdingPeriod)
 			.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
 	}
 
