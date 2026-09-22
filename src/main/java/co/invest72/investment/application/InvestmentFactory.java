@@ -22,7 +22,6 @@ import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.PeriodRange;
-import co.invest72.investment.domain.RepurchaseAgreement;
 import co.invest72.investment.domain.TaxRate;
 import co.invest72.investment.domain.Taxable;
 import co.invest72.investment.domain.TaxableFactory;
@@ -59,8 +58,6 @@ public class InvestmentFactory {
 		dtoRegistry.put(new InvestmentKey(DEPOSIT, COMPOUND), this::deposit);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, SIMPLE), this::savings);
 		dtoRegistry.put(new InvestmentKey(SAVINGS, COMPOUND), this::savings);
-		dtoRegistry.put(new InvestmentKey(RP, SIMPLE), this::rp);
-		dtoRegistry.put(new InvestmentKey(RP, COMPOUND), this::rp);
 		this.productAmountMapper = productAmountMapper;
 		this.exchangeRateService = exchangeRateService;
 	}
@@ -151,17 +148,6 @@ public class InvestmentFactory {
 			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.interestRate(dto.getInterestRate())
 			.interestType(dto.getInterestType())
-			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
-			.build();
-	}
-
-	private Investment rp(CalculateInvestmentDto dto) {
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(dto.getCurrency());
-		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
-		return RepurchaseAgreement.builder()
-			.amount(new FixedDepositAmount(dto.getAmount().getValue(), currency))
-			.interestRate(dto.getInterestRate())
-			.investPeriod(new MonthlyInvestPeriod(dto.getMonths().getValue()))
 			.taxable(resolveTaxable(dto.getTaxType(), dto.getTaxRate()))
 			.build();
 	}
