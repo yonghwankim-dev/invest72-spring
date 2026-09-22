@@ -2,6 +2,7 @@ package co.invest72.rp.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -178,5 +179,26 @@ class RpServiceTest {
 				.withComparatorForType(BigDecimal::compareTo, BigDecimal.class)
 				.isEqualTo(expected);
 		}
+
+		@Test
+		@DisplayName("RP 엔티티 데이터를 찾을 수 없다면 예외를 발생시켜야 한다")
+		void should_throw_exception_when_not_found_rp_entity() {
+			// given
+			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
+			String rpId = UUID.randomUUID().toString();
+			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
+			BDDMockito.given(localDateProvider.now())
+				.willReturn(LocalDate.of(2026, 1, 31));
+			LocalDate startDate = LocalDate.of(2026, 1, 1);
+			BDDMockito.given(localDateProvider.nowDateTime())
+				.willReturn(startDate.atStartOfDay());
+			RpRepository repository = new InMemoryRpRepository();
+			RpService service = new RpService(idGenerator, localDateProvider, repository);
+			// when & then
+			Assertions.assertThatThrownBy(() -> service.getRp(rpId))
+				.isInstanceOf(NoSuchElementException.class)
+				.hasMessage("not found rp, id=" + rpId);
+		}
+
 	}
 }
