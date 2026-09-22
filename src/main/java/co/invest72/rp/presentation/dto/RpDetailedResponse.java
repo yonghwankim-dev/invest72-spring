@@ -62,7 +62,7 @@ public class RpDetailedResponse {
 			.investmentType(rp.getTypeName())
 			.name(rp.getName())
 			.amount(rp.getAmount().getValue())
-			.currency(rp.getAmount().getCurrency())
+			.currency(rp.getAmount().getCurrencyCode())
 			.interestRate(rp.getProductAnnualInterestRate().getValue())
 			.startDate(rp.getStartDate())
 			.termOfAgreement(rp.getDays())

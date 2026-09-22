@@ -53,14 +53,14 @@ public class ProductAmount {
 
 	public static ProductAmount from(Money money, ExchangeRate exchangeRate) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
-		return of(money.getValue(), money.getCurrency().getCode(), exchangeRate);
+		return of(money.getValue(), exchangeRate);
 	}
 
-	public static ProductAmount of(BigDecimal amount, String currencyCode, ExchangeRate exchangeRate) {
+	public static ProductAmount of(BigDecimal amount, ExchangeRate exchangeRate) {
 		return new ProductAmount(amount, exchangeRate);
 	}
 
-	public String getCurrency() {
+	public String getCurrencyCode() {
 		return exchangeRate.getCurrencyCode();
 	}
 

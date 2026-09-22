@@ -67,7 +67,7 @@ public class FinancialProductService {
 		Long remainingDays = calculator.calculateRemainingDays(product, today, expirationDate);
 
 		// exchangeRate 조회
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrency());
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrencyCode());
 		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		ProductCurrency productCurrency = ProductCurrency.from(currency);
 		return DetailedFinancialProductResponse.builder()
@@ -165,7 +165,7 @@ public class FinancialProductService {
 
 		LocalDate today = localDateProvider.now();
 		for (FinancialProduct product : products) {
-			ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrency());
+			ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrencyCode());
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
 				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),

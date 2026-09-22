@@ -36,7 +36,8 @@ class BalancePolicyTest {
 		FinancialProduct product = FinancialProductDataProvider.createDepositProduct("user-1");
 		LocalDate today = LocalDate.of(2026, 1, 1);
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrency()).orElseThrow();
+		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrencyCode())
+			.orElseThrow();
 		Currency productCurrency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 
 		// When
@@ -55,7 +56,8 @@ class BalancePolicyTest {
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		LocalDate today = LocalDate.of(2025, 12, 31);
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrency()).orElseThrow();
+		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrencyCode())
+			.orElseThrow();
 		Currency productCurrency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 
 		// When
@@ -74,7 +76,8 @@ class BalancePolicyTest {
 		FinancialProduct product = FinancialProductDataProvider.createSavingsProduct("user-1");
 		LocalDate today = LocalDate.of(2027, 1, 2);
 		LocalDate expirationDate = calculator.calculateExpirationDate(product);
-		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrency()).orElseThrow();
+		ExchangeRate exchangeRate = exchangeRateRepository.findByCode(product.getAmount().getCurrencyCode())
+			.orElseThrow();
 		Currency productCurrency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 
 		// When

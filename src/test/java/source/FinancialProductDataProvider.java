@@ -37,7 +37,7 @@ public class FinancialProductDataProvider {
 			.userId(userId)
 			.name("현금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
-			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), currency.getCode(), exchangeRate))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), exchangeRate))
 			.months(new ProductMonths(0))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
 			.productInterestType(ProductInterestType.from(InterestType.NONE))

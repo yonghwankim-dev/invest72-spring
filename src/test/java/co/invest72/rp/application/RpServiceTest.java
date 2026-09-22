@@ -153,7 +153,7 @@ class RpServiceTest {
 				.userId(UUID.randomUUID().toString())
 				.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
 				.name("미래에셋증권 RP")
-				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode(), exchangeRate))
+				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 				.days(30)
 				.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
 				.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

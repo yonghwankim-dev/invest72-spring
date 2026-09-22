@@ -80,7 +80,7 @@ public class InvestmentFactory {
 			.interestType(InterestType.valueOf(product.getProductInterestType().getName()))
 			.taxType(TaxType.valueOf(product.getProductTaxType().getName()))
 			.taxRate(new FixedTaxRate(product.getProductTaxRate().getValue()))
-			.currency(product.getAmount().getCurrency())
+			.currency(product.getAmount().getCurrencyCode())
 			.build();
 		return createBy(dto);
 	}

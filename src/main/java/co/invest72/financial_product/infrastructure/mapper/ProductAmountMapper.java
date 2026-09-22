@@ -29,7 +29,7 @@ public class ProductAmountMapper {
 	public Money toMoney(ProductAmount productAmount) {
 		Objects.requireNonNull(productAmount, "ProductAmount 객체는 null일 수 없습니다.");
 
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(productAmount.getCurrency());
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(productAmount.getCurrencyCode());
 		Currency currency = Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName());
 		return Money.of(productAmount.getValue(), currency);
 	}
