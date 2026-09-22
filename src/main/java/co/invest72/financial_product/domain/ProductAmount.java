@@ -47,23 +47,12 @@ public class ProductAmount {
 		}
 	}
 
-	public static ProductAmount won(BigDecimal amount) {
-		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
-		return won(amount, exchangeRate);
-	}
-
-	// TODO: delete method
-	public static ProductAmount dollar(BigDecimal amount) {
-		ExchangeRate exchangeRate = new ExchangeRate("USD", "미국 달러", BigDecimal.ONE);
-		return from(Money.dollar(amount), exchangeRate);
+	public static ProductAmount won(BigDecimal amount, ExchangeRate exchangeRate) {
+		return from(Money.won(amount), exchangeRate);
 	}
 
 	public static ProductAmount dollar(BigDecimal amount, ExchangeRate exchangeRate) {
 		return from(Money.dollar(amount), exchangeRate);
-	}
-
-	public static ProductAmount won(BigDecimal amount, ExchangeRate exchangeRate) {
-		return from(Money.won(amount), exchangeRate);
 	}
 
 	// TODO: temp code, delete method

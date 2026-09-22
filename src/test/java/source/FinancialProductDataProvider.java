@@ -3,6 +3,7 @@ package source;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.financial_product.domain.CashProduct;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
@@ -62,12 +63,13 @@ public class FinancialProductDataProvider {
 	 * @return 예금 상품 객체
 	 */
 	public static FinancialProduct createDepositProduct(String userId, InterestType interestType) {
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		return DepositProduct.builder()
 			.id("product-4567")
 			.userId(userId)
 			.name("예금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(interestType))
@@ -96,12 +98,13 @@ public class FinancialProductDataProvider {
 	 * @return 적금 상품 객체
 	 */
 	public static FinancialProduct createSavingsProduct(String userId, InterestType interestType) {
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		return SavingsProduct.builder()
 			.id("product-1356")
 			.userId(userId)
 			.name("적금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000L), exchangeRate))
 			.months(new ProductMonths(12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))

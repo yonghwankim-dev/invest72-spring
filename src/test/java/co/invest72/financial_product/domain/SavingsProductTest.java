@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.investment.PaymentDay;
@@ -16,12 +17,13 @@ import source.FinancialProductDataProvider;
 class SavingsProductTest {
 
 	private SavingsProduct createInvalidUpdatedSavingProduct() {
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		return SavingsProduct.builder()
 			.id("new-id") // id 변경
 			.userId("user2")
 			.name("Updated Savings")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000), exchangeRate))
 			.months(new ProductMonths(24))
 			.paymentDay(new PaymentDay(15))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
@@ -87,7 +89,7 @@ class SavingsProductTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("상품 소유자(userId)는 변경할 수 없습니다.");
 	}
-	
+
 	@DisplayName("상품 수정 - 적금 상품은 생성 날짜를 변경할 수 없다")
 	@Test
 	void update_whenCreatedAtChanged_thenThrowException() {
@@ -113,13 +115,14 @@ class SavingsProductTest {
 	@Test
 	void update_whenChangedToDepositProduct_thenThrowException() {
 		// Given
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct originalProduct = FinancialProductDataProvider.createSavingsProduct("user-1");
 		DepositProduct updatedProduct = DepositProduct.builder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
 			.userId(originalProduct.getUserId()) // userId는 원래 값으로 유지
 			.name("Updated Deposit")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(2000)))
+			.amount(ProductAmount.won(BigDecimal.valueOf(2000), exchangeRate))
 			.months(new ProductMonths(24))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.06)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
