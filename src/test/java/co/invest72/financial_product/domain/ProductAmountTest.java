@@ -30,7 +30,7 @@ class ProductAmountTest {
 		// then
 		Assertions.assertThat(throwable)
 			.isInstanceOf(NullPointerException.class)
-			.hasMessage("금액은 null일 수 없습니다.");
+			.hasMessage("value must not null");
 	}
 
 	@DisplayName("금액이 범위를 벗어난 경우 예외가 발생해야 한다.")

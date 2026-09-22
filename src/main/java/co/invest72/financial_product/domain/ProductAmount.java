@@ -29,9 +29,9 @@ public class ProductAmount {
 	private ExchangeRate exchangeRate;
 
 	private ProductAmount(BigDecimal value, ExchangeRate exchangeRate) {
-		validateRange(value);
 		this.value = Objects.requireNonNull(value, "value must not null");
 		this.exchangeRate = Objects.requireNonNull(exchangeRate, "exchangeRate must not null");
+		validateRange(this.value);
 	}
 
 	private void validateRange(BigDecimal value) {
@@ -44,11 +44,11 @@ public class ProductAmount {
 	}
 
 	public static ProductAmount won(BigDecimal amount, ExchangeRate exchangeRate) {
-		return from(Money.won(amount), exchangeRate);
+		return of(amount, exchangeRate);
 	}
 
 	public static ProductAmount dollar(BigDecimal amount, ExchangeRate exchangeRate) {
-		return from(Money.dollar(amount), exchangeRate);
+		return of(amount, exchangeRate);
 	}
 
 	public static ProductAmount from(Money money, ExchangeRate exchangeRate) {
