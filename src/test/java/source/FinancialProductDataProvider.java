@@ -31,7 +31,7 @@ public class FinancialProductDataProvider {
 	}
 
 	public static FinancialProduct createCashProduct(String productId, String userId, Currency currency) {
-		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
+		ExchangeRate exchangeRate = new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE);
 		return CashProduct.builder()
 			.id(productId)
 			.userId(userId)

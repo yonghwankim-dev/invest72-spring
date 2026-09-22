@@ -24,17 +24,13 @@ public class ProductAmount {
 	@Column(name = "amount", nullable = false, precision = 19, scale = 2)
 	private BigDecimal value;
 
-	@Column(name = "currency", nullable = false, length = 3)
-	private String currency;
-
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "currency_code", nullable = false)
 	private ExchangeRate exchangeRate;
 
-	private ProductAmount(BigDecimal value, String currencyCode, ExchangeRate exchangeRate) {
+	private ProductAmount(BigDecimal value, ExchangeRate exchangeRate) {
 		validateRange(value);
 		this.value = Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
-		this.currency = Objects.requireNonNull(currencyCode, "통화는 null일 수 없습니다.");
 		this.exchangeRate = Objects.requireNonNull(exchangeRate, "exchangeRate must not null");
 	}
 
@@ -61,21 +57,33 @@ public class ProductAmount {
 	}
 
 	public static ProductAmount of(BigDecimal amount, String currencyCode, ExchangeRate exchangeRate) {
-		return new ProductAmount(amount, currencyCode, exchangeRate);
+		return new ProductAmount(amount, exchangeRate);
+	}
+
+	public String getCurrency() {
+		return exchangeRate.getCurrencyCode();
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (o == null || getClass() != o.getClass())
+		if (!(o instanceof ProductAmount that))
 			return false;
-		ProductAmount that = (ProductAmount)o;
-		return this.value.compareTo(that.value) == 0 && Objects.equals(this.currency, that.currency);
+		return this.value.compareTo(that.value) == 0 && Objects.equals(exchangeRate, that.exchangeRate);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value.stripTrailingZeros(), currency);
+		BigDecimal normalizedValue = (value != null) ? value.stripTrailingZeros() : null;
+		return Objects.hash(normalizedValue, exchangeRate);
+	}
+
+	@Override
+	public String toString() {
+		return "ProductAmount{" +
+			"value=" + value +
+			", exchangeRate=" + exchangeRate +
+			'}';
 	}
 }
