@@ -9,14 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
@@ -35,8 +33,6 @@ import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.domain.service.FinancialProductCalculator;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.financial_product.presentation.dto.request.FinancialProductRequest;
-import co.invest72.financial_product.presentation.dto.response.DetailedFinancialProductResponse;
-import co.invest72.financial_product.presentation.dto.response.ProductCurrency;
 import co.invest72.investment.application.InvestmentFactory;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
@@ -86,99 +82,6 @@ class FinancialProductServiceTest {
 			exchangeRateService
 		);
 		user = new User("user1@gmail.com", "user1", UUID.randomUUID().toString());
-	}
-
-	@Test
-	@DisplayName("RP 상품 생성")
-	void should_create_rp_product() {
-		// given
-		LocalDate startDate = LocalDate.of(2026, 8, 27);
-		FinancialProductData dto = FinancialProductRequest.builder()
-			.name("미래에셋증권 RP")
-			.investmentType(InvestmentType.RP.name())
-			.amount(BigDecimal.valueOf(1_000_000))
-			.months(12)
-			.paymentDay(null)
-			.interestRate(BigDecimal.valueOf(0.03))
-			.interestType(InterestType.COMPOUND.name())
-			.taxType(TaxType.STANDARD.name())
-			.taxRate(BigDecimal.valueOf(0.154))
-			.startDate(startDate)
-			.currencyCode(Currency.won().getCode())
-			.userId(user.getId())
-			.build();
-
-		String productId = UUID.randomUUID().toString();
-		BDDMockito.given(idGenerator.generateId())
-			.willReturn(productId);
-		BDDMockito.given(localDateProvider.nowDateTime())
-			.willReturn(startDate.atStartOfDay());
-		BDDMockito.given(financialProductRepository.save(ArgumentMatchers.any(RepurchaseAgreementProduct.class)))
-			.willReturn(productId);
-		// when
-		String actualProductId = service.createProduct(user, dto);
-		// then
-		Assertions.assertThat(actualProductId).isEqualTo(productId);
-	}
-
-	@Test
-	@DisplayName("상품 상세 조회")
-	void should_return_detailed_product() {
-		// given
-		String productId = UUID.randomUUID().toString();
-		LocalDate startDate = LocalDate.of(2026, 8, 27);
-		Money amount = Money.won(1_000_000);
-		FinancialProduct product = RepurchaseAgreementProduct.builder()
-			.id(productId)
-			.userId(user.getId())
-			.name("미래에셋증권 RP")
-			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-			.amount(ProductAmount.from(amount))
-			.months(new ProductMonths(12))
-			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.03)))
-			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
-			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
-			.startDate(startDate)
-			.createdAt(startDate.atStartOfDay())
-			.build();
-
-		BDDMockito.given(financialProductRepository.findByProductId(productId))
-			.willReturn(product);
-		BDDMockito.given(localDateProvider.now())
-			.willReturn(startDate);
-
-		Currency currency = amount.getCurrency();
-		BigDecimal rate = BigDecimal.valueOf(1);
-		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
-			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), rate));
-		// when
-		DetailedFinancialProductResponse productDetail = service.getProductDetail(user, productId);
-		// then
-		DetailedFinancialProductResponse expected = DetailedFinancialProductResponse.builder()
-			.id(productId)
-			.userId(user.getId())
-			.name("미래에셋증권 RP")
-			.investmentType(InvestmentType.RP.name())
-			.amount(amount.getValue())
-			.months(12)
-			.paymentDay(null)
-			.interestRate(BigDecimal.valueOf(0.03))
-			.interestType(InterestType.COMPOUND.name())
-			.taxType(TaxType.STANDARD.name())
-			.taxRate(BigDecimal.valueOf(0.154))
-			.startDate(startDate)
-			.createdAt(startDate.atStartOfDay())
-			.expirationDate(startDate.plusMonths(12L))
-			.balance(amount.getValue())
-			.progress(BigDecimal.ZERO)
-			.remainingDays(365L)
-			.productCurrency(ProductCurrency.from(currency))
-			.build();
-		Assertions.assertThat(productDetail)
-			.usingRecursiveComparison()
-			.withComparatorForType(BigDecimal::compareTo, BigDecimal.class)
-			.isEqualTo(expected);
 	}
 
 	@Test

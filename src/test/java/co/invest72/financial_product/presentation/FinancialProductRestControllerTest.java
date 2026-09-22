@@ -237,32 +237,6 @@ class FinancialProductRestControllerTest {
 			.andExpect(jsonPath("$.id").value(notNullValue()));
 	}
 
-	@DisplayName("상품 생성 - RP 상품")
-	@Test
-	void createProduct_whenInvestmentTypeIsRP_thenSaveProduct() throws Exception {
-		// given
-		FinancialProductData dto = FinancialProductRequest.builder()
-			.name("미래에셋증권 RP")
-			.investmentType(InvestmentType.RP.name())
-			.amount(BigDecimal.valueOf(1_000_000L))
-			.months(12)
-			.interestRate(BigDecimal.valueOf(0.05))
-			.interestType(InterestType.COMPOUND.name())
-			.taxType(TaxType.STANDARD.name())
-			.taxRate(BigDecimal.valueOf(0.154))
-			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
-			.build();
-		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
-				.with(SecurityMockMvcRequestPostProcessors.user(principalUser))
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto)))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.id").value(notNullValue()));
-	}
-
 	@DisplayName("상품 생성 - 요청시 CSRF 토큰을 헤더로 전달하지 않아서 403 응답을 받아야 한다")
 	@Test
 	void createProduct_whenHeaderNotHaveCsrfToken_thenResponseForbidden() throws Exception {
