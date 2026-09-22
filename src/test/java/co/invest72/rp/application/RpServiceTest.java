@@ -49,7 +49,7 @@ class RpServiceTest {
 
 	@Nested
 	@DisplayName("RP 엔티티 저장")
-	class createRp {
+	class createRpTests {
 		@Test
 		@DisplayName("RP 엔티티를 저장소에 저장한다")
 		void save_rp_entity() {
@@ -88,7 +88,7 @@ class RpServiceTest {
 
 	@Nested
 	@DisplayName("RP 상품 정보 조회")
-	class getRp {
+	class getRpTests {
 
 		private static Stream<Arguments> holdingPeriodSource() {
 			return Stream.of(
