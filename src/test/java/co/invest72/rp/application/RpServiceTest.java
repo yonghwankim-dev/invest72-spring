@@ -3,11 +3,15 @@ package co.invest72.rp.application;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.BDDMockito;
 
 import co.invest72.common.time.LocalDateProvider;
@@ -85,67 +89,28 @@ class RpServiceTest {
 	@Nested
 	@DisplayName("RP 상품 정보 조회")
 	class getRp {
-		@Test
-		@DisplayName("예치일수가 0일인 RP 상품의 정보 조회")
-		void should_return_rp_data_when_holding_period_is_zero_days() {
-			// given
-			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
-			String rpId = UUID.randomUUID().toString();
-			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
-			BDDMockito.given(localDateProvider.now())
-				.willReturn(LocalDate.of(2026, 1, 1));
-			LocalDate startDate = LocalDate.of(2026, 1, 1);
-			BDDMockito.given(localDateProvider.nowDateTime())
-				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
-			RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
-				.id(rpId)
-				.userId(UUID.randomUUID().toString())
-				.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-				.name("미래에셋증권 RP")
-				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
-				.days(30)
-				.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
-				.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
-				.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-				.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
-				.startDate(startDate)
-				.createdAt(startDate.atStartOfDay())
-				.build();
-			repository.save(entity);
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
-			// when
-			RpDetailedResponse response = service.getRp(rpId);
-			// then
-			RpDetailedResponse expected = RpDetailedResponse.builder()
-				.id(rpId)
-				.investmentType("RP")
-				.name("미래에셋증권 RP")
-				.amount(BigDecimal.valueOf(1_000_000))
-				.currency("KRW")
-				.interestRate(BigDecimal.valueOf(0.034))
-				.startDate(LocalDate.of(2026, 1, 1))
-				.termOfAgreement(30)
-				.maturityInterest(BigDecimal.valueOf(2795))
-				.currentInterest(BigDecimal.ZERO)
-				.currentInterestRate(BigDecimal.ZERO)
-				.isAutoReinvest(true)
-				.build();
-			Assertions.assertThat(response)
-				.usingRecursiveComparison()
-				.withComparatorForType(BigDecimal::compareTo, BigDecimal.class)
-				.isEqualTo(expected);
+
+		private static Stream<Arguments> holdingPeriodSource() {
+			return Stream.of(
+				Arguments.of(LocalDate.of(2026, 1, 1), BigDecimal.ZERO, BigDecimal.ZERO), // 예치 일수 0일
+				Arguments.of(LocalDate.of(2026, 1, 2), BigDecimal.valueOf(93), BigDecimal.valueOf(0.0001)), // 예치 일수 1일
+				Arguments.of(LocalDate.of(2026, 1, 16), BigDecimal.valueOf(1397), BigDecimal.valueOf(0.0014)),
+				// 예치 일수 1일
+				Arguments.of(LocalDate.of(2026, 1, 31), BigDecimal.valueOf(2795), BigDecimal.valueOf(0.0028))
+				// 예치 일수 30일
+			);
 		}
 
-		@Test
-		@DisplayName("예치일수가 1일인 RP 상품의 정보 조회")
-		void should_return_rp_data_when_holding_period_is_one_days() {
+		@ParameterizedTest(name = "예치일자={0}, 예상현재이자금액={1}, 예상현재이자수익율={2}")
+		@MethodSource(value = "holdingPeriodSource")
+		void should_return_rp_details_with_accrued_interest_for_given_holding_period(LocalDate now,
+			BigDecimal expectedCurrentInterest, BigDecimal expectedCurrentInterestRate) {
 			// given
 			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
 			String rpId = UUID.randomUUID().toString();
 			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
 			BDDMockito.given(localDateProvider.now())
-				.willReturn(LocalDate.of(2026, 1, 2));
+				.willReturn(now);
 			LocalDate startDate = LocalDate.of(2026, 1, 1);
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
@@ -179,112 +144,8 @@ class RpServiceTest {
 				.startDate(LocalDate.of(2026, 1, 1))
 				.termOfAgreement(30)
 				.maturityInterest(BigDecimal.valueOf(2795))
-				.currentInterest(BigDecimal.valueOf(93))
-				.currentInterestRate(BigDecimal.valueOf(0.0001))
-				.isAutoReinvest(true)
-				.build();
-			Assertions.assertThat(response)
-				.usingRecursiveComparison()
-				.withComparatorForType(BigDecimal::compareTo, BigDecimal.class)
-				.isEqualTo(expected);
-		}
-
-		@Test
-		@DisplayName("예치일수가 15일인 RP 상품의 정보 조회")
-		void should_return_rp_data_when_today_is_half_of_expiration_date() {
-			// given
-			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
-			String rpId = UUID.randomUUID().toString();
-			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
-			BDDMockito.given(localDateProvider.now())
-				.willReturn(LocalDate.of(2026, 1, 16));
-			LocalDate startDate = LocalDate.of(2026, 1, 1);
-			BDDMockito.given(localDateProvider.nowDateTime())
-				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
-			RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
-				.id(rpId)
-				.userId(UUID.randomUUID().toString())
-				.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-				.name("미래에셋증권 RP")
-				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
-				.days(30)
-				.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
-				.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
-				.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-				.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
-				.startDate(startDate)
-				.createdAt(startDate.atStartOfDay())
-				.build();
-			repository.save(entity);
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
-			// when
-			RpDetailedResponse response = service.getRp(rpId);
-			// then
-			RpDetailedResponse expected = RpDetailedResponse.builder()
-				.id(rpId)
-				.investmentType("RP")
-				.name("미래에셋증권 RP")
-				.amount(BigDecimal.valueOf(1_000_000))
-				.currency("KRW")
-				.interestRate(BigDecimal.valueOf(0.034))
-				.startDate(LocalDate.of(2026, 1, 1))
-				.termOfAgreement(30)
-				.maturityInterest(BigDecimal.valueOf(2795))
-				.currentInterest(BigDecimal.valueOf(1397))
-				.currentInterestRate(BigDecimal.valueOf(0.0014))
-				.isAutoReinvest(true)
-				.build();
-			Assertions.assertThat(response)
-				.usingRecursiveComparison()
-				.withComparatorForType(BigDecimal::compareTo, BigDecimal.class)
-				.isEqualTo(expected);
-		}
-
-		@Test
-		@DisplayName("만기 일자에서 RP 상품의 정보 조회")
-		void should_return_rp_data_when_today_is_expiration_date() {
-			// given
-			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
-			String rpId = UUID.randomUUID().toString();
-			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
-			BDDMockito.given(localDateProvider.now())
-				.willReturn(LocalDate.of(2026, 1, 31));
-			LocalDate startDate = LocalDate.of(2026, 1, 1);
-			BDDMockito.given(localDateProvider.nowDateTime())
-				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
-			RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
-				.id(rpId)
-				.userId(UUID.randomUUID().toString())
-				.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
-				.name("미래에셋증권 RP")
-				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
-				.days(30)
-				.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
-				.productInterestType(ProductInterestType.from(InterestType.COMPOUND))
-				.productTaxType(ProductTaxType.from(TaxType.STANDARD))
-				.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
-				.startDate(startDate)
-				.createdAt(startDate.atStartOfDay())
-				.build();
-			repository.save(entity);
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
-			// when
-			RpDetailedResponse response = service.getRp(rpId);
-			// then
-			RpDetailedResponse expected = RpDetailedResponse.builder()
-				.id(rpId)
-				.investmentType("RP")
-				.name("미래에셋증권 RP")
-				.amount(BigDecimal.valueOf(1_000_000))
-				.currency("KRW")
-				.interestRate(BigDecimal.valueOf(0.034))
-				.startDate(LocalDate.of(2026, 1, 1))
-				.termOfAgreement(30)
-				.maturityInterest(BigDecimal.valueOf(2795))
-				.currentInterest(BigDecimal.valueOf(2795))
-				.currentInterestRate(BigDecimal.valueOf(0.0028))
+				.currentInterest(expectedCurrentInterest)
+				.currentInterestRate(expectedCurrentInterestRate)
 				.isAutoReinvest(true)
 				.build();
 			Assertions.assertThat(response)
