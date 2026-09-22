@@ -6,12 +6,14 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.BDDMockito;
 
 import co.invest72.common.time.LocalDateProvider;
@@ -35,27 +37,21 @@ import co.invest72.user.domain.User;
 
 class RpServiceTest {
 
-	@Test
-	@DisplayName("서비스 객체 생성")
-	void can_create_instance() {
-		IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
-		LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
-		RpRepository repository = new InMemoryRpRepository();
-
-		RpService service = new RpService(idGenerator, localDateProvider, repository);
-
-		Assertions.assertThat(service).isNotNull();
-	}
-
 	@Nested
-	@DisplayName("RP 엔티티 저장")
+	@DisplayName("RP 엔티티 저장 단위 테스트")
 	class createRpTests {
-		@Test
-		@DisplayName("RP 엔티티를 저장소에 저장한다")
-		void save_rp_entity() {
-			// given
+
+		private RpService service;
+		private String rpId;
+		private User user;
+
+		@BeforeEach
+		void setUp() {
+			String userId = UUID.randomUUID().toString();
+			user = new User("user1@gmail.com", "user1", userId);
+
 			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
-			String rpId = UUID.randomUUID().toString();
+			rpId = UUID.randomUUID().toString();
 			BDDMockito.given(idGenerator.generateId())
 				.willReturn(rpId);
 			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
@@ -63,8 +59,13 @@ class RpServiceTest {
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
 			RpRepository repository = new InMemoryRpRepository();
-			RpService service = new RpService(idGenerator, localDateProvider, repository);
-			User user = new User("user1@gmail.com", "user1", UUID.randomUUID().toString());
+			service = new RpService(idGenerator, localDateProvider, repository);
+		}
+
+		@Test
+		@DisplayName("RP 엔티티를 저장소에 저장한다")
+		void should_return_created_rp_entity_id_when_save_rp_data() {
+			// given
 			RpCreateRequest request = RpCreateRequest.builder()
 				.name("미래에셋증권 RP")
 				.investmentType(InvestmentType.RP.name())
@@ -74,7 +75,7 @@ class RpServiceTest {
 				.interestType(InterestType.COMPOUND.name())
 				.taxType(TaxType.STANDARD.name())
 				.taxRate(BigDecimal.valueOf(0.154))
-				.startDate(startDate)
+				.startDate(LocalDate.of(2026, 1, 1))
 				.currencyCode(Currency.won().getCode())
 				.build();
 
@@ -83,6 +84,30 @@ class RpServiceTest {
 
 			// then
 			Assertions.assertThat(id).isEqualTo(rpId);
+		}
+
+		@ParameterizedTest
+		@ValueSource(ints = {-1, 0})
+		@DisplayName("약정 일수가 0일 이하인 경우 예외를 발생시켜야 한다.")
+		void should_throw_exception_when_days_zero_or_negative(int days) {
+			// given
+			RpCreateRequest request = RpCreateRequest.builder()
+				.name("미래에셋증권 RP")
+				.investmentType(InvestmentType.RP.name())
+				.amount(BigDecimal.valueOf(1_000_000))
+				.days(days) // 약정 일수 설정
+				.interestRate(BigDecimal.valueOf(0.03))
+				.interestType(InterestType.COMPOUND.name())
+				.taxType(TaxType.STANDARD.name())
+				.taxRate(BigDecimal.valueOf(0.154))
+				.startDate(LocalDate.of(2026, 1, 1))
+				.currencyCode(Currency.won().getCode())
+				.build();
+
+			// when
+			Assertions.assertThatThrownBy(() -> service.createRp(user, request))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("days must not zero or not negative, days=" + days);
 		}
 	}
 

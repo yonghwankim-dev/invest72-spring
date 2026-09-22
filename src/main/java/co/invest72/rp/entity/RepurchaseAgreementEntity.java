@@ -64,6 +64,7 @@ public class RepurchaseAgreementEntity {
 		ProductAmount amount, Integer days,
 		ProductAnnualInterestRate productAnnualInterestRate, ProductInterestType productInterestType,
 		ProductTaxType productTaxType, ProductTaxRate productTaxRate, LocalDate startDate, LocalDateTime createdAt) {
+		validateDays(days);
 		this.id = Objects.requireNonNull(id);
 		this.userId = Objects.requireNonNull(userId);
 		this.productInvestmentType = Objects.requireNonNull(productInvestmentType);
@@ -76,6 +77,12 @@ public class RepurchaseAgreementEntity {
 		this.productTaxRate = Objects.requireNonNull(productTaxRate);
 		this.startDate = Objects.requireNonNull(startDate);
 		this.createdAt = Objects.requireNonNull(createdAt);
+	}
+
+	private void validateDays(Integer days) {
+		if (days <= 0) {
+			throw new IllegalArgumentException("days must not zero or not negative, days=" + days);
+		}
 	}
 
 	public String getTypeName() {
