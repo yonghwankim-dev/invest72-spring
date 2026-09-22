@@ -59,6 +59,7 @@ public class RpService {
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
 		return repository.findById(id)
 			.map(rp -> {
+				// todo: convert rp entity to rp domain
 				BigDecimal maturityInterest = calculateMaturityInterest(rp);
 				BigDecimal currentInterest = calculateCurrentInterest(rp);
 				BigDecimal currentInterestRate = calculateCurrentInterestRate(rp);
