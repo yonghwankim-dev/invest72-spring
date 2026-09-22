@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.application.FinancialProductFactory;
@@ -92,8 +93,9 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -123,9 +125,10 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -155,9 +158,10 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((SavingsProduct)FinancialProductDataProvider.createSavingsProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000)), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
