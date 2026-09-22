@@ -58,20 +58,32 @@ public class RpService {
 	@Transactional(readOnly = true)
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
 		return repository.findById(id)
-			.map(rp -> {
-				// todo: convert rp entity to rp domain
-				BigDecimal maturityInterest = calculateMaturityInterest(rp);
-				BigDecimal currentInterest = calculateCurrentInterest(rp);
-				BigDecimal currentInterestRate = calculateCurrentInterestRate(rp);
+			.map(entity -> {
+				// todo: convert entity entity to entity domain
+				// ProductAmount amount = entity.getAmount();
+				//
+				// InvestmentAmount investmentAmount = new FixedDepositAmount(amount.getValue(), )
+				// InterestRate interestRate = new AnnualInterestRate(
+				// 	entity.getProductAnnualInterestRate().getValue());
+				// LocalDate startDate = entity.getStartDate();
+				// Integer days = entity.getDays();
+				// InvestPeriod investPeriod = new DailyInvestPeriod(startDate, days);
+				//
+				// RepurchaseAgreement rp = new TermRepurchaseAgreement(investmentAmount, interestRate, startDate,
+				// 	investPeriod);
+
+				BigDecimal maturityInterest = calculateMaturityInterest(entity);
+				BigDecimal currentInterest = calculateCurrentInterest(entity);
+				BigDecimal currentInterestRate = calculateCurrentInterestRate(entity);
 				return RpDetailedResponse.builder()
-					.id(rp.getId())
-					.investmentType(rp.getTypeName())
-					.name(rp.getName())
-					.amount(rp.getAmount().getValue())
-					.currency(rp.getAmount().getCurrency())
-					.interestRate(rp.getProductAnnualInterestRate().getValue())
-					.startDate(rp.getStartDate())
-					.termOfAgreement(rp.getDays())
+					.id(entity.getId())
+					.investmentType(entity.getTypeName())
+					.name(entity.getName())
+					.amount(entity.getAmount().getValue())
+					.currency(entity.getAmount().getCurrency())
+					.interestRate(entity.getProductAnnualInterestRate().getValue())
+					.startDate(entity.getStartDate())
+					.termOfAgreement(entity.getDays())
 					.maturityInterest(maturityInterest)
 					.currentInterest(currentInterest)
 					.currentInterestRate(currentInterestRate)
