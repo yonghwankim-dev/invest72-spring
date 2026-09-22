@@ -31,12 +31,13 @@ public class FinancialProductDataProvider {
 	}
 
 	public static FinancialProduct createCashProduct(String productId, String userId, Currency currency) {
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		return CashProduct.builder()
 			.id(productId)
 			.userId(userId)
 			.name("현금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.CASH))
-			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), currency.getCode()))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000L), currency.getCode(), exchangeRate))
 			.months(new ProductMonths(0))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.ZERO))
 			.productInterestType(ProductInterestType.from(InterestType.NONE))

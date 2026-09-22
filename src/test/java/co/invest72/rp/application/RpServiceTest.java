@@ -19,6 +19,7 @@ import org.mockito.BDDMockito;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.IdGenerator;
@@ -146,12 +147,13 @@ class RpServiceTest {
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
 			RpRepository repository = new InMemoryRpRepository();
+			ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 			RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 				.id(rpId)
 				.userId(UUID.randomUUID().toString())
 				.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
 				.name("미래에셋증권 RP")
-				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
+				.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode(), exchangeRate))
 				.days(30)
 				.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
 				.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

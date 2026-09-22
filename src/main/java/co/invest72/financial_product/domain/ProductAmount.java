@@ -54,15 +54,10 @@ public class ProductAmount {
 	public static ProductAmount dollar(BigDecimal amount, ExchangeRate exchangeRate) {
 		return from(Money.dollar(amount), exchangeRate);
 	}
-	
+
 	public static ProductAmount from(Money money, ExchangeRate exchangeRate) {
 		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
 		return of(money.getValue(), money.getCurrency().getCode(), exchangeRate);
-	}
-
-	public static ProductAmount of(BigDecimal amount, String currencyCode) {
-		ExchangeRate exchangeRate = new ExchangeRate(currencyCode, "tempName", BigDecimal.ONE);
-		return new ProductAmount(amount, currencyCode, exchangeRate);
 	}
 
 	public static ProductAmount of(BigDecimal amount, String currencyCode, ExchangeRate exchangeRate) {
