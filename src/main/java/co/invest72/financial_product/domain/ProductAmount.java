@@ -30,7 +30,7 @@ public class ProductAmount {
 
 	private ProductAmount(BigDecimal value, ExchangeRate exchangeRate) {
 		validateRange(value);
-		this.value = Objects.requireNonNull(value, "금액은 null일 수 없습니다.");
+		this.value = Objects.requireNonNull(value, "value must not null");
 		this.exchangeRate = Objects.requireNonNull(exchangeRate, "exchangeRate must not null");
 	}
 
