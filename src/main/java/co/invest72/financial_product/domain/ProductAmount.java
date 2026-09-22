@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
-import co.invest72.money.domain.Money;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
@@ -41,11 +40,6 @@ public class ProductAmount {
 		if (value.compareTo(MAX_AMOUNT) > 0) {
 			throw new IllegalArgumentException("금액은 99999조원을 초과할 수 없습니다.");
 		}
-	}
-
-	public static ProductAmount from(Money money, ExchangeRate exchangeRate) {
-		Objects.requireNonNull(money, "Money 객체는 null일 수 없습니다.");
-		return of(money.getValue(), exchangeRate);
 	}
 
 	public static ProductAmount of(BigDecimal amount, ExchangeRate exchangeRate) {
