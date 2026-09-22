@@ -1,4 +1,4 @@
-package co.invest72.investment.domain.rp;
+package co.invest72.rp.domain;
 
 import java.time.LocalDate;
 

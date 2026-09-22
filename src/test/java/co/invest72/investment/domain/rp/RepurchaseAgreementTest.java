@@ -18,6 +18,8 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
+import co.invest72.rp.domain.RepurchaseAgreement;
+import co.invest72.rp.domain.TermRepurchaseAgreement;
 
 class RepurchaseAgreementTest {
 
