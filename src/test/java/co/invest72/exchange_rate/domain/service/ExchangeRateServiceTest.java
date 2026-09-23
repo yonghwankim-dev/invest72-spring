@@ -76,7 +76,7 @@ class ExchangeRateServiceTest {
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
 	@Test
-	void getRate_whenKRWToUSE_thenReturnRate() {
+	void should_return_won_dollar_rate_when_from_is_won_to_is_dollar() {
 		// given
 		Currency from = Currency.won();
 		Currency to = Currency.dollar();
@@ -96,12 +96,14 @@ class ExchangeRateServiceTest {
 
 	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")
 	@Test
-	void getRate_whenKRWToKRW_thenReturnOne() {
+	void should_return_one_rate_when_same_currency() {
 		// given
 		Currency won = Currency.won();
 		// when
-		BigDecimal rate = service.getRate(new CurrencyPair(won, won)).orElseThrow();
+		Optional<BigDecimal> rate = service.getRate(new CurrencyPair(won, won));
 		// then
-		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
+		Assertions.assertThat(rate)
+			.usingValueComparator(BigDecimal::compareTo)
+			.contains(BigDecimal.ONE);
 	}
 }
