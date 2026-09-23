@@ -26,23 +26,6 @@ class ExchangeRateServiceTest {
 		service = new ExchangeRateService(repository);
 	}
 
-	@DisplayName("환율 저장")
-	@Test
-	void save() {
-		// given
-		Currency from = Currency.dollar();
-		BigDecimal rate = BigDecimal.valueOf(1000);
-		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
-		// when
-		service.saveRate(exchangeRate);
-		// then
-		Currency to = Currency.won();
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(1000));
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
-	}
-
 	@DisplayName("환율 저장 - 원달러 환율을 저장한다")
 	@Test
 	void should_save_exchange_rate_data() {
@@ -70,8 +53,10 @@ class ExchangeRateServiceTest {
 			.willReturn(Optional.of(exchangeRate));
 		BDDMockito.given(repository.findByCode(to.getCode()))
 			.willReturn(Optional.empty());
-		// when & then
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to))).isEmpty();
+		// when
+		Optional<BigDecimal> result = service.getRate(new CurrencyPair(from, to));
+		// then
+		Assertions.assertThat(result).isEmpty();
 	}
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
