@@ -2,6 +2,7 @@ package co.invest72.rp.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -20,10 +21,10 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	@Builder(toBuilder = true)
 	public TermRepurchaseAgreement(InvestmentAmount investmentAmount, InterestRate interestRate, LocalDate startDate,
 		InvestPeriod investPeriod) {
-		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
-		this.startDate = startDate;
-		this.investPeriod = investPeriod;
+		this.investmentAmount = Objects.requireNonNull(investmentAmount);
+		this.interestRate = Objects.requireNonNull(interestRate);
+		this.startDate = Objects.requireNonNull(startDate);
+		this.investPeriod = Objects.requireNonNull(investPeriod);
 	}
 
 	@Override

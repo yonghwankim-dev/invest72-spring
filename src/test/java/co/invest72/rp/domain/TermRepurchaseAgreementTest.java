@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import co.invest72.investment.domain.DailyInvestPeriod;
 import co.invest72.investment.domain.InterestRate;
+import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
@@ -29,10 +30,12 @@ class TermRepurchaseAgreementTest {
 		InvestmentAmount investmentAmount = new FixedDepositAmount(Money.won(1_000_000));
 		InterestRate interestRate = new AnnualInterestRate(BigDecimal.valueOf(0.05));
 		LocalDate startDate = LocalDate.of(2026, 9, 11);
+		InvestPeriod investPeriod = new DailyInvestPeriod(startDate, 30);
 		rp = TermRepurchaseAgreement.builder()
 			.investmentAmount(investmentAmount)
 			.interestRate(interestRate)
 			.startDate(startDate)
+			.investPeriod(investPeriod)
 			.build();
 	}
 
@@ -47,32 +50,46 @@ class TermRepurchaseAgreementTest {
 				.isNotNull()
 				.isInstanceOf(TermRepurchaseAgreement.class);
 		}
+
+		@Test
+		@DisplayName("RP 인스턴스 생성시 매개변수가 null이면 예외를 발생시켜야 한다.")
+		void should_throw_exception_when_param_is_null() {
+			// when
+			Throwable throwable = Assertions.catchThrowable(() -> TermRepurchaseAgreement.builder().build());
+			// then
+			Assertions.assertThat(throwable)
+				.isInstanceOf(NullPointerException.class);
+		}
 	}
 
-	@Test
-	@DisplayName("RP 상품의 만기일자를 계산한다")
-	void should_calculate_expiration_date_correctly_when_months_given() {
-		// given
-		int days = 30;
+	@Nested
+	@DisplayName("RP 상품의 만기 일자 계산 검증")
+	class calculateExpirationDateTest {
+		@Test
+		@DisplayName("RP 상품의 만기일자를 계산한다")
+		void should_calculate_expiration_date_correctly_when_months_given() {
+			// given
+			int days = 30;
 
-		// when
-		LocalDate expirationDate = rp.calculateExpirationDate(days);
+			// when
+			LocalDate expirationDate = rp.calculateExpirationDate(days);
 
-		// then
-		LocalDate expected = LocalDate.of(2026, 10, 11);
-		Assertions.assertThat(expirationDate).isEqualTo(expected);
-	}
+			// then
+			LocalDate expected = LocalDate.of(2026, 10, 11);
+			Assertions.assertThat(expirationDate).isEqualTo(expected);
+		}
 
-	@ParameterizedTest
-	@DisplayName("일수(days)가 0이하이면 시작일자를 반환한다.")
-	@ValueSource(ints = {-1, 0})
-	void should_return_start_date_when_days_is_zero_or_negative(int days) {
-		// when
-		LocalDate expirationDate = rp.calculateExpirationDate(days);
+		@ParameterizedTest
+		@DisplayName("일수(days)가 0이하이면 시작일자를 반환한다.")
+		@ValueSource(ints = {-1, 0})
+		void should_return_start_date_when_days_is_zero_or_negative(int days) {
+			// when
+			LocalDate expirationDate = rp.calculateExpirationDate(days);
 
-		// then
-		LocalDate expected = LocalDate.of(2026, 9, 11);
-		Assertions.assertThat(expirationDate).isEqualTo(expected);
+			// then
+			LocalDate expected = LocalDate.of(2026, 9, 11);
+			Assertions.assertThat(expirationDate).isEqualTo(expected);
+		}
 	}
 
 	@Test
