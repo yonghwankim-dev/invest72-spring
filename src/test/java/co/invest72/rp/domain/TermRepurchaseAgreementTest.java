@@ -19,7 +19,7 @@ import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
 
-class RepurchaseAgreementTest {
+class TermRepurchaseAgreementTest {
 
 	private RepurchaseAgreement rp;
 
