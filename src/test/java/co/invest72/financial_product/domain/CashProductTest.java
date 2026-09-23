@@ -8,10 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
-import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
@@ -19,10 +16,9 @@ import source.FinancialProductDataProvider;
 
 class CashProductTest {
 
-	private ExchangeRateService exchangeRateService;
+	private ExchangeRate exchangeRate;
 
 	private CashProduct createInvalidUpdatedCashProduct() {
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		return CashProduct.builder()
 			.id("new-id") // id 변경
 			.userId("user2") // userId 변경
@@ -41,15 +37,13 @@ class CashProductTest {
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 	}
 
 	@DisplayName("상품 수정 - 현금 상품은 이름, 금액, 시작일자만 변경할 수 있다")
 	@Test
 	void update_whenValidUpdatedProduct_thenUpdateSuccessfully() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId())
@@ -75,7 +69,6 @@ class CashProductTest {
 	@Test
 	void update_whenIdChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id("new-id") // id 변경
@@ -105,7 +98,6 @@ class CashProductTest {
 	@Test
 	void update_whenUserIdChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -135,7 +127,6 @@ class CashProductTest {
 	@Test
 	void update_whenInvestmentTypeChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -165,7 +156,6 @@ class CashProductTest {
 	@Test
 	void update_whenCreatedAtChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -195,7 +185,6 @@ class CashProductTest {
 	@Test
 	void update_whenMonthsChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -223,7 +212,6 @@ class CashProductTest {
 	@Test
 	void update_whenInterestRateChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -251,7 +239,6 @@ class CashProductTest {
 	@Test
 	void update_whenInterestRateNotChanged_thenNotThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -277,7 +264,6 @@ class CashProductTest {
 	@Test
 	void update_whenInterestTypeChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -307,7 +293,6 @@ class CashProductTest {
 	@Test
 	void update_whenTaxTypeChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -337,7 +322,6 @@ class CashProductTest {
 	@Test
 	void update_whenTaxRateChanged_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = createInvalidUpdatedCashProduct().toBuilder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
@@ -367,7 +351,6 @@ class CashProductTest {
 	@Test
 	void update_whenOtherProductType_thenThrowException() {
 		// Given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct originalProduct = FinancialProductDataProvider.createCashProduct("user-1");
 		FinancialProduct updatedProduct = DepositProduct.builder()
 			.id(originalProduct.getId()) // id는 원래 값으로 유지
