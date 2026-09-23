@@ -1,6 +1,7 @@
 package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,20 +57,21 @@ class ExchangeRateServiceTest {
 			.save(exchangeRate);
 	}
 
-	@DisplayName("환율 저장 - 환율이 양수가 아니면 역방향 환율이 저장되지 않는다")
+	@DisplayName("환율 조회 - 달러 환율 정보는 존재하지만, 원환율 정보는 존재하지 않으면 최종적으로 빈 Optional을 반환해야 한다")
 	@Test
-	void save_whenRateIsNotPositive_thenNotSavedReverseRate() {
+	void should_return_empty_optional_when_exchange_rate_has_dollar_and_not_has_won() {
 		// given
 		Currency from = Currency.dollar();
 		Currency to = Currency.won();
-		BigDecimal rate = BigDecimal.ZERO;
+		BigDecimal rate = BigDecimal.ONE;
 		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
-		// when
-		service.saveRate(exchangeRate);
-		// then
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.ZERO);
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from))).isEmpty();
+
+		BDDMockito.given(repository.findByCode(from.getCode()))
+			.willReturn(Optional.of(exchangeRate));
+		BDDMockito.given(repository.findByCode(to.getCode()))
+			.willReturn(Optional.empty());
+		// when & then
+		Assertions.assertThat(service.getRate(new CurrencyPair(from, to))).isEmpty();
 	}
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
@@ -78,10 +80,18 @@ class ExchangeRateServiceTest {
 		// given
 		Currency from = Currency.won();
 		Currency to = Currency.dollar();
+		ExchangeRate wonExchangeRate = new ExchangeRate(from.getCode(), from.getName(), BigDecimal.ONE);
+		BDDMockito.given(repository.findByCode(from.getCode()))
+			.willReturn(Optional.of(wonExchangeRate));
+		ExchangeRate dollarExchangeRate = new ExchangeRate(to.getCode(), to.getName(), BigDecimal.valueOf(1000));
+		BDDMockito.given(repository.findByCode(to.getCode()))
+			.willReturn(Optional.of(dollarExchangeRate));
 		// when
-		BigDecimal rate = service.getRate(new CurrencyPair(from, to)).orElseThrow();
+		Optional<BigDecimal> rate = service.getRate(new CurrencyPair(from, to));
 		// then
-		Assertions.assertThat(rate).isEqualByComparingTo(BigDecimal.valueOf(0.001));
+		Assertions.assertThat(rate)
+			.usingValueComparator(BigDecimal::compareTo)
+			.contains(BigDecimal.valueOf(0.001));
 	}
 
 	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")
