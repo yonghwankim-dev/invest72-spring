@@ -1,6 +1,5 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +9,6 @@ import org.mockito.Mockito;
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
-import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.CurrencyPair;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -20,13 +16,11 @@ class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
 	private KoreaeximClient client;
-	private ExchangeRateService exchangeRateService;
 	private ExchangeRateUpdateHandler exchangeRateUpdateHandler;
 
 	@BeforeEach
 	void setUp() {
 		client = BDDMockito.mock(KoreaeximClient.class);
-		exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
 		exchangeRateUpdateHandler = BDDMockito.mock(ExchangeRateUpdateHandler.class);
 		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
 	}
@@ -61,18 +55,18 @@ class KoreaeximExchangeRateProviderTest {
 			.verifyComplete();
 	}
 
-	@DisplayName("환율 업데이트 - 특정 응답의 result이 0이면 해당 환율을 업데이트하지 않아야 한다")
+	@DisplayName("환율 업데이트 - 특정 응답의 result 필드가 0이면 해당 환율을 업데이트하지 않아야 한다")
 	@Test
-	void updateRates_whenResultIsZero_thenNotUpdateExchangeRate() {
+	void should_not_update_rates_when_result_is_zero() {
 		// given
+		ExchangeJsonResponse response = new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
-			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러")));
-		// when
-		provider.updateRates().blockLast();
+			.willReturn(Flux.just(response));
+		// when & then
+		StepVerifier.create(provider.updateRates())
+			.expectNextCount(0)
+			.verifyComplete();
 		// then
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.dollar())))
-			.isEmpty();
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.dollar(), Currency.won())))
-			.isEmpty();
+		BDDMockito.then(exchangeRateUpdateHandler).shouldHaveNoInteractions();
 	}
 }
