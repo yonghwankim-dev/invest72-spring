@@ -11,11 +11,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductMonths;
@@ -46,8 +45,9 @@ class InvestmentFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
