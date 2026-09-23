@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -35,12 +36,17 @@ class TermRepurchaseAgreementTest {
 			.build();
 	}
 
-	@Test
-	@DisplayName("약정형 RP 객체 생성")
-	void create_instance() {
-		Assertions.assertThat(rp)
-			.isNotNull()
-			.isInstanceOf(TermRepurchaseAgreement.class);
+	@Nested
+	@DisplayName("약정형 RP 생성자 제약 조건 검증")
+	class termRepurchaseAgreementConstructorValidationTest {
+		@Test
+		@DisplayName("약정형 RP 객체 생성")
+		void create_instance() {
+			// when & then
+			Assertions.assertThat(rp)
+				.isNotNull()
+				.isInstanceOf(TermRepurchaseAgreement.class);
+		}
 	}
 
 	@Test
