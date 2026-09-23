@@ -12,6 +12,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
@@ -27,6 +29,7 @@ class FinancialProductFactoryTest {
 	private FinancialProductFactory factory;
 	private ProductIdGenerator idGenerator;
 	private String userId;
+	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
@@ -36,7 +39,8 @@ class FinancialProductFactoryTest {
 		idGenerator = Mockito.mock(ProductIdGenerator.class);
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
-		factory = new FinancialProductFactory(localDateProvider, idGenerator);
+		exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		factory = new FinancialProductFactory(localDateProvider, idGenerator, exchangeRateService);
 		userId = "user-1234";
 	}
 
@@ -44,6 +48,7 @@ class FinancialProductFactoryTest {
 	@Test
 	void givenDto_whenInvestmentTypeIsCash_thenReturnCashProduct() {
 		// given
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
@@ -55,9 +60,12 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.userId(userId)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		FinancialProduct product = factory.create(dto);
 		// then
@@ -71,6 +79,7 @@ class FinancialProductFactoryTest {
 		// given
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-4567");
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("예금 상품")
 			.investmentType(InvestmentType.DEPOSIT.name())
@@ -82,9 +91,12 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.userId(userId)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		FinancialProduct product = factory.create(dto);
 		// then
@@ -98,6 +110,7 @@ class FinancialProductFactoryTest {
 		// given
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1356");
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("적금 상품")
 			.investmentType(InvestmentType.SAVINGS.name())
@@ -109,9 +122,12 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.STANDARD.name())
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.userId(userId)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		FinancialProduct product = factory.create(dto);
 		// then
@@ -123,6 +139,7 @@ class FinancialProductFactoryTest {
 	@Test
 	void toEntity_whenInvestmentTypeIsCashAndProductIdIsNull_thenThrowException() {
 		// given
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
@@ -134,10 +151,13 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.productId(null)
 			.userId(userId)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
 		// then
@@ -149,6 +169,7 @@ class FinancialProductFactoryTest {
 	@Test
 	void toEntity_whenInvestmentTypeIsCashAndUserIdIsNull_thenThrowException() {
 		// given
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
@@ -160,10 +181,13 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.productId("product-1234")
 			.userId(null)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
 		// then
@@ -175,6 +199,7 @@ class FinancialProductFactoryTest {
 	@Test
 	void toEntity_whenInvestmentTypeIsCashAndCreatedAtIsNull_thenThrowException() {
 		// given
+		Currency currency = Currency.won();
 		FinancialProductData dto = FinancialProductRequest.builder()
 			.name("현금 상품")
 			.investmentType(InvestmentType.CASH.name())
@@ -186,11 +211,14 @@ class FinancialProductFactoryTest {
 			.taxType(TaxType.NONE.name())
 			.taxRate(BigDecimal.ZERO)
 			.startDate(LocalDate.of(2026, 1, 1))
-			.currencyCode(Currency.won().getCode())
+			.currencyCode(currency.getCode())
 			.productId("product-1234")
 			.userId(userId)
 			.createdAt(null)
 			.build();
+
+		BDDMockito.given(exchangeRateService.findExchangeRate(currency.getCode()))
+			.willReturn(new ExchangeRate(currency.getCode(), currency.getName(), BigDecimal.ONE));
 		// when
 		Throwable throwable = Assertions.catchThrowable(() -> factory.toEntity(dto));
 		// then

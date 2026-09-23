@@ -1,49 +1,34 @@
 package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.CurrencyPair;
 
 class ExchangeRateServiceTest {
 
 	private ExchangeRateService service;
+	private ExchangeRateRepository repository;
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
+		repository = BDDMockito.mock(ExchangeRateRepository.class);
 		service = new ExchangeRateService(repository);
 	}
 
-	@DisplayName("환율 저장")
+	@DisplayName("환율 저장 - 원달러 환율을 저장한다")
 	@Test
-	void save() {
-		// given
-		Currency from = Currency.dollar();
-		BigDecimal rate = BigDecimal.valueOf(1000);
-		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
-		// when
-		service.saveRate(exchangeRate);
-		// then
-		Currency to = Currency.won();
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(1000));
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
-	}
-
-	@DisplayName("환율 저장 - 원달러 환율이 1300원인 경우에 100만원은 769.23달러여야 한다")
-	@Test
-	void save_whenScaleIs4() {
+	void should_save_exchange_rate_data() {
 		// given
 		Currency dollar = Currency.dollar();
 		BigDecimal rate = BigDecimal.valueOf(1300);
@@ -51,56 +36,59 @@ class ExchangeRateServiceTest {
 		// when
 		service.saveRate(exchangeRate);
 		// then
-		// 100만원 * (1/1300)원 = 769.23
-		Currency from = Currency.dollar();
-		Currency to = Currency.won();
-		BigDecimal reverseRate = service.getRate(new CurrencyPair(to, from)).orElseThrow();
-		BigDecimal sourceAmount = BigDecimal.valueOf(1_000_000);
-		BigDecimal dollarResult = sourceAmount.multiply(reverseRate).setScale(2, RoundingMode.HALF_EVEN);
-		Assertions.assertThat(dollarResult).isEqualByComparingTo(BigDecimal.valueOf(769.23));
-
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(1300));
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.0007692308));
+		BDDMockito.verify(repository, Mockito.times(1))
+			.save(exchangeRate);
 	}
 
-	@DisplayName("환율 저장 - 환율이 양수가 아니면 역방향 환율이 저장되지 않는다")
+	@DisplayName("환율 조회 - 달러 환율 정보는 존재하지만, 원환율 정보는 존재하지 않으면 최종적으로 빈 Optional을 반환해야 한다")
 	@Test
-	void save_whenRateIsNotPositive_thenNotSavedReverseRate() {
+	void should_return_empty_optional_when_exchange_rate_has_dollar_and_not_has_won() {
 		// given
 		Currency from = Currency.dollar();
 		Currency to = Currency.won();
-		BigDecimal rate = BigDecimal.ZERO;
+		BigDecimal rate = BigDecimal.ONE;
 		ExchangeRate exchangeRate = new ExchangeRate(from.getCode(), from.getName(), rate);
+
+		BDDMockito.given(repository.findByCode(from.getCode()))
+			.willReturn(Optional.of(exchangeRate));
+		BDDMockito.given(repository.findByCode(to.getCode()))
+			.willReturn(Optional.empty());
 		// when
-		service.saveRate(exchangeRate);
+		Optional<BigDecimal> result = service.getRate(new CurrencyPair(from, to));
 		// then
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.ZERO);
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from))).isEmpty();
+		Assertions.assertThat(result).isEmpty();
 	}
 
 	@DisplayName("환율 조회 - 원화 -> 달러에 대한 환율 조회")
 	@Test
-	void getRate_whenKRWToUSE_thenReturnRate() {
+	void should_return_won_dollar_rate_when_from_is_won_to_is_dollar() {
 		// given
 		Currency from = Currency.won();
 		Currency to = Currency.dollar();
+		ExchangeRate wonExchangeRate = new ExchangeRate(from.getCode(), from.getName(), BigDecimal.ONE);
+		BDDMockito.given(repository.findByCode(from.getCode()))
+			.willReturn(Optional.of(wonExchangeRate));
+		ExchangeRate dollarExchangeRate = new ExchangeRate(to.getCode(), to.getName(), BigDecimal.valueOf(1000));
+		BDDMockito.given(repository.findByCode(to.getCode()))
+			.willReturn(Optional.of(dollarExchangeRate));
 		// when
-		BigDecimal rate = service.getRate(new CurrencyPair(from, to)).orElseThrow();
+		Optional<BigDecimal> rate = service.getRate(new CurrencyPair(from, to));
 		// then
-		Assertions.assertThat(rate).isEqualByComparingTo(BigDecimal.valueOf(0.001));
+		Assertions.assertThat(rate)
+			.usingValueComparator(BigDecimal::compareTo)
+			.contains(BigDecimal.valueOf(0.001));
 	}
 
 	@DisplayName("환율 조회 - 통화가 동일한 경우 1이 반환되어야 한다")
 	@Test
-	void getRate_whenKRWToKRW_thenReturnOne() {
+	void should_return_one_rate_when_same_currency() {
 		// given
 		Currency won = Currency.won();
 		// when
-		BigDecimal rate = service.getRate(new CurrencyPair(won, won)).orElseThrow();
+		Optional<BigDecimal> rate = service.getRate(new CurrencyPair(won, won));
 		// then
-		Assertions.assertThat(rate).isEqualTo(BigDecimal.ONE);
+		Assertions.assertThat(rate)
+			.usingValueComparator(BigDecimal::compareTo)
+			.contains(BigDecimal.ONE);
 	}
 }

@@ -11,6 +11,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.application.FinancialProductFactory;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
@@ -19,7 +21,6 @@ import co.invest72.investment.domain.interest.InterestType;
 import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.Money;
 import source.FinancialProductDataProvider;
 
 class FinancialProductTest {
@@ -36,7 +37,11 @@ class FinancialProductTest {
 		ProductIdGenerator idGenerator = Mockito.mock(ProductIdGenerator.class);
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
-		factory = new FinancialProductFactory(localDateProvider, idGenerator);
+		ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
+
+		factory = new FinancialProductFactory(localDateProvider, idGenerator, exchangeRateService);
 	}
 
 	@DisplayName("객체 생성 - 적금 상품 생성시 이체일이 초기화되지 않는 경우 예외가 발생한다.")
@@ -87,8 +92,9 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((CashProduct)FinancialProductDataProvider.createCashProduct(userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -118,9 +124,10 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((DepositProduct)FinancialProductDataProvider.createDepositProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}
@@ -150,9 +157,10 @@ class FinancialProductTest {
 		// when
 		originProduct.update(updateProduct);
 		// then
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct expected = ((SavingsProduct)FinancialProductDataProvider.createSavingsProduct(
 			userId)).toBuilder()
-			.amount(ProductAmount.from(Money.won(BigDecimal.valueOf(2_000_000))))
+			.amount(ProductAmount.of(BigDecimal.valueOf(2_000_000), exchangeRate))
 			.build();
 		Assertions.assertThat(originProduct).isEqualTo(expected);
 	}

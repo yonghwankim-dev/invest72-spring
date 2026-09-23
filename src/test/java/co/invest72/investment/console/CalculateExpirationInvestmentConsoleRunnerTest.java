@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,10 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.BDDMockito;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.infrastructure.mapper.ProductAmountMapper;
 import co.invest72.investment.application.CalculateInvestment;
 import co.invest72.investment.application.InvestmentFactory;
@@ -110,8 +111,7 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 			calculateInvestmentRequestReader);
 		investmentResultPrinter = new PrintStreamBasedInvestmentResultPrinter(printStream);
 		investment = new CalculateInvestment(new TaxPercentFormatter(), new MoneyMapper());
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		runner = new CalculateExpirationInvestmentConsoleRunner(
@@ -140,8 +140,9 @@ class CalculateExpirationInvestmentConsoleRunnerTest {
 		calculateInvestmentRequestReader = new CalculateInvestmentRequestReader(reader, guidePrinter);
 		investmentReaderDelegator = new CalculateExpirationInvestmentReaderDelegator(amountReaderStrategyRegistry,
 			calculateInvestmentRequestReader);
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		InvestmentFactory factory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 		runner = new CalculateExpirationInvestmentConsoleRunner(

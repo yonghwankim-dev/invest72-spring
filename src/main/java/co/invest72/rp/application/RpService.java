@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
@@ -33,15 +35,19 @@ public class RpService {
 	private final IdGenerator idGenerator;
 	private final LocalDateProvider localDateProvider;
 	private final RpRepository repository;
+	private final ExchangeRateService exchangeRateService;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
 	public String createRp(User user, RpCreateRequest request) {
+		// 환율 찾기
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(request.getCurrencyCode());
+
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 			.id(idGenerator.generateId())
 			.productInvestmentType(ProductInvestmentType.from(request.getInvestmentType()))
 			.name(request.getName())
-			.amount(ProductAmount.of(request.getAmount(), request.getCurrencyCode()))
+			.amount(ProductAmount.of(request.getAmount(), exchangeRate))
 			.days(request.getDays())
 			.productAnnualInterestRate(new ProductAnnualInterestRate(request.getInterestRate()))
 			.productInterestType(ProductInterestType.from(request.getInterestType()))
@@ -80,7 +86,7 @@ public class RpService {
 					.investmentType(entity.getTypeName())
 					.name(entity.getName())
 					.amount(entity.getAmount().getValue())
-					.currency(entity.getAmount().getCurrency())
+					.currency(entity.getAmount().getCurrencyCode())
 					.interestRate(entity.getProductAnnualInterestRate().getValue())
 					.startDate(entity.getStartDate())
 					.termOfAgreement(entity.getDays())

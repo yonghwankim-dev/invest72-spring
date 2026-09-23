@@ -23,6 +23,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
+import co.invest72.exchange_rate.domain.service.ExchangeRateService;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.FinancialProductRepository;
@@ -52,6 +54,9 @@ class FinancialProductCalculationRestControllerTest {
 	@Autowired
 	private FinancialProductRepository financialProductRepository;
 
+	@Autowired
+	private ExchangeRateService exchangeRateService;
+
 	private PrincipalUser principalUser;
 
 	@BeforeEach
@@ -75,11 +80,12 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsSimpleDeposit_thenReturnsCalculationResult() throws Exception {
 		// Given
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(SIMPLE))
@@ -115,11 +121,12 @@ class FinancialProductCalculationRestControllerTest {
 	void calculateFinancialProduct_whenCurrencyIsDollarAndProductIsSimpleFixedDeposit_thenReturnCalculationResult() throws
 		Exception {
 		// Given
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("USD");
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("단리-예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.dollar(BigDecimal.valueOf(1_000_000)))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(SIMPLE))
@@ -154,11 +161,12 @@ class FinancialProductCalculationRestControllerTest {
 	@Test
 	void calculateFinancialProduct_whenProductIsCompoundDeposit_thenReturnsCalculationResult() throws Exception {
 		// Given
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		FinancialProduct product = DepositProduct.builder()
 			.userId(principalUser.getUser().getId())
 			.name("복리-예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(BigDecimal.valueOf(1_000_000)))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.months(new ProductMonths(12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.05)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

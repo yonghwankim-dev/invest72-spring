@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.invest72.common.time.LocalDateProvider;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
 import co.invest72.financial_product.domain.ProductInterestType;
@@ -112,12 +113,13 @@ class RpRestControllerTest {
 			.willReturn(LocalDate.of(2026, 1, 31));
 		LocalDate startDate = LocalDate.of(2026, 1, 1);
 		String rpId = UUID.randomUUID().toString();
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 		RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 			.id(rpId)
 			.userId(UUID.randomUUID().toString())
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.RP))
 			.name("미래에셋증권 RP")
-			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), Currency.won().getCode()))
+			.amount(ProductAmount.of(BigDecimal.valueOf(1_000_000), exchangeRate))
 			.days(30)
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(0.034)))
 			.productInterestType(ProductInterestType.from(InterestType.COMPOUND))

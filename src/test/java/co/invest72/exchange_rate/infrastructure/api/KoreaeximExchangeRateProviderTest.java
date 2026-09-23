@@ -1,106 +1,72 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
-import java.math.BigDecimal;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 
 import co.invest72.exchange_rate.application.ExchangeRateUpdateHandler;
 import co.invest72.exchange_rate.domain.ExchangeRateProvider;
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.KoreaeximClient;
-import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
-import co.invest72.money.domain.Currency;
-import co.invest72.money.domain.CurrencyPair;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 class KoreaeximExchangeRateProviderTest {
 
 	private ExchangeRateProvider provider;
 	private KoreaeximClient client;
-	private ExchangeRateService exchangeRateService;
-	private ExchangeRateRepository exchangeRateRepository;
+	private ExchangeRateUpdateHandler exchangeRateUpdateHandler;
 
 	@BeforeEach
 	void setUp() {
 		client = BDDMockito.mock(KoreaeximClient.class);
+		exchangeRateUpdateHandler = BDDMockito.mock(ExchangeRateUpdateHandler.class);
+		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
+	}
+
+	@DisplayName("환율 업데이트 - 응답 결과가 KRW, USD 2개인 경우 통화를 업데이트한다")
+	@Test
+	void should_update_rates_when_response_contains_krw_usd() {
+		// given
 		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.just(response1, response2));
-		exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
-		ExchangeRateUpdateHandler exchangeRateUpdateHandler = new ExchangeRateUpdateHandler(exchangeRateService);
-		provider = new KoreaeximExchangeRateProvider(client, exchangeRateUpdateHandler);
-	}
+		// when & then
+		StepVerifier.create(provider.updateRates())
+			.expectNext(response1, response2)
+			.verifyComplete();
 
-	@DisplayName("환율 업데이트")
-	@Test
-	void updateRates() {
-		// when
-		provider.updateRates().blockLast();
-		// then
-		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.dollar())).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
-		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.dollar(), Currency.won())).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(1000));
-	}
-
-	@DisplayName("환율 업데이트 - JPY(100)과 같이 100단위로 오는 경우 환율에는 1단위로 정규화 시켜 저장해야 한다")
-	@Test
-	void updateRates_whenCurrencyUnitContain100_thenOneNormalization() {
-		// given
-		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
-		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "JPY(100)", "951.05", "미국 달러");
-		BDDMockito.given(client.exchangeJson())
-			.willReturn(Flux.just(response1, response2));
-		// when
-		provider.updateRates().blockLast();
-		// then
-		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.jpy())).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.1051469429));
-		Assertions.assertThat(
-				exchangeRateService.getRate(new CurrencyPair(Currency.jpy(), Currency.won())).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(9.5105));
+		BDDMockito.verify(exchangeRateUpdateHandler, Mockito.times(1))
+			.handleUpdateRates(response1);
+		BDDMockito.verify(exchangeRateUpdateHandler, Mockito.times(1))
+			.handleUpdateRates(response2);
 	}
 
 	@DisplayName("환율 업데이트 - 응답한 데이터가 비어있으면 저장되지 않는다")
 	@Test
-	void updateRates_whenEmptyFlux_thenReturnEmptyOptional() {
+	void should_not_saved_rates_when_flux_is_empty() {
 		// given
-		exchangeRateRepository.clear();
 		BDDMockito.given(client.exchangeJson())
 			.willReturn(Flux.empty());
-		// when
-		provider.updateRates().blockLast();
-		// then
-
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.dollar())))
-			.isEmpty();
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.dollar(), Currency.won())))
-			.isEmpty();
+		// when & then
+		StepVerifier.create(provider.updateRates())
+			.verifyComplete();
 	}
 
-	@DisplayName("환율 업데이트 - 특정 응답의 result이 0이면 해당 환율을 업데이트하지 않아야 한다")
+	@DisplayName("환율 업데이트 - 특정 응답의 result 필드가 0이면 해당 환율을 업데이트하지 않아야 한다")
 	@Test
-	void updateRates_whenResultIsZero_thenNotUpdateExchangeRate() {
+	void should_not_update_rates_when_result_is_zero() {
 		// given
-		exchangeRateRepository.clear();
+		ExchangeJsonResponse response = new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
-			.willReturn(Flux.just(new ExchangeJsonResponse(0, "USD", "1,000", "미국 달러")));
-		// when
-		provider.updateRates().blockLast();
+			.willReturn(Flux.just(response));
+		// when & then
+		StepVerifier.create(provider.updateRates())
+			.expectNextCount(0)
+			.verifyComplete();
 		// then
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.won(), Currency.dollar())))
-			.isEmpty();
-		Assertions.assertThat(exchangeRateService.getRate(new CurrencyPair(Currency.dollar(), Currency.won())))
-			.isEmpty();
+		BDDMockito.then(exchangeRateUpdateHandler).shouldHaveNoInteractions();
 	}
 }

@@ -31,10 +31,11 @@ public class FinancialProductCalculator {
 
 	public Money calculateBalance(FinancialProduct product, LocalDate today, LocalDate expirationDate) {
 		InvestmentType investmentType = InvestmentType.valueOf(product.getInvestmentTypeName());
-		Currency currency = exchangeRateRepository.findByCode(product.getAmount().getCurrency())
+		Currency currency = exchangeRateRepository.findByCode(product.getAmount().getCurrencyCode())
 			.map(exchangeRate -> Currency.of(exchangeRate.getCurrencyCode(), exchangeRate.getCurrencyName()))
 			.orElseThrow(
-				() -> new NoSuchElementException("not found ExchangeRate, code=" + product.getAmount().getCurrency()));
+				() -> new NoSuchElementException(
+					"not found ExchangeRate, code=" + product.getAmount().getCurrencyCode()));
 		return investmentType.calculateBalance(product, currency, today, expirationDate);
 	}
 

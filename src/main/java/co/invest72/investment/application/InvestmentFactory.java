@@ -80,7 +80,7 @@ public class InvestmentFactory {
 			.interestType(InterestType.valueOf(product.getProductInterestType().getName()))
 			.taxType(TaxType.valueOf(product.getProductTaxType().getName()))
 			.taxRate(new FixedTaxRate(product.getProductTaxRate().getValue()))
-			.currency(product.getAmount().getCurrency())
+			.currency(product.getAmount().getCurrencyCode())
 			.build();
 		return createBy(dto);
 	}
@@ -90,11 +90,13 @@ public class InvestmentFactory {
 		PeriodType periodType = PeriodType.from(request.getPeriodType());
 		PeriodRange periodRange = createPeriodRange(periodType, request.getPeriodValue());
 		InvestPeriod investPeriod = periodType.create(periodRange);
-		Currency currency = Currency.of(request.getCurrencyCode(), request.getCurrencyName());
+
+		// 환율 정보 찾기
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(request.getCurrencyCode());
 
 		// ProductAmount는 일시금이거나 월투자금액으로 고정됨
-		Money amount = Money.of(BigDecimal.valueOf(request.getAmount()), currency);
-		ProductAmount productAmount = ProductAmount.from(amount);
+		BigDecimal amount = BigDecimal.valueOf(request.getAmount());
+		ProductAmount productAmount = ProductAmount.of(amount, exchangeRate);
 		// InvestmentType 적금인 경우에 월 투자금액으로 저장되도록 처리
 		if (investmentType == SAVINGS) {
 			InvestmentAmountParser investmentAmountParser = new InstallmentInvestmentAmountParser();

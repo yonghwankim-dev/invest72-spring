@@ -7,10 +7,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
+import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.DepositProduct;
 import co.invest72.financial_product.domain.FinancialProduct;
 import co.invest72.financial_product.domain.ProductAmount;
@@ -32,11 +32,13 @@ import co.invest72.money.domain.Money;
 class InvestmentTest {
 
 	private InvestmentFactory investmentFactory;
+	private ExchangeRateService exchangeRateService;
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
 		ProductAmountMapper productAmountMapper = new ProductAmountMapper(exchangeRateService);
 		investmentFactory = new InvestmentFactory(productAmountMapper, exchangeRateService);
 	}
@@ -45,11 +47,12 @@ class InvestmentTest {
 	@Test
 	void calculateDepositInvestmentProfit_whenMaxValues_thenCalculateCorrectly() {
 		// Given
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
 		FinancialProduct financialProduct = DepositProduct.builder()
 			.userId("user-1")
 			.name("정기예금")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.DEPOSIT))
-			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
+			.amount(ProductAmount.of(new BigDecimal("10000000000000"), exchangeRate)) // 10조
 			.months(new ProductMonths(999 * 12))
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
 			.productInterestType(ProductInterestType.from(InterestType.SIMPLE))
@@ -76,11 +79,13 @@ class InvestmentTest {
 	@Test
 	void calculateSavingsInvestmentProfit_whenMaxValues_thenCalculateCorrectly() {
 		// Given
+		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
+
 		FinancialProduct financialProduct = SavingsProduct.builder()
 			.userId("user-1")
 			.name("적금 상품")
 			.productInvestmentType(ProductInvestmentType.from(InvestmentType.SAVINGS))
-			.amount(ProductAmount.won(new BigDecimal("10000000000000"))) // 10조
+			.amount(ProductAmount.of(new BigDecimal("10000000000000"), exchangeRate)) // 10조
 			.months(new ProductMonths(999 * 12))
 			.paymentDay(new PaymentDay(15)) // 매월 15일 납입
 			.productAnnualInterestRate(new ProductAnnualInterestRate(BigDecimal.valueOf(9.9999)))
