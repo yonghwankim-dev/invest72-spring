@@ -6,11 +6,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.money.domain.Money;
 
@@ -21,8 +20,7 @@ class ProductAmountMapperTest {
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
 		mapper = new ProductAmountMapper(exchangeRateService);
 	}
 
@@ -32,11 +30,13 @@ class ProductAmountMapperTest {
 		// given
 		Money money = Money.won(10000);
 
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
+		BDDMockito.given(exchangeRateService.findExchangeRate(money.getCurrency().getCode()))
+			.willReturn(exchangeRate);
 		// when
 		ProductAmount productAmount = mapper.toProductAmount(money);
 
 		// then
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(money.getCurrency().getCode());
 		ProductAmount expected = ProductAmount.of(BigDecimal.valueOf(10000), exchangeRate);
 		Assertions.assertThat(productAmount)
 			.hasSameHashCodeAs(expected)
@@ -56,7 +56,9 @@ class ProductAmountMapperTest {
 	@Test
 	void toMoney_whenProductAmountIsValid_thenReturnMoneyWithCorrectCurrency() {
 		// given
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(exchangeRate);
 		ProductAmount productAmount = ProductAmount.of(BigDecimal.valueOf(10000), exchangeRate);
 
 		// when
