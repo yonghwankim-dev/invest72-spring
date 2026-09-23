@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.Bank;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
@@ -54,6 +53,7 @@ class FinancialProductServiceTest {
 	@Mock
 	private LocalDateProvider localDateProvider;
 
+	@Mock
 	private ExchangeRateService exchangeRateService;
 
 	@Mock
@@ -62,8 +62,9 @@ class FinancialProductServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(exchangeRate);
 		InvestmentFactory investmentFactory = new InvestmentFactory(
 			new ProductAmountMapper(exchangeRateService),
 			exchangeRateService
@@ -115,7 +116,8 @@ class FinancialProductServiceTest {
 			.currencyCode(Currency.won().getCode())
 			.build();
 		BigDecimal amount = BigDecimal.valueOf(1_000_000);
-		ExchangeRate exchangeRate = exchangeRateService.findExchangeRate("KRW");
+
+		ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 
 		FinancialProduct originalProduct = RepurchaseAgreementProduct.builder()
 			.id(productId)
