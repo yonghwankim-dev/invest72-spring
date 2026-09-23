@@ -11,10 +11,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.application.FinancialProductFactory;
 import co.invest72.financial_product.domain.entity.FinancialProductData;
 import co.invest72.financial_product.infrastructure.ProductIdGenerator;
@@ -39,8 +37,10 @@ class FinancialProductTest {
 		ProductIdGenerator idGenerator = Mockito.mock(ProductIdGenerator.class);
 		BDDMockito.given(idGenerator.generateId())
 			.willReturn("product-1234");
-		ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-		ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+		ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+		BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+			.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
+
 		factory = new FinancialProductFactory(localDateProvider, idGenerator, exchangeRateService);
 	}
 
