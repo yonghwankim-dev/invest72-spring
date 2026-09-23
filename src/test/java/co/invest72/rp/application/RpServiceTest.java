@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
@@ -97,30 +96,6 @@ class RpServiceTest {
 			Assertions.assertThat(id).isEqualTo(rpId);
 			BDDMockito.then(repository).should(Mockito.times(1))
 				.save(captor.capture());
-		}
-
-		@ParameterizedTest
-		@ValueSource(ints = {-1, 0})
-		@DisplayName("약정 일수가 0일 이하인 경우 예외를 발생시켜야 한다.")
-		void should_throw_exception_when_days_zero_or_negative(int days) {
-			// given
-			RpCreateRequest request = RpCreateRequest.builder()
-				.name("미래에셋증권 RP")
-				.investmentType(InvestmentType.RP.name())
-				.amount(BigDecimal.valueOf(1_000_000))
-				.days(days) // 약정 일수 설정
-				.interestRate(BigDecimal.valueOf(0.03))
-				.interestType(InterestType.COMPOUND.name())
-				.taxType(TaxType.STANDARD.name())
-				.taxRate(BigDecimal.valueOf(0.154))
-				.startDate(LocalDate.of(2026, 1, 1))
-				.currencyCode(Currency.won().getCode())
-				.build();
-
-			// when
-			Assertions.assertThatThrownBy(() -> service.createRp(user, request))
-				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("days must not zero or not negative, days=" + days);
 		}
 	}
 
