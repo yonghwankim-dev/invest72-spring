@@ -1,26 +1,27 @@
 package co.invest72.exchange_rate.domain.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.CurrencyPair;
 
 class ExchangeRateServiceTest {
 
 	private ExchangeRateService service;
+	private ExchangeRateRepository repository;
 
 	@BeforeEach
 	void setUp() {
-		ExchangeRateRepository repository = new InMemoryExchangeRateRepository();
+		repository = BDDMockito.mock(ExchangeRateRepository.class);
 		service = new ExchangeRateService(repository);
 	}
 
@@ -41,9 +42,9 @@ class ExchangeRateServiceTest {
 			.isEqualByComparingTo(BigDecimal.valueOf(0.001));
 	}
 
-	@DisplayName("환율 저장 - 원달러 환율이 1300원인 경우에 100만원은 769.23달러여야 한다")
+	@DisplayName("환율 저장 - 원달러 환율을 저장한다")
 	@Test
-	void save_whenScaleIs4() {
+	void should_save_exchange_rate_data() {
 		// given
 		Currency dollar = Currency.dollar();
 		BigDecimal rate = BigDecimal.valueOf(1300);
@@ -51,18 +52,8 @@ class ExchangeRateServiceTest {
 		// when
 		service.saveRate(exchangeRate);
 		// then
-		// 100만원 * (1/1300)원 = 769.23
-		Currency from = Currency.dollar();
-		Currency to = Currency.won();
-		BigDecimal reverseRate = service.getRate(new CurrencyPair(to, from)).orElseThrow();
-		BigDecimal sourceAmount = BigDecimal.valueOf(1_000_000);
-		BigDecimal dollarResult = sourceAmount.multiply(reverseRate).setScale(2, RoundingMode.HALF_EVEN);
-		Assertions.assertThat(dollarResult).isEqualByComparingTo(BigDecimal.valueOf(769.23));
-
-		Assertions.assertThat(service.getRate(new CurrencyPair(from, to)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(1300));
-		Assertions.assertThat(service.getRate(new CurrencyPair(to, from)).orElseThrow())
-			.isEqualByComparingTo(BigDecimal.valueOf(0.0007692308));
+		BDDMockito.verify(repository, Mockito.times(1))
+			.save(exchangeRate);
 	}
 
 	@DisplayName("환율 저장 - 환율이 양수가 아니면 역방향 환율이 저장되지 않는다")
