@@ -3,6 +3,7 @@ package co.invest72.rp.application;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -19,10 +20,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
-import co.invest72.exchange_rate.domain.ExchangeRateRepository;
 import co.invest72.exchange_rate.domain.entity.ExchangeRate;
 import co.invest72.exchange_rate.domain.service.ExchangeRateService;
-import co.invest72.exchange_rate.infrastructure.persistence.InMemoryExchangeRateRepository;
 import co.invest72.financial_product.domain.IdGenerator;
 import co.invest72.financial_product.domain.ProductAmount;
 import co.invest72.financial_product.domain.ProductAnnualInterestRate;
@@ -35,7 +34,6 @@ import co.invest72.investment.domain.investment.InvestmentType;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
 import co.invest72.rp.entity.RepurchaseAgreementEntity;
-import co.invest72.rp.infrastructure.InMemoryRpRepository;
 import co.invest72.rp.infrastructure.RpRepository;
 import co.invest72.rp.presentation.dto.RpCreateRequest;
 import co.invest72.rp.presentation.dto.RpDetailedResponse;
@@ -103,6 +101,12 @@ class RpServiceTest {
 	@DisplayName("RP 상품 정보 조회")
 	class getRpTests {
 
+		private RpService service;
+		private LocalDateProvider localDateProvider;
+		private IdGenerator idGenerator;
+		private LocalDate startDate;
+		private RpRepository repository;
+
 		private static Stream<Arguments> holdingPeriodSource() {
 			return Stream.of(
 				Arguments.of(LocalDate.of(2026, 1, 1), BigDecimal.ZERO, BigDecimal.ZERO), // 예치 일수 0일
@@ -114,20 +118,28 @@ class RpServiceTest {
 			);
 		}
 
+		@BeforeEach
+		void setUp() {
+			idGenerator = BDDMockito.mock(IdGenerator.class);
+			localDateProvider = BDDMockito.mock(LocalDateProvider.class);
+			startDate = LocalDate.of(2026, 1, 1);
+			BDDMockito.given(localDateProvider.nowDateTime())
+				.willReturn(startDate.atStartOfDay());
+			repository = BDDMockito.mock(RpRepository.class);
+			ExchangeRateService exchangeRateService = Mockito.mock(ExchangeRateService.class);
+			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
+		}
+
 		@ParameterizedTest(name = "예치일자={0}, 예상현재이자금액={1}, 예상현재이자수익율={2}")
 		@MethodSource(value = "holdingPeriodSource")
 		void should_return_rp_details_with_accrued_interest_for_given_holding_period(LocalDate now,
 			BigDecimal expectedCurrentInterest, BigDecimal expectedCurrentInterestRate) {
 			// given
-			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
 			String rpId = UUID.randomUUID().toString();
-			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
+			BDDMockito.given(idGenerator.generateId())
+				.willReturn(rpId);
 			BDDMockito.given(localDateProvider.now())
 				.willReturn(now);
-			LocalDate startDate = LocalDate.of(2026, 1, 1);
-			BDDMockito.given(localDateProvider.nowDateTime())
-				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
 			ExchangeRate exchangeRate = new ExchangeRate("KRW", "한국 원", BigDecimal.ONE);
 			RepurchaseAgreementEntity entity = RepurchaseAgreementEntity.builder()
 				.id(rpId)
@@ -143,10 +155,8 @@ class RpServiceTest {
 				.startDate(startDate)
 				.createdAt(startDate.atStartOfDay())
 				.build();
-			repository.save(entity);
-			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
-			RpService service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
+			BDDMockito.given(repository.findById(rpId))
+				.willReturn(Optional.of(entity));
 			// when
 			RpDetailedResponse response = service.getRp(rpId);
 			// then
@@ -174,23 +184,13 @@ class RpServiceTest {
 		@DisplayName("RP 엔티티 데이터를 찾을 수 없다면 예외를 발생시켜야 한다")
 		void should_throw_exception_when_not_found_rp_entity() {
 			// given
-			IdGenerator idGenerator = BDDMockito.mock(IdGenerator.class);
 			String rpId = UUID.randomUUID().toString();
-			LocalDateProvider localDateProvider = BDDMockito.mock(LocalDateProvider.class);
-			BDDMockito.given(localDateProvider.now())
-				.willReturn(LocalDate.of(2026, 1, 31));
-			LocalDate startDate = LocalDate.of(2026, 1, 1);
-			BDDMockito.given(localDateProvider.nowDateTime())
-				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
-			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
-			RpService service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
+			BDDMockito.given(repository.findById(rpId))
+				.willReturn(Optional.empty());
 			// when & then
 			Assertions.assertThatThrownBy(() -> service.getRp(rpId))
 				.isInstanceOf(NoSuchElementException.class)
 				.hasMessage("not found rp, id=" + rpId);
 		}
-
 	}
 }
