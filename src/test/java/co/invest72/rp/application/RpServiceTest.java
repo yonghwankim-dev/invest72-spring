@@ -15,7 +15,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 
 import co.invest72.common.time.LocalDateProvider;
 import co.invest72.exchange_rate.domain.ExchangeRateRepository;
@@ -49,6 +51,7 @@ class RpServiceTest {
 		private RpService service;
 		private String rpId;
 		private User user;
+		private RpRepository repository;
 
 		@BeforeEach
 		void setUp() {
@@ -63,9 +66,10 @@ class RpServiceTest {
 			LocalDate startDate = LocalDate.of(2026, 1, 1);
 			BDDMockito.given(localDateProvider.nowDateTime())
 				.willReturn(startDate.atStartOfDay());
-			RpRepository repository = new InMemoryRpRepository();
-			ExchangeRateRepository exchangeRateRepository = new InMemoryExchangeRateRepository();
-			ExchangeRateService exchangeRateService = new ExchangeRateService(exchangeRateRepository);
+			repository = BDDMockito.mock(RpRepository.class);
+			ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
+			BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
+				.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
 			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
 		}
 
@@ -85,12 +89,14 @@ class RpServiceTest {
 				.startDate(LocalDate.of(2026, 1, 1))
 				.currencyCode(Currency.won().getCode())
 				.build();
-
+			ArgumentCaptor<RepurchaseAgreementEntity> captor = ArgumentCaptor.forClass(RepurchaseAgreementEntity.class);
 			// when
 			String id = service.createRp(user, request);
 
 			// then
 			Assertions.assertThat(id).isEqualTo(rpId);
+			BDDMockito.then(repository).should(Mockito.times(1))
+				.save(captor.capture());
 		}
 
 		@ParameterizedTest
