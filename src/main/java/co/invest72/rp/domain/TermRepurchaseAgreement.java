@@ -46,6 +46,11 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
+	public Money calculateMaturityInterest() {
+		return null;
+	}
+
+	@Override
 	public LocalDate getExpirationDate() {
 		return startDate.plusDays(investPeriod.getDays(this.startDate));
 	}
