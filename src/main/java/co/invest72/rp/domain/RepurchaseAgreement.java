@@ -21,6 +21,8 @@ public interface RepurchaseAgreement {
 	 */
 	Money calculateInterestForDays(int days);
 
+	LocalDate getExpirationDate();
+	
 	/**
 	 * 만기 이자 금액 계산하여 반환
 	 * <p>
@@ -30,6 +32,4 @@ public interface RepurchaseAgreement {
 	 * @return 만기 시 이자 금액
 	 */
 	Money calculateMaturityInterest();
-
-	LocalDate getExpirationDate();
 }
