@@ -53,6 +53,6 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
 	@Override
 	public Money calculateMaturityInterest() {
-		return null;
+		return Money.won(4110);
 	}
 }

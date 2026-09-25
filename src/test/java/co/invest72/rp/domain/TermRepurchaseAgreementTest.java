@@ -229,8 +229,10 @@ class TermRepurchaseAgreementTest {
 		@Test
 		@DisplayName("만기 이자 금액 계산")
 		void should_return_maturity_interest() {
-			Money money = rp.calculateMaturityInterest();
-			throw new RuntimeException("todo");
+			// when
+			Money interest = rp.calculateMaturityInterest();
+			// then
+			Assertions.assertThat(interest).isEqualTo(Money.won(4110));
 		}
 	}
 }
