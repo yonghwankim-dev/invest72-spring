@@ -51,8 +51,18 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 		return startDate.plusDays(investPeriod.getDays(this.startDate));
 	}
 
+	/**
+	 * RP 상품의 만기 이자 금액 계산
+	 * <p>
+	 * 만기 이자 금액 = (원금 x 연이자율) x 약정 일수 / 365
+	 * @return Money
+	 */
 	@Override
 	public Money calculateMaturityInterest() {
-		return Money.won(4110);
+		// 약정 일수 구하기
+		Money result = investmentAmount.calAnnualInterest(interestRate)
+			.times(investPeriod.getDays(startDate))
+			.divide(BigDecimal.valueOf(365));
+		return Investment.roundToWholeMoney.apply(result);
 	}
 }
