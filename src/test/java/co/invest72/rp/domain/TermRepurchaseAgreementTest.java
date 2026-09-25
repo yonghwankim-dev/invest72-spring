@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import co.invest72.investment.domain.DailyInvestPeriod;
@@ -233,6 +234,22 @@ class TermRepurchaseAgreementTest {
 			Money interest = rp.calculateMaturityInterest();
 			// then
 			Assertions.assertThat(interest).isEqualTo(Money.won(4110));
+		}
+
+		@ParameterizedTest(name = "약정일수={0}, 만기 이자 금액 계산")
+		@CsvSource({
+			"0, 0"
+		})
+		void should_return_maturity_interest_given_days(int days, int expected) {
+			// given
+			LocalDate startDate = LocalDate.of(2026, 9, 11);
+			rp = ((TermRepurchaseAgreement)rp).toBuilder()
+				.investPeriod(new DailyInvestPeriod(startDate, days))
+				.build();
+			// when
+			Money interest = rp.calculateMaturityInterest();
+			// then
+			Assertions.assertThat(interest).isEqualTo(Money.won(expected));
 		}
 	}
 }
