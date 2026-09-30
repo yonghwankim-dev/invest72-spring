@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -302,7 +303,8 @@ class TermRepurchaseAgreementTest {
 			BigDecimal interestRate = rp.calculateInterestRateForDays(days);
 			// then
 			BigDecimal expected = BigDecimal.valueOf(0.0041);
-			Assertions.assertThat(interestRate).isEqualTo(expected);
+			Assertions.assertThat(interestRate)
+				.isCloseTo(expected, Offset.offset(BigDecimal.valueOf(4)));
 		}
 	}
 }

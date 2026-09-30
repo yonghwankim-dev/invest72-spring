@@ -55,7 +55,9 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
 	@Override
 	public BigDecimal calculateInterestRateForDays(int days) {
-		return BigDecimal.valueOf(0.0041);
+		Money interest = calculateInterestForDays(days);
+		return interest.divide(investmentAmount.getAmount().getValue())
+			.getValue();
 	}
 
 	@Override

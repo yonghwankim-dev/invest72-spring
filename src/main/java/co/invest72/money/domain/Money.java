@@ -83,6 +83,25 @@ public class Money implements Comparable<Money> {
 		return of(rounded, this.currency);
 	}
 
+	/**
+	 * 금액을 금액으로 나누어 비율(수익율/이자율) 반환 (Money / Money = BigDecimal)
+	 * <p>
+	 * - 대상 금액 대비 현재 금액의 비율을 계산한다
+	 * @param target {@link Money} 기준이 되는 금액 (분모)
+	 * @return {@link BigDecimal} 비율 (예: 0.05=5%), target이 0이거나 통화가 서로 다른 경우 0을 반환한다
+	 * @throws NullPointerException target이 null인 경우 예외를 발생시킨다.
+	 */
+	public BigDecimal ratioOf(Money target) {
+		Objects.requireNonNull(target, "target must not null");
+		if (target.isZero()) {
+			return BigDecimal.ZERO;
+		}
+		if (!this.currency.equals(target.currency)) {
+			return BigDecimal.ZERO;
+		}
+		return this.value.divide(target.value, SCALE, RoundingMode.HALF_EVEN);
+	}
+
 	public Money reduce(Currency target, BigDecimal rate) {
 		BigDecimal amount = value.multiply(rate);
 		return Money.of(amount, target);
@@ -96,6 +115,10 @@ public class Money implements Comparable<Money> {
 	public Money roundToWhole() {
 		BigDecimal rounded = this.value.setScale(0, RoundingMode.HALF_EVEN);
 		return of(rounded, this.currency);
+	}
+
+	private boolean isZero() {
+		return BigDecimal.ZERO.compareTo(this.value) == 0;
 	}
 
 	private boolean isZero(BigDecimal divisor) {

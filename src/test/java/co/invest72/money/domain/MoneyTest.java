@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class MoneyTest {
@@ -183,5 +184,23 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(equalsActual).isTrue();
 		Assertions.assertThat(hashCodeActual).isTrue();
+	}
+
+	@Nested
+	@DisplayName("금액 간 비율 계산 테스트")
+	class ratioOfTest {
+
+		@Test
+		@DisplayName("20만원은 100만원의 0.2(20%) 비율을 반환한다")
+		void should_return_ratio() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.won(1_000_000);
+			// when
+			BigDecimal ratio = money.ratioOf(target);
+			// then
+			BigDecimal expected = BigDecimal.valueOf(0.2);
+			Assertions.assertThat(ratio).isEqualByComparingTo(expected);
+		}
 	}
 }
