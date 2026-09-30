@@ -2,6 +2,7 @@ package co.invest72.rp.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
@@ -36,7 +37,8 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 
 	@Override
 	public Money calculateInterestForDate(LocalDate now) {
-		return Money.won(4110);
+		int days = (int)startDate.until(now, ChronoUnit.DAYS);
+		return calculateInterestForDays(days);
 	}
 
 	@Override

@@ -266,19 +266,25 @@ class TermRepurchaseAgreementTest {
 		@Nested
 		@DisplayName("일자에 따른 이자금액 계산 검증")
 		class calculateInterestForDateTest {
-			@Test
-			@DisplayName("이자 금액 계산")
-			void should_return_interest_when_now_is_thirty() {
+			@ParameterizedTest(name = "약정일수={0}, 약정 일수에 따른 이자 금액 계산")
+			@CsvSource({
+				"0, 0",
+				"1, 137",
+				"2, 274",
+				"3, 411",
+				"30, 4110"
+			})
+			void should_return_interest_when_now_is_thirty(int daysToAdd, int expected) {
 				// given
 				LocalDate startDate = LocalDate.of(2026, 9, 11);
 				rp = ((TermRepurchaseAgreement)rp).toBuilder()
 					.startDate(startDate)
 					.build();
-				LocalDate now = startDate.plusDays(30);
+				LocalDate now = startDate.plusDays(daysToAdd);
 				// when
 				Money interest = rp.calculateInterestForDate(now);
 				// then
-				Assertions.assertThat(interest).isEqualTo(Money.won(4110));
+				Assertions.assertThat(interest).isEqualTo(Money.won(expected));
 			}
 		}
 	}
