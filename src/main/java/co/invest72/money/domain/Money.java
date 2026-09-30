@@ -90,6 +90,7 @@ public class Money implements Comparable<Money> {
 	 * @param target {@link Money} 기준이 되는 금액 (분모)
 	 * @return {@link BigDecimal} 비율 (예: 0.05=5%), target이 0이거나 통화가 서로 다른 경우 0을 반환한다
 	 * @throws NullPointerException target이 null인 경우 예외를 발생시킨다.
+	 * @throws IllegalArgumentException 통화가 서로 다르면 예외를 발생시킨다.
 	 */
 	public BigDecimal ratioOf(Money target) {
 		Objects.requireNonNull(target, "target must not null");
@@ -97,7 +98,8 @@ public class Money implements Comparable<Money> {
 			return BigDecimal.ZERO;
 		}
 		if (!this.currency.equals(target.currency)) {
-			return BigDecimal.ZERO;
+			throw new IllegalArgumentException(
+				"currencies are different, this.currency=" + this.currency + ", target.currency=" + target.currency);
 		}
 		return this.value.divide(target.value, SCALE, RoundingMode.HALF_EVEN);
 	}

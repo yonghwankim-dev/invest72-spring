@@ -214,5 +214,17 @@ class MoneyTest {
 			// then
 			Assertions.assertThat(ratio).isZero();
 		}
+
+		@Test
+		@DisplayName("서로 다른 통화 간 비율 계산시 예외가 발생해야 한다")
+		void should_throw_exception_when_currencies_are_different() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.dollar(1_000_000);
+			// when & then
+			Assertions.assertThatThrownBy(() -> money.ratioOf(target))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("currencies are different, this.currency=KRW, target.currency=USD");
+		}
 	}
 }
