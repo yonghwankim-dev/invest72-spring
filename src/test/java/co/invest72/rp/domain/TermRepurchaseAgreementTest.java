@@ -230,6 +230,9 @@ class TermRepurchaseAgreementTest {
 		@ParameterizedTest(name = "약정일수={0}, 약정 일수에 따른 만기 이자 금액 계산")
 		@CsvSource({
 			"0, 0",
+			"1, 137",
+			"2, 274",
+			"3, 411",
 			"30, 4110"
 		})
 		void should_return_maturity_interest_given_days(int days, int expected) {
