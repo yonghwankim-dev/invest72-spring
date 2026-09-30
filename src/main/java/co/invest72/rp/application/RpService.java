@@ -85,7 +85,7 @@ public class RpService {
 					.investPeriod(investPeriod)
 					.build();
 
-				BigDecimal maturityInterest = calculateMaturityInterest(entity);
+				BigDecimal maturityInterest = rp.calculateMaturityInterest().getValue();
 				BigDecimal currentInterest = calculateCurrentInterest(entity);
 				BigDecimal currentInterestRate = calculateCurrentInterestRate(entity);
 				return RpDetailedResponse.builder()
