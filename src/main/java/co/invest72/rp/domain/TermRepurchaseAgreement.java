@@ -54,6 +54,11 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
+	public BigDecimal calculateInterestRateForDays(int days) {
+		return BigDecimal.valueOf(0.0041);
+	}
+
+	@Override
 	public LocalDate getExpirationDate() {
 		return startDate.plusDays(investPeriod.getDays(this.startDate));
 	}

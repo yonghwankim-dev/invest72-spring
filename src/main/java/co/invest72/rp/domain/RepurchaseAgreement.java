@@ -1,5 +1,6 @@
 package co.invest72.rp.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.money.domain.Money;
@@ -27,6 +28,8 @@ public interface RepurchaseAgreement {
 	 * @return 이자 금액
 	 */
 	Money calculateInterestForDays(int days);
+
+	BigDecimal calculateInterestRateForDays(int days);
 
 	LocalDate getExpirationDate();
 

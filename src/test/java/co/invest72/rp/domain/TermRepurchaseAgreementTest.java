@@ -286,6 +286,23 @@ class TermRepurchaseAgreementTest {
 				// then
 				Assertions.assertThat(interest).isEqualTo(Money.won(expected));
 			}
+
+		}
+	}
+
+	@Nested
+	@DisplayName("일수에 따른 이자 수익율 계산 검증")
+	class calculateInterestRateForDays {
+		@Test
+		@DisplayName("30일의 이자 수익율 계산")
+		void should_return_interest_rate_when_days_is_thirty() {
+			// given
+			int days = 30;
+			// when
+			BigDecimal interestRate = rp.calculateInterestRateForDays(days);
+			// then
+			BigDecimal expected = BigDecimal.valueOf(0.0041);
+			Assertions.assertThat(interestRate).isEqualTo(expected);
 		}
 	}
 }
