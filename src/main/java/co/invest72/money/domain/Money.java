@@ -13,6 +13,7 @@ public class Money implements Comparable<Money> {
 
 	private static final UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = money -> money.setScale(2,
 		RoundingMode.HALF_EVEN);
+	private static final int SCALE = 19;
 
 	private final BigDecimal value;
 	private final Currency currency;
@@ -78,13 +79,23 @@ public class Money implements Comparable<Money> {
 		if (isZero(divisor)) {
 			return Money.of(BigDecimal.ZERO, this.currency);
 		}
-		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
+		BigDecimal newValue = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
 		return of(newValue, this.currency);
 	}
 
 	public Money reduce(Currency target, BigDecimal rate) {
 		BigDecimal amount = value.multiply(rate);
 		return Money.of(amount, target);
+	}
+
+	/**
+	 * Money 객체가 값을 스스로 절사/반올림하여 반환한다.
+	 *
+	 * @return {@link Money}
+	 */
+	public Money roundToWhole() {
+		BigDecimal rounded = this.value.setScale(0, RoundingMode.HALF_EVEN);
+		return of(rounded, this.currency);
 	}
 
 	private boolean isZero(BigDecimal divisor) {

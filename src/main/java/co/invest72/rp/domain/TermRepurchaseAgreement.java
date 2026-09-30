@@ -59,10 +59,9 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	 */
 	@Override
 	public Money calculateMaturityInterest() {
-		// 약정 일수 구하기
-		Money result = investmentAmount.calAnnualInterest(interestRate)
+		return investmentAmount.calAnnualInterest(interestRate)
 			.times(investPeriod.getDays(startDate))
-			.divide(BigDecimal.valueOf(365));
-		return Investment.roundToWholeMoney.apply(result);
+			.divide(BigDecimal.valueOf(365))
+			.roundToWhole();
 	}
 }

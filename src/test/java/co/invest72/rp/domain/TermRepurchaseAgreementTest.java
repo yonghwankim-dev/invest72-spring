@@ -246,5 +246,21 @@ class TermRepurchaseAgreementTest {
 			// then
 			Assertions.assertThat(interest).isEqualTo(Money.won(expected));
 		}
+
+		@Test
+		@DisplayName("만기 이자 금액 계산 검증 - 이중 반올림 문제 해결 테스트")
+		void should_fail_due_to_double_rounding_issue() {
+			// given
+			LocalDate startDate = LocalDate.of(2026, 9, 11);
+			rp = ((TermRepurchaseAgreement)rp).toBuilder()
+				.investmentAmount(new FixedDepositAmount(Money.won(1000)))
+				.interestRate(new AnnualInterestRate(BigDecimal.valueOf(0.04564)))
+				.investPeriod(new DailyInvestPeriod(startDate, 100))
+				.build();
+			// when
+			Money interest = rp.calculateMaturityInterest();
+			// then
+			Assertions.assertThat(interest).isEqualTo(Money.won(13));
+		}
 	}
 }
