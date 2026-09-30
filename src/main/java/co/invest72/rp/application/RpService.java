@@ -114,24 +114,6 @@ public class RpService {
 		return new FixedDepositAmount(entity.getAmount().getValue(), currency);
 	}
 
-	/**
-	 * 만기 이자 금액 계산하여 반환
-	 * <p>
-	 * - 원금 x 연 이자율 x (투자 일수 / 365)
-	 * <p>
-	 * - 만기 이자 금액 반환시 정수 형태로 반올림하여 반환
-	 * @param entity {@link RepurchaseAgreementEntity}
-	 * @return 만기 시 이자 금액
-	 */
-	private BigDecimal calculateMaturityInterest(RepurchaseAgreementEntity entity) {
-		BigDecimal amount = entity.getAmount().getValue();
-		BigDecimal annualInterest = entity.getProductAnnualInterestRate().getValue();
-		Integer days = entity.getDays();
-
-		BigDecimal interestForHoldingPeriod = calculateInterestForHoldingPeriod(amount, annualInterest, days);
-		return applyDailyInterest(interestForHoldingPeriod);
-	}
-
 	private BigDecimal calculateInterestForHoldingPeriod(BigDecimal principal, BigDecimal annualInterestRate,
 		Integer holdingPeriod) {
 		return principal.multiply(annualInterestRate)
@@ -143,24 +125,6 @@ public class RpService {
 			return BigDecimal.ZERO;
 		}
 		return interest.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
-	}
-
-	/**
-	 * 현재 이자 금액 계산
-	 * <p>
-	 * - RP 상품의 시작일자 및 약정일수 기반으로 현재 이자 금액을 계산
-	 * <p>
-	 * - 현재 이자 금액 = 원금 x 연이율 x (예치 일수 / 365)
-	 * @return BigDecimal 현재 이자 금액
-	 */
-	private BigDecimal calculateCurrentInterest(RepurchaseAgreementEntity rp) {
-		BigDecimal principal = rp.getAmount().getValue();
-		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
-		int holdingPeriod = calculateHoldingPeriod(rp);
-
-		BigDecimal interestForHoldingPeriod = calculateInterestForHoldingPeriod(principal, annualInterest,
-			holdingPeriod);
-		return applyDailyInterest(interestForHoldingPeriod);
 	}
 
 	/**
