@@ -86,7 +86,9 @@ public class RpService {
 					.build();
 
 				BigDecimal maturityInterest = rp.calculateMaturityInterest().getValue();
-				BigDecimal currentInterest = calculateCurrentInterest(entity);
+				// 예치일수 넣기
+				int days = calculateHoldingPeriod(entity);
+				BigDecimal currentInterest = rp.calculateInterestForDays(days).getValue();
 				BigDecimal currentInterestRate = calculateCurrentInterestRate(entity);
 				return RpDetailedResponse.builder()
 					.id(entity.getId())
