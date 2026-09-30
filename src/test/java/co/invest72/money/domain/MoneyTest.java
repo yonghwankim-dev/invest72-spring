@@ -202,5 +202,17 @@ class MoneyTest {
 			BigDecimal expected = BigDecimal.valueOf(0.2);
 			Assertions.assertThat(ratio).isEqualByComparingTo(expected);
 		}
+
+		@Test
+		@DisplayName("분모가 0인 경우 0을 반환해야 한다")
+		void should_return_zero_when_target_is_zero() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.won(0);
+			// when
+			BigDecimal ratio = money.ratioOf(target);
+			// then
+			Assertions.assertThat(ratio).isZero();
+		}
 	}
 }
