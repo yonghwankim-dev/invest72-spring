@@ -226,5 +226,17 @@ class MoneyTest {
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("currencies are different, this.currency=KRW, target.currency=USD");
 		}
+
+		@Test
+		@DisplayName("target이 null인 경우 예외가 발생해야 한다")
+		void should_throw_exception_when_target_is_null() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = null;
+			// when & then
+			Assertions.assertThatThrownBy(() -> money.ratioOf(target))
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("target must not null");
+		}
 	}
 }
