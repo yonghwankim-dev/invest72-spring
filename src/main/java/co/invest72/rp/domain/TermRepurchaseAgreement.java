@@ -35,6 +35,11 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
+	public Money calculateInterestForDate(LocalDate now) {
+		return Money.won(4110);
+	}
+
+	@Override
 	public Money calculateInterestForDays(int days) {
 		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)

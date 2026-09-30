@@ -262,5 +262,24 @@ class TermRepurchaseAgreementTest {
 			// then
 			Assertions.assertThat(interest).isEqualTo(Money.won(13));
 		}
+
+		@Nested
+		@DisplayName("일자에 따른 이자금액 계산 검증")
+		class calculateInterestForDateTest {
+			@Test
+			@DisplayName("이자 금액 계산")
+			void should_return_interest_when_now_is_thirty() {
+				// given
+				LocalDate startDate = LocalDate.of(2026, 9, 11);
+				rp = ((TermRepurchaseAgreement)rp).toBuilder()
+					.startDate(startDate)
+					.build();
+				LocalDate now = startDate.plusDays(30);
+				// when
+				Money interest = rp.calculateInterestForDate(now);
+				// then
+				Assertions.assertThat(interest).isEqualTo(Money.won(4110));
+			}
+		}
 	}
 }

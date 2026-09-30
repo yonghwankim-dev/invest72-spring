@@ -12,6 +12,13 @@ public interface RepurchaseAgreement {
 	LocalDate calculateExpirationDate(int daysToAdd);
 
 	/**
+	 * RP 상품의 시작일자부터 현재일자({@param now})까지의 이자 금액을 계산하여 반환한다.
+	 * @param now 현재 시간
+	 * @return {@link Money} 이자 합계 금액
+	 */
+	Money calculateInterestForDate(LocalDate now);
+
+	/**
 	 * 약정 일수까지의 이자 금액 계산
 	 * <p>
 	 * - 이자금액 = 투자 금액 x 약정수익률(연이율) x (예치 일수 / 365)
@@ -22,7 +29,7 @@ public interface RepurchaseAgreement {
 	Money calculateInterestForDays(int days);
 
 	LocalDate getExpirationDate();
-	
+
 	/**
 	 * 만기 이자 금액 계산하여 반환
 	 * <p>
