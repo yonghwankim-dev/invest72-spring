@@ -79,8 +79,8 @@ public class Money implements Comparable<Money> {
 		if (isZero(divisor)) {
 			return Money.of(BigDecimal.ZERO, this.currency);
 		}
-		BigDecimal newValue = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
-		return of(newValue, this.currency);
+		BigDecimal rounded = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
+		return of(rounded, this.currency);
 	}
 
 	public Money reduce(Currency target, BigDecimal rate) {
