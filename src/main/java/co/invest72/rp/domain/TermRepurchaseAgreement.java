@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
-import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.money.domain.Money;
 import lombok.Builder;
@@ -39,11 +38,12 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	public Money calculateInterestForDays(int days) {
 		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)
-			.divide(BigDecimal.valueOf(365L));
+			.divide(BigDecimal.valueOf(365L))
+			.roundToWhole();
 		if (interest.isNegative()) {
 			return Money.of(BigDecimal.ZERO, interest.getCurrency());
 		}
-		return Investment.roundToWholeMoney.apply(interest);
+		return interest;
 	}
 
 	@Override
