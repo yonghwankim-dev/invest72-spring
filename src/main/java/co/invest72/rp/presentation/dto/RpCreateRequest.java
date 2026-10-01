@@ -52,4 +52,7 @@ public class RpCreateRequest {
 
 	@NotNull(message = "통화는 필수입니다.")
 	private String currencyCode;
+
+	@NotNull(message = "자동 재투자 여부는 필수입니다.")
+	private Boolean isAutoReinvest;
 }
