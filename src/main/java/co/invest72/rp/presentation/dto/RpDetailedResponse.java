@@ -9,25 +9,25 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-@Builder
 @Getter
 @EqualsAndHashCode
 @ToString
 public class RpDetailedResponse {
-	private String id; // 식별자
-	private String investmentType; // 상품 타입
-	private String name; // 상품 이름
-	private BigDecimal amount; // 매수금액
-	private String currency; // 통화 코드
-	private BigDecimal interestRate; // 연이자율
-	private LocalDate startDate; // 시작 금액
-	private Integer termOfAgreement; // 약정 일수(days)
-	private BigDecimal maturityInterest; // 만기 시 받는 이자 금액
-	private BigDecimal currentInterest; // 현재 이자 금액
-	private BigDecimal currentInterestRate; // 현재 이자 수익율
-	private Boolean isAutoReinvest; // 만기시 자동 재투자 여부
+	private final String id; // 식별자
+	private final String investmentType; // 상품 타입
+	private final String name; // 상품 이름
+	private final BigDecimal amount; // 매수금액
+	private final String currency; // 통화 코드
+	private final BigDecimal interestRate; // 연이자율
+	private final LocalDate startDate; // 시작 금액
+	private final Integer termOfAgreement; // 약정 일수(days)
+	private final BigDecimal maturityInterest; // 만기 시 받는 이자 금액
+	private final BigDecimal currentInterest; // 현재 이자 금액
+	private final BigDecimal currentInterestRate; // 현재 이자 수익율
+	private final Boolean isAutoReinvest; // 만기시 자동 재투자 여부
 
-	private RpDetailedResponse(
+	@Builder
+	public RpDetailedResponse(
 		String id,
 		String investmentType,
 		String name,
