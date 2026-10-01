@@ -85,6 +85,7 @@ class RpServiceTest {
 				.taxType(TaxType.STANDARD.name())
 				.taxRate(BigDecimal.valueOf(0.154))
 				.startDate(LocalDate.of(2026, 1, 1))
+				.isAutoReinvest(true)
 				.currencyCode(Currency.won().getCode())
 				.build();
 			ArgumentCaptor<RepurchaseAgreementEntity> captor = ArgumentCaptor.forClass(RepurchaseAgreementEntity.class);
@@ -156,6 +157,7 @@ class RpServiceTest {
 				.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 				.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 				.startDate(startDate)
+				.isAutoReinvest(true)
 				.createdAt(startDate.atStartOfDay())
 				.build();
 			BDDMockito.given(repository.findById(rpId))

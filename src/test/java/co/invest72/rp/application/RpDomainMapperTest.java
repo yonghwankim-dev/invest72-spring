@@ -47,6 +47,7 @@ class RpDomainMapperTest {
 				.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 				.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 				.startDate(startDate)
+				.isAutoReinvest(true)
 				.createdAt(startDate.atStartOfDay())
 				.build();
 			// when

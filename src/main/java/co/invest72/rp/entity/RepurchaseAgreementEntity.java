@@ -58,14 +58,27 @@ public class RepurchaseAgreementEntity {
 	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate; // 투자 시작일
 
+	@Column(name = "is_auto_reinvest", nullable = false)
+	private Boolean isAutoReinvest; // 자동 재투자 여부
+
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성 일시
 
 	@Builder(toBuilder = true)
-	public RepurchaseAgreementEntity(String id, String userId, ProductInvestmentType productInvestmentType, String name,
-		ProductAmount amount, Integer days,
-		ProductAnnualInterestRate productAnnualInterestRate, ProductInterestType productInterestType,
-		ProductTaxType productTaxType, ProductTaxRate productTaxRate, LocalDate startDate, LocalDateTime createdAt) {
+	public RepurchaseAgreementEntity(
+		String id,
+		String userId,
+		ProductInvestmentType productInvestmentType,
+		String name,
+		ProductAmount amount,
+		Integer days,
+		ProductAnnualInterestRate productAnnualInterestRate,
+		ProductInterestType productInterestType,
+		ProductTaxType productTaxType,
+		ProductTaxRate productTaxRate,
+		LocalDate startDate,
+		Boolean isAutoReinvest,
+		LocalDateTime createdAt) {
 		validateDays(days);
 		this.id = Objects.requireNonNull(id);
 		this.userId = Objects.requireNonNull(userId);
@@ -78,6 +91,7 @@ public class RepurchaseAgreementEntity {
 		this.productTaxType = Objects.requireNonNull(productTaxType);
 		this.productTaxRate = Objects.requireNonNull(productTaxRate);
 		this.startDate = Objects.requireNonNull(startDate);
+		this.isAutoReinvest = Objects.requireNonNull(isAutoReinvest);
 		this.createdAt = Objects.requireNonNull(createdAt);
 	}
 
