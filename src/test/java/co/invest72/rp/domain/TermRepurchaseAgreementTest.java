@@ -327,5 +327,23 @@ class TermRepurchaseAgreementTest {
 			Rate expected = Rate.of(BigDecimal.ZERO);
 			Assertions.assertThat(rate).isEqualByComparingTo(expected);
 		}
+
+		@ParameterizedTest(name = "예치일수={0}, 예상이자율={1}")
+		@DisplayName("이자 수익율 계산")
+		@CsvSource(value = {
+			"-1, 0",
+			"0, 0",
+			"1, 0.0001370000000000000",
+			"30, 0.0041100000000000000"
+		})
+		void should_return_calculated_interest_rate_according_to_holding_days(int days, double expectedValue) {
+			// given
+			LocalDate now = LocalDate.of(2026, 9, 11).plusDays(days);
+			// when
+			Rate rate = rp.calculateInterestRateForDate(now);
+			// then
+			Rate expected = Rate.of(BigDecimal.valueOf(expectedValue));
+			Assertions.assertThat(rate).isEqualByComparingTo(expected);
+		}
 	}
 }
