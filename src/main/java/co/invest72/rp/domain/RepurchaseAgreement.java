@@ -28,7 +28,13 @@ public interface RepurchaseAgreement {
 	 * @return 이자 금액
 	 */
 	Money calculateInterestForDays(int days);
-
+	
+	/**
+	 * 약정 일수(days)까지의 이자 수익율 계산
+	 * - 이자 수익율 = 이자 금액 / 예치 금액
+	 * @param days 약정 일수
+	 * @return {@link Rate} 이자수익율
+	 */
 	Rate calculateInterestRateForDays(int days);
 
 	LocalDate getExpirationDate();
