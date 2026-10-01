@@ -18,16 +18,11 @@ import co.invest72.financial_product.domain.ProductInterestType;
 import co.invest72.financial_product.domain.ProductInvestmentType;
 import co.invest72.financial_product.domain.ProductTaxRate;
 import co.invest72.financial_product.domain.ProductTaxType;
-import co.invest72.investment.domain.DailyInvestPeriod;
-import co.invest72.investment.domain.InterestRate;
-import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.investment.domain.amount.FixedDepositAmount;
-import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
 import co.invest72.rp.domain.RepurchaseAgreement;
-import co.invest72.rp.domain.TermRepurchaseAgreement;
 import co.invest72.rp.entity.RepurchaseAgreementEntity;
 import co.invest72.rp.infrastructure.RpRepository;
 import co.invest72.rp.presentation.dto.RpCreateRequest;
@@ -72,16 +67,8 @@ public class RpService {
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
 		return repository.findById(id)
 			.map(entity -> {
-				InvestmentAmount investmentAmount = getInvestmentAmount(entity);
-				InterestRate interestRate = new AnnualInterestRate(entity.getProductAnnualInterestRate().getValue());
-				LocalDate startDate = entity.getStartDate();
-				InvestPeriod investPeriod = new DailyInvestPeriod(startDate, entity.getDays());
-				RepurchaseAgreement rp = TermRepurchaseAgreement.builder()
-					.investmentAmount(investmentAmount)
-					.interestRate(interestRate)
-					.startDate(startDate)
-					.investPeriod(investPeriod)
-					.build();
+				RpDomainMapper mapper = new RpDomainMapper();
+				RepurchaseAgreement rp = mapper.toDomain(entity);
 
 				BigDecimal maturityInterest = rp.calculateMaturityInterest().getValue();
 				LocalDate now = localDateProvider.now();
