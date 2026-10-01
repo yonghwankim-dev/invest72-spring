@@ -1,12 +1,16 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import lombok.Getter;
 
 @Getter
 public class Rate implements Comparable<Rate> {
+
+	private static final int DEFAULT_SCALE = 4;
+	private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
 
 	private final BigDecimal value;
 
@@ -29,6 +33,10 @@ public class Rate implements Comparable<Rate> {
 	public Money applyTo(Money target) {
 		Objects.requireNonNull(target, "Money must not be null");
 		return target.times(this.value);
+	}
+
+	public BigDecimal round() {
+		return this.value.setScale(DEFAULT_SCALE, DEFAULT_ROUNDING_MODE);
 	}
 
 	@Override
