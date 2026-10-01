@@ -28,6 +28,7 @@ import co.invest72.investment.domain.amount.FixedDepositAmount;
 import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.tax.TaxType;
 import co.invest72.money.domain.Currency;
+import co.invest72.money.domain.Rate;
 import co.invest72.rp.domain.RepurchaseAgreement;
 import co.invest72.rp.domain.TermRepurchaseAgreement;
 import co.invest72.rp.entity.RepurchaseAgreementEntity;
@@ -89,7 +90,7 @@ public class RpService {
 				LocalDate now = localDateProvider.now();
 				BigDecimal currentInterest = rp.calculateInterestForDate(now).getValue();
 				int holdingPeriod = calculateHoldingPeriod(entity);
-				BigDecimal currentInterestRate = rp.calculateInterestRateForDays(holdingPeriod);
+				Rate currentInterestRate = rp.calculateInterestRateForDays(holdingPeriod);
 				return RpDetailedResponse.builder()
 					.id(entity.getId())
 					.investmentType(entity.getTypeName())
@@ -101,7 +102,7 @@ public class RpService {
 					.termOfAgreement(entity.getDays())
 					.maturityInterest(maturityInterest)
 					.currentInterest(currentInterest)
-					.currentInterestRate(currentInterestRate)
+					.currentInterestRate(currentInterestRate.getValue())
 					.isAutoReinvest(true)
 					.build();
 			})

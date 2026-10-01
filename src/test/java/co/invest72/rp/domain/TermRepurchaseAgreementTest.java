@@ -21,6 +21,7 @@ import co.invest72.investment.domain.interest.AnnualInterestRate;
 import co.invest72.investment.domain.period.MonthlyInvestPeriod;
 import co.invest72.investment.domain.period.YearlyInvestPeriod;
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Rate;
 
 class TermRepurchaseAgreementTest {
 
@@ -304,9 +305,9 @@ class TermRepurchaseAgreementTest {
 		})
 		void should_return_interest_rate_given_days(int days, double expectedValue) {
 			// when
-			BigDecimal interestRate = rp.calculateInterestRateForDays(days);
+			Rate interestRate = rp.calculateInterestRateForDays(days);
 			// then
-			BigDecimal expected = BigDecimal.valueOf(expectedValue);
+			Rate expected = Rate.of(BigDecimal.valueOf(expectedValue));
 			Assertions.assertThat(interestRate).isEqualByComparingTo(expected);
 		}
 	}

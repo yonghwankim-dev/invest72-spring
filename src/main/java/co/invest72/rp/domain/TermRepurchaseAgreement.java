@@ -10,6 +10,7 @@ import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Rate;
 import lombok.Builder;
 
 public class TermRepurchaseAgreement implements RepurchaseAgreement {
@@ -55,10 +56,11 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
-	public BigDecimal calculateInterestRateForDays(int days) {
+	public Rate calculateInterestRateForDays(int days) {
 		Money interest = calculateInterestForDays(days);
-		return interest.ratioOf(investmentAmount.getAmount())
+		BigDecimal value = interest.ratioOf(investmentAmount.getAmount())
 			.setScale(4, RoundingMode.HALF_EVEN);
+		return Rate.of(value);
 	}
 
 	@Override

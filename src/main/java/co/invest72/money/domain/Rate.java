@@ -3,6 +3,9 @@ package co.invest72.money.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import lombok.Getter;
+
+@Getter
 public class Rate implements Comparable<Rate> {
 
 	private final BigDecimal value;

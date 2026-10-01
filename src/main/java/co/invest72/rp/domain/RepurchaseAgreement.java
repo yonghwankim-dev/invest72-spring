@@ -1,9 +1,9 @@
 package co.invest72.rp.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Rate;
 
 /**
  * 환매조건부채권(RP)
@@ -29,7 +29,7 @@ public interface RepurchaseAgreement {
 	 */
 	Money calculateInterestForDays(int days);
 
-	BigDecimal calculateInterestRateForDays(int days);
+	Rate calculateInterestRateForDays(int days);
 
 	LocalDate getExpirationDate();
 
