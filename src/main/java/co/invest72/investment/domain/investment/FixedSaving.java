@@ -55,7 +55,8 @@ public class FixedSaving implements Investment {
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		return roundToWholeMoney.apply(details.get(month).getPrincipal());
+		return details.get(month).getPrincipal()
+			.roundToWhole();
 	}
 
 	@Override
@@ -71,7 +72,8 @@ public class FixedSaving implements Investment {
 		if (month < 0) {
 			return getInterest(0);
 		}
-		return roundToWholeMoney.apply(details.get(month).getInterest());
+		return details.get(month).getInterest()
+			.roundToWhole();
 	}
 
 	@Override
@@ -87,29 +89,30 @@ public class FixedSaving implements Investment {
 		if (month < 0) {
 			return getProfit(0);
 		}
-		return roundToWholeMoney.apply(details.get(month).getProfit());
+		return details.get(month).getProfit()
+			.roundToWhole();
 	}
 
 	@Override
 	public Money getTotalInvestment() {
-		Money totalInvestment = investmentAmount.getAmount().times(investPeriod.getMonths());
-		return roundToWholeMoney.apply(totalInvestment);
+		return investmentAmount.getAmount().times(investPeriod.getMonths())
+			.roundToWhole();
 	}
 
 	@Override
 	public Money getTotalInterest() {
-		Money totalInterest = details.stream()
+		return details.stream()
 			.skip(1) // 0월은 이자가 없음
 			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
-			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
-		return roundToWholeMoney.apply(totalInterest);
+			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()))
+			.roundToWhole();
 	}
 
 	@Override
 	public Money getTotalTax() {
-		Money tax = taxable.applyTax(getTotalInterest());
-		return roundToWholeMoney.apply(tax);
+		return taxable.applyTax(getTotalInterest())
+			.roundToWhole();
 	}
 
 	@Override
@@ -118,7 +121,7 @@ public class FixedSaving implements Investment {
 		Money interest = details.get(getFinalMonth()).getInterest();
 		Money tax = getTotalTax();
 		Money totalProfit = principal.add(interest).subtract(tax);
-		return roundToWholeMoney.apply(totalProfit);
+		return totalProfit.roundToWhole();
 	}
 
 	@Override
@@ -144,7 +147,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return roundToWholeMoney.apply(yearlyDetails.get(year).getPrincipal());
+		return yearlyDetails.get(year).getPrincipal().roundToWhole();
 	}
 
 	@Override
@@ -156,7 +159,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return roundToWholeMoney.apply(yearlyDetails.get(year).getInterest());
+		return yearlyDetails.get(year).getInterest().roundToWhole();
 	}
 
 	@Override
@@ -168,7 +171,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return roundToWholeMoney.apply(yearlyDetails.get(year).getProfit());
+		return yearlyDetails.get(year).getProfit().roundToWhole();
 	}
 
 	@Override

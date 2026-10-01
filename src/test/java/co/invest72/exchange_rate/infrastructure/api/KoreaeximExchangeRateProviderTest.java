@@ -1,5 +1,8 @@
 package co.invest72.exchange_rate.infrastructure.api;
 
+import java.util.ArrayList;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,10 +35,15 @@ class KoreaeximExchangeRateProviderTest {
 		ExchangeJsonResponse response1 = new ExchangeJsonResponse(1, "KRW", "1", "한국 원");
 		ExchangeJsonResponse response2 = new ExchangeJsonResponse(1, "USD", "1,000", "미국 달러");
 		BDDMockito.given(client.exchangeJson())
-			.willReturn(Flux.just(response1, response2));
+			.willReturn(Flux.just(response2, response1).log("client-emission"));
+
 		// when & then
-		StepVerifier.create(provider.updateRates())
-			.expectNext(response1, response2)
+		StepVerifier.create(provider.updateRates().log("provider-stream")) // 로깅 추가하여 최종 수신 데이터 순서 확인
+			.recordWith(ArrayList::new) // 1. 방출되는 모든 이벤(Next)를 컬렉션에 기록
+			.expectNextCount(2) // 2. 총 2개의 Next 이벤트가 발생하는지 검증
+			.consumeRecordedWith(
+				consumer -> Assertions.assertThat(consumer)
+					.containsExactlyInAnyOrder(response1, response2)) // 3. 기록된 전체 컬렉션을 AssertJ로 순서 상관없이 검
 			.verifyComplete();
 
 		BDDMockito.verify(exchangeRateUpdateHandler, Mockito.times(1))

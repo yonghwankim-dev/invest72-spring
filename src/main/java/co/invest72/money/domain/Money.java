@@ -13,6 +13,7 @@ public class Money implements Comparable<Money> {
 
 	private static final UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = money -> money.setScale(2,
 		RoundingMode.HALF_EVEN);
+	private static final int SCALE = 19;
 
 	private final BigDecimal value;
 	private final Currency currency;
@@ -78,13 +79,48 @@ public class Money implements Comparable<Money> {
 		if (isZero(divisor)) {
 			return Money.of(BigDecimal.ZERO, this.currency);
 		}
-		BigDecimal newValue = this.value.divide(divisor, 2, RoundingMode.HALF_EVEN);
-		return of(newValue, this.currency);
+		BigDecimal rounded = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
+		return of(rounded, this.currency);
+	}
+	
+	/**
+	 * 금액을 금액으로 나누어 비율(수익율/이자율) 반환 (Money / Money = BigDecimal)
+	 * <p>
+	 * - 대상 금액 대비 현재 금액의 비율을 계산한다
+	 * @param target {@link Money} 기준이 되는 금액 (분모)
+	 * @return {@link BigDecimal} 비율 (예: 0.05=5%), target이 0이거나 통화가 서로 다른 경우 0을 반환한다
+	 * @throws NullPointerException target이 null인 경우 예외를 발생시킨다.
+	 * @throws IllegalArgumentException 통화가 서로 다르면 예외를 발생시킨다.
+	 */
+	public BigDecimal ratioOf(Money target) {
+		Objects.requireNonNull(target, "target must not null");
+		if (target.isZero()) {
+			return BigDecimal.ZERO;
+		}
+		if (!this.currency.equals(target.currency)) {
+			throw new IllegalArgumentException(
+				"currencies are different, this.currency=" + this.currency + ", target.currency=" + target.currency);
+		}
+		return this.value.divide(target.value, SCALE, RoundingMode.HALF_EVEN);
 	}
 
 	public Money reduce(Currency target, BigDecimal rate) {
 		BigDecimal amount = value.multiply(rate);
 		return Money.of(amount, target);
+	}
+
+	/**
+	 * Money 객체가 값을 스스로 절사/반올림하여 반환한다.
+	 *
+	 * @return {@link Money}
+	 */
+	public Money roundToWhole() {
+		BigDecimal rounded = this.value.setScale(0, RoundingMode.HALF_EVEN);
+		return of(rounded, this.currency);
+	}
+
+	private boolean isZero() {
+		return BigDecimal.ZERO.compareTo(this.value) == 0;
 	}
 
 	private boolean isZero(BigDecimal divisor) {

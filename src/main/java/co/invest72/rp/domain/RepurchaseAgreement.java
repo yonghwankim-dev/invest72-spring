@@ -3,6 +3,7 @@ package co.invest72.rp.domain;
 import java.time.LocalDate;
 
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Rate;
 
 /**
  * 환매조건부채권(RP)
@@ -10,6 +11,13 @@ import co.invest72.money.domain.Money;
 public interface RepurchaseAgreement {
 
 	LocalDate calculateExpirationDate(int daysToAdd);
+
+	/**
+	 * RP 상품의 시작일자부터 현재일자({@param now})까지의 이자 금액을 계산하여 반환한다.
+	 * @param now 현재 시간
+	 * @return {@link Money} 이자 합계 금액
+	 */
+	Money calculateInterestForDate(LocalDate now);
 
 	/**
 	 * 약정 일수까지의 이자 금액 계산
@@ -21,5 +29,30 @@ public interface RepurchaseAgreement {
 	 */
 	Money calculateInterestForDays(int days);
 
+	/**
+	 * RP 상품의 시작일자부터 현재일자({@param now})까지의 이자 수익율 계산하여 반환한다.
+	 * @param now 현재 시간
+	 * @return {@link Rate} 이자 수익율
+	 */
+	Rate calculateInterestRateForDate(LocalDate now);
+	
+	/**
+	 * 약정 일수(days)까지의 이자 수익율 계산
+	 * - 이자 수익율 = 이자 금액 / 예치 금액
+	 * @param days 약정 일수
+	 * @return {@link Rate} 이자수익율
+	 */
+	Rate calculateInterestRateForDays(int days);
+
 	LocalDate getExpirationDate();
+
+	/**
+	 * 만기 이자 금액 계산하여 반환
+	 * <p>
+	 * - 원금 x 연 이자율 x (투자 일수 / 365)
+	 * <p>
+	 * - 만기 이자 금액 반환시 정수 형태로 반올림하여 반환
+	 * @return 만기 시 이자 금액
+	 */
+	Money calculateMaturityInterest();
 }

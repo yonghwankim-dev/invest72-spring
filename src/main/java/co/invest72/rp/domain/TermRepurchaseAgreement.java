@@ -2,12 +2,14 @@ package co.invest72.rp.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
-import co.invest72.investment.domain.Investment;
 import co.invest72.investment.domain.InvestmentAmount;
 import co.invest72.money.domain.Money;
+import co.invest72.money.domain.Rate;
 import lombok.Builder;
 
 public class TermRepurchaseAgreement implements RepurchaseAgreement {
@@ -20,10 +22,10 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	@Builder(toBuilder = true)
 	public TermRepurchaseAgreement(InvestmentAmount investmentAmount, InterestRate interestRate, LocalDate startDate,
 		InvestPeriod investPeriod) {
-		this.investmentAmount = investmentAmount;
-		this.interestRate = interestRate;
-		this.startDate = startDate;
-		this.investPeriod = investPeriod;
+		this.investmentAmount = Objects.requireNonNull(investmentAmount);
+		this.interestRate = Objects.requireNonNull(interestRate);
+		this.startDate = Objects.requireNonNull(startDate);
+		this.investPeriod = Objects.requireNonNull(investPeriod);
 	}
 
 	@Override
@@ -35,18 +37,51 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
+	public Money calculateInterestForDate(LocalDate now) {
+		int days = (int)startDate.until(now, ChronoUnit.DAYS);
+		return calculateInterestForDays(days);
+	}
+
+	@Override
 	public Money calculateInterestForDays(int days) {
 		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)
-			.divide(BigDecimal.valueOf(365L));
+			.divide(BigDecimal.valueOf(365L))
+			.roundToWhole();
 		if (interest.isNegative()) {
 			return Money.of(BigDecimal.ZERO, interest.getCurrency());
 		}
-		return Investment.roundToWholeMoney.apply(interest);
+		return interest;
+	}
+
+	@Override
+	public Rate calculateInterestRateForDate(LocalDate now) {
+		int days = (int)startDate.until(now, ChronoUnit.DAYS);
+		return calculateInterestRateForDays(days);
+	}
+
+	@Override
+	public Rate calculateInterestRateForDays(int days) {
+		Money interest = calculateInterestForDays(days);
+		return Rate.of(interest.ratioOf(investmentAmount.getAmount()));
 	}
 
 	@Override
 	public LocalDate getExpirationDate() {
 		return startDate.plusDays(investPeriod.getDays(this.startDate));
+	}
+
+	/**
+	 * RP 상품의 만기 이자 금액 계산
+	 * <p>
+	 * 만기 이자 금액 = (원금 x 연이자율) x 약정 일수 / 365
+	 * @return Money
+	 */
+	@Override
+	public Money calculateMaturityInterest() {
+		return investmentAmount.calAnnualInterest(interestRate)
+			.times(investPeriod.getDays(startDate))
+			.divide(BigDecimal.valueOf(365))
+			.roundToWhole();
 	}
 }

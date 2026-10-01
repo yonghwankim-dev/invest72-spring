@@ -24,9 +24,8 @@ public class KoreaeximExchangeRateProvider implements ExchangeRateProvider {
 		int success = 1;
 		return client.exchangeJson()
 			.filter(response -> response.getResult() == success)
-			.flatMap(response ->
-				Mono.fromRunnable(() -> exchangeRateUpdateHandler.handleUpdateRates(response))
-					.subscribeOn(Schedulers.boundedElastic())
-					.thenReturn(response));
+			.flatMap(response -> Mono.fromRunnable(() -> exchangeRateUpdateHandler.handleUpdateRates(response))
+				.subscribeOn(Schedulers.boundedElastic())
+				.thenReturn(response));
 	}
 }

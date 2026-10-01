@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class MoneyTest {
@@ -183,5 +184,59 @@ class MoneyTest {
 		// then
 		Assertions.assertThat(equalsActual).isTrue();
 		Assertions.assertThat(hashCodeActual).isTrue();
+	}
+
+	@Nested
+	@DisplayName("금액 간 비율 계산 테스트")
+	class ratioOfTest {
+
+		@Test
+		@DisplayName("20만원은 100만원의 0.2(20%) 비율을 반환한다")
+		void should_return_ratio() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.won(1_000_000);
+			// when
+			BigDecimal ratio = money.ratioOf(target);
+			// then
+			BigDecimal expected = BigDecimal.valueOf(0.2);
+			Assertions.assertThat(ratio).isEqualByComparingTo(expected);
+		}
+
+		@Test
+		@DisplayName("분모가 0인 경우 0을 반환해야 한다")
+		void should_return_zero_when_target_is_zero() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.won(0);
+			// when
+			BigDecimal ratio = money.ratioOf(target);
+			// then
+			Assertions.assertThat(ratio).isZero();
+		}
+
+		@Test
+		@DisplayName("서로 다른 통화 간 비율 계산시 예외가 발생해야 한다")
+		void should_throw_exception_when_currencies_are_different() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = Money.dollar(1_000_000);
+			// when & then
+			Assertions.assertThatThrownBy(() -> money.ratioOf(target))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("currencies are different, this.currency=KRW, target.currency=USD");
+		}
+
+		@Test
+		@DisplayName("target이 null인 경우 예외가 발생해야 한다")
+		void should_throw_exception_when_target_is_null() {
+			// given
+			Money money = Money.won(200_000);
+			Money target = null;
+			// when & then
+			Assertions.assertThatThrownBy(() -> money.ratioOf(target))
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("target must not null");
+		}
 	}
 }

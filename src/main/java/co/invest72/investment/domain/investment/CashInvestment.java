@@ -23,7 +23,11 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getPrincipal(int month) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return getRoundedPrincipal();
+	}
+
+	private Money getRoundedPrincipal() {
+		return investmentAmount.getAmount().roundToWhole();
 	}
 
 	@Override
@@ -43,12 +47,12 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getProfit(int month) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return investmentAmount.getAmount().roundToWhole();
 	}
 
 	@Override
 	public Money getTotalInvestment() {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return investmentAmount.getAmount().roundToWhole();
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getTotalProfit() {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return getRoundedPrincipal();
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getPrincipalForYear(int year) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return getRoundedPrincipal();
 	}
 
 	@Override
@@ -88,7 +92,7 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getProfitForYear(int year) {
-		return roundToWholeMoney.apply(investmentAmount.getAmount());
+		return getRoundedPrincipal();
 	}
 
 	@Override

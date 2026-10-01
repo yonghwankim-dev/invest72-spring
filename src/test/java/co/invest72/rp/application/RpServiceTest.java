@@ -67,7 +67,8 @@ class RpServiceTest {
 			ExchangeRateService exchangeRateService = BDDMockito.mock(ExchangeRateService.class);
 			BDDMockito.given(exchangeRateService.findExchangeRate("KRW"))
 				.willReturn(new ExchangeRate("KRW", "한국 원", BigDecimal.ONE));
-			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
+			RpDomainMapper mapper = new RpDomainMapper();
+			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService, mapper);
 		}
 
 		@Test
@@ -110,7 +111,8 @@ class RpServiceTest {
 		private static Stream<Arguments> holdingPeriodSource() {
 			return Stream.of(
 				Arguments.of(LocalDate.of(2026, 1, 1), BigDecimal.ZERO, BigDecimal.ZERO), // 예치 일수 0일
-				Arguments.of(LocalDate.of(2026, 1, 2), BigDecimal.valueOf(93), BigDecimal.valueOf(0.0001)), // 예치 일수 1일
+				Arguments.of(LocalDate.of(2026, 1, 2), BigDecimal.valueOf(93), BigDecimal.valueOf(0.0001)),
+				// 예치 일수 1일
 				Arguments.of(LocalDate.of(2026, 1, 16), BigDecimal.valueOf(1397), BigDecimal.valueOf(0.0014)),
 				// 예치 일수 1일
 				Arguments.of(LocalDate.of(2026, 1, 31), BigDecimal.valueOf(2795), BigDecimal.valueOf(0.0028))
@@ -127,7 +129,8 @@ class RpServiceTest {
 				.willReturn(startDate.atStartOfDay());
 			repository = BDDMockito.mock(RpRepository.class);
 			ExchangeRateService exchangeRateService = Mockito.mock(ExchangeRateService.class);
-			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService);
+			RpDomainMapper mapper = new RpDomainMapper();
+			service = new RpService(idGenerator, localDateProvider, repository, exchangeRateService, mapper);
 		}
 
 		@ParameterizedTest(name = "예치일자={0}, 예상현재이자금액={1}, 예상현재이자수익율={2}")
