@@ -56,6 +56,17 @@ class RpDomainMapperTest {
 				.isInstanceOf(TermRepurchaseAgreement.class)
 				.isNotNull();
 		}
+
+		@Test
+		@DisplayName("entity의 값이 null이면 예외를 발생시켜야 한다")
+		void should_throw_exception_when_entity_is_null() {
+			// given
+			RpDomainMapper mapper = new RpDomainMapper();
+			// when & then
+			Assertions.assertThatThrownBy(() -> mapper.toDomain(null))
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("entity must not be null");
+		}
 	}
 
 }

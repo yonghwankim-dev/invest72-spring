@@ -1,6 +1,7 @@
 package co.invest72.rp.application;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import co.invest72.rp.entity.RepurchaseAgreementEntity;
 @Component
 public class RpDomainMapper {
 	public RepurchaseAgreement toDomain(RepurchaseAgreementEntity entity) {
+		Objects.requireNonNull(entity, "entity must not be null");
 		InvestmentAmount investmentAmount = getInvestmentAmount(entity);
 		InterestRate interestRate = new AnnualInterestRate(entity.getProductAnnualInterestRate().getValue());
 		LocalDate startDate = entity.getStartDate();
