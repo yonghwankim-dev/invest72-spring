@@ -28,6 +28,13 @@ public interface RepurchaseAgreement {
 	 * @return 이자 금액
 	 */
 	Money calculateInterestForDays(int days);
+
+	/**
+	 * RP 상품의 시작일자부터 현재일자({@param now})까지의 이자 수익율 계산하여 반환한다.
+	 * @param now 현재 시간
+	 * @return {@link Rate} 이자 수익율
+	 */
+	Rate calculateInterestRateForDate(LocalDate now);
 	
 	/**
 	 * 약정 일수(days)까지의 이자 수익율 계산

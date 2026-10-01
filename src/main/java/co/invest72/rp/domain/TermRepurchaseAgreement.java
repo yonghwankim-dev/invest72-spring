@@ -55,6 +55,12 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	}
 
 	@Override
+	public Rate calculateInterestRateForDate(LocalDate now) {
+		int days = (int)startDate.until(now, ChronoUnit.DAYS);
+		return calculateInterestRateForDays(days);
+	}
+
+	@Override
 	public Rate calculateInterestRateForDays(int days) {
 		Money interest = calculateInterestForDays(days);
 		return Rate.of(interest.ratioOf(investmentAmount.getAmount()));

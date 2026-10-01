@@ -312,4 +312,20 @@ class TermRepurchaseAgreementTest {
 				.isEqualByComparingTo(expected);
 		}
 	}
+
+	@Nested
+	@DisplayName("특정 일자 까지의 이자 수익율 계산 검증")
+	class calculateInterestRateForDateTest {
+		@Test
+		@DisplayName("시작일자와 현재 일자가 동일한 날인 경우에는 이자 수익율이 0 퍼센트이다")
+		void should_return_interest_rate_when_start_date_same_now_then_rate_is_zero_percent() {
+			// given
+			LocalDate now = LocalDate.of(2026, 9, 11);
+			// when
+			Rate rate = rp.calculateInterestRateForDate(now);
+			// then
+			Rate expected = Rate.of(BigDecimal.ZERO);
+			Assertions.assertThat(rate).isEqualByComparingTo(expected);
+		}
+	}
 }
