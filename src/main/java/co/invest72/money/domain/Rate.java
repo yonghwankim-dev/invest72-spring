@@ -49,4 +49,9 @@ public class Rate implements Comparable<Rate> {
 	public int hashCode() {
 		return Objects.hash(value);
 	}
+
+	@Override
+	public String toString() {
+		return "Rate{" + "value=" + value + '}';
+	}
 }
