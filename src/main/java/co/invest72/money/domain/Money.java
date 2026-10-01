@@ -82,7 +82,7 @@ public class Money implements Comparable<Money> {
 		BigDecimal rounded = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
 		return of(rounded, this.currency);
 	}
-
+	
 	/**
 	 * 금액을 금액으로 나누어 비율(수익율/이자율) 반환 (Money / Money = BigDecimal)
 	 * <p>
