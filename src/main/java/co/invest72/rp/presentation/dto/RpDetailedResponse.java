@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import co.invest72.rp.entity.RepurchaseAgreementEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,22 +53,5 @@ public class RpDetailedResponse {
 		this.currentInterest = Objects.requireNonNull(currentInterest);
 		this.currentInterestRate = Objects.requireNonNull(currentInterestRate);
 		this.isAutoReinvest = Objects.requireNonNull(isAutoReinvest);
-	}
-
-	public static RpDetailedResponse fromEntity(RepurchaseAgreementEntity rp) {
-		return RpDetailedResponse.builder()
-			.id(rp.getId())
-			.investmentType(rp.getTypeName())
-			.name(rp.getName())
-			.amount(rp.getAmount().getValue())
-			.currency(rp.getAmount().getCurrencyCode())
-			.interestRate(rp.getProductAnnualInterestRate().getValue())
-			.startDate(rp.getStartDate())
-			.termOfAgreement(rp.getDays())
-			.maturityInterest(BigDecimal.ZERO)
-			.currentInterest(BigDecimal.ZERO)
-			.currentInterestRate(BigDecimal.ZERO)
-			.isAutoReinvest(true)
-			.build();
 	}
 }
