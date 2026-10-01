@@ -1,9 +1,7 @@
 package co.invest72.rp.application;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.NoSuchElementException;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -112,61 +110,5 @@ public class RpService {
 		String currencyName = entity.getAmount().getExchangeRate().getCurrencyName();
 		Currency currency = Currency.of(currencyCode, currencyName);
 		return new FixedDepositAmount(entity.getAmount().getValue(), currency);
-	}
-
-	private BigDecimal calculateInterestForHoldingPeriod(BigDecimal principal, BigDecimal annualInterestRate,
-		Integer holdingPeriod) {
-		return principal.multiply(annualInterestRate)
-			.multiply(BigDecimal.valueOf(holdingPeriod));
-	}
-
-	private BigDecimal applyDailyInterest(BigDecimal interest) {
-		if (interest == null) {
-			return BigDecimal.ZERO;
-		}
-		return interest.divide(BigDecimal.valueOf(365), 0, RoundingMode.HALF_EVEN);
-	}
-
-	/**
-	 * 예치 일수 계산하여 반환한다.
-	 * <p>
-	 * - 예치 일수 = 현재 일자 - 시작 일자
-	 * @return int 예치 일수
-	 */
-	private int calculateHoldingPeriod(RepurchaseAgreementEntity rp) {
-		LocalDate nowDate = localDateProvider.now();
-		LocalDate startDate = rp.getStartDate();
-		return (int)startDate.until(nowDate, ChronoUnit.DAYS);
-	}
-
-	/**
-	 * 현재 이자 금액에 대한 수익률을 비율(Ratio) 형태의 실수값으로 계산하여 반환한다.
-	 * <p><b>계산식:</b>
-	 * <ul>
-	 *   <li>{@code 현재 이자 수익률 = 현재 이자 금액 / 원금}</li>
-	 * </ul>
-	 *
-	 * <p><b>반환 형식 및 반올림 정책:</b>
-	 * <ul>
-	 *   <li>백분율(%)이 아닌 <b>소수점 형태의 비율(Ratio) 값</b>으로 반환한다. (예: 2% → {@code 0.02})</li>
-	 *   <li>소수점 이하 둘째 자리까지 표기하며, {@link RoundingMode#HALF_EVEN} (Banker's Rounding) 정책을 적용한다.</li>
-	 * </ul>
-	 *
-	 * @param rp {@link RepurchaseAgreementEntity}
-	 * @return {@link BigDecimal} 현재 이자 금액 수익율
-	 */
-	private BigDecimal calculateCurrentInterestRate(RepurchaseAgreementEntity rp) {
-		// 현재 이자 금액 계산
-		BigDecimal principal = rp.getAmount().getValue();
-		BigDecimal annualInterest = rp.getProductAnnualInterestRate().getValue();
-		int holdingPeriod = calculateHoldingPeriod(rp);
-		BigDecimal dailyInterest = applyDailyInterest(
-			calculateInterestForHoldingPeriod(principal, annualInterest, holdingPeriod));
-		// 현재 아지 금액 수익율 계산
-		return applyInterestRate(dailyInterest, principal);
-	}
-
-	private BigDecimal applyInterestRate(BigDecimal interest, BigDecimal principal) {
-		return interest.divide(principal, 4, RoundingMode.HALF_EVEN);
 	}
 }
