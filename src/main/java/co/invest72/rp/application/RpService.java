@@ -38,6 +38,7 @@ public class RpService {
 	private final LocalDateProvider localDateProvider;
 	private final RpRepository repository;
 	private final ExchangeRateService exchangeRateService;
+	private final RpDomainMapper mapper;
 
 	@Transactional
 	@CacheEvict(value = {"productSummary"}, key = "#user.id")
@@ -67,7 +68,6 @@ public class RpService {
 	public RpDetailedResponse getRp(String id) throws NoSuchElementException {
 		return repository.findById(id)
 			.map(entity -> {
-				RpDomainMapper mapper = new RpDomainMapper();
 				RepurchaseAgreement rp = mapper.toDomain(entity);
 
 				BigDecimal maturityInterest = rp.calculateMaturityInterest().getValue();
