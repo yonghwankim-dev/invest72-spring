@@ -88,7 +88,8 @@ public class RpService {
 				BigDecimal maturityInterest = rp.calculateMaturityInterest().getValue();
 				LocalDate now = localDateProvider.now();
 				BigDecimal currentInterest = rp.calculateInterestForDate(now).getValue();
-				BigDecimal currentInterestRate = calculateCurrentInterestRate(entity);
+				int holdingPeriod = calculateHoldingPeriod(entity);
+				BigDecimal currentInterestRate = rp.calculateInterestRateForDays(holdingPeriod);
 				return RpDetailedResponse.builder()
 					.id(entity.getId())
 					.investmentType(entity.getTypeName())
