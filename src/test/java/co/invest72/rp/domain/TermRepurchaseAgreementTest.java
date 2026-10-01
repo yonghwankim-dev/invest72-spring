@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -294,17 +293,21 @@ class TermRepurchaseAgreementTest {
 	@Nested
 	@DisplayName("일수에 따른 이자 수익율 계산 검증")
 	class calculateInterestRateForDays {
-		@Test
-		@DisplayName("30일의 이자 수익율 계산")
-		void should_return_interest_rate_when_days_is_thirty() {
-			// given
-			int days = 30;
+
+		@ParameterizedTest(name = "예치일수={0}, 예상이자율={1}")
+		@DisplayName("이자 수익율 계산")
+		@CsvSource(value = {
+			"-1, 0",
+			"0, 0",
+			"1, 0.0001",
+			"30, 0.0041"
+		})
+		void should_return_interest_rate_given_days(int days, double expectedValue) {
 			// when
 			BigDecimal interestRate = rp.calculateInterestRateForDays(days);
 			// then
-			BigDecimal expected = BigDecimal.valueOf(0.0041);
-			Assertions.assertThat(interestRate)
-				.isCloseTo(expected, Offset.offset(BigDecimal.valueOf(4)));
+			BigDecimal expected = BigDecimal.valueOf(expectedValue);
+			Assertions.assertThat(interestRate).isEqualByComparingTo(expected);
 		}
 	}
 }
