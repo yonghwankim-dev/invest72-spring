@@ -300,15 +300,16 @@ class TermRepurchaseAgreementTest {
 		@CsvSource(value = {
 			"-1, 0",
 			"0, 0",
-			"1, 0.0001",
-			"30, 0.0041"
+			"1, 0.0001370000000000000",
+			"30, 0.0041100000000000000"
 		})
 		void should_return_interest_rate_given_days(int days, double expectedValue) {
 			// when
 			Rate interestRate = rp.calculateInterestRateForDays(days);
 			// then
 			Rate expected = Rate.of(BigDecimal.valueOf(expectedValue));
-			Assertions.assertThat(interestRate).isEqualByComparingTo(expected);
+			Assertions.assertThat(interestRate)
+				.isEqualByComparingTo(expected);
 		}
 	}
 }

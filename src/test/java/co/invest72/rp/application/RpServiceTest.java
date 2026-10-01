@@ -110,10 +110,11 @@ class RpServiceTest {
 		private static Stream<Arguments> holdingPeriodSource() {
 			return Stream.of(
 				Arguments.of(LocalDate.of(2026, 1, 1), BigDecimal.ZERO, BigDecimal.ZERO), // 예치 일수 0일
-				Arguments.of(LocalDate.of(2026, 1, 2), BigDecimal.valueOf(93), BigDecimal.valueOf(0.0001)), // 예치 일수 1일
-				Arguments.of(LocalDate.of(2026, 1, 16), BigDecimal.valueOf(1397), BigDecimal.valueOf(0.0014)),
+				Arguments.of(LocalDate.of(2026, 1, 2), BigDecimal.valueOf(93), BigDecimal.valueOf(0.000093)),
 				// 예치 일수 1일
-				Arguments.of(LocalDate.of(2026, 1, 31), BigDecimal.valueOf(2795), BigDecimal.valueOf(0.0028))
+				Arguments.of(LocalDate.of(2026, 1, 16), BigDecimal.valueOf(1397), BigDecimal.valueOf(0.001397)),
+				// 예치 일수 1일
+				Arguments.of(LocalDate.of(2026, 1, 31), BigDecimal.valueOf(2795), BigDecimal.valueOf(0.002795))
 				// 예치 일수 30일
 			);
 		}
