@@ -1,7 +1,6 @@
 package co.invest72.rp.domain;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -58,9 +57,7 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 	@Override
 	public Rate calculateInterestRateForDays(int days) {
 		Money interest = calculateInterestForDays(days);
-		BigDecimal value = interest.ratioOf(investmentAmount.getAmount())
-			.setScale(4, RoundingMode.HALF_EVEN);
-		return Rate.of(value);
+		return Rate.of(interest.ratioOf(investmentAmount.getAmount()));
 	}
 
 	@Override
