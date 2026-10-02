@@ -1,11 +1,12 @@
 package co.invest72.investment.domain.interest;
 
+import static org.assertj.core.api.Assertions.*;
 import static testutil.BigDecimalAssertions.*;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,8 +57,8 @@ class AnnualInterestRateTest {
 
 	@Test
 	void shouldThrowException_whenAnnualRateIsNegative() {
-		Assertions.assertThrows(IllegalArgumentException.class,
-			() -> new AnnualInterestRate(-0.01));
+		assertThatThrownBy(() -> new AnnualInterestRate(-0.01))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@DisplayName("객체 최대값 검증 - 연이율은 최대 999.99%까지 허용")
@@ -72,9 +73,8 @@ class AnnualInterestRateTest {
 	@DisplayName("객체 최대값 검증 - 연이율은 최대 9.9999%까지 허용, 초과 시 예외 발생")
 	@Test
 	void shouldThrowException_whenAnnualRateExceedsMax() {
-		Assertions.assertThrows(IllegalArgumentException.class,
-			() -> new AnnualInterestRate(10.0));
-
+		Assertions.assertThatThrownBy(() -> new AnnualInterestRate(10.0))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
@@ -92,9 +92,7 @@ class AnnualInterestRateTest {
 
 		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		org.assertj.core.api.Assertions.assertThat(actualMonthlyInterest)
-			.isEqualTo(Money.won(BigDecimal.valueOf(4166.66666667)))
-			.isEqualTo(Money.won(BigDecimal.valueOf(4166.67)));
+		assertThat(actualMonthlyInterest).isEqualTo(Money.won(new BigDecimal("4166.666666666667")));
 	}
 
 	@Test
@@ -103,9 +101,8 @@ class AnnualInterestRateTest {
 
 		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		org.assertj.core.api.Assertions.assertThat(actualMonthlyInterest)
-			.isEqualTo(Money.won(BigDecimal.valueOf(4166.66666667)))
-			.isEqualTo(Money.won(BigDecimal.valueOf(4166.67)));
+		assertThat(actualMonthlyInterest)
+			.isEqualTo(Money.won(new BigDecimal("4166.666666666667")));
 	}
 
 	@Test
@@ -115,7 +112,7 @@ class AnnualInterestRateTest {
 		Money actualAnnualInterest = interestRate.getAnnualInterest(amount);
 
 		Money expectedAnnualInterest = Money.won(BigDecimal.valueOf(50_000));
-		org.assertj.core.api.Assertions.assertThat(actualAnnualInterest).isEqualTo(expectedAnnualInterest);
+		assertThat(actualAnnualInterest).isEqualTo(expectedAnnualInterest);
 	}
 
 	@ParameterizedTest

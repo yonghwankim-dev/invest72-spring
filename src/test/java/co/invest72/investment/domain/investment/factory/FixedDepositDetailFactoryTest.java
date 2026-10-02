@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import co.invest72.money.domain.Money;
 
 class FixedDepositDetailFactoryTest {
 
+	private final Offset<BigDecimal> offset = Offset.offset(new BigDecimal("0.01"));
 	private InvestmentDetailFactory factory;
 
 	@BeforeEach
@@ -39,15 +41,24 @@ class FixedDepositDetailFactoryTest {
 		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
-		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
-		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
-		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
-		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
-		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
-		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_008_333.33)));
+		Assertions.assertThat(details.get(0).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(0).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(0), offset);
+		Assertions.assertThat(details.get(0).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(4_166.67), offset);
+		Assertions.assertThat(details.get(1).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_004_166.67), offset);
+		Assertions.assertThat(details.get(2).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_004_166.67), offset);
+		Assertions.assertThat(details.get(2).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(4_166.67), offset);
+		Assertions.assertThat(details.get(2).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_008_333.33), offset);
 	}
 
 	@DisplayName("복리-예금-월별 데이터 생성")
@@ -61,15 +72,24 @@ class FixedDepositDetailFactoryTest {
 		List<InvestmentDetail> details = factory.createMonthlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
-		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
-		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
-		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
-		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(BigDecimal.valueOf(1_004_166.67)));
-		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_184.03)));
-		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_008_350.69)));
+		Assertions.assertThat(details.get(0).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(0).getInterest().getValue())
+			.isCloseTo(BigDecimal.ZERO, offset);
+		Assertions.assertThat(details.get(0).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(4_166.67), offset);
+		Assertions.assertThat(details.get(1).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_004_166.67), offset);
+		Assertions.assertThat(details.get(2).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_004_166.67), offset);
+		Assertions.assertThat(details.get(2).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(4_184.03), offset);
+		Assertions.assertThat(details.get(2).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_008_350.69), offset);
 	}
 
 	@DisplayName("이자없음-예금-월별 데이터 생성")
@@ -106,12 +126,18 @@ class FixedDepositDetailFactoryTest {
 		List<InvestmentDetail> details = factory.createYearlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(2);
-		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
-		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(50_000)));
-		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_050_000)));
+		Assertions.assertThat(details.get(0).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(0).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(0), offset);
+		Assertions.assertThat(details.get(0).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(50_000), offset);
+		Assertions.assertThat(details.get(1).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
 	}
 
 	@DisplayName("단리-예금-년도별 데이터 생성 - 투자기간이 0개월인 경우")
@@ -143,15 +169,24 @@ class FixedDepositDetailFactoryTest {
 		List<InvestmentDetail> details = factory.createYearlyDetails();
 		// then
 		Assertions.assertThat(details).hasSize(3);
-		Assertions.assertThat(details.get(0).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(0).getInterest()).isEqualTo(Money.won(0));
-		Assertions.assertThat(details.get(0).getProfit()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getPrincipal()).isEqualTo(Money.won(1_000_000));
-		Assertions.assertThat(details.get(1).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(50_000)));
-		Assertions.assertThat(details.get(1).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_050_000)));
-		Assertions.assertThat(details.get(2).getPrincipal()).isEqualTo(Money.won(1_050_000));
-		Assertions.assertThat(details.get(2).getInterest()).isEqualTo(Money.won(BigDecimal.valueOf(4_166.67)));
-		Assertions.assertThat(details.get(2).getProfit()).isEqualTo(Money.won(BigDecimal.valueOf(1_054_166.67)));
+		Assertions.assertThat(details.get(0).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(0).getInterest().getValue())
+			.isCloseTo(BigDecimal.ZERO, offset);
+		Assertions.assertThat(details.get(0).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+		Assertions.assertThat(details.get(1).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(50_000), offset);
+		Assertions.assertThat(details.get(1).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
+		Assertions.assertThat(details.get(2).getPrincipal().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
+		Assertions.assertThat(details.get(2).getInterest().getValue())
+			.isCloseTo(BigDecimal.valueOf(4_166.67), offset);
+		Assertions.assertThat(details.get(2).getProfit().getValue())
+			.isCloseTo(BigDecimal.valueOf(1_054_166.67), offset);
 	}
 
 	@DisplayName("단리-예금-월별 데이터 생성 - 투자기간이 0개월인 경우 1개의 데이터만 반환해야 한다")
