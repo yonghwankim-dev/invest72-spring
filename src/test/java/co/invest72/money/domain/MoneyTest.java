@@ -1,6 +1,8 @@
 package co.invest72.money.domain;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -46,11 +48,9 @@ class MoneyTest {
 		Money money1 = Money.dollar(5);
 		Money money2 = Money.won(5);
 		// when
-		Throwable throwable = Assertions.catchThrowable(() -> money1.equals(money2));
+		boolean result = money1.equals(money2);
 		// then
-		Assertions.assertThat(throwable)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("통화가 일치하지 않습니다.");
+		Assertions.assertThat(result).isFalse();
 	}
 
 	@DisplayName("덧셈 - 두개의 달러를 더했을 때, 새로운 달러 객체가 반환되어야 한다.")
@@ -172,18 +172,55 @@ class MoneyTest {
 			.hasMessage("분모는 null일 수 없습니다.");
 	}
 
-	@DisplayName("해시코드 비교 - 동일한 금액과 통화를 가진 객체들끼리는 동일한 해시코드를 가져야 한다.")
-	@Test
-	void hashCode_whenSameValueAndCurrency_thenHashCodesAreEqual() {
-		// given
-		Money money1 = Money.won(BigDecimal.valueOf(1.234));
-		Money money2 = Money.won(BigDecimal.valueOf(1.23));
-		// when
-		boolean equalsActual = money1.equals(money2);
-		boolean hashCodeActual = money1.hashCode() == money2.hashCode();
-		// then
-		Assertions.assertThat(equalsActual).isTrue();
-		Assertions.assertThat(hashCodeActual).isTrue();
+	@Nested
+	@DisplayName("동등성 비교 검증")
+	class EqualityTest {
+		@Test
+		@DisplayName("Scale이 달라도 수학적으로 같은 금액이면 equals는 true를 반환한다")
+		void should_equal_when_values_are_numerically_same_despite_scale() {
+			// given
+			Money won1 = Money.won(new BigDecimal("1000"));
+			Money won2 = Money.won(new BigDecimal("1000.0000"));
+			// when & then
+			Assertions.assertThat(won1)
+				.isEqualTo(won2)
+				.hasSameHashCodeAs(won2);
+		}
+
+		@Test
+		@DisplayName("미세하게 수치가 다르면(10.004 vs 10.001) equals는 false를 반환한다")
+		void should_not_equal_when_values_are_slightly_different() {
+			// given
+			Money won1 = Money.won(new BigDecimal("10.004"));
+			Money won2 = Money.won(new BigDecimal("10.001"));
+			// when & then
+			Assertions.assertThat(won1).isNotEqualTo(won2);
+		}
+
+		@Test
+		@DisplayName("통화가 다른 객체끼리 equals 비교시 예외를 발생시키지 않고 false를 반환한다")
+		void should_return_false_when_equals_compared_with_different_currency() {
+			// given
+			Money won = Money.won(new BigDecimal("10"));
+			Money dollar = Money.dollar(new BigDecimal("10"));
+			// when & then
+			Assertions.assertThat(won.equals(dollar)).isFalse();
+			Assertions.assertThat(dollar.equals(won)).isFalse();
+		}
+
+		@Test
+		@DisplayName("Scale 차이가 있는 동일 금액들을 Set에 저장 시 정상 중복 제거된다")
+		void should_deduplicate_in_set() {
+			// given
+			Set<Money> set = new HashSet<>();
+			Money won1 = Money.won(new BigDecimal("100"));
+			Money won2 = Money.won(new BigDecimal("100.00"));
+			// when
+			set.add(won1);
+			set.add(won2);
+			// then
+			Assertions.assertThat(set).hasSize(1);
+		}
 	}
 
 	@Nested

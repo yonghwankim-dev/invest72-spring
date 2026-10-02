@@ -3,7 +3,6 @@ package co.invest72.money.domain;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
@@ -11,8 +10,6 @@ import lombok.Getter;
 @Getter
 public class Money implements Comparable<Money> {
 
-	private static final UnaryOperator<BigDecimal> roundToTwoDecimalPlaces = money -> money.setScale(2,
-		RoundingMode.HALF_EVEN);
 	private static final int SCALE = 19;
 
 	private final BigDecimal value;
@@ -82,7 +79,7 @@ public class Money implements Comparable<Money> {
 		BigDecimal rounded = this.value.divide(divisor, SCALE, RoundingMode.HALF_EVEN);
 		return of(rounded, this.currency);
 	}
-	
+
 	/**
 	 * 금액을 금액으로 나누어 비율(수익율/이자율) 반환 (Money / Money = BigDecimal)
 	 * <p>
@@ -132,31 +129,35 @@ public class Money implements Comparable<Money> {
 	}
 
 	@Override
-	public int compareTo(@Nonnull Money other) {
-		validate(other);
-		BigDecimal roundedThisValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
-		BigDecimal roundedOtherValue = roundToTwoDecimalPlaces.apply(other.value.stripTrailingZeros());
-		return roundedThisValue.compareTo(roundedOtherValue);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (o == null || getClass() != o.getClass())
+		if (!(o instanceof Money other))
 			return false;
-		Money other = (Money)o;
-		return this.compareTo(other) == 0 && this.currency.equals(other.currency);
+		// 통화가 다르면 false 반환
+		if (!Objects.equals(this.currency, other.currency)) {
+			return false;
+		}
+		// BigDecimal의 scale 차이를 무시하고 수치적 가치를 비교
+		return this.value.compareTo(other.value) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		BigDecimal roundedValue = roundToTwoDecimalPlaces.apply(this.value.stripTrailingZeros());
-		return Objects.hash(roundedValue, currency);
+		// compareTo 결과와 일치하도록 stripTrailingZeros 후 hashCode 생성
+		return Objects.hash(value.stripTrailingZeros(), currency);
+	}
+
+	@Override
+	public int compareTo(@Nonnull Money other) {
+		validate(other);
+		return this.value.compareTo(other.value);
 	}
 
 	@Override
 	public String toString() {
-		return roundToTwoDecimalPlaces.apply(value.stripTrailingZeros()) + currency.getCode();
+		// 표현(UI/출력)용으로만 소수점 2자리 정제 적용
+		BigDecimal displayValue = this.value.setScale(2, RoundingMode.HALF_EVEN).stripTrailingZeros();
+		return displayValue.toPlainString() + " " + currency.getCode();
 	}
 }
