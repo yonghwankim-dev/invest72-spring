@@ -56,7 +56,7 @@ public class FixedSaving implements Investment {
 			return getPrincipal(0);
 		}
 		return details.get(month).getPrincipal()
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class FixedSaving implements Investment {
 			return getInterest(0);
 		}
 		return details.get(month).getInterest()
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
@@ -90,13 +90,13 @@ public class FixedSaving implements Investment {
 			return getProfit(0);
 		}
 		return details.get(month).getProfit()
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
 	public Money getTotalInvestment() {
 		return investmentAmount.getAmount().times(investPeriod.getMonths())
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
@@ -106,13 +106,13 @@ public class FixedSaving implements Investment {
 			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
 			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()))
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
 	public Money getTotalTax() {
 		return taxable.applyTax(getTotalInterest())
-			.roundToWhole();
+			.round();
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class FixedSaving implements Investment {
 		Money interest = details.get(getFinalMonth()).getInterest();
 		Money tax = getTotalTax();
 		Money totalProfit = principal.add(interest).subtract(tax);
-		return totalProfit.roundToWhole();
+		return totalProfit.round();
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return yearlyDetails.get(year).getPrincipal().roundToWhole();
+		return yearlyDetails.get(year).getPrincipal().round();
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return yearlyDetails.get(year).getInterest().roundToWhole();
+		return yearlyDetails.get(year).getInterest().round();
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class FixedSaving implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return yearlyDetails.get(year).getProfit().roundToWhole();
+		return yearlyDetails.get(year).getProfit().round();
 	}
 
 	@Override
