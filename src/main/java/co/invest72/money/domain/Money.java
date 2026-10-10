@@ -111,7 +111,7 @@ public class Money implements Comparable<Money> {
 	 *
 	 * @return {@link Money}
 	 */
-	public Money roundToWhole() {
+	public Money round() {
 		BigDecimal rounded = this.value.setScale(0, RoundingMode.HALF_EVEN);
 		return of(rounded, this.currency);
 	}
@@ -157,7 +157,7 @@ public class Money implements Comparable<Money> {
 	@Override
 	public String toString() {
 		// 표현(UI/출력)용으로만 소수점 2자리 정제 적용
-		BigDecimal displayValue = this.value.setScale(2, RoundingMode.HALF_EVEN).stripTrailingZeros();
+		BigDecimal displayValue = this.value.setScale(2, RoundingMode.HALF_EVEN);
 		return displayValue.toPlainString() + " " + currency.getCode();
 	}
 }
