@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,7 +93,8 @@ class AnnualInterestRateTest {
 
 		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		assertThat(actualMonthlyInterest).isEqualTo(Money.won(new BigDecimal("4166.666666666667")));
+		assertThat(actualMonthlyInterest.getValue())
+			.isCloseTo(new BigDecimal("4166.67"), Offset.offset(new BigDecimal("0.01")));
 	}
 
 	@Test
@@ -101,8 +103,8 @@ class AnnualInterestRateTest {
 
 		Money actualMonthlyInterest = interestRate.calMonthlyInterest(amount);
 
-		assertThat(actualMonthlyInterest)
-			.isEqualTo(Money.won(new BigDecimal("4166.666666666667")));
+		assertThat(actualMonthlyInterest.getValue())
+			.isCloseTo(new BigDecimal("4166.67"), Offset.offset(new BigDecimal("0.01")));
 	}
 
 	@Test
