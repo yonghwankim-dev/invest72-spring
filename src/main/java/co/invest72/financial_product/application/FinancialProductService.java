@@ -168,7 +168,7 @@ public class FinancialProductService {
 			ExchangeRate exchangeRate = exchangeRateService.findExchangeRate(product.getAmount().getCurrencyCode());
 			FinancialProductSummary data = FinancialProductSummary.from(
 				product,
-				moneyMapper.toBigDecimal(investmentFactory.createBy(product).getTotalInterest()),
+				investmentFactory.createBy(product).getTotalInterest().round().getValue(),
 				today,
 				calculator,
 				exchangeRate

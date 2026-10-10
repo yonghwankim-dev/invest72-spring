@@ -51,7 +51,7 @@ class YearlyInstallmentInvestmentAmountTest {
 
 		Money monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
 
-		Money expectedMonthlyInterest = Money.won(BigDecimal.valueOf(50_000));
+		Money expectedMonthlyInterest = Money.won(new BigDecimal("50000.000000000004"));
 		Assertions.assertThat(monthlyInterest).isEqualTo(expectedMonthlyInterest);
 	}
 }

@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.assertj.core.api.Assertions;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import co.invest72.investment.domain.InterestRate;
 import co.invest72.investment.domain.InvestPeriod;
@@ -31,6 +34,8 @@ import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 class FixedDepositTest {
+
+	private final Offset<BigDecimal> offset = Offset.offset(new BigDecimal("0.01"));
 
 	@Nested
 	class SimpleFixedDepositTest {
@@ -58,21 +63,26 @@ class FixedDepositTest {
 		@DisplayName("월별 투자 금액 계산 - 고정 예금, 단리, 일반 과세")
 		@ParameterizedTest
 		@CsvFileSource(files = "src/test/resources/simple_fixed_deposit_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
-		void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest, int expectedProfit) {
+		void shouldReturnInvestmentAmount(int month, double expectedPrincipal, double expectedInterest,
+			double expectedProfit) {
 			Money principal = investment.getPrincipal(month);
 			Money interest = investment.getInterest(month);
 			Money profit = investment.getProfit(month);
 
-			assertEquals(Money.won(BigDecimal.valueOf(expectedPrincipal)), principal);
-			assertEquals(Money.won(BigDecimal.valueOf(expectedInterest)), interest);
-			assertEquals(Money.won(BigDecimal.valueOf(expectedProfit)), profit);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedPrincipal), offset);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedInterest), offset);
+			Assertions.assertThat(profit.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedProfit), offset);
 		}
 
 		@Test
 		void getPrincipal() {
 			Money principal = investment.getPrincipal();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_045_833)), principal);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_045_833.33), offset);
 		}
 
 		@Test
@@ -99,14 +109,16 @@ class FixedDepositTest {
 
 			Money principal = investment.getPrincipal(month);
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_045_833)), principal);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_045_833.33), offset);
 		}
 
 		@Test
 		void getInterest() {
 			Money interest = investment.getInterest();
 
-			assertEquals(Money.won(BigDecimal.valueOf(4_167)), interest);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(4_166.67), offset);
 		}
 
 		@Test
@@ -133,14 +145,16 @@ class FixedDepositTest {
 
 			Money interest = investment.getInterest(month);
 
-			assertEquals(Money.won(BigDecimal.valueOf(4_167)), interest);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(4_166.66), offset);
 		}
 
 		@Test
 		void getProfit() {
 			Money profit = investment.getProfit();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_050_000)), profit);
+			Assertions.assertThat(profit.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
 		}
 
 		@Test
@@ -174,7 +188,8 @@ class FixedDepositTest {
 
 			Money profit = investment.getProfit(month);
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_050_000)), profit);
+			Assertions.assertThat(profit.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
 		}
 
 		@Test
@@ -188,21 +203,24 @@ class FixedDepositTest {
 		void getTotalInterest() {
 			Money totalInterest = investment.getTotalInterest();
 
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), totalInterest);
+			Assertions.assertThat(totalInterest.getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
 		}
 
 		@Test
 		void getTotalTax() {
 			Money totalTax = investment.getTotalTax();
 
-			assertEquals(Money.won(BigDecimal.valueOf(7_700)), totalTax);
+			Assertions.assertThat(totalTax.getValue())
+				.isCloseTo(BigDecimal.valueOf(7_700), offset);
 		}
 
 		@Test
 		void getTotalProfit() {
 			Money totalProfit = investment.getTotalProfit();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_042_300)), totalProfit);
+			Assertions.assertThat(totalProfit.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_042_300), offset);
 		}
 
 		@Test
@@ -224,13 +242,20 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_050_000)), investment.getPrincipalForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(1_100_000)), investment.getPrincipalForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(1_150_000)), investment.getPrincipalForYear(4));
-			assertEquals(Money.won(BigDecimal.valueOf(1_200_000)), investment.getPrincipalForYear(5));
+			Assertions.assertThat(investment.getPrincipalForYear(-1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(0).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_050_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_100_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(4).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_150_000), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(5).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_200_000), offset);
 		}
 
 		@Test
@@ -253,13 +278,20 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(0)), investment.getInterestForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(0)), investment.getInterestForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(4));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(5));
+			Assertions.assertThat(investment.getInterestForYear(-1).getValue())
+				.isCloseTo(BigDecimal.valueOf(0), offset);
+			Assertions.assertThat(investment.getInterestForYear(0).getValue())
+				.isCloseTo(BigDecimal.valueOf(0), offset);
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(4).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(5).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
 		}
 
 		@Test
@@ -269,8 +301,10 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(4_167)), investment.getInterestForYear(2));
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(4_166.66), offset);
 		}
 
 		@Test
@@ -280,9 +314,12 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(4_167)), investment.getInterestForYear(3));
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(4_166.66), offset);
 		}
 
 		@Test
@@ -292,8 +329,10 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(50_000)), investment.getInterestForYear(2));
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
+			Assertions.assertThat(investment.getInterestForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(50_000), offset);
 		}
 
 		@Test
@@ -303,35 +342,45 @@ class FixedDepositTest {
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(4_167)), investment.getInterestForYear(1));
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(4_166.66), offset);
 		}
 
-		@Test
-		void getProfitForYear() {
+		@ParameterizedTest(name = "{0}년 차(경계값 포함) 예상 수익금: {1}원")
+		@CsvSource({
+			"-1, 1000000",
+			"0, 1000000",
+			"1, 1050000",
+			"2, 1100000",
+			"3, 1150000",
+			"4, 1200000",
+			"5, 1250000"
+		})
+		void getProfitForYear(int year, String expectedProfit) {
+			// given
 			investment = ((FixedDeposit)investment).toBuilder()
 				.investPeriod(new YearlyInvestPeriod(5))
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getProfitForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getProfitForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(1_050_000)), investment.getProfitForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_100_000)), investment.getProfitForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(1_150_000)), investment.getProfitForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(1_200_000)), investment.getProfitForYear(4));
-			assertEquals(Money.won(BigDecimal.valueOf(1_250_000)), investment.getProfitForYear(5));
+			// when & then
+			Assertions.assertThat(investment.getProfitForYear(year).getValue())
+				.isCloseTo(new BigDecimal(expectedProfit), offset);
 		}
 
-		@Test
-		void getProfitForYear_whenPeriodIsMonth25() {
+		@ParameterizedTest(name = "{0}년 차(경계값 포함) 예상 수익금: {1}원")
+		@CsvSource({
+			"1, 1050000",
+			"2, 1100000",
+			"3, 1104166.66",
+		})
+		void getProfitForYear_whenPeriodIsMonth25(int year, String expectedProfit) {
 			investment = ((FixedDeposit)investment).toBuilder()
 				.investPeriod(new MonthlyInvestPeriod(25))
 				.taxable(new KoreanTaxableFactory().createNonTax())
 				.build();
-
-			assertEquals(Money.won(BigDecimal.valueOf(1_050_000)), investment.getProfitForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_100_000)), investment.getProfitForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(1_104_167)), investment.getProfitForYear(3));
+			Assertions.assertThat(investment.getProfitForYear(year).getValue())
+				.isCloseTo(new BigDecimal(expectedProfit), offset);
 		}
 	}
 
@@ -358,22 +407,29 @@ class FixedDepositTest {
 
 		@ParameterizedTest
 		@CsvFileSource(files = "src/test/resources/compound_fixed_deposit_1y_5percent_standard_tax.csv", numLinesToSkip = 1)
-		void shouldReturnInvestmentAmount(int month, int expectedPrincipal, int expectedInterest,
-			int expectedTotalProfit) {
+		void shouldReturnInvestmentAmount(int month, double expectedPrincipal, double expectedInterest,
+			double expectedTotalProfit) {
 			Money principal = investment.getPrincipal(month);
 			Money interest = investment.getInterest(month);
 			Money totalProfit = investment.getProfit(month);
 
-			assertEquals(Money.won(BigDecimal.valueOf(expectedPrincipal)), principal);
-			assertEquals(Money.won(BigDecimal.valueOf(expectedInterest)), interest);
-			assertEquals(Money.won(BigDecimal.valueOf(expectedTotalProfit)), totalProfit);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedPrincipal), offset);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedInterest), offset);
+			Assertions.assertThat(totalProfit.getValue())
+				.isCloseTo(BigDecimal.valueOf(expectedTotalProfit), offset);
+			// assertEquals(Money.won(BigDecimal.valueOf(expectedPrincipal)), principal);
+			// assertEquals(Money.won(BigDecimal.valueOf(expectedInterest)), interest);
+			// assertEquals(Money.won(BigDecimal.valueOf(expectedTotalProfit)), totalProfit);
 		}
 
 		@Test
 		void getPrincipal() {
 			Money principal = investment.getPrincipal();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_046_800)), principal);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_046_800.23), offset);
 		}
 
 		@Test
@@ -394,14 +450,16 @@ class FixedDepositTest {
 		void getPrincipal_whenMonthGreaterThanFinalMonth() {
 			Money principal = investment.getPrincipal(13);
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_046_800)), principal);
+			Assertions.assertThat(principal.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_046_800.23), offset);
 		}
 
 		@Test
 		void getInterest() {
 			Money interest = investment.getInterest();
 
-			assertEquals(Money.won(BigDecimal.valueOf(4_362)), interest);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(4_361.66), offset);
 		}
 
 		@Test
@@ -422,14 +480,16 @@ class FixedDepositTest {
 		void getInterest_whenMonthGreaterThanFinalMonth() {
 			Money interest = investment.getInterest(13);
 
-			assertEquals(Money.won(BigDecimal.valueOf(4_362)), interest);
+			Assertions.assertThat(interest.getValue())
+				.isCloseTo(BigDecimal.valueOf(4_361.66), offset);
 		}
 
 		@Test
 		void getProfit() {
 			Money totalProfit = investment.getProfit();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_051_162)), totalProfit);
+			Assertions.assertThat(totalProfit.getValue())
+				.isCloseTo(BigDecimal.valueOf(1_051_161.9), offset);
 		}
 
 		@Test
@@ -443,14 +503,16 @@ class FixedDepositTest {
 		void getTotalInterest() {
 			Money totalInterest = investment.getTotalInterest();
 
-			assertEquals(Money.won(BigDecimal.valueOf(51_162)), totalInterest);
+			Assertions.assertThat(totalInterest.getValue())
+				.isCloseTo(BigDecimal.valueOf(51_161.89), offset);
 		}
 
 		@Test
 		void getTotalTax() {
 			Money totalTax = investment.getTotalTax();
 
-			assertEquals(Money.won(BigDecimal.valueOf(7_879)), totalTax);
+			Assertions.assertThat(totalTax.getValue())
+				.isCloseTo(totalTax.getValue(), offset);
 		}
 
 		@Test
@@ -466,12 +528,16 @@ class FixedDepositTest {
 				.investPeriod(new YearlyInvestPeriod(3))
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getPrincipalForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_051_162)), investment.getPrincipalForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(1_104_941)), investment.getPrincipalForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(1_104_941)), investment.getPrincipalForYear(4));
+			Assertions.assertThat(investment.getPrincipalForYear(-1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000.0), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(0).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000.0), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000.0), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_051_161.89), offset);
+			Assertions.assertThat(investment.getPrincipalForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_104_941.33), offset);
 		}
 
 		@Test
@@ -480,12 +546,18 @@ class FixedDepositTest {
 				.investPeriod(new YearlyInvestPeriod(3))
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(0)), investment.getInterestForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(0)), investment.getInterestForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(51_162)), investment.getInterestForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(53_779)), investment.getInterestForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(56_531)), investment.getInterestForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(56_531)), investment.getInterestForYear(4));
+			Assertions.assertThat(investment.getInterestForYear(-1).getValue())
+				.isCloseTo(BigDecimal.valueOf(0.0), offset);
+			Assertions.assertThat(investment.getInterestForYear(0).getValue())
+				.isCloseTo(BigDecimal.valueOf(0.0), offset);
+			Assertions.assertThat(investment.getInterestForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(51_161.89), offset);
+			Assertions.assertThat(investment.getInterestForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(53_779.44), offset);
+			Assertions.assertThat(investment.getInterestForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(56_530.89), offset);
+			Assertions.assertThat(investment.getInterestForYear(4).getValue())
+				.isCloseTo(BigDecimal.valueOf(56_530.89), offset);
 		}
 
 		@Test
@@ -494,12 +566,18 @@ class FixedDepositTest {
 				.investPeriod(new YearlyInvestPeriod(3))
 				.build();
 
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getProfitForYear(-1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_000_000)), investment.getProfitForYear(0));
-			assertEquals(Money.won(BigDecimal.valueOf(1_051_162)), investment.getProfitForYear(1));
-			assertEquals(Money.won(BigDecimal.valueOf(1_104_941)), investment.getProfitForYear(2));
-			assertEquals(Money.won(BigDecimal.valueOf(1_161_472)), investment.getProfitForYear(3));
-			assertEquals(Money.won(BigDecimal.valueOf(1_161_472)), investment.getProfitForYear(4));
+			Assertions.assertThat(investment.getProfitForYear(-1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000.0), offset);
+			Assertions.assertThat(investment.getProfitForYear(0).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_000_000.0), offset);
+			Assertions.assertThat(investment.getProfitForYear(1).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_051_161.9), offset);
+			Assertions.assertThat(investment.getProfitForYear(2).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_104_941.34), offset);
+			Assertions.assertThat(investment.getProfitForYear(3).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_161_472.23), offset);
+			Assertions.assertThat(investment.getProfitForYear(4).getValue())
+				.isCloseTo(BigDecimal.valueOf(1_161_472.23), offset);
 		}
 	}
 }

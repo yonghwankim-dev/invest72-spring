@@ -94,6 +94,7 @@ class RpRestControllerTest {
 			.taxRate(BigDecimal.valueOf(0.154))
 			.startDate(LocalDate.of(2026, 1, 1))
 			.currencyCode(Currency.won().getCode())
+			.isAutoReinvest(true)
 			.build();
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/rp")
@@ -126,6 +127,7 @@ class RpRestControllerTest {
 			.productTaxType(ProductTaxType.from(TaxType.STANDARD))
 			.productTaxRate(new ProductTaxRate(BigDecimal.valueOf(0.154)))
 			.startDate(startDate)
+			.isAutoReinvest(true)
 			.createdAt(startDate.atStartOfDay())
 			.build();
 		repository.save(entity);

@@ -55,8 +55,7 @@ public class FixedDeposit implements Investment {
 		if (month < 0) {
 			return getPrincipal(0);
 		}
-		return details.get(month).getPrincipal()
-			.roundToWhole();
+		return details.get(month).getPrincipal();
 	}
 
 	@Override
@@ -72,8 +71,7 @@ public class FixedDeposit implements Investment {
 		if (month < 0) {
 			return getInterest(0);
 		}
-		return details.get(month).getInterest()
-			.roundToWhole();
+		return details.get(month).getInterest();
 	}
 
 	@Override
@@ -89,13 +87,12 @@ public class FixedDeposit implements Investment {
 		if (month < 0) {
 			return getProfit(0);
 		}
-		return details.get(month).getProfit()
-			.roundToWhole();
+		return details.get(month).getProfit();
 	}
 
 	@Override
 	public Money getTotalInvestment() {
-		return investmentAmount.getAmount().roundToWhole();
+		return investmentAmount.getAmount();
 	}
 
 	@Override
@@ -104,14 +101,12 @@ public class FixedDeposit implements Investment {
 			.skip(1) // 0월은 이자가 없음
 			.map(InvestmentDetail::getInterest)
 			.reduce(Money::add)
-			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()))
-			.roundToWhole();
+			.orElseGet(() -> Money.of(BigDecimal.ZERO, investmentAmount.getAmount().getCurrency()));
 	}
 
 	@Override
 	public Money getTotalTax() {
-		return taxable.applyTax(getTotalInterest())
-			.roundToWhole();
+		return taxable.applyTax(getTotalInterest());
 	}
 
 	@Override
@@ -119,8 +114,7 @@ public class FixedDeposit implements Investment {
 		Money principal = details.get(getFinalMonth()).getPrincipal();
 		Money interest = details.get(getFinalMonth()).getInterest();
 		Money tax = getTotalTax();
-		Money totalProfit = principal.add(interest).subtract(tax);
-		return totalProfit.roundToWhole();
+		return principal.add(interest).subtract(tax);
 	}
 
 	@Override
@@ -146,8 +140,7 @@ public class FixedDeposit implements Investment {
 		if (year < 0) {
 			return getPrincipalForYear(0);
 		}
-		return yearlyDetails.get(year).getPrincipal()
-			.roundToWhole();
+		return yearlyDetails.get(year).getPrincipal();
 	}
 
 	@Override
@@ -159,8 +152,7 @@ public class FixedDeposit implements Investment {
 		if (year < 0) {
 			return getInterestForYear(0);
 		}
-		return yearlyDetails.get(year).getInterest()
-			.roundToWhole();
+		return yearlyDetails.get(year).getInterest();
 	}
 
 	@Override
@@ -172,8 +164,7 @@ public class FixedDeposit implements Investment {
 		if (year < 0) {
 			return getProfitForYear(0);
 		}
-		return yearlyDetails.get(year).getProfit()
-			.roundToWhole();
+		return yearlyDetails.get(year).getProfit();
 	}
 
 	@Override

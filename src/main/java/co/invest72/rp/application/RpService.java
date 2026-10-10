@@ -55,6 +55,7 @@ public class RpService {
 			.productTaxRate(new ProductTaxRate(request.getTaxRate()))
 			.startDate(request.getStartDate())
 			.createdAt(localDateProvider.nowDateTime())
+			.isAutoReinvest(request.getIsAutoReinvest())
 			.userId(user.getId())
 			.build();
 		repository.save(entity);

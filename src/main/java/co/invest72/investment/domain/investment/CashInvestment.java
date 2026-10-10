@@ -27,7 +27,7 @@ public class CashInvestment implements Investment {
 	}
 
 	private Money getRoundedPrincipal() {
-		return investmentAmount.getAmount().roundToWhole();
+		return investmentAmount.getAmount().round();
 	}
 
 	@Override
@@ -47,12 +47,12 @@ public class CashInvestment implements Investment {
 
 	@Override
 	public Money getProfit(int month) {
-		return investmentAmount.getAmount().roundToWhole();
+		return investmentAmount.getAmount().round();
 	}
 
 	@Override
 	public Money getTotalInvestment() {
-		return investmentAmount.getAmount().roundToWhole();
+		return investmentAmount.getAmount().round();
 	}
 
 	@Override

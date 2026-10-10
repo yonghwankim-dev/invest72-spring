@@ -47,7 +47,7 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 		Money interest = investmentAmount.calAnnualInterest(interestRate)
 			.times(days)
 			.divide(BigDecimal.valueOf(365L))
-			.roundToWhole();
+			.round();
 		if (interest.isNegative()) {
 			return Money.of(BigDecimal.ZERO, interest.getCurrency());
 		}
@@ -82,6 +82,6 @@ public class TermRepurchaseAgreement implements RepurchaseAgreement {
 		return investmentAmount.calAnnualInterest(interestRate)
 			.times(investPeriod.getDays(startDate))
 			.divide(BigDecimal.valueOf(365))
-			.roundToWhole();
+			.round();
 	}
 }

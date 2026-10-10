@@ -1,14 +1,11 @@
 package co.invest72.investment.domain;
 
 import java.math.BigDecimal;
-import java.util.function.UnaryOperator;
 
 import co.invest72.money.domain.Currency;
 import co.invest72.money.domain.Money;
 
 public interface Investment {
-
-	UnaryOperator<Money> roundToWholeMoney = Money::roundToWhole;
 
 	Money getPrincipal();
 

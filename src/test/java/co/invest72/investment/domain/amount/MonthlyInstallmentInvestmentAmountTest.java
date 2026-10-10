@@ -1,8 +1,9 @@
 package co.invest72.investment.domain.amount;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.math.BigDecimal;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class MonthlyInstallmentInvestmentAmountTest {
 		Money annualInterest = investmentAmount.calAnnualInterest(interestRate);
 
 		Money expectedAnnualInterest = Money.won(BigDecimal.valueOf(50_000));
-		Assertions.assertEquals(expectedAnnualInterest, annualInterest);
+		assertThat(annualInterest).isEqualTo(expectedAnnualInterest);
 	}
 
 	@Test
@@ -35,8 +36,8 @@ class MonthlyInstallmentInvestmentAmountTest {
 
 		Money monthlyInterest = investmentAmount.calMonthlyInterest(interestRate);
 
-		Money expectedMonthlyInterest = Money.won(BigDecimal.valueOf(4166.666667));
-		org.assertj.core.api.Assertions.assertThat(monthlyInterest).isEqualTo(expectedMonthlyInterest);
+		Money expectedMonthlyInterest = Money.won(new BigDecimal("4166.666666666667"));
+		assertThat(monthlyInterest).isEqualTo(expectedMonthlyInterest);
 	}
 
 	@Test
@@ -44,12 +45,15 @@ class MonthlyInstallmentInvestmentAmountTest {
 		Money amount = investmentAmount.getMonthlyAmount();
 
 		Money expected = Money.won(BigDecimal.valueOf(1_000_000));
-		Assertions.assertEquals(expected, amount);
+		assertThat(amount).isEqualTo(expected);
 	}
 
 	@Test
 	void shouldThrowException_whenAmountIsNegative() {
-		Assertions.assertThrows(IllegalArgumentException.class,
-			() -> new MonthlyInstallmentInvestmentAmount(Money.won(BigDecimal.valueOf(-1_000_000))));
+		// given
+		Money won = Money.won(BigDecimal.valueOf(-1_000_000));
+		// when & then
+		assertThatThrownBy(() -> new MonthlyInstallmentInvestmentAmount(won))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 }

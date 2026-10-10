@@ -37,7 +37,6 @@ public class RpRestController {
 	@GetMapping
 	public ResponseEntity<RpDetailedResponse> getRp(@RequestParam String id) {
 		RpDetailedResponse response = service.getRp(id);
-		return ResponseEntity.ok()
-			.body(response);
+		return ResponseEntity.ok(response);
 	}
 }
